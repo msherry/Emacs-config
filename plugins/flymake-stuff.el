@@ -1,6 +1,9 @@
 ;; Marc Sherry
 
-;; Custom modes for flymake syntax checking
+;; Custom stuff for flymake syntax checking
+
+; Disable popup windows
+(setq flymake-gui-warnings-enabled nil)
 
 ; On-the-fly pyflakes checking
 (defvar python-check-command (if (eq system-type 'darwin)
