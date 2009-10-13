@@ -45,6 +45,7 @@
 (add-to-list 'load-path "~/.emacs.d/plugins")
 (add-to-list 'load-path "~/.emacs.d/plugins/python-mode")
 (add-to-list 'load-path "~/.emacs.d/plugins/slime")
+(add-to-list 'load-path "~/.emacs.d/plugins/erlang")
 ; Others'
 (require 'paren)
 (require 'tramp)                        ; remote file editing
@@ -86,11 +87,11 @@
 
 
 ;; Other settings
-; Display
 (setq mac-command-modifier 'meta        ; 23 broke these
       ring-bell-function 'ignore)
 
 (show-paren-mode t)
+; Display
 (setq transient-mark-mode t            ; on by default in 23.x
       column-number-mode t
       global-font-lock-mode t
