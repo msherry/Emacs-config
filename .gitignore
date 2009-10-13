@@ -1,5 +1,5 @@
-.gitignore
+*.elc
 auto-save-list/
-backups/
+backups/*
 emacs-places
 games/
