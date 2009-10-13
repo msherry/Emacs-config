@@ -146,10 +146,12 @@
                             emacs-lisp-mode sh-mode))
 
 (defun really-set-keys ()
+  "Force our keys even in modes that try to override them"
   (local-set-key (kbd "C-c C-c") 'compile)
   (local-set-key (kbd "C-c .") 'flymake-goto-next-error))
 
 (defun programming-mode-hook ()
+  "Hook common to all programming modes"
   (add-todo-to-current-mode)
   (flyspell-prog-mode)
   (really-set-keys))
