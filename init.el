@@ -121,7 +121,7 @@
 
 
 ;; Bindings
-; TODO: (local-set-key in modes that override these)
+; These are sometimes overridden by major modes
 (global-set-key (kbd "C-c C-c") 'compile)
 (global-set-key (kbd "C-c .") 'flymake-goto-next-error)
 
