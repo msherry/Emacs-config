@@ -12,7 +12,7 @@
 			(height . 47))
 		      default-frame-alist))))
   (if (fboundp 'tool-bar-mode) (tool-bar-mode -1))
-  (if (fboundp 'scroll-bar-mode) (scroll-bar-mode -1))
+;;   (if (fboundp 'scroll-bar-mode) (scroll-bar-mode -1))
   (custom-set-faces
    ;; Only one instance of custom-set-faces allowed
    '(region ((((class color) (min-colors 88) (background light))
