@@ -173,6 +173,10 @@
           '(lambda ()
             (flyspell-mode t)))
 
+; Trailing whitespace is annoying in shell mode
+(add-hook 'shell-mode-hook
+          '(lambda ()
+            (setq show-trailing-whitespace nil)))
 
 ;; Mouse wheel scrolling in xterm
 (unless window-system
