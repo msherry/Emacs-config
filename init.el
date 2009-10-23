@@ -55,6 +55,7 @@
 (require 'slime-autoloads)
 (require 'flymake-point) ; shows errors in the minibuffer when highlighted
 (require 'uniquify)      ; stop naming buffers <2>
+(require 'comint)
 ; Mine
 (require 'tags-funcs)
 (require 'lisp-customization)
@@ -133,6 +134,9 @@
 (global-set-key (kbd "M-p") (lambda() (interactive) (scroll-down 1)))
 (global-set-key (kbd "C-x \\") 'align-regexp)
 (global-set-key (kbd "M-/") 'hippie-expand) ; better than dabbrev
+; Readline in shell mode
+(define-key comint-mode-map [up] 'comint-previous-input)
+(define-key comint-mode-map [down] 'comint-next-input)
 
 ; Better buffer switching
 (iswitchb-mode t)
