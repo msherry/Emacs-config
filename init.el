@@ -140,6 +140,8 @@
 
 ; Better buffer switching
 (iswitchb-mode t)
+; Don't prompt when creating scratch buffers
+(setq iswitchb-prompt-newbuffer nil)
 
 ; Create two frames initially
 (split-window-horizontally)
