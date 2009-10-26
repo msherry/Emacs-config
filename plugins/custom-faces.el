@@ -7,12 +7,14 @@
      (set-face-foreground 'diff-removed "red3")))
 
 
-;; Default yellow color doesn't show up nicely on linux, so pick something that
-;; stands out more
-(eval-after-load 'js2-mode
-  '(progn
-    (set-face-foreground 'js2-external-variable-face "white")
-    (set-face-background 'js2-external-variable-face "red")))
+;; Default "orange" color doesn't show up nicely if we don't have >8 colors, so
+;; pick something that stands out more if we're color-impaired
+(when (<= (length (list-colors-duplicates (defined-colors)))
+         8)
+  (eval-after-load 'js2-mode
+    '(progn
+      (set-face-foreground 'js2-external-variable-face "white")
+      (set-face-background 'js2-external-variable-face "red"))))
 
 ; Try to highlight "TODO: " entries
 (defface todo-face
