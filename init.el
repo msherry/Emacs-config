@@ -43,9 +43,12 @@
 
 ;; Plugins
 (add-to-list 'load-path "~/.emacs.d/plugins")
-(add-to-list 'load-path "~/.emacs.d/plugins/python-mode")
-(add-to-list 'load-path "~/.emacs.d/plugins/slime")
-(add-to-list 'load-path "~/.emacs.d/plugins/erlang")
+(add-to-list 'load-path "~/.emacs.d/plugins/vendor/")
+(add-to-list 'load-path "~/.emacs.d/plugins/vendor/js2")
+(add-to-list 'load-path "~/.emacs.d/plugins/vendor/python-mode")
+(add-to-list 'load-path "~/.emacs.d/plugins/vendor/php-mode")
+(add-to-list 'load-path "~/.emacs.d/plugins/vendor/slime")
+(add-to-list 'load-path "~/.emacs.d/plugins/vendor/erlang")
 ; Others'
 (require 'paren)
 (require 'tramp)                        ; remote file editing
