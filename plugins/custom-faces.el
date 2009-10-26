@@ -15,6 +15,9 @@
       (set-face-foreground 'js2-external-variable-face "white")
       (set-face-background 'js2-external-variable-face "red"))))
 
+;; If we're highlighting beyond 80 characters, make it noticeable
+(set-face-background 'highlight-beyond-fill-column-face "green")
+
 ; Try to highlight "TODO: " entries
 (defface todo-face
     '((t ("cyan")))

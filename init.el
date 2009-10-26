@@ -44,6 +44,7 @@
 ;; Plugins
 (add-to-list 'load-path "~/.emacs.d/plugins")
 (add-to-list 'load-path "~/.emacs.d/plugins/vendor/")
+(add-to-list 'load-path "~/.emacs.d/plugins/vendor/emacs-goodies")
 (add-to-list 'load-path "~/.emacs.d/plugins/vendor/js2")
 (add-to-list 'load-path "~/.emacs.d/plugins/vendor/python-mode")
 (add-to-list 'load-path "~/.emacs.d/plugins/vendor/php-mode")
@@ -58,7 +59,8 @@
 (require 'slime-autoloads)
 (require 'flymake-point) ; shows errors in the minibuffer when highlighted
 (require 'uniquify)      ; stop naming buffers <2>
-(require 'comint)
+(require 'comint)        ; better key handling in shell mode
+(require 'highlight-beyond-fill-column)
 ; Mine
 (require 'tags-funcs)
 (require 'lisp-customization)
@@ -164,7 +166,8 @@
   "Hook common to all programming modes"
   (add-todo-to-current-mode)
   (flyspell-prog-mode)
-  (really-set-keys))
+  (really-set-keys)
+  (highlight-beyond-fill-column))
 
 ; Add a common hook to every programming mode
 (mapcar '(lambda (x)
