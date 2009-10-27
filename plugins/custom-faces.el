@@ -15,8 +15,11 @@
       (set-face-foreground 'js2-external-variable-face "white")
       (set-face-background 'js2-external-variable-face "red"))))
 
-;; If we're highlighting beyond 80 characters, make it noticeable
+;; If we're highlighting beyond 80 characters, make it noticeable. The default
+;; is to underline, which sucks.
+;; TODO: use defface here
 (set-face-background 'highlight-beyond-fill-column-face "green")
+(set-face-underline-p 'highlight-beyond-fill-column-face nil)
 
 ; Try to highlight "TODO: " entries
 (defface todo-face
