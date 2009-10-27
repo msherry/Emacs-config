@@ -88,12 +88,12 @@
           (goto-char original-point)    ; restore point
           nil)                          ; return nil
 
-      (set-match-data (list (point-marker) ; set match data
-                            (progn
-                              (end-of-line)
-                              (point-marker))))
-      ;; return t indicating that the match data was set
-      t)))
+        (set-match-data (list (point-marker) ; set match data
+                              (progn
+                                (end-of-line)
+                                (point-marker))))
+        ;; return t indicating that the match data was set
+        t)))
 
 ;;;###autoload
 (defun highlight-beyond-fill-column ()
