@@ -11,11 +11,11 @@
   (if (eq system-type 'darwin)
       (progn
         (setq default-frame-alist
-	      (append '((left . 15)
-			(top . 22)
-			(width . 175)
-			(height . 47))
-		      default-frame-alist))))
+              (append '((left . 15)
+                        (top . 22)
+                        (width . 175)
+                        (height . 47))
+                      default-frame-alist))))
   (if (fboundp 'tool-bar-mode) (tool-bar-mode -1)))
 ;;   (if (fboundp 'scroll-bar-mode) (scroll-bar-mode -1))
 
@@ -60,7 +60,6 @@
 (add-to-list 'load-path "~/.emacs.d/plugins/vendor/slime")
 (add-to-list 'load-path "~/.emacs.d/plugins/vendor/erlang")
 ; Others'
-(require 'paren)
 (require 'tramp)                        ; remote file editing
 (require 'saveplace)
 (require 'tex-site)                     ; auctex mode
@@ -156,15 +155,16 @@
 ; Don't prompt when creating scratch buffers
 (setq iswitchb-prompt-newbuffer nil)
 
-; Create two frames initially if we have the room
-(if (> (window-width) (* 2 fill-column))
+; Create two frames initially if we have the room. Check both current width and
+; width from default-frame-alist, since the frame may not have been resized yet
+(if (> (max (window-width) (cdr (assoc 'width default-frame-alist))) 160)
     (split-window-horizontally))
 
 
 ;; Mode hooks
 ; Programming modes
 (defvar programming-modes '(python-mode js2-mode java-mode c-mode
-                            emacs-lisp-mode sh-mode))
+                            lisp-mode emacs-lisp-mode sh-mode))
 
 (defun really-set-keys ()
   "Force our keys even in modes that try to override them"
