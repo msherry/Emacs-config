@@ -28,8 +28,8 @@
 ;; I edit this file a lot, so put it in a register
 (set-register ?z '(file . "~/.emacs.d/init.el"))
 
-; Set PATH/exec-path based on the shell's configuration
 (defun set-path-from-shell ()
+  "Set PATH/exec-path based on the shell's configuration"
   (if (get-buffer "*set-path-from-shell*")
       (kill-buffer "*set-path-from-shell*"))
   (call-process-shell-command "echo $PATH" nil "*set-path-from-shell*")
@@ -114,7 +114,6 @@
       ediff-split-window-function 'split-window-horizontally
 ; Functionality
       save-place t
-      case-fold-search t
       require-final-newline 'visit-save ; add on both visit and save
       inferior-erlang-prompt-timeout t
       vc-delete-logbuf-window nil       ; don't close vc window when done
@@ -166,9 +165,9 @@
 
 
 ;; Mode hooks
-; Programming modes
 (defvar programming-modes '(python-mode js2-mode java-mode c-mode
-                            lisp-mode emacs-lisp-mode sh-mode))
+                            lisp-mode emacs-lisp-mode sh-mode)
+  "Modes used for programming")
 
 (defun really-set-keys ()
   "Force our keys even in modes that try to override them"
