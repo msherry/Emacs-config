@@ -20,6 +20,9 @@
             (:background "cyan")))))
 
 
+;; I edit this file a lot, so put it in a register
+(set-register ?z '(file . "~/.emacs.d/init.el"))
+
 ; Set PATH/exec-path based on the shell's configuration
 (defun set-path-from-shell ()
   (if (get-buffer "*set-path-from-shell*")

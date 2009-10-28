@@ -36,6 +36,7 @@
 
 ;; WTF? I didn't ask for this
 (eval-after-load 'python-mode
-  (set-face-foreground 'py-XXX-tag-face nil))
+  '(progn
+    (set-face-foreground 'py-XXX-tag-face nil)))
 
 (provide 'custom-faces)
