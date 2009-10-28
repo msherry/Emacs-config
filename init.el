@@ -118,6 +118,7 @@
       case-fold-search t
       require-final-newline 'visit-save ; add on both visit and save
       inferior-erlang-prompt-timeout t
+      vc-delete-logbuf-window nil       ; don't close vc window when done
 ; put the dabbrev (regular M-/ functionality) first
       hippie-expand-try-functions-list '(try-expand-dabbrev try-expand-dabbrev-all-buffers try-expand-dabbrev-from-kill try-complete-file-name-partially try-complete-file-name try-expand-all-abbrevs try-expand-list try-expand-line try-complete-lisp-symbol-partially try-complete-lisp-symbol))
 (setq-default show-trailing-whitespace t
