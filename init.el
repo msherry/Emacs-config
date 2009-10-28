@@ -205,3 +205,15 @@
   "Unmark marked files in dired mode before searching for new ones"
   (dired-unmark-all-files ?\r))
 (ad-activate 'dired-mark-files-containing-regexp)
+
+(defadvice py-shift-region-left (after keep-region-active
+                                       (start end &optional count))
+  "Keep the region active so we can do multiple shifts"
+  (setq deactivate-mark nil))
+(ad-activate 'py-shift-region-left)
+
+(defadvice py-shift-region-right (after keep-region-active
+                                       (start end &optional count))
+  "Keep the region active so we can do multiple shifts"
+  (setq deactivate-mark nil))
+(ad-activate 'py-shift-region-right)
