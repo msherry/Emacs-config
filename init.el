@@ -156,8 +156,12 @@
 (setq iswitchb-prompt-newbuffer nil)
 
 ; Create two frames initially if we have the room. Check both current width and
-; width from default-frame-alist, since the frame may not have been resized yet
-(if (> (max (window-width) (cdr (assoc 'width default-frame-alist))) 160)
+; width from default-frame-alist (if present), since the frame may not have been
+; resized yet
+(if (> (max (window-width)
+            (or (cdr (assoc 'width default-frame-alist))
+                0))
+       160)
     (split-window-horizontally))
 
 
