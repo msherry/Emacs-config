@@ -1,6 +1,11 @@
 ;; Much of this is organized similar to:
 ;; http://bitbucket.org/brodie/dotfiles/src/tip/.emacs
 
+;; Do these early so if there's an error in config we don't pollute ~/ with junk
+;; files
+(setq save-place-file "~/.emacs.d/emacs-places"
+      backup-directory-alist '(("." . "~/.emacs.d/backups")))
+
 ;; Set up GUI as soon as possible
 (when window-system
   (if (eq system-type 'darwin)
@@ -110,10 +115,8 @@
       ediff-split-window-function 'split-window-horizontally
 ; Functionality
       save-place t
-      save-place-file "~/.emacs.d/emacs-places"
       case-fold-search t
       require-final-newline 'visit-save ; add on both visit and save
-      backup-directory-alist '(("." . "~/.emacs.d/backups"))
       inferior-erlang-prompt-timeout t
 ; put the dabbrev (regular M-/ functionality) first
       hippie-expand-try-functions-list '(try-expand-dabbrev try-expand-dabbrev-all-buffers try-expand-dabbrev-from-kill try-complete-file-name-partially try-complete-file-name try-expand-all-abbrevs try-expand-list try-expand-line try-complete-lisp-symbol-partially try-complete-lisp-symbol))
