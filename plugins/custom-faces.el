@@ -34,4 +34,7 @@
                           '(("\\(TODO\\|HACK\\|FIXME\\):" 1 'todo-face prepend))
                           t))
 
+;; WTF? I didn't ask for this
+(set-face-foreground 'py-XXX-tag-face nil)
+
 (provide 'custom-faces)
