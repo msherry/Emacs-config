@@ -156,8 +156,9 @@
 ; Don't prompt when creating scratch buffers
 (setq iswitchb-prompt-newbuffer nil)
 
-; Create two frames initially
-(split-window-horizontally)
+; Create two frames initially if we have the room
+(if (> (window-width) (* 2 fill-column))
+    (split-window-horizontally))
 
 
 ;; Mode hooks
