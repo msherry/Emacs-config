@@ -16,6 +16,8 @@ font-lock-mode"
 ;; Which modes use 'lambda'
 (add-hook 'emacs-lisp-mode-hook 'sm-lambda-mode-hook)
 (add-hook 'lisp-interactive-mode-hook 'sm-lamba-mode-hook)
+(add-hook 'lisp-mode-hook 'sm-lambda-mode-hook)
+(add-hook 'slime-repl-mode-hook 'sm-lambda-mode-hook)
 (add-hook 'scheme-mode-hook 'sm-lambda-mode-hook)
 (add-hook 'python-mode-hook 'sm-lambda-mode-hook)
 
