@@ -60,7 +60,6 @@
 (add-to-list 'load-path "~/.emacs.d/plugins/vendor/slime")
 (add-to-list 'load-path "~/.emacs.d/plugins/vendor/erlang")
 ; Others'
-(require 'tramp)                        ; remote file editing
 (require 'saveplace)
 (require 'tex-site)                     ; auctex mode
 (require 'erlang-start)
@@ -204,6 +203,14 @@
                                (interactive)
                                (scroll-up 5))))
 
+
+;; ElDoc mode for modes that support it
+(defvar eldoc-supported-modes '(emacs-lisp-mode))
+
+(mapcar '(lambda (x)
+          (let ((mode-hook (intern (concat (symbol-name x) "-hook"))))
+            (add-hook mode-hook 'turn-on-eldoc-mode)))
+        eldoc-supported-modes)
 
 ;; Modify functions that aren't quite right
 (defadvice dired-mark-files-containing-regexp (before unmark-all-first
