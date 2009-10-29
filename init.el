@@ -19,14 +19,6 @@
   (if (fboundp 'tool-bar-mode) (tool-bar-mode -1)))
 ;;   (if (fboundp 'scroll-bar-mode) (scroll-bar-mode -1))
 
-(defvar cyan-name (cond ((eq system-type 'darwin) "cyan")
-                          (t "brightcyan")))
-
-(defface
-    region '((((class color) (min-colors 88) (background light))
-              (:background cyan-name)))
-  "Basic face for highlighting the region")
-
 
 ;; I edit this file a lot, so put it in a register
 (set-register ?z '(file . "~/.emacs.d/init.el"))

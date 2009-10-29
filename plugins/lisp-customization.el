@@ -16,12 +16,9 @@
 
 (add-hook 'slime-mode-hook 'cliki:start-slime)
 
-;; need these on the Mac
+;; need this on the Mac - maybe it's a 22.x thing?
 (if (eq window-system 'mac)
-   (progn
-     (require 'slime-autoloads)
-     (setq slime-lisp-implementations `((sbcl ("/opt/local/bin/sbcl"))))
-     (eval-after-load "slime"
-       '(slime-setup '(slime-fancy slime-banner)))))
+    (eval-after-load "slime"
+      '(slime-setup '(slime-fancy slime-banner))))
 
 (provide 'lisp-customization)
