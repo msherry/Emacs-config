@@ -133,10 +133,6 @@
 
 
 ;; Bindings
-; These are sometimes overridden by major modes
-(global-set-key (kbd "C-c C-c") 'compile)
-(global-set-key (kbd "C-c .") 'flymake-goto-next-error)
-
 (global-set-key (kbd "M-g") 'goto-line)
 (global-set-key (kbd "C-c e") 'ediff-buffers)
 (global-set-key [insertchar] nil)       ; Right next to delete!!
@@ -154,7 +150,7 @@
 ; Don't prompt when creating scratch buffers
 (setq iswitchb-prompt-newbuffer nil)
 
-; Create two frames initially if we have the room. Check both current width and
+; Create two windows initially if we have the room. Check both current width and
 ; width from default-frame-alist (if present), since the frame may not have been
 ; resized yet
 (if (> (max (window-width)
@@ -187,7 +183,6 @@
           (let ((mode-hook (intern (concat (symbol-name x) "-hook"))))
             (add-hook mode-hook 'programming-mode-hook)))
         programming-modes)
-
 
 (add-hook 'text-mode-hook
           '(lambda ()
