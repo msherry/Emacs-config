@@ -146,7 +146,7 @@
 
 ; Give us the ability to leave certain words highlighted - always got jealous
 ; when i saw this in vim
-(hi-lock-mode)
+(global-hi-lock-mode 1)
 
 ; Create two windows initially if we have the room. Check both current width and
 ; width from default-frame-alist (if present), since the frame may not have been
