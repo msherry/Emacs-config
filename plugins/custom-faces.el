@@ -1,14 +1,10 @@
 ;; Marc Sherry
 
-;; Make region roughly similar on linux and mac
+;; Make cyan roughly similar on linux and mac
 (defvar cyan-name (cond ((eq system-type 'darwin) "cyan")
                           (t "brightcyan")))
 
-(defface
-    region '((((class color) (min-colors 88) (background light))
-              (:background cyan-name)))
-  "Basic face for highlighting the region")
-
+(set-face-background 'region cyan-name)
 
 ;; Make diff mode colorful on the mac, and not psychotic on linux
 (eval-after-load 'diff-mode
@@ -25,18 +21,12 @@
       (set-face-foreground 'js2-external-variable-face "white")
       (set-face-background 'js2-external-variable-face "red"))))
 
-;; If we're highlighting beyond 80 characters, make it noticeable. The default
-;; is to underline, which sucks.
-;; TODO: use defface here
-(set-face-background 'highlight-beyond-fill-column-face "green")
-(set-face-underline-p 'highlight-beyond-fill-column-face nil)
-
 ; Try to highlight "TODO: " entries
 (defface todo-face
-    '((t ("cyan")))
+    '((t ()))
   "Face for highlighting comments like TODO: and HACK:")
 
-(set-face-background 'todo-face "cyan")
+(set-face-background 'todo-face cyan-name)
 
 ;; Add keywords we want highlighted
 (defun add-todo-to-current-mode ()
@@ -44,9 +34,15 @@
                           '(("\\(TODO\\|HACK\\|FIXME\\):" 1 'todo-face prepend))
                           t))
 
+;; If we're highlighting beyond 80 characters, make it noticeable. The default
+;; is to underline, which sucks.
+;; TODO: use defface here
+(set-face-background 'highlight-beyond-fill-column-face "green")
+(set-face-underline-p 'highlight-beyond-fill-column-face nil)
+
 ;; WTF? I didn't ask for this
 (eval-after-load 'python-mode
   '(progn
-    (set-face-foreground 'py-XXX-tag-face nil)))
+    (set-face-foreground 'py-XXX-tag-face 'unspecified)))
 
 (provide 'custom-faces)

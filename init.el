@@ -68,6 +68,7 @@
 (require 'lisp-customization)
 (require 'custom-faces)
 (require 'flymake-stuff)
+(require 'old-emacs-git)
 (require 'lambda)
 ; Autoloads
 (autoload 'js2-mode "js2" nil t)
