@@ -16,6 +16,12 @@
 
 (add-hook 'slime-mode-hook 'cliki:start-slime)
 
+(add-hook 'slime-repl-mode-hook
+          '(lambda ()
+            (local-set-key (kbd "M-<up>") 'slime-repl-backward-input)
+            (local-set-key (kbd "M-<down>") 'slime-repl-forward-input)
+            (cliki:start-slime)))
+
 ;; need this on the Mac - maybe it's a 22.x thing?
 (if (eq window-system 'mac)
     (eval-after-load "slime"

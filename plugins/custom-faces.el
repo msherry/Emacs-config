@@ -1,14 +1,8 @@
 ;; Marc Sherry
 
-;; Make region roughly similar on linux and mac
+;; Make cyan roughly similar on linux and mac
 (defvar cyan-name (cond ((eq system-type 'darwin) "cyan")
                           (t "brightcyan")))
-
-(defface
-    region '((((class color) (min-colors 88) (background light))
-              (:background cyan-name)))
-  "Basic face for highlighting the region")
-
 
 ;; Make diff mode colorful on the mac, and not psychotic on linux
 (eval-after-load 'diff-mode
@@ -36,7 +30,7 @@
     '((t ("cyan")))
   "Face for highlighting comments like TODO: and HACK:")
 
-(set-face-background 'todo-face "cyan")
+(set-face-background 'todo-face cyan-name)
 
 ;; Add keywords we want highlighted
 (defun add-todo-to-current-mode ()
