@@ -19,6 +19,18 @@
   (if (fboundp 'tool-bar-mode) (tool-bar-mode -1)))
 ;;   (if (fboundp 'scroll-bar-mode) (scroll-bar-mode -1))
 
+;; This is a hacky way to do this, but we can't evaluate variables in the face
+;; spec (it has a stupid stringp test), so we have to have two separate
+;; custom-set-faces calls
+(if window-system
+    (custom-set-faces
+     ;; Only one instance of custom-set-faces allowed
+     '(region ((((class color) (min-colors 88) (background light))
+                (:background "cyan")))))
+    (custom-set-faces
+     ;; Only one instance of custom-set-faces allowed
+     '(region ((((class color) (min-colors 88) (background light))
+                (:background "brightcyan"))))))
 
 ;; I edit this file a lot, so put it in a register
 (set-register ?z '(file . "~/.emacs.d/init.el"))
@@ -186,10 +198,18 @@
           '(lambda ()
             (flyspell-mode t)))
 
-; Trailing whitespace is annoying in shell mode
-(add-hook 'shell-mode-hook
-          '(lambda ()
-            (setq show-trailing-whitespace nil)))
+; Trailing whitespace is annoying in some modes
+(defvar no-trailing-whitespace-modes '(shell-mode slime-repl-mode))
+
+(mapcar '(lambda (x)
+          (let ((mode-hook (intern (concat (symbol-name x) "-hook"))))
+            (add-hook mode-hook '(lambda ()
+                                  (setq show-trailing-whitespace nil)))))
+        no-trailing-whitespace-modes)
+
+;; (add-hook 'shell-mode-hook
+;;           '(lambda ()
+;;             (setq show-trailing-whitespace nil)))
 
 ;; Mouse wheel scrolling in xterm
 (unless window-system
