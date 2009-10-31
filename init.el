@@ -19,19 +19,6 @@
   (if (fboundp 'tool-bar-mode) (tool-bar-mode -1)))
 ;;   (if (fboundp 'scroll-bar-mode) (scroll-bar-mode -1))
 
-;; This is a hacky way to do this, but we can't evaluate variables in the face
-;; spec (it has a stupid stringp test), so we have to have two separate
-;; custom-set-faces calls
-(if window-system
-    (custom-set-faces
-     ;; Only one instance of custom-set-faces allowed
-     '(region ((((class color) (min-colors 88) (background light))
-                (:background "cyan")))))
-    (custom-set-faces
-     ;; Only one instance of custom-set-faces allowed
-     '(region ((((class color) (min-colors 88) (background light))
-                (:background "brightcyan"))))))
-
 ;; I edit this file a lot, so put it in a register
 (set-register ?z '(file . "~/.emacs.d/init.el"))
 
@@ -80,6 +67,7 @@
 (require 'lisp-customization)
 (require 'custom-faces)
 (require 'flymake-stuff)
+(require 'old-emacs-git)
 (require 'lambda)
 ; Autoloads
 (autoload 'js2-mode "js2" nil t)
