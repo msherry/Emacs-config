@@ -112,7 +112,9 @@
       inferior-erlang-prompt-timeout t
       vc-delete-logbuf-window nil       ; don't close vc window when done
 ; put the dabbrev (regular M-/ functionality) first
-      hippie-expand-try-functions-list '(try-expand-dabbrev try-expand-dabbrev-all-buffers try-expand-dabbrev-from-kill try-complete-file-name-partially try-complete-file-name try-expand-all-abbrevs try-expand-list try-expand-line try-complete-lisp-symbol-partially try-complete-lisp-symbol))
+      hippie-expand-try-functions-list '(try-expand-dabbrev try-expand-dabbrev-all-buffers try-expand-dabbrev-from-kill try-complete-file-name-partially try-complete-file-name try-expand-all-abbrevs try-expand-list try-expand-line try-complete-lisp-symbol-partially try-complete-lisp-symbol)
+      vc-follow-symlinks t)             ; Don't always ask
+
 (setq-default show-trailing-whitespace t
               fill-column 80)           ; default of 72 is too narrow
 (put 'upcase-region 'disabled nil)
