@@ -7,6 +7,9 @@
 ;; Use it for the region
 (set-face-background 'region cyan-name)
 
+;; Orchid is a terrible color for builtins
+(set-face-foreground 'font-lock-builtin-face "Blue1")
+
 ;; Make diff mode colorful on the mac, and not psychotic on linux
 (eval-after-load 'diff-mode
   '(progn
