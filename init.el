@@ -21,6 +21,7 @@
 
 ;; I edit this file a lot, so put it in a register
 (set-register ?z '(file . "~/.emacs.d/init.el"))
+(set-register ?l '(file . "~/Desktop/notes-for-lyd.txt"))
 
 (defun set-path-from-shell ()
   "Set PATH/exec-path based on the shell's configuration"
@@ -111,9 +112,10 @@
       require-final-newline 'visit-save ; add on both visit and save
       inferior-erlang-prompt-timeout t
       vc-delete-logbuf-window nil       ; don't close vc window when done
+      vc-follow-symlinks t              ; don't always ask
 ; put the dabbrev (regular M-/ functionality) first
       hippie-expand-try-functions-list '(try-expand-dabbrev try-expand-dabbrev-all-buffers try-expand-dabbrev-from-kill try-complete-file-name-partially try-complete-file-name try-expand-all-abbrevs try-expand-list try-expand-line try-complete-lisp-symbol-partially try-complete-lisp-symbol)
-      vc-follow-symlinks t)             ; Don't always ask
+      ediff-window-setup-function 'ediff-setup-windows-plain) ; same window, pls
 
 (setq-default show-trailing-whitespace t
               fill-column 80)           ; default of 72 is too narrow
