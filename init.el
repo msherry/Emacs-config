@@ -22,6 +22,7 @@
 ;; I edit this file a lot, so put it in a register
 (set-register ?z '(file . "~/.emacs.d/init.el"))
 (set-register ?l '(file . "~/Desktop/notes-for-lyd.txt"))
+(set-register ?b '(file . "/imo25:/var/www/run_on_first_boot"))
 
 (defun set-path-from-shell ()
   "Set PATH/exec-path based on the shell's configuration"
