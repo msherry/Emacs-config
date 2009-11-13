@@ -139,6 +139,7 @@
 (global-set-key (kbd "M-p") (lambda() (interactive) (scroll-down 1)))
 (global-set-key (kbd "C-x \\") 'align-regexp)
 (global-set-key (kbd "M-/") 'hippie-expand) ; better than dabbrev
+(global-set-key (kbd "M-'") 'find-tag-other-window)
 ; Readline in shell mode
 (define-key comint-mode-map [up] 'comint-previous-input)
 (define-key comint-mode-map [down] 'comint-next-input)
