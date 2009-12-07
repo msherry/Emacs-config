@@ -4,9 +4,6 @@
 (defvar cyan-name (cond ((eq system-type 'darwin) "cyan")
                           (t "brightcyan")))
 
-;; Use it for the region
-(set-face-background 'region cyan-name)
-
 ;; Orchid is a terrible color for builtins
 (set-face-foreground 'font-lock-builtin-face "Blue1")
 

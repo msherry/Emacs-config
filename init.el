@@ -64,6 +64,7 @@
 (require 'uniquify)      ; stop naming buffers <2>
 (require 'comint)        ; better key handling in shell mode
 (require 'highlight-beyond-fill-column)
+(require 'tramp)
 ; Mine
 (require 'tags-funcs)
 (require 'lisp-customization)
@@ -77,6 +78,7 @@
 (autoload 'php-mode "php-mode" nil t) ; either Mac or 22 only
 ;; Use python-mode, instead of the crappy built-in python.el on the mac
 (autoload 'python-mode "python-mode" "Python Mode." t)
+(autoload 'turn-on-cldoc-mode "cldoc" "CL docs" t)
 
 
 ;; File/mode associations
@@ -140,7 +142,6 @@
 (global-set-key (kbd "M-p") (lambda() (interactive) (scroll-down 1)))
 (global-set-key (kbd "C-x \\") 'align-regexp)
 (global-set-key (kbd "M-/") 'hippie-expand) ; better than dabbrev
-(global-set-key (kbd "M-'") 'find-tag-other-window)
 ; Readline in shell mode
 (define-key comint-mode-map [up] 'comint-previous-input)
 (define-key comint-mode-map [down] 'comint-next-input)
@@ -217,14 +218,6 @@
                                (scroll-up 5))))
 
 
-;; ElDoc mode for modes that support it
-(defvar eldoc-supported-modes '(emacs-lisp-mode))
-
-(mapcar '(lambda (x)
-          (let ((mode-hook (intern (concat (symbol-name x) "-hook"))))
-            (add-hook mode-hook 'turn-on-eldoc-mode)))
-        eldoc-supported-modes)
-
 ;; Modify functions that aren't quite right
 (defadvice dired-mark-files-containing-regexp (before unmark-all-first
                                                       (regexp &optional marker-char))
@@ -243,16 +236,13 @@
   "Keep the region active so we can do multiple shifts"
   (setq deactivate-mark nil))
 (ad-activate 'py-shift-region-right)
-(custom-set-variables
-  ;; custom-set-variables was added by Custom.
-  ;; If you edit it by hand, you could mess it up, so be careful.
-  ;; Your init file should contain only one such instance.
-  ;; If there is more than one, they won't work right.
- )
+
 (custom-set-faces
   ;; custom-set-faces was added by Custom.
   ;; If you edit it by hand, you could mess it up, so be careful.
   ;; Your init file should contain only one such instance.
   ;; If there is more than one, they won't work right.
- '(ediff-current-diff-B ((((class color) (min-colors 16)) (:background "brightmagenta" :foreground "blue"))))
- '(ediff-even-diff-B ((((class color) (min-colors 16)) (:background "Grey" :foreground "black")))))
+ '(ediff-current-diff-B ((((class color) (min-colors 16)) (:background "#ff00ff" :foreground "blue"))))
+ '(ediff-even-diff-B ((((class color) (min-colors 16)) (:background "Grey" :foreground "black"))))
+ ;; Called both cyan and brightcyan
+ '(region ((((class color) (min-colors 24)) (:background "#00ffffff")))))

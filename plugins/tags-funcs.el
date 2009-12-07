@@ -17,6 +17,7 @@
      (visit-tags-table tag-file)))
 
 
-(global-set-key "\M-\"" 'regen-tags)
+(global-set-key (kbd "M-\"") 'regen-tags)
+(global-set-key (kbd "M-'") 'find-tag-other-window)
 
 (provide 'tags-funcs)
