@@ -96,6 +96,7 @@
 (setq standard-indent 4)
 (setq c-default-style "ellemtel")
 (setq c-basic-offset 2)                 ; imo uses two
+(setq js2-basic-offset 4)               ; imo uses four
 
 
 ;; Other settings
