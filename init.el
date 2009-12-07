@@ -246,4 +246,4 @@
  '(ediff-current-diff-B ((((class color) (min-colors 16)) (:background "#ff00ff" :foreground "blue"))))
  '(ediff-even-diff-B ((((class color) (min-colors 16)) (:background "Grey" :foreground "black"))))
  ;; Called both cyan and brightcyan
- '(region ((((class color) (min-colors 24)) (:background "#00ffffff")))))
+ '(region ((((class color) (min-colors 24)) (:background "#00ffff")))))
