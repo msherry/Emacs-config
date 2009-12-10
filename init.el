@@ -153,7 +153,7 @@
 (setq iswitchb-prompt-newbuffer nil)
 
 ; Give us the ability to leave certain words highlighted - always got jealous
-; when i saw this in vim
+; when I saw this in vim
 (global-hi-lock-mode 1)
 
 ; Create two windows initially if we have the room. Check both current width and
