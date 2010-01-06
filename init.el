@@ -22,6 +22,7 @@
 ;; I edit this file a lot, so put it in a register
 (set-register ?z '(file . "~/.emacs.d/init.el"))
 (set-register ?l '(file . "~/Desktop/notes-for-lyd.txt"))
+(set-register ?t '(file . "~/TODO.org"))
 (set-register ?b '(file . "/imo25:/var/www/run_on_first_boot"))
 
 (defun set-path-from-shell ()
@@ -40,6 +41,7 @@
 ; That doesn't work on the mac - retarded. Bring in the macports paths
 ; ourselves, both for emacs and subprocesses
 (add-to-list 'exec-path "/opt/local/bin")
+(add-to-list 'exec-path "/usr/local/bin")
 (setenv "PATH" (concat "/usr/local/bin:/opt/local/bin:/opt/local/mysql/bin:/opt/local/sbin:" (getenv "PATH")))
 
 ;; Set up environment
@@ -86,6 +88,7 @@
 (add-to-list 'auto-mode-alist '("\\.js$" . js2-mode))
 (add-to-list 'auto-mode-alist '("\\.as$" . actionscript-mode))
 (add-to-list 'auto-mode-alist '("\\.py$" . python-mode))
+(add-to-list 'auto-mode-alist '("\\.org$" . org-mode))
 (add-to-list 'interpreter-mode-alist '("python" . python-mode))
 
 
@@ -168,7 +171,8 @@
 
 ;; Mode hooks
 (defvar programming-modes '(python-mode js2-mode java-mode c-mode
-                            lisp-mode emacs-lisp-mode sh-mode)
+                            lisp-mode emacs-lisp-mode sh-mode
+                            makefile-mode)
   "Modes used for programming")
 
 (defun really-set-keys ()
@@ -203,9 +207,6 @@
                                   (setq show-trailing-whitespace nil)))))
         no-trailing-whitespace-modes)
 
-;; (add-hook 'shell-mode-hook
-;;           '(lambda ()
-;;             (setq show-trailing-whitespace nil)))
 
 ;; Mouse wheel scrolling in xterm
 (unless window-system

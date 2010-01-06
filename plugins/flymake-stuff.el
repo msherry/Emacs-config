@@ -20,7 +20,7 @@
   (add-to-list 'flymake-allowed-file-name-masks
                '("\\.py\\'" flymake-pyflakes-init)))
 
-(defvar flymake-modes '(python-mode))   ;c-mode-common is a pain to get working
+(defvar flymake-modes '(python-mode c-mode-common))   ;c-mode-common is a pain to get working
 
 (mapcar '(lambda (x)
           (let ((mode-hook (intern (concat (symbol-name x) "-hook"))))
