@@ -22,3 +22,7 @@ font-lock-mode"
 (add-hook 'python-mode-hook 'sm-lambda-mode-hook)
 
 (provide 'lambda)
+
+;; Resources for trying to fix lambda problem on Mac emacs 23:
+;; http://www.emacswiki.org/emacs/SetFonts
+;; http://3e8.org/zb/quack-pretty-lambda.html
