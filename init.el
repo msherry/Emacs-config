@@ -107,10 +107,12 @@
 (setq mac-command-modifier 'meta
       ring-bell-function 'ignore)
 (blink-cursor-mode 1)
+(global-set-key (kbd "C-l") 'recenter)  ; recenter-top-bottom? No thanks
 
 ;; This doesn't work, but fn-delete should be <delete>, not DEL
 ;(define-key function-key-map (kbd "<kp-delete>") (kbd "<delete>"))
 ;; (global-set-key [kp-delete] [delete])
+(global-set-key (kbd "<kp-delete>") (kbd "<deletechar>"))
 
 (show-paren-mode t)
 ; Display
