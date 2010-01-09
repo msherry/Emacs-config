@@ -31,7 +31,7 @@
 
 ;; Prepend a different java handler, since flymake defaults to using Makefiles
 ;; TODO: this doesn't actually work - running flymake on java hangs emacs
-(push '("\\.java\\'" flymake-simple-ant-java-init flymake-simple-java-cleanup)
-      flymake-allowed-file-name-masks)
+;; (push '("\\.java\\'" flymake-simple-ant-java-init flymake-simple-java-cleanup)
+;;       flymake-allowed-file-name-masks)
 
 (provide 'flymake-stuff)

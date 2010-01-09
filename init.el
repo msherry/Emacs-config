@@ -9,13 +9,14 @@
 ;; Set up GUI as soon as possible
 (when window-system
   (if (eq system-type 'darwin)
-      (progn
-        (setq default-frame-alist
-              (append '((left . 15)
-                        (top . 22)
-                        (width . 175)
-                        (height . 47))
-                      default-frame-alist))))
+      (setq default-frame-alist
+            (append `((left . ,(cond ((< emacs-major-version 23) 15)
+                                    (t 8)))
+                      (top . 22)
+                      (width . 175)
+                      (height . ,(cond ((< emacs-major-version 23) 47)
+                                      (t 52))))
+                    default-frame-alist)))
   (if (fboundp 'tool-bar-mode) (tool-bar-mode -1)))
 ;;   (if (fboundp 'scroll-bar-mode) (scroll-bar-mode -1))
 
@@ -102,9 +103,14 @@
 (setq js2-basic-offset 4)               ; imo uses four
 
 
-;; Other settings
-(setq mac-command-modifier 'meta        ; 23 broke these
+;; Other settings that 23 broke
+(setq mac-command-modifier 'meta
       ring-bell-function 'ignore)
+(blink-cursor-mode 1)
+
+;; This doesn't work, but fn-delete should be <delete>, not DEL
+;(define-key function-key-map (kbd "<kp-delete>") (kbd "<delete>"))
+;; (global-set-key [kp-delete] [delete])
 
 (show-paren-mode t)
 ; Display
