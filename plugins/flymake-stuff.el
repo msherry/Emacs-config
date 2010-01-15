@@ -24,7 +24,7 @@
 
 (defun turn-on-flymake-if-local ()
   "Turn on flymake mode if buffer's directory is writable and
-tramp is not loaded, or this file isn't being edited via tramp"
+tramp is not loaded, or this file isn't being edited via tramp."
   (when (and buffer-file-name
              (file-writable-p
               (file-name-directory buffer-file-name))
