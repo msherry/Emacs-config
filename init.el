@@ -6,16 +6,28 @@
 (setq save-place-file "~/.emacs.d/emacs-places"
       backup-directory-alist '(("." . "~/.emacs.d/backups")))
 
+;; While emacs23 handles greek poorly on the mac, use a different font. See last
+;; http ref in plugins/lambda.el. Also stop using a chinese font for japanese
+;; kanji
+
+(set-fontset-font "fontset-startup"
+                  'greek-iso8859-7
+                  "-apple-Andale_Mono-medium-normal-normal-*-14-*-*-*-p-0-iso10646-1")
+;; TODO: this seems to override more than just japanese - even greek
+;; (set-fontset-font "fontset-startup"
+;;                   'japanese-jisx0208
+;;                   "-apple-Osaka-medium-normal-normal-*-12-*-*-*-m-0-iso10646-1")
+
 ;; Set up GUI as soon as possible
 (when window-system
   (if (eq system-type 'darwin)
       (setq default-frame-alist
             (append `((left . ,(cond ((< emacs-major-version 23) 15)
-                                    (t 8)))
+                                     (t 8)))
                       (top . 22)
                       (width . 175)
                       (height . ,(cond ((< emacs-major-version 23) 47)
-                                      (t 52))))
+                                       (t 52))))
                     default-frame-alist)))
   (if (fboundp 'tool-bar-mode) (tool-bar-mode -1)))
 ;;   (if (fboundp 'scroll-bar-mode) (scroll-bar-mode -1))
@@ -69,6 +81,7 @@
 (require 'comint)        ; better key handling in shell mode
 (require 'highlight-beyond-fill-column)
 (require 'tramp)
+(require 'vc-svn)
 ; Mine
 (require 'tags-funcs)
 (require 'lisp-customization)

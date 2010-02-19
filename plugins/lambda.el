@@ -9,9 +9,9 @@
 font-lock-mode"
   (font-lock-add-keywords
    nil `(("\\<lambda\\>"
-   (0 (progn (compose-region (match-beginning 0) (match-end 0)
-        ,(make-char 'greek-iso8859-7 107))
-      nil))))))
+          (0 (progn (compose-region (match-beginning 0) (match-end 0)
+                                    ,(make-char 'greek-iso8859-7 107))
+                    nil))))))
 
 ;; Which modes use 'lambda'
 (add-hook 'emacs-lisp-mode-hook 'sm-lambda-mode-hook)
@@ -24,5 +24,7 @@ font-lock-mode"
 (provide 'lambda)
 
 ;; Resources for trying to fix lambda problem on Mac emacs 23:
+;; UPDATE - it's an emacs bug. Sigh...
 ;; http://www.emacswiki.org/emacs/SetFonts
 ;; http://3e8.org/zb/quack-pretty-lambda.html
+;; http://emacsbugs.donarmstrong.com/cgi-bin/bugreport.cgi?bug=3174
