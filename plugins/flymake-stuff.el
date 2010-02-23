@@ -34,11 +34,11 @@ tramp is not loaded, or this file isn't being edited via tramp."
                        (tramp-list-remote-buffers)))))
     (flymake-mode 1)))
 
-(mapcar '(lambda (x)
-          (let ((mode-hook (intern (concat (symbol-name x) "-hook"))))
-            (add-hook mode-hook
-                      'turn-on-flymake-if-local)))
-        flymake-modes)
+(mapc '(lambda (x)
+        (let ((mode-hook (intern (concat (symbol-name x) "-hook"))))
+          (add-hook mode-hook
+                    'turn-on-flymake-if-local)))
+      flymake-modes)
 
 ;; Prepend a different java handler, since flymake defaults to using Makefiles
 ;; TODO: this doesn't actually work - running flymake on java hangs emacs

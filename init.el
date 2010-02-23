@@ -62,15 +62,14 @@
 (set-language-environment "UTF-8")
 
 
-;; Plugins
+;; Plugins - add plugins dir, vendors dir, and all dirs under vendor
+;; excluding . and ..
 (add-to-list 'load-path "~/.emacs.d/plugins")
-(add-to-list 'load-path "~/.emacs.d/plugins/vendor/")
-(add-to-list 'load-path "~/.emacs.d/plugins/vendor/emacs-goodies")
-(add-to-list 'load-path "~/.emacs.d/plugins/vendor/js2")
-(add-to-list 'load-path "~/.emacs.d/plugins/vendor/python-mode")
-(add-to-list 'load-path "~/.emacs.d/plugins/vendor/php-mode")
-(add-to-list 'load-path "~/.emacs.d/plugins/vendor/slime")
-(add-to-list 'load-path "~/.emacs.d/plugins/vendor/erlang")
+(add-to-list 'load-path "~/.emacs.d/plugins/vendor")
+(dolist (dir (directory-files "~/.emacs.d/plugins/vendor" t "^[^.]"))
+  (when (file-directory-p dir)
+    (add-to-list 'load-path dir)))
+
 ; Others'
 (require 'saveplace)
 (require 'tex-site)                     ; auctex mode
@@ -150,7 +149,7 @@
               fill-column 80)           ; default of 72 is too narrow
 (put 'upcase-region 'disabled nil)
 (fset 'yes-or-no-p 'y-or-n-p)            ; stop forcing me to spell out "yes"
-
+;; TODO: find a way to stop auto-saving files while editing under tramp
 
 ; Uniquifying
 (setq uniquify-buffer-name-style 'reverse)
@@ -210,11 +209,11 @@
   (highlight-beyond-fill-column))
 
 ; Add a common hook to every programming mode
-(mapcar '(lambda (x)
-          ; Get the mode's name and turn that into a mode hook
-          (let ((mode-hook (intern (concat (symbol-name x) "-hook"))))
-            (add-hook mode-hook 'programming-mode-hook)))
-        programming-modes)
+(mapc '(lambda (x)
+        ; Get the mode's name and turn that into a mode hook
+        (let ((mode-hook (intern (concat (symbol-name x) "-hook"))))
+          (add-hook mode-hook 'programming-mode-hook)))
+      programming-modes)
 
 (add-hook 'text-mode-hook
           '(lambda ()
@@ -223,11 +222,11 @@
 ; Trailing whitespace is annoying in some modes
 (defvar no-trailing-whitespace-modes '(shell-mode slime-repl-mode))
 
-(mapcar '(lambda (x)
-          (let ((mode-hook (intern (concat (symbol-name x) "-hook"))))
-            (add-hook mode-hook '(lambda ()
-                                  (setq show-trailing-whitespace nil)))))
-        no-trailing-whitespace-modes)
+(mapc '(lambda (x)
+        (let ((mode-hook (intern (concat (symbol-name x) "-hook"))))
+          (add-hook mode-hook '(lambda ()
+                                (setq show-trailing-whitespace nil)))))
+      no-trailing-whitespace-modes)
 
 
 ;; Mouse wheel scrolling in xterm

@@ -28,12 +28,12 @@
 ;;   (add-hook hook 'turn-on-cldoc-mode))
 
 ;; ElDoc mode for modes that support it
-;; (defvar eldoc-supported-modes '(emacs-lisp-mode))
+(defvar eldoc-supported-modes '(emacs-lisp-mode))
 
-;; (mapcar '(lambda (x)
-;;           (let ((mode-hook (intern (concat (symbol-name x) "-hook"))))
-;;             (add-hook mode-hook 'turn-on-eldoc-mode)))
-;;         eldoc-supported-modes)
+(mapc '(lambda (x)
+        (let ((mode-hook (intern (concat (symbol-name x) "-hook"))))
+          (add-hook mode-hook 'turn-on-eldoc-mode)))
+      eldoc-supported-modes)
 
 ;; need this on the Mac - maybe it's a 22.x thing?
 (if (eq window-system 'ns)              ;used to be 'mac'
