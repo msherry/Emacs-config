@@ -8,11 +8,12 @@
 
 ;; While emacs23 handles greek poorly on the mac, use a different font. See last
 ;; http ref in plugins/lambda.el. Also stop using a chinese font for japanese
-;; kanji
-
-(set-fontset-font "fontset-startup"
-                  'greek-iso8859-7
-                  "-apple-Andale_Mono-medium-normal-normal-*-14-*-*-*-p-0-iso10646-1")
+;; kanji. "fontset-startup" (or fontsets at all, it seems) don't exist in 22, so
+;; only do this on the mac for now
+(when (eq system-type 'darwin)
+  (set-fontset-font "fontset-startup"
+		    'greek-iso8859-7
+		    "-apple-Andale_Mono-medium-normal-normal-*-14-*-*-*-p-0-iso10646-1"))
 ;; TODO: this seems to override more than just japanese - even greek
 ;; (set-fontset-font "fontset-startup"
 ;;                   'japanese-jisx0208
