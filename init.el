@@ -249,16 +249,14 @@
 (ad-activate 'dired-mark-files-containing-regexp)
 
 (defadvice py-shift-region-left (after keep-region-active
-                                       (start end &optional count))
+                                       (start end &optional count) activate)
   "Keep the region active so we can do multiple shifts"
   (setq deactivate-mark nil))
-(ad-activate 'py-shift-region-left)
 
 (defadvice py-shift-region-right (after keep-region-active
-                                       (start end &optional count))
+                                       (start end &optional count) activate)
   "Keep the region active so we can do multiple shifts"
   (setq deactivate-mark nil))
-(ad-activate 'py-shift-region-right)
 
 (custom-set-faces
   ;; custom-set-faces was added by Custom.
@@ -269,3 +267,79 @@
  '(ediff-even-diff-B ((((class color) (min-colors 16)) (:background "Grey" :foreground "black"))))
  ;; Called both cyan and brightcyan
  '(region ((((class color) (min-colors 24)) (:background "#00ffff")))))
+
+
+;; Email stuff
+(require 'gnus)
+(require 'starttls)
+(require 'mm-decode)
+
+(setq user-mail-address "msherry@gmail.com")
+(setq user-full-name "Marc Sherry")
+
+(setq gnus-select-method '(nnimap "gmail"
+                           (nnimap-address "imap.gmail.com")
+                           (nnimap-server-port 993)
+                           (nnimap-authinfo-file "~/.authinfo")
+                           (nnimap-stream ssl))
+      gnus-secondary-select-methods '((nnimap "imo"
+                                       (nnimap-address "imap.gmail.com")
+                                       (nnimap-server-port 993)
+                                       (nnimap-authinfo-file "~/.authinfo-imo")
+                                       (nnimap-stream ssl)))
+      gnus-use-full-window nil)
+
+(setq gnus-thread-sort-functions
+      '((not gnus-thread-sort-by-date)))
+
+(setq smtpmail-starttls-credentials '(("smtp.gmail.com" 587 nil nil))
+      smtpmail-smtp-server "smtp.gmail.com"
+      smtpmail-default-smtp-server "smtp.gmail.com"
+      send-mail-function 'smtpmail-send-it
+      message-send-mail-function 'smtpmail-send-it
+      smtpmail-smtp-service 587
+      smtpmail-auth-credentials '(("smtp.gmail.com" 587 "msherry@gmail.com" nil))
+      smtpmail-debug-info t
+      smtpmail-debug-verb t)
+
+(setq smtpmail-local-domain nil)
+(setq gnus-permanently-visible-groups "\\(.*INBOX\\|.*Feedback\\)")
+(executable-find starttls-program)
+
+;; Default from address for outgoing mail is msherry@gmail.com, but if we detect
+;; @imo.im in the headers, use that instead
+(defadvice smtpmail-send-it (around google-apps-message-send-mail
+                                     protect activate)
+  (interactive "P")
+  (if (save-restriction
+        (message-narrow-to-headers)
+        (string-match "imo.im" (message-fetch-field "from")))
+      (let ((smtpmail-auth-credentials '(("smtp.gmail.com" 587 "marc@imo.im" nil))))
+        ad-do-it)
+      ad-do-it))
+
+;; (Require 'pop3)
+;; (add-to-list 'gnus-secondary-select-methods
+;;              '(nnml ""))
+
+;; (setq gnus-posting-styles
+;;    '((".*" (name "Marc Sherry"))))
+
+;; (setq mail-sources
+;;       '((pop :server "pop.gmail.com"
+;; 	     :port 995
+;; 	     :user "msherry"
+;; 	     :connection ssl
+;; 	     :leave t)))
+
+;; (setq gnus-permanently-visible-groups "mail")
+
+;; (setq starttls-use-gnutls t)
+
+;; (setq message-send-mail-function 'smtpmail-send-it
+;;       smtpmail-starttls-credentials '(("smtp.gmail.com" 587 nil nil))
+;;       smtpmail-auth-credentials '(("smtp.gmail.com" 587 "msherry@gmail.com" nil))
+;;       smtpmail-default-smtp-server "smtp.gmail.com"
+;;       smtpmail-smtp-server "smtp.gmail.com"
+;;       smtpmail-smtp-service 587
+;;       smtpmail-local-domain "imo.im")
