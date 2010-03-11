@@ -49,7 +49,8 @@ tramp is not loaded, or this file isn't being edited via tramp."
 ;; This doesn't strictly depend on flymake, but the side effect of having
 ;; python-check-command set is nice.
 (defun dired-mark-python-with-errors (&optional marker-char)
-  "Mark all files with contents containing REGEXP for use in later commands.
+  "Run `python-check-command' on all python files in directory, and mark all
+files containing errors for use in later commands.
 A prefix argument means to unmark them instead.
 `.' and `..' are never marked."
   (interactive
