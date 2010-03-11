@@ -36,6 +36,10 @@ message to display, so there is one ;)"
   "Display the error in the mini-buffer rather than having to mouse over it"
   (show-fly-err-at-point))
 
+(defadvice flymake-highlight-err-lines (after display-message activate compile)
+  "Display errors once flymake highlights them in case we're on that line"
+  (show-fly-err-at-point))
+
 (defadvice flymake-mode (before post-command-stuff activate compile)
   "Add functionality to the post command hook so that if the
 cursor is sitting on a flymake error the error information is
