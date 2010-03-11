@@ -26,8 +26,7 @@
   "Turn on flymake mode if buffer's directory is writable and
 tramp is not loaded, or this file isn't being edited via tramp."
   (when (and buffer-file-name
-             (file-writable-p
-              (file-name-directory buffer-file-name))
+             (file-writable-p (file-name-directory buffer-file-name))
              (or (not (fboundp 'tramp-list-remote-buffers))
                  (not (member
                        (current-buffer)
@@ -56,8 +55,6 @@ A prefix argument means to unmark them instead.
   (interactive
    (list (if current-prefix-arg ?\040)))
   (let ((dired-marker-char (or marker-char dired-marker-char)))
-    (if (get-buffer "*dired-mark-python-with-errors*")
-        (kill-buffer "*dired-mark-python-with-errors*"))
     (dired-mark-if
      (and (not (looking-at dired-re-dot))
           (not (eolp))			; empty line
@@ -68,13 +65,9 @@ A prefix argument means to unmark them instead.
               (progn
                 (message "Checking %s" fn)
                 (> (call-process-shell-command
-                    (concat python-check-command " " fn)
-                    nil
-                    "*dired-mark-python-with-errors*")
+                    (concat python-check-command " " fn) nil nil)
                    0)))))
-     "errorful file")
-    (if (get-buffer "*dired-mark-python-with-errors*")
-        (kill-buffer "*dired-mark-python-with-errors*"))))
+     "errorful file")))
 
 ;; Provide dired with a way of calling dired-mark-python-with-errors
 (when (load "dired" t)

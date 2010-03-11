@@ -249,15 +249,17 @@
   (dired-unmark-all-files ?\r))
 (ad-activate 'dired-mark-files-containing-regexp)
 
-(defadvice py-shift-region-left (after keep-region-active
+(defadvice py-shift-region-left (around keep-region-active
                                        (start end &optional count) activate)
   "Keep the region active so we can do multiple shifts"
-  (setq deactivate-mark nil))
+  (let ((deactivate-mark nil))
+    ad-do-it))
 
-(defadvice py-shift-region-right (after keep-region-active
+(defadvice py-shift-region-right (around keep-region-active
                                        (start end &optional count) activate)
   "Keep the region active so we can do multiple shifts"
-  (setq deactivate-mark nil))
+  (let ((deactivate-mark nil))
+    ad-do-it))
 
 (custom-set-faces
   ;; custom-set-faces was added by Custom.
