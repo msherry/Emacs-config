@@ -7,7 +7,7 @@
 
 ; On-the-fly pyflakes checking
 (defvar python-check-command (if (eq system-type 'darwin)
-                                 "pyflakes-2.5" ; dumb
+                                 "pyflakes-2.6" ; dumb
                                  "pyflakes"))
 (when (load "flymake" t)
   (defun flymake-pyflakes-init ()
@@ -44,5 +44,36 @@ tramp is not loaded, or this file isn't being edited via tramp."
 ;; TODO: this doesn't actually work - running flymake on java hangs emacs
 ;; (push '("\\.java\\'" flymake-simple-ant-java-init flymake-simple-java-cleanup)
 ;;       flymake-allowed-file-name-masks)
+
+
+;; This doesn't strictly depend on flymake, but the side effect of having
+;; python-check-command set is nice.
+(defun dired-mark-python-with-errors (&optional marker-char)
+  "Mark all files with contents containing REGEXP for use in later commands.
+A prefix argument means to unmark them instead.
+`.' and `..' are never marked."
+  (interactive
+   (list (if current-prefix-arg ?\040)))
+  (let ((dired-marker-char (or marker-char dired-marker-char)))
+    (if (get-buffer "*dired-mark-python-with-errors*")
+        (kill-buffer "*dired-mark-python-with-errors*"))
+    (dired-mark-if
+     (and (not (looking-at dired-re-dot))
+          (not (eolp))			; empty line
+          (let ((fn (dired-get-filename nil t)))
+            (when (and fn (file-readable-p fn)
+                       (not (file-directory-p fn))
+                       (string-match "\.py$" fn))
+              (progn
+                (message "Checking %s" fn)
+                (> (call-process-shell-command (concat python-check-command " " fn) nil "*dired-mark-python-with-errors*")
+                   0)))))
+     "errorful file")
+    (if (get-buffer "*dired-mark-python-with-errors*")
+        (kill-buffer "*dired-mark-python-with-errors*"))))
+
+;; Provide dired with a way of calling dired-mark-python-with-errors
+(when (load "dired" t)
+  (define-key dired-mode-map (kbd "% p") 'dired-mark-python-with-errors))
 
 (provide 'flymake-stuff)
