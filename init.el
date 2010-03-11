@@ -244,10 +244,10 @@
 
 ;; Modify functions that aren't quite right
 (defadvice dired-mark-files-containing-regexp (before unmark-all-first
-                                                      (regexp &optional marker-char))
+                                                      (regexp &optional marker-char)
+                                                      activate)
   "Unmark marked files in dired mode before searching for new ones"
   (dired-unmark-all-files ?\r))
-(ad-activate 'dired-mark-files-containing-regexp)
 
 (defadvice py-shift-region-left (around keep-region-active
                                        (start end &optional count) activate)
