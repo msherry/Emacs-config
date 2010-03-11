@@ -67,7 +67,10 @@ A prefix argument means to unmark them instead.
                        (string-match "\.py$" fn))
               (progn
                 (message "Checking %s" fn)
-                (> (call-process-shell-command (concat python-check-command " " fn) nil "*dired-mark-python-with-errors*")
+                (> (call-process-shell-command
+                    (concat python-check-command " " fn)
+                    nil
+                    "*dired-mark-python-with-errors*")
                    0)))))
      "errorful file")
     (if (get-buffer "*dired-mark-python-with-errors*")
