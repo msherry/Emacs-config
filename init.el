@@ -36,6 +36,7 @@
 ;; I edit this file a lot, so put it in a register
 (set-register ?z '(file . "~/.emacs.d/init.el"))
 (set-register ?l '(file . "~/Desktop/notes-for-lyd.txt"))
+(set-register ?g '(file . "~/imo.im/trunk/imo/imop/GraphHead.py"))
 (set-register ?t '(file . "~/TODO.org"))
 (set-register ?b '(file . "/imo25:/var/www/run_on_first_boot"))
 (set-register ?k '(file . "/athens:imo.im/branches/kodama"))
@@ -61,7 +62,6 @@
 
 ;; Set up environment
 (set-language-environment "UTF-8")
-
 
 ;; Plugins - add plugins dir, vendors dir, and all dirs under vendor
 ;; excluding . and ..
@@ -143,8 +143,13 @@
       vc-delete-logbuf-window nil       ; don't close vc window when done
       vc-follow-symlinks t              ; don't always ask
 ; put the dabbrev (regular M-/ functionality) first
-      hippie-expand-try-functions-list '(try-expand-dabbrev try-expand-dabbrev-all-buffers try-expand-dabbrev-from-kill try-complete-file-name-partially try-complete-file-name try-expand-all-abbrevs try-expand-list try-expand-line try-complete-lisp-symbol-partially try-complete-lisp-symbol)
-      ediff-window-setup-function 'ediff-setup-windows-plain) ; same window, pls
+      hippie-expand-try-functions-list '(try-expand-dabbrev
+          try-expand-dabbrev-all-buffers try-expand-dabbrev-from-kill
+          try-complete-file-name-partially try-complete-file-name
+          try-expand-all-abbrevs try-expand-list try-expand-line
+          try-complete-lisp-symbol-partially try-complete-lisp-symbol)
+      ediff-window-setup-function 'ediff-setup-windows-plain ; same window, pls
+      mouse-yank-at-point t)            ; middle-click paste at point, not mouse
 
 (setq-default show-trailing-whitespace t
               fill-column 80)           ; default of 72 is too narrow
@@ -177,6 +182,7 @@
 ; Don't prompt when creating scratch buffers
 (setq iswitchb-prompt-newbuffer nil)
 
+
 ; Give us the ability to leave certain words highlighted - always got jealous
 ; when I saw this in vim
 (global-hi-lock-mode 1)
@@ -207,7 +213,8 @@
   (add-todo-to-current-mode)
   (flyspell-prog-mode)
   (really-set-keys)
-  (highlight-beyond-fill-column))
+  (highlight-beyond-fill-column)
+  (font-lock-fontify-numbers))
 
 ; Add a common hook to every programming mode
 (mapc '(lambda (x)
