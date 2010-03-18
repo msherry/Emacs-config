@@ -6,6 +6,9 @@
 (setq save-place-file "~/.emacs.d/emacs-places"
       backup-directory-alist '(("." . "~/.emacs.d/backups")))
 
+; Seed RNG
+(random t)
+
 ;; While emacs23 handles greek poorly on the mac, use a different font. See last
 ;; http ref in plugins/lambda.el. Also stop using a chinese font for japanese
 ;; kanji. "fontset-startup" (or fontsets at all, it seems) don't exist in 22, so
@@ -89,6 +92,7 @@
 (require 'flymake-stuff)
 (require 'old-emacs-git)
 (require 'lambda)
+(require 'totd)
 ; Autoloads
 (autoload 'js2-mode "js2" nil t)
 (autoload 'actionscript-mode "actionscript" nil t)
