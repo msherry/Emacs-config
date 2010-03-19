@@ -41,7 +41,7 @@
 (set-register ?l '(file . "~/Desktop/notes-for-lyd.txt"))
 (set-register ?g '(file . "~/imo.im/trunk/imo/imop/GraphHead.py"))
 (set-register ?t '(file . "~/TODO.org"))
-(set-register ?b '(file . "/imo25:/var/www/run_on_first_boot"))
+(set-register ?b '(file . "/imo25:imo.im/trunk/scripts/host/root/run_on_first_boot"))
 (set-register ?k '(file . "/athens:imo.im/branches/kodama"))
 
 (defun set-path-from-shell ()

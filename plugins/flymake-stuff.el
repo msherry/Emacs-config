@@ -9,16 +9,17 @@
 (defvar python-check-command (if (eq system-type 'darwin)
                                  "pyflakes-2.6" ; dumb
                                  "pyflakes"))
-(when (load "flymake" t)
-  (defun flymake-pyflakes-init ()
-    (let* ((temp-file (flymake-init-create-temp-buffer-copy
-                       'flymake-create-temp-inplace))
-           (local-file (file-relative-name
-                        temp-file
-                        (file-name-directory buffer-file-name))))
-      (list python-check-command (list local-file))))
-  (add-to-list 'flymake-allowed-file-name-masks
-               '("\\.py\\'" flymake-pyflakes-init)))
+(eval-after-load "flymake"
+  '(progn
+    (defun flymake-pyflakes-init ()
+      (let* ((temp-file (flymake-init-create-temp-buffer-copy
+                         'flymake-create-temp-inplace))
+             (local-file (file-relative-name
+                          temp-file
+                          (file-name-directory buffer-file-name))))
+        (list python-check-command (list local-file))))
+    (add-to-list 'flymake-allowed-file-name-masks
+     '("\\.py\\'" flymake-pyflakes-init))))
 
 (defvar flymake-modes '(python-mode c-mode-common))   ;c-mode-common is a pain to get working
 
@@ -70,7 +71,8 @@ A prefix argument means to unmark them instead.
      "errorful file")))
 
 ;; Provide dired with a way of calling dired-mark-python-with-errors
-(when (load "dired" t)
-  (define-key dired-mode-map (kbd "% p") 'dired-mark-python-with-errors))
+(eval-after-load "dired"
+  '(progn
+    (define-key dired-mode-map (kbd "% p") 'dired-mark-python-with-errors)))
 
 (provide 'flymake-stuff)

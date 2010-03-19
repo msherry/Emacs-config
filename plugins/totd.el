@@ -1,3 +1,5 @@
+(require 'cl)
+
 (defun totd ()
   "Tip of the day.
 
