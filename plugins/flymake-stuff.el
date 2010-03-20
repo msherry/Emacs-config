@@ -6,9 +6,16 @@
 (setq flymake-gui-warnings-enabled nil)
 
 ; On-the-fly pyflakes checking
-(defvar python-check-command (if (eq system-type 'darwin)
+(defvar pyflakes-command (if (eq system-type 'darwin)
                                  "pyflakes-2.6" ; dumb
                                  "pyflakes"))
+
+; Script that runs pyflakes, pep8, and maybe pydo
+(defvar python-multiple-checker-command "~/.emacs.d/plugins/pycheckers.py")
+
+; Which checker should we use?
+(defvar python-check-command pyflakes-command)
+
 (eval-after-load "flymake"
   '(progn
     (defun flymake-pyflakes-init ()

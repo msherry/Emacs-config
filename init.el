@@ -141,7 +141,6 @@
       truncate-partial-width-windows nil
       ediff-split-window-function 'split-window-horizontally
 ; Functionality
-      save-place t
       require-final-newline 'visit-save ; add on both visit and save
       inferior-erlang-prompt-timeout t
       vc-delete-logbuf-window nil       ; don't close vc window when done
@@ -156,7 +155,8 @@
       mouse-yank-at-point t)            ; middle-click paste at point, not mouse
 
 (setq-default show-trailing-whitespace t
-              fill-column 80)           ; default of 72 is too narrow
+              fill-column 80            ; default of 72 is too narrow
+              save-place t)             ; This didn't used to be buffer-local
 (put 'upcase-region 'disabled nil)
 (fset 'yes-or-no-p 'y-or-n-p)            ; stop forcing me to spell out "yes"
 ;; TODO: find a way to stop auto-saving files while editing under tramp
