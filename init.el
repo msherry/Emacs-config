@@ -76,7 +76,10 @@
 
 ; Others'
 (require 'saveplace)
-(require 'tex-site)                     ; auctex mode
+; Doesn't work on Ubuntu 8.04 with emacs 23
+(when (not (and (>= emacs-major-version 23)
+		(eq system-type 'gnu/linux)))
+  (require 'tex-site))                     ; auctex mode
 (require 'erlang-start)
 (require 'slime-autoloads)
 (require 'flymake-point) ; shows errors in the minibuffer when highlighted
@@ -122,8 +125,11 @@
 
 
 ;; Other settings that 23 broke
-(setq mac-command-modifier 'meta
-      ring-bell-function 'ignore)
+(when (>= emacs-major-version 23)
+    (setq mac-command-modifier 'meta
+          ring-bell-function 'ignore
+          split-height-threshold nil))       ; TODO: Not sure this is good - only
+                                        ; seems needed in a terminal on Linux
 (blink-cursor-mode 1)
 (global-set-key (kbd "C-l") 'recenter)  ; recenter-top-bottom? No thanks
 
