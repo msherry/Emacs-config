@@ -45,9 +45,9 @@
 (defun font-lock-fontify-numbers ()
  "Use this function as a hook to fontify numbers as constant"
   (font-lock-add-keywords nil
-      '(("[^a-zA-Z_]\\(0x[0-9a-fA-F]+\\)" 1 font-lock-constant-face) ; hex
-        ("[^a-zA-Z_]\\(-?[0-9]+\\.[0-9]+\\)" 1 font-lock-constant-face) ; float
-        ("[^a-zA-Z_1-9]\\(-?[0-9]+L?\\)" 1 font-lock-constant-face)))) ; int
+      '(("\\(?:[\s]\\|^\\)\\(0x[0-9a-fA-F]+\\)" 1 font-lock-constant-face) ; hex
+        ("\\(?:[\s]\\|^\\)\\(-?[0-9]+\\.[0-9]+\\)" 1 font-lock-constant-face) ; float
+        ("\\(?:[\s]\\|^\\)\\(-?[0-9]+L?\\)" 1 font-lock-constant-face)))) ; int
 
 
 (provide 'custom-faces)

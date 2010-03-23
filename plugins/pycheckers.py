@@ -36,13 +36,15 @@ unknown.
 
 # Checkers to run be default, when no --checkers options are supplied.
 # One or more of pydo, pep8 or pyflakes, separated by commas
-default_checkers = 'pep8, pyflakes-2.6'
+# default_checkers = 'pep8, pyflakes'
+default_checkers = 'pyflakes'
 
 # A list of error codes to ignore.
 # default_ignore_codes = ['E225', 'W114']
 default_ignore_codes = \
     [
     'E221',                             # Multiple spaces before operator
+    'E225',                             # Missing whitespace around operator
     'E231',                             # Missing whitespace after ':'
     'E302',                             # Expected 2 blank lines, found 1
     'E303',                             # Too many blank lines
@@ -96,6 +98,8 @@ class LintRunner(object):
         args.extend(self.run_flags)
         args.append(filename)
 
+        errors_or_warnings = 0
+
         try:
             process = Popen(args, stdout=PIPE, stderr=PIPE)
         except Exception, e:
@@ -108,6 +112,7 @@ class LintRunner(object):
                 tokens = dict(self.output_template)
                 tokens.update(self.fixup_data(line, match))
                 print self.output_format % tokens
+                errors_or_warnings += 1
 
         for line in process.stderr:
             match = self.process_output(line)
@@ -115,6 +120,9 @@ class LintRunner(object):
                 tokens = dict(self.output_template)
                 tokens.update(self.fixup_data(line, match))
                 print self.output_format % tokens
+                errors_or_warnings += 1
+
+        return errors_or_warnings
 
 
 class PyflakesRunner(LintRunner):
@@ -216,7 +224,7 @@ def croak(*msgs):
 
 
 RUNNERS = {
-    'pyflakes-2.6': PyflakesRunner,
+    'pyflakes': PyflakesRunner,
     'pep8': Pep8Runner,
     'pydo': PydoRunner,
     }
@@ -256,6 +264,7 @@ if __name__ == '__main__':
         checkers = default_checkers
         ignore_codes = default_ignore_codes
 
+    errors_or_warnings = 0
     for checker in checkers.split(','):
         try:
             cls = RUNNERS[checker.strip()]
@@ -263,6 +272,9 @@ if __name__ == '__main__':
             croak(("Unknown checker %s" % checker),
                   ("Expected one of %s" % ', '.join(RUNNERS.keys())))
         runner = cls(ignore_codes=ignore_codes)
-        runner.run(source_file)
+        errors_or_warnings += runner.run(source_file)
 
-    sys.exit(0)
+    exit_status = 0
+    if errors_or_warnings > 0:
+        exit_status = 1
+    sys.exit(exit_status)
