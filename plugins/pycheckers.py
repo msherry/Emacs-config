@@ -37,7 +37,7 @@ unknown.
 # Checkers to run be default, when no --checkers options are supplied.
 # One or more of pydo, pep8 or pyflakes, separated by commas
 # default_checkers = 'pep8, pyflakes'
-default_checkers = 'pyflakes'
+default_checkers = 'pyflakes,pep8'
 
 # A list of error codes to ignore.
 # default_ignore_codes = ['E225', 'W114']
@@ -137,7 +137,11 @@ class PyflakesRunner(LintRunner):
             ^
     """
 
-    command = 'pyflakes-2.6'
+    # On the mac, we have 'pyflakes-2.6', but on linux, just pyflakes. A symlink
+    # might be easier, but this is probably more robust
+    command = 'pyflakes'
+    if sys.platform == 'darwin':
+        command = 'pyflakes-2.6'
 
     output_matcher = re.compile(
         r'(?P<filename>[^:]+):'

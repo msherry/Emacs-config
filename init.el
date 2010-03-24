@@ -93,7 +93,8 @@
 (require 'lisp-customization)
 (require 'custom-faces)
 (require 'flymake-stuff)
-(require 'old-emacs-git)
+(when (< emacs-major-version 23)
+  (require 'old-emacs-git))
 (require 'lambda)
 (require 'totd)
 ; Autoloads
@@ -128,8 +129,9 @@
 (when (>= emacs-major-version 23)
     (setq mac-command-modifier 'meta
           ring-bell-function 'ignore
-          split-height-threshold nil))       ; TODO: Not sure this is good - only
-                                        ; seems needed in a terminal on Linux
+          split-height-threshold nil))       ; TODO: Not sure this is good -
+                                             ; only seems needed in a terminal
+                                             ; on Linux
 (blink-cursor-mode 1)
 (global-set-key (kbd "C-l") 'recenter)  ; recenter-top-bottom? No thanks
 
@@ -267,13 +269,13 @@
   (dired-unmark-all-files ?\r))
 
 (defadvice py-shift-region-left (around keep-region-active
-                                       (start end &optional count) activate)
+                                        (start end &optional count) activate)
   "Keep the region active so we can do multiple shifts"
   (let ((deactivate-mark nil))
     ad-do-it))
 
 (defadvice py-shift-region-right (around keep-region-active
-                                       (start end &optional count) activate)
+                                         (start end &optional count) activate)
   "Keep the region active so we can do multiple shifts"
   (let ((deactivate-mark nil))
     ad-do-it))

@@ -11,10 +11,10 @@
                                  "pyflakes"))
 
 ; Script that runs pyflakes, pep8, and maybe pydo
-(defvar python-multiple-checker-command "~/.emacs.d/plugins/pycheckers.py")
+(defvar python-multiple-checker-command "~/.emacs.d/plugins/pycheckers.py -c pyflakes")
 
 ; Which checker should we use?
-(defvar python-check-command pyflakes-command)
+(defvar python-check-command python-multiple-checker-command)
 
 (eval-after-load "flymake"
   '(progn
