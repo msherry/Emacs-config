@@ -43,9 +43,12 @@ default_checkers = 'pyflakes,pep8'
 # default_ignore_codes = ['E225', 'W114']
 default_ignore_codes = \
     [
+    'E202',                             # Whitespace before ']'
     'E221',                             # Multiple spaces before operator
     'E225',                             # Missing whitespace around operator
     'E231',                             # Missing whitespace after ':'
+    'E241',                             # Multiple spaces after ':'
+    'W291',                             # Trailing whitespace
     'E302',                             # Expected 2 blank lines, found 1
     'E303',                             # Too many blank lines
     'E401',                             # Multiple imports on one line
@@ -153,6 +156,8 @@ class PyflakesRunner(LintRunner):
         if 'imported but unused' in data['description']:
             data['level'] = 'WARNING'
         elif 'redefinition of unused' in data['description']:
+            data['level'] = 'WARNING'
+        elif 'assigned to but never used' in data['description']:
             data['level'] = 'WARNING'
         else:
             data['level'] = 'ERROR'
