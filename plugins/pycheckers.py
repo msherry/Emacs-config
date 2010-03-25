@@ -280,6 +280,7 @@ if __name__ == '__main__':
         except KeyError:
             croak(("Unknown checker %s" % checker),
                   ("Expected one of %s" % ', '.join(RUNNERS.keys())))
+            break
         runner = cls(ignore_codes=ignore_codes)
         errors_or_warnings += runner.run(source_file)
 

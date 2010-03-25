@@ -57,11 +57,13 @@
       (kill-buffer nil))))
 (set-path-from-shell)
 
-; That doesn't work on the mac - retarded. Bring in the macports paths
-; ourselves, both for emacs and subprocesses
-(add-to-list 'exec-path "/opt/local/bin")
-(add-to-list 'exec-path "/usr/local/bin")
-(setenv "PATH" (concat "/usr/local/bin:/opt/local/bin:/opt/local/mysql/bin:/opt/local/sbin:" (getenv "PATH")))
+; That doesn't work on the mac because it's started from the dock -
+; retarded. Bring in the macports paths ourselves, both for emacs and
+; subprocesses
+(when (eq window-system 'ns)
+  (add-to-list 'exec-path "/usr/local/bin")
+  (add-to-list 'exec-path "/opt/local/bin")
+  (setenv "PATH" (concat "/usr/local/bin:/opt/local/bin:/opt/local/mysql/bin:/opt/local/sbin:" (getenv "PATH"))))
 
 ;; Set up environment
 (set-language-environment "UTF-8")
