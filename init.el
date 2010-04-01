@@ -131,9 +131,10 @@
 (when (>= emacs-major-version 23)
     (setq mac-command-modifier 'meta
           ring-bell-function 'ignore
-          split-height-threshold nil))       ; TODO: Not sure this is good -
-                                             ; only seems needed in a terminal
-                                             ; on Linux
+          line-move-visual nil              ; I'm used to logical lines, not visible
+          split-height-threshold nil))      ; TODO: Not sure this is good -
+                                            ; only seems needed in a terminal
+                                            ; on Linux
 (blink-cursor-mode 1)
 (global-set-key (kbd "C-l") 'recenter)  ; recenter-top-bottom? No thanks
 
