@@ -131,7 +131,7 @@
 (when (>= emacs-major-version 23)
     (setq mac-command-modifier 'meta
           ring-bell-function 'ignore
-          line-move-visual nil              ; I'm used to logical lines, not visible
+          ;; line-move-visual nil           ; I'm used to logical lines, not visible
           split-height-threshold nil))      ; TODO: Not sure this is good -
                                             ; only seems needed in a terminal
                                             ; on Linux
