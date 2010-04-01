@@ -242,7 +242,8 @@
             (flyspell-mode t)))
 
 ; Trailing whitespace is annoying in some modes
-(defvar no-trailing-whitespace-modes '(shell-mode slime-repl-mode))
+(defvar no-trailing-whitespace-modes '(shell-mode slime-repl-mode text-mode
+                                       fundamental-mode))
 
 (mapc '(lambda (x)
         (let ((mode-hook (intern (concat (symbol-name x) "-hook"))))
