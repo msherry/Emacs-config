@@ -57,7 +57,9 @@ tramp is not loaded, or this file isn't being edited via tramp."
 
 
 ;; This doesn't strictly depend on flymake, but the side effect of having
-;; python-check-command set is nice.
+;; python-check-command set is nice. XXX Actually, we always use
+;; pyflakes-command now, since python-check-command may be set up to give us
+;; PEP8 style warnings.
 (defun dired-mark-python-with-errors (&optional marker-char)
   "Run `python-check-command' on all python files in directory, and mark all
 files containing errors for use in later commands.
@@ -76,7 +78,7 @@ A prefix argument means to unmark them instead.
               (progn
                 (message "Checking %s" fn)
                 (> (call-process-shell-command
-                    (concat python-check-command " " fn) nil nil)
+                    (concat pyflakes-command " " fn) nil nil)
                    0)))))
      "errorful file")))
 

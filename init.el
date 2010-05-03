@@ -39,7 +39,7 @@
 ;; I edit this file a lot, so put it in a register
 (set-register ?z '(file . "~/.emacs.d/init.el"))
 (set-register ?l '(file . "~/Desktop/notes-for-lyd.txt"))
-(set-register ?g '(file . "~/imo.im/trunk/imo/imop/GraphHead.py"))
+(set-register ?g '(file . "~/imo.im/branches/frostbite/imo/imop/GraphHead.py"))
 (set-register ?t '(file . "~/TODO.org"))
 (set-register ?b '(file . "/imo25:imo.im/trunk/scripts/host/root/run_on_first_boot"))
 (set-register ?k '(file . "/athens:imo.im/branches/kodama"))
@@ -244,7 +244,7 @@
 
 ; Trailing whitespace is annoying in some modes
 (defvar no-trailing-whitespace-modes '(shell-mode slime-repl-mode text-mode
-                                       fundamental-mode))
+                                       fundamental-mode term-mode))
 
 (mapc '(lambda (x)
         (let ((mode-hook (intern (concat (symbol-name x) "-hook"))))
@@ -343,6 +343,12 @@
       (let ((smtpmail-auth-credentials '(("smtp.gmail.com" 587 "marc@imo.im" nil))))
         ad-do-it)
       ad-do-it))
+
+
+;; Possibly verify signatures? See http://groups.google.com/group/gnu.emacs.gnus/browse_thread/thread/31d2b93cd9077042/27db73815f125952?lnk=raot&fwc=1
+(setq mm-verify-option 'known
+      mm-decrypt-option 'known)
+(setq gnus-buttonized-mime-types '("multipart/signed" "multipart/encrypted"))
 
 ;; (Require 'pop3)
 ;; (add-to-list 'gnus-secondary-select-methods

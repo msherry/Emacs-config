@@ -43,7 +43,7 @@
     (set-face-foreground 'py-XXX-tag-face 'unspecified)))
 
 (defun font-lock-fontify-numbers ()
- "Use this function as a hook to fontify numbers as constant"
+ "Use this function as a hook to fontify numbers as constants"
   (font-lock-add-keywords nil
       '(("\\<\\(0x[0-9a-fA-F]+\\)\\>" 1 font-lock-constant-face) ; hex
         ("\\<\\(-?[0-9]+\\.[0-9]+\\)\\>" 1 font-lock-constant-face) ; float
