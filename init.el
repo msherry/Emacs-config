@@ -24,15 +24,22 @@
 
 ;; Set up GUI as soon as possible
 (when window-system
-  (if (eq system-type 'darwin)
-      (setq default-frame-alist
-            (append `((left . ,(cond ((< emacs-major-version 23) 15)
-                                     (t 8)))
-                      (top . 22)
-                      (width . 175)
-                      (height . ,(cond ((< emacs-major-version 23) 47)
-                                       (t 52))))
-                    default-frame-alist)))
+  (cond ((eq system-type 'darwin)
+         (setq default-frame-alist
+               (append `((left . ,(cond ((< emacs-major-version 23) 15)
+                                        (t 8)))
+                         (top . 22)
+                         (width . 175)
+                         (height . ,(cond ((< emacs-major-version 23) 47)
+                                          (t 52))))
+                       default-frame-alist)))
+        ((eq system-type 'gnu/linux)
+         (setq default-frame-alist
+               (append `((left . 520)
+                         (top . 48)
+                         (width . 186)
+                         (height . 87))))
+          (set-default-font "-unknown-DejaVu Sans Mono-normal-normal-normal-*-14-*-*-*-m-0-iso10646-1")))
   (if (fboundp 'tool-bar-mode) (tool-bar-mode -1)))
 ;;   (if (fboundp 'scroll-bar-mode) (scroll-bar-mode -1))
 
