@@ -50,6 +50,7 @@ default_ignore_codes = \
     'E241',                          # Multiple spaces after ':'
     'E261',                          # At least two spaces before inline comment
     'W291',                          # Trailing whitespace
+    'E301',                          # Expected 1 blank line, found 0
     'E302',                          # Expected 2 blank lines, found 1
     'E303',                          # Too many blank lines
     'E401',                          # Multiple imports on one line
