@@ -2,6 +2,8 @@
 
 ;; Custom stuff for flymake syntax checking
 
+(require 'custom-utils)
+
 ; Disable popup windows
 (setq flymake-gui-warnings-enabled nil)
 
@@ -34,14 +36,8 @@
 (defvar flymake-modes '(python-mode c-mode-common))   ;c-mode-common is a pain to get working
 
 (defun turn-on-flymake-if-local ()
-  "Turn on flymake mode if buffer's directory is writable and
-tramp is not loaded, or this file isn't being edited via tramp."
-  (when (and buffer-file-name
-             (file-writable-p (file-name-directory buffer-file-name))
-             (or (not (fboundp 'tramp-list-remote-buffers))
-                 (not (member
-                       (current-buffer)
-                       (tramp-list-remote-buffers)))))
+  "Turn on flymake mode if buffer is local and writable"
+  (when (file-is-local-and-writable-p)
     (flymake-mode 1)))
 
 (mapc '(lambda (x)

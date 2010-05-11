@@ -156,6 +156,8 @@
       inferior-erlang-prompt-timeout t
       vc-delete-logbuf-window nil       ; don't close vc window when done
       vc-follow-symlinks t              ; don't always ask
+      vc-svn-diff-switches '("-x" "-w") ; ignore whitespace in svn diffs
+
 ; put the dabbrev (regular M-/ functionality) first
       hippie-expand-try-functions-list '(try-expand-dabbrev
           try-expand-dabbrev-all-buffers try-expand-dabbrev-from-kill
@@ -170,7 +172,6 @@
               save-place t)             ; This didn't used to be buffer-local
 (put 'upcase-region 'disabled nil)
 (fset 'yes-or-no-p 'y-or-n-p)            ; stop forcing me to spell out "yes"
-;; TODO: find a way to stop auto-saving files while editing under tramp
 
 ; Uniquifying
 (setq uniquify-buffer-name-style 'reverse)
@@ -264,6 +265,11 @@
                                (interactive)
                                (scroll-up 5))))
 
+
+;; Tramp adds a hook to auto-save files. Remove it
+(remove-hook 'find-file-hook 'tramp-set-auto-save)
+;; That's not really enough to turn off auto-save remotely, so add our own hook
+;; here
 
 ;; Modify functions that aren't quite right
 (defadvice dired-mark-files-containing-regexp (before unmark-all-first
