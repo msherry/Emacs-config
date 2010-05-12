@@ -277,6 +277,12 @@
 (remove-hook 'find-file-hook 'tramp-set-auto-save)
 ;; That's not really enough to turn off auto-save remotely, so add our own hook
 ;; here
+(require 'custom-utils)
+(defun turn-off-auto-save-mode-if-tramp ()
+  (when (not (file-is-local-and-writable-p))
+    (auto-save-mode nil)))
+
+(add-hook 'find-file-hook 'turn-off-auto-save-mode-if-tramp)
 
 ;; Modify functions that aren't quite right
 (defadvice dired-mark-files-containing-regexp (before unmark-all-first
