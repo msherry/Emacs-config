@@ -10,17 +10,25 @@
 (random t)
 
 ;; While emacs23 handles greek poorly on the mac, use a different font. See last
-;; http ref in plugins/lambda.el. Also stop using a chinese font for japanese
-;; kanji. "fontset-startup" (or fontsets at all, it seems) don't exist in 22, so
-;; only do this on the mac for now
+;; http ref in plugins/lambda.el. "fontset-startup" (or fontsets at all, it
+;; seems) don't exist in 22, so only do this on the mac for now
 (when (eq system-type 'darwin)
   (set-fontset-font "fontset-startup"
-		    'greek-iso8859-7
-		    "-apple-Andale_Mono-medium-normal-normal-*-14-*-*-*-p-0-iso10646-1"))
-;; TODO: this seems to override more than just japanese - even greek
-;; (set-fontset-font "fontset-startup"
-;;                   'japanese-jisx0208
-;;                   "-apple-Osaka-medium-normal-normal-*-12-*-*-*-m-0-iso10646-1")
+                    ; used to use 'greek-iso8859-7, but that overwrote more than
+                    ; just the lambda character, so now we specify a range of 1 char
+		    '(955 . 955)
+		    "-apple-Andale_Mono-medium-normal-normal-*-14-*-*-*-p-0-iso10646-1")
+;; Use a decent japanese font for all kanji, hiragana, and katakana, rather than
+;; a crap chinese font. It seems that it's kind of random when a font is used,
+;; and can change, so we specify all three ranges manually. Obviously we could
+;; combine hiragana and katakana ranges.
+  (mapc '(lambda (x)
+            (set-fontset-font "fontset-startup"
+             x
+             "-apple-Osaka-medium-normal-normal-*-12-*-*-*-m-0-iso10646-1"))
+        '((?\x3040 . ?\x309F)           ; Hiragana
+          (?\x30A0 . ?\x30FF)           ; Katakana
+          (?\x4E00 . ?\x9FBF))))        ; Kanji
 
 ;; Set up GUI as soon as possible
 (when window-system
