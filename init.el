@@ -98,6 +98,7 @@
 (require 'tramp)
 (require 'vc-svn)
 ; Mine
+(require 'load-edict)
 (require 'tags-funcs)
 (require 'lisp-customization)
 (require 'custom-faces)

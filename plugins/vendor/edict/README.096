@@ -1,0 +1,49 @@
+
+Copyright (C) 1992 Bob Kerns <rwk@crl.dec.com>
+
+Package contents Copyright (c) 1991, 1992  Per Hammarlund <perham@nada.kth.se>
+and Copyright (c) 1992 Bob Kerns <rwk@crl.dec.com>
+
+Some code that looks for translations of english and japanese using the
+EDICTJ Public Domain japanese/english dictionary.
+
+edict.el written by Per Hammarlund <perham@nada.kth.se>
+Morphology and private dictionary handling/editing by Bob Kerns <rwk@crl.dec.com>
+International installation script by Bob Kerns <rwk@crl.dec.com>
+Helpful remarks from Ken-Ichi Handa <handa@etl.go.jp>.
+The EDICTJ PD dictionary is maintained by Jim Breen <jwb@monu6.cc.monash.edu.au>
+Your credits here if you contribute!
+
+
+This distribution includes the following files.
+
+README			You should read this file first!  (OK, you are...)
+COPYING			The GNU public license.
+edict.ChangeLog		History of changes.
+edict.el		The actual code for the dictionary lookup program.
+edict-test.el		The test suite for the dictionary lookup program.
+edict.doc		The documentation.  Read this for usage instructions.
+install.edict		The installation script, internationalized.
+			(Please contribute a language, currently only
+			Japanese, English, and Swedish.)
+Makefile		You won't need this, this is to build distributions.
+edictj.demo		A demo version of the edictj public-domain dictionary.
+			You may use this to try out the software; I suggest using
+			the words 'car' and '¼Ö' as a test cases.
+
+			You should obtain the real dictionary via
+			anonymous ftp from the /pub/Nihongo directory
+			at monu6.cc.monash.edu.au. 
+
+The installation process, ie running the install script, creates the
+following additional files:
+
+edict.elc		Compiled version of edict.el; the actual compiled library
+			code to load.
+edict.emacs		Sample code to include in your .emacs file.
+
+To run the installation script, cd to the directory containing this software,
+and do ./install.edict, and answer the questions.
+
+cd /usr/local/src/edict
+./install.edict

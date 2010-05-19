@@ -1,0 +1,23 @@
+This package was debianized by Roland Mas <lolando@debian.org> on
+Sat, 21 Apr 2001 22:34:54 +0200.
+
+It was downloaded from
+<http://turnbull.sk.tsukuba.ac.jp/Tools/XEmacs/packages/edict/>
+
+Upstream Author:
+ Per Hammarlund <perham@nada.kth.se>
+ Stephen J. Turnbull <turnbull@sk.tsukuba.ac.jp>
+
+Copyright:
+,----
+| This file is part of XEmacs.
+| 
+| It is free software; you can redistribute it and/or modify it
+| under the terms of the GNU General Public License as published by
+| the Free Software Foundation; either version 2, or (at your
+| option) any later version.
+`----
+
+On Debian systems, the GNU General Public License can be found in
+/usr/share/common-licenses (along with other commomnly-used software
+licenses).

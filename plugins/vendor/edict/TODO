@@ -1,0 +1,77 @@
+file: TODO
+
+This file lists the known outstanding bugs and assorted desirable
+changes.  The latter are divided into "prettification" (not requiring
+thinking on this maintainer's part), "to do" (actual work, but I have
+a pretty good idea how to do it), and "projects" (either I don't know
+how to do it in Emacs LISP or careful thought about user interface and
+the like is needed).
+
+Closed bugs, to do items, and projects are moved to ChangeLog but the
+remainder are not recycled.
+
+BUGS
+
+1.  Editing does not work when the dictionaries aren't loaded
+    (edict-user-dictionary is unbound).  Probably should also check
+    for existence of edict-buffer.
+2.  Completion of search methods will find insert methods, eg, need to
+    filter in the same way as history.
+3.  To conform with Makefile.FSF need to make default
+    edict-dictionary-path point to .../emacs/site-lisp/edict.
+4.  edict-standin does (aref i global-map)
+
+PRETTIFICATION
+
+1.  Move customizable variables to separate file.
+2.  Give kanjidic entries precedence in list.
+3.  Give private dictionary entries precedence in list.
+4.  The nomenclature is non-standard (use of `*' in variable names).
+    Change these to the `edict-...' style.
+5.  Fix style of docstrings and move comments into docstrings where
+    appropriate.
+6.  Move the docstring for `edict-init' back into the function.  It's
+    currently not there because XEmacs gets confused about indentation
+    if it is.
+
+TO DO
+
+1.  Maybe add a customize interface (the only thing that might want
+    customized that I know of is the proposed edict-coding-system
+    variable, but there it would be definitely useful since Custom can 
+    be set up to automatically reread EDICT, unlike setq).
+    [SJT: also *edict-files*.]
+2.  FSF compatibility.
+3.  A "report private dictionary to Jim Breen" function.
+4.  A "parse-word-at-point" function.  (I was wrong, it isn't in 
+    the current version.  Hard; you can ask for it, but I don't know
+    that I'll be able to produce a good one quickly :-)
+5.  Info documentation.
+
+PROJECTS
+
+1.  Generalization (eg for Korean/Chinese, or for Spanish/German for
+    that matter).
+2.  Error handling on file I/O etc is rude.  Especially fix the
+    `with-output-to-temp-buffer' stuff.
+3.  Why are there so many `edict-add-*' and `edict-insert-*' commands?
+4.  Make the morphology rewrite system make sense, and be consistent
+    with the docs.
+5.  kanjidic support
+6.  Figure out how to handle both FSF's functionality and XEmacs's
+    functionality portably
+7.  Use VM's tapestry.el to track window configuration, or borrow
+    from view-process-mode.el.
+8.  Bug report/feature request function.  (Use reporter.el, see
+    view-process-mode.el for how.)
+9.  Need to handle JIS X 0201 (and so on) in the dictionary as well as
+    in the key.
+10. The timing for missing/unreadable files and preregistered methods
+    is bogus.  Think and fix.
+11. "Upstream" and "external" package tracking.  Things like
+    dictionaries should be tracked at their sources for updates.
+    If you're going to have that capability, then why not the
+    capability to do this for arbitrary packages?
+12. If you're going to be automatically running off to do external
+    package tracking, then automate sending the local dictionary to
+    Jim Breen.  

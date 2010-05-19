@@ -1,0 +1,15 @@
+This package provides access to Edict from within Emacs.
+Two main commands are provided:
+
+* `edict-search-english': Search the Edict dictionary for an English
+  word.  Default word is the word at point, if any.
+
+* `edict-search-kanji': Search the dictionary for the Japanese phrase
+  in the current region.
+
+  You might want to add keybindings for these functions.  Cut and
+paste the contents of /usr/share/doc/edict-el/dot-emacs into your
+.emacs startup file.  That should bind `edict-search-english' to `M-*'
+and `edict-search-kanji' to `M-_'.
+
+Roland Mas <lolando@debian.org>, 2001-04-24

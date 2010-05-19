@@ -1,0 +1,6 @@
+;; -*-emacs-lisp-*-
+;;
+;; Sample keybindings for Edict
+
+(global-set-key "\M-_" 'edict-search-kanji)
+(global-set-key "\M-*" 'edict-search-english)
