@@ -23,9 +23,9 @@
 ;; and can change, so we specify all three ranges manually. Obviously we could
 ;; combine hiragana and katakana ranges.
   (mapc '(lambda (x)
-            (set-fontset-font "fontset-startup"
-             x
-             "-apple-Osaka-medium-normal-normal-*-12-*-*-*-m-0-iso10646-1"))
+          (set-fontset-font "fontset-startup"
+           x
+           "-apple-Osaka-medium-normal-normal-*-12-*-*-*-m-0-iso10646-1"))
         '((?\x3040 . ?\x309F)           ; Hiragana
           (?\x30A0 . ?\x30FF)           ; Katakana
           (?\x4E00 . ?\x9FBF))))        ; Kanji
