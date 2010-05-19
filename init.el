@@ -163,7 +163,6 @@
       inferior-erlang-prompt-timeout t
       vc-delete-logbuf-window nil       ; don't close vc window when done
       vc-follow-symlinks t              ; don't always ask
-      vc-svn-diff-switches '("-x" "-w") ; ignore whitespace in svn diffs
 
 ; put the dabbrev (regular M-/ functionality) first
       hippie-expand-try-functions-list '(try-expand-dabbrev
@@ -283,6 +282,15 @@
     (auto-save-mode nil)))
 
 (add-hook 'find-file-hook 'turn-off-auto-save-mode-if-tramp)
+
+
+(defun show-whitespace-in-diffs ()
+  "Toggle showing whitespace in svn diffs"
+  (interactive)
+  (setq vc-svn-diff-switches (if (eq vc-svn-diff-switches t)
+                                 '("-x" "-w")
+                                 t)))
+
 
 ;; Modify functions that aren't quite right
 (defadvice dired-mark-files-containing-regexp (before unmark-all-first
