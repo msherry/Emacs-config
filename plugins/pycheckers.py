@@ -161,6 +161,8 @@ class PyflakesRunner(LintRunner):
             data['level'] = 'WARNING'
         elif 'assigned to but never used' in data['description']:
             data['level'] = 'WARNING'
+        elif 'unable to detect undefined names' in data['description']:
+            data['level'] = 'WARNING'
         else:
             data['level'] = 'ERROR'
         data['error_type'] = 'PY'

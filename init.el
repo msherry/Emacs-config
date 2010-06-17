@@ -54,7 +54,7 @@
 ;; I edit this file a lot, so put it in a register
 (set-register ?z '(file . "~/.emacs.d/init.el"))
 (set-register ?l '(file . "~/Desktop/notes-for-lyd.txt"))
-(set-register ?g '(file . "~/imo.im/branches/frostbite/imo/imop/GraphHead.py"))
+(set-register ?g '(file . "~/imo.im/trunk/imo/imop/GraphHead.py"))
 (set-register ?t '(file . "~/TODO.org"))
 (set-register ?b '(file . "/imo25:imo.im/trunk/scripts/host/root/run_on_first_boot"))
 (set-register ?k '(file . "/athens:imo.im/branches/kodama"))
@@ -104,17 +104,18 @@
 (require 'comint)        ; better key handling in shell mode
 (require 'highlight-beyond-fill-column)
 (require 'tramp)
-(require 'vc-svn)
 ; Mine
 (require 'load-edict)
 (require 'tags-funcs)
 (require 'lisp-customization)
 (require 'custom-faces)
 (require 'flymake-stuff)
-(when (< emacs-major-version 23)
-  (require 'old-emacs-git))
 (require 'lambda)
 (require 'totd)
+(when (< emacs-major-version 23)
+  (progn
+    (require 'old-emacs-git)
+    (require 'vc-svn)))
 ; Autoloads
 (autoload 'js2-mode "js2" nil t)
 (autoload 'actionscript-mode "actionscript" nil t)
@@ -138,10 +139,14 @@
 ; Use SLIME-style indentation, instead of Emacs' huge tab stops
 (setq lisp-indent-function 'common-lisp-indent-function)
 (setq standard-indent 4)
-(setq c-default-style "ellemtel")
-(setq c-basic-offset 2)                 ; imo uses two
+(setq c-default-style "bsd")
+(setq c-basic-offset 4)                 ; imo uses two
 (setq js2-basic-offset 4)               ; imo uses four
 
+;; Second line of arglists gets two indents
+(c-set-offset 'arglist-cont-nonempty '++)
+(c-set-offset 'arglist-cont '++)
+(c-set-offset 'arglist-close '++)
 
 ;; Other settings that 23 broke
 (when (>= emacs-major-version 23)
@@ -238,6 +243,7 @@
   "Force our keys even in modes that try to override them"
   (local-set-key (kbd "C-c C-c") 'compile)
   (local-set-key (kbd "C-c .") 'flymake-goto-next-error))
+
 
 (defun programming-mode-hook ()
   "Hook common to all programming modes"
