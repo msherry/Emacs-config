@@ -1,7 +1,7 @@
 ;; Marc Sherry
 
 ;; Depends on exuberant ctags being symlinked to etags
-(defvar tags-cmd "etags -R 2>/dev/null")
+(defvar tags-cmd "ctags -e -R 2>/dev/null")
 
 (defun regen-tags ()
   "Regenerate the tags file for the current working directory"

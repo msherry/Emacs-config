@@ -13,11 +13,18 @@
 ;; http ref in plugins/lambda.el. "fontset-startup" (or fontsets at all, it
 ;; seems) don't exist in 22, so only do this on the mac for now
 (when (eq system-type 'darwin)
-  (set-fontset-font "fontset-startup"
+  ;; Default on mac - "-apple-Monaco-medium-normal-normal-*-12-*-*-*-m-0-iso10646-1"
+
+  ;; Try this font for a while. Either syntax is acceptable here
+  (set-default-font "Inconsolata-14"
+                    ;"-apple-Inconsolata-medium-normal-normal-*-14-*-*-*-m-0-iso10646-1")
+                    )
+
+  (set-fontset-font t
                     ; used to use 'greek-iso8859-7, but that overwrote more than
                     ; just the lambda character, so now we specify a range of 1 char
-		    '(955 . 955)
-		    "-apple-Andale_Mono-medium-normal-normal-*-14-*-*-*-p-0-iso10646-1")
+        	    '(955 . 955)
+        	    "-apple-Andale_Mono-medium-normal-normal-*-14-*-*-*-p-0-iso10646-1")
 ;; Use a decent japanese font for all kanji, hiragana, and katakana, rather than
 ;; a crap chinese font. It seems that it's kind of random when a font is used,
 ;; and can change, so we specify all three ranges manually. Obviously we could
@@ -124,6 +131,8 @@
 (autoload 'python-mode "python-mode" "Python Mode." t)
 (autoload 'turn-on-cldoc-mode "cldoc" "CL docs" t)
 
+;; Enable preview-latex
+(add-hook 'LaTeX-mode-hook 'LaTeX-preview-setup)
 
 ;; File/mode associations
 (add-to-list 'auto-mode-alist '("\\.php$" . php-mode))
@@ -152,7 +161,6 @@
 (when (>= emacs-major-version 23)
     (setq mac-command-modifier 'meta
           ring-bell-function 'ignore
-          ;; line-move-visual nil           ; I'm used to logical lines, not visible
           split-height-threshold nil))      ; TODO: Not sure this is good -
                                             ; only seems needed in a terminal
                                             ; on Linux
@@ -417,3 +425,16 @@
 ;;       smtpmail-smtp-server "smtp.gmail.com"
 ;;       smtpmail-smtp-service 587
 ;;       smtpmail-local-domain "imo.im")
+
+
+
+(defun switch-font ()
+  "Temporary function to quickly switch between monaco and
+inconsolata. Really only applicable on the Mac."
+  (interactive)
+  (let ((monaco "-apple-Monaco-medium-normal-normal-*-12-*-*-*-m-0-iso10646-1")
+        (inconsolata "-apple-Inconsolata-medium-normal-normal-*-14-*-*-*-m-0-iso10646-1")
+        (current (cdr (assoc 'font (frame-parameters)))))
+    (set-frame-font (if (string= current monaco) inconsolata monaco))))
+
+(global-set-key (kbd "C-c C-v") 'switch-font)

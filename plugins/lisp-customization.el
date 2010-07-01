@@ -27,7 +27,7 @@
 ;;                 slime-repl-mode-hook))
 ;;   (add-hook hook 'turn-on-cldoc-mode))
 
-;; ElDoc mode for modes that support it
+ElDoc mode for modes that support it
 (defvar eldoc-supported-modes '(emacs-lisp-mode))
 
 (mapc '(lambda (x)
@@ -38,6 +38,10 @@
 ;; need this on the Mac - maybe it's a 22.x thing?
 (if (eq window-system 'ns)              ;used to be 'mac'
     (eval-after-load "slime"
-      '(slime-setup '(slime-fancy slime-banner slime-asdf slime-autodoc))))
+      '(progn
+        (slime-setup '(slime-fancy slime-banner slime-asdf))
+        ; That just turned on slime-autodoc, which uses eldoc, which sucks. Turn
+        ; off eldoc and use the better built-in(?) doc mode
+        (eldoc-mode nil))))
 
 (provide 'lisp-customization)
