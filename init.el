@@ -100,10 +100,8 @@
 
 ; Others'
 (require 'saveplace)
-; Doesn't work on Ubuntu 8.04 with emacs 23
-(when (not (and (>= emacs-major-version 23)
-		(eq system-type 'gnu/linux)))
-  (require 'tex-site))                     ; auctex mode
+(when (locate-library "auctex")
+  (require 'tex-site))
 (require 'erlang-start)
 (require 'slime-autoloads)
 (require 'flymake-point) ; shows errors in the minibuffer when highlighted
@@ -244,7 +242,7 @@
 ;; Mode hooks
 (defvar programming-modes '(python-mode js2-mode java-mode c-mode
                             lisp-mode emacs-lisp-mode sh-mode
-                            makefile-mode)
+                            makefile-mode conf-mode)
   "Modes used for programming")
 
 (defun really-set-keys ()

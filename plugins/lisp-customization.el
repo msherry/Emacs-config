@@ -20,14 +20,15 @@
           '(lambda ()
             (local-set-key (kbd "M-<up>") 'slime-repl-backward-input)
             (local-set-key (kbd "M-<down>") 'slime-repl-forward-input)
-            (cliki:start-slime)))
+            (cliki:start-slime)
+            (eldoc-mode nil)))
 
 ;; CLdoc
 ;; (dolist (hook '(lisp-mode-hook
 ;;                 slime-repl-mode-hook))
 ;;   (add-hook hook 'turn-on-cldoc-mode))
 
-ElDoc mode for modes that support it
+;; ElDoc mode for modes that support it
 (defvar eldoc-supported-modes '(emacs-lisp-mode))
 
 (mapc '(lambda (x)
