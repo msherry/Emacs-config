@@ -183,6 +183,7 @@
       inferior-erlang-prompt-timeout t
       vc-delete-logbuf-window nil       ; don't close vc window when done
       vc-follow-symlinks t              ; don't always ask
+      vc-log-show-limit 0               ; I like seeing the full log
 
 ; put the dabbrev (regular M-/ functionality) first
       hippie-expand-try-functions-list '(try-expand-dabbrev
