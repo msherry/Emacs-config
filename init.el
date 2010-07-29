@@ -333,6 +333,18 @@
   (let ((deactivate-mark nil))
     ad-do-it))
 
+
+;; Replace functions that are completely wrong
+
+(eval-after-load "vc-svn"
+  '(progn
+    (defun vc-svn-annotate-command (file buf &optional rev)
+      "Marc's version of this - exactly the same as stock, but 'async
+has been replaced with t -- without this, we only get partial
+annotations"
+      (vc-svn-command buf 't file "annotate" (if rev (concat "-r" rev))))))
+
+
 (custom-set-faces
   ;; custom-set-faces was added by Custom.
   ;; If you edit it by hand, you could mess it up, so be careful.
