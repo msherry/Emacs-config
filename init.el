@@ -58,7 +58,7 @@
   (if (fboundp 'tool-bar-mode) (tool-bar-mode -1)))
 ;;   (if (fboundp 'scroll-bar-mode) (scroll-bar-mode -1))
 
-;; I edit this file a lot, so put it in a register
+;; I edit these files a lot, so put them in registers
 (set-register ?z '(file . "~/.emacs.d/init.el"))
 (set-register ?l '(file . "~/Desktop/notes-for-lyd.txt"))
 (set-register ?g '(file . "~/repos/imo.im/imo/imop/GraphHead.py"))
