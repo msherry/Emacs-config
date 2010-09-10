@@ -108,6 +108,7 @@
 (require 'comint)        ; better key handling in shell mode
 (require 'highlight-beyond-fill-column)
 (require 'tramp)
+(require 'paredit)
 ; Mine
 (require 'load-edict)
 (require 'tags-funcs)
