@@ -18,6 +18,8 @@
 ; Which checker should we use?
 (defvar python-check-command pyflakes-command)
 
+; JS checker
+(defvar js-check-command "~/repos/imo.im/scripts/jslint/imojslint")
 
 (eval-after-load "flymake"
   '(progn
@@ -28,23 +30,60 @@
                           temp-file
                           (file-name-directory buffer-file-name))))
         (list python-multiple-checker-command
-              (list "-c" "pyflakes,pep8" temp-file))))
-        ;; (list python-check-command (list local-file))))
+              ;; -c option allows for comma-separated list of checkers
+              (list "-c" "pyflakes,pep8" local-file))))
     (add-to-list 'flymake-allowed-file-name-masks
-     '("\\.py\\'" flymake-pyflakes-init))))
+     '("\\.py\\'" flymake-pyflakes-init))
 
-(defvar flymake-modes '(python-mode c-mode-common))   ;c-mode-common is a pain to get working
+    (defun flymake-js-init ()
+      (let* ((temp-file (flymake-init-create-temp-buffer-copy
+                         'flymake-create-temp-inplace))
+             (local-file (file-relative-name
+                          temp-file
+                          (file-name-directory buffer-file-name))))
+        (list js-check-command
+              (list
+               "-errors"
+               local-file))))
+    (add-to-list 'flymake-allowed-file-name-masks
+     '("\\.js\\'" flymake-js-init))
+
+    (add-to-list 'flymake-err-line-patterns imojslint-err-line-pattern)))
+
+
+(defvar flymake-modes '(python-mode c-mode-common js-mode))   ;c-mode-common is a pain to get working
+
+(defvar flymake-tramp-modes '())
+
+;; parse Iskren's imojslint output into something flymake can use
+(defvar imojslint-err-line-pattern
+  '("\\(^[0-9]+\\)|##|\\([0-9]+\\)|##|\\([^|]+\\)|##|\\([EW]\\)|##|\\([^|]+\\)"
+    3 1 2 5))
 
 (defun turn-on-flymake-if-local ()
   "Turn on flymake mode if buffer is local and writable"
   (when (file-is-local-and-writable-p)
     (flymake-mode 1)))
 
+(defun turn-on-flymake-unconditionally ()
+  "Flymake works remotely for these modes (over TRAMP) -
+let's turn it on. If we're editing over tramp, only syntax check on save -
+not on every change."
+  (progn
+    (flymake-mode 1)
+    (remove-hook 'after-change-functions 'flymake-after-change-function)))
+
 (mapc '(lambda (x)
         (let ((mode-hook (intern (concat (symbol-name x) "-hook"))))
           (add-hook mode-hook
                     'turn-on-flymake-if-local)))
       flymake-modes)
+
+(mapc '(lambda (x)
+        (let ((mode-hook (intern (concat (symbol-name x) "-hook"))))
+          (add-hook mode-hook
+                    'turn-on-flymake-unconditionally)))
+      flymake-tramp-modes)
 
 ;; Prepend a different java handler, since flymake defaults to using Makefiles
 ;; TODO: this doesn't actually work - running flymake on java hangs emacs

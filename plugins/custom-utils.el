@@ -12,4 +12,11 @@ tramp."
                  (tramp-list-remote-buffers))))))
 
 
+(defun file-is-local-p ()
+  "Determine if a file is local, versus being edited over tramp."
+  (or (not (fboundp 'tramp-list-remote-buffers))
+      (not (member
+            (current-buffer)
+            (tramp-list-remote-buffers)))))
+
 (provide 'custom-utils)
