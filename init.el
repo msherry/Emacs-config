@@ -134,7 +134,7 @@
 
 ;; File/mode associations
 (add-to-list 'auto-mode-alist '("\\.php$" . php-mode))
-(if (< emacs-minor-version 2)           ; js-mode was made standard in 23.1
+(if (< emacs-minor-version 2)           ; js-mode was made standard in 23.2
     (add-to-list 'auto-mode-alist '("\\.js$" . js2-mode))
     (add-to-list 'auto-mode-alist '("\\.js$" . js-mode)))
 (add-to-list 'auto-mode-alist '("\\.as$" . actionscript-mode))
