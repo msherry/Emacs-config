@@ -19,7 +19,7 @@
 (defvar python-check-command pyflakes-command)
 
 ; JS checker
-(defvar js-check-command "~/repos/imo.im/scripts/jslint/imojslint")
+(defvar js-check-command (concat (getenv "IMO_HOME") "/scripts/jslint/imojslint"))
 
 (eval-after-load "flymake"
   '(progn
@@ -43,7 +43,7 @@
                           (file-name-directory buffer-file-name))))
         (list js-check-command
               (list
-               "-errors"
+               ;; "-errors"
                local-file))))
     (add-to-list 'flymake-allowed-file-name-masks
      '("\\.js\\'" flymake-js-init))
@@ -51,14 +51,14 @@
     (add-to-list 'flymake-err-line-patterns imojslint-err-line-pattern)))
 
 
-(defvar flymake-modes '(python-mode c-mode-common js-mode))   ;c-mode-common is a pain to get working
+(defvar flymake-modes '(python-mode c-mode-common js-mode js2-mode))   ;c-mode-common is a pain to get working
 
 (defvar flymake-tramp-modes '())
 
 ;; parse Iskren's imojslint output into something flymake can use
 (defvar imojslint-err-line-pattern
-  '("\\(^[0-9]+\\)|##|\\([0-9]+\\)|##|\\([^|]+\\)|##|\\([EW]\\)|##|\\([^|]+\\)"
-    3 1 2 5))
+  '("\\(^[0-9]+\\)|##|\\([0-9]+\\)|##|\\([^|]+\\)|##|\\([^|]+\\)|##|\\([^|]+\\)"
+    3 1 2 5 4))
 
 (defun turn-on-flymake-if-local ()
   "Turn on flymake mode if buffer is local and writable"
@@ -121,5 +121,44 @@ A prefix argument means to unmark them instead.
 (eval-after-load "dired"
   '(progn
     (define-key dired-mode-map (kbd "% p") 'dired-mark-python-with-errors)))
+
+
+;; Modified version of this function - allows a 5th element in patterns to
+;; specify whether a line is a warning. Used only for Iskren's imojslist script
+(defun flymake-parse-line (line)
+  "Parse LINE to see if it is an error or warning.
+Return its components if so, nil otherwise."
+  (let ((raw-file-name nil)
+	(line-no 0)
+	(err-type "e")
+	(err-text nil)
+	(patterns flymake-err-line-patterns)
+	(matched nil))
+    (while (and patterns (not matched))
+      (when (string-match (car (car patterns)) line)
+	(let* ((file-idx (nth 1 (car patterns)))
+	       (line-idx (nth 2 (car patterns))))
+
+	  (setq raw-file-name (if file-idx (match-string file-idx line) nil))
+	  (setq line-no       (if line-idx (string-to-number (match-string line-idx line)) 0))
+	  (setq err-text      (if (> (length (car patterns)) 4)
+				  (match-string (nth 4 (car patterns)) line)
+				(flymake-patch-err-text (substring line (match-end 0)))))
+	  (or err-text (setq err-text "<no error text>"))
+          ;; This first part is the part we changed
+	  (if (or (and (> (length (car patterns)) 4)
+                       (string-match "^[wW].*"
+                                     (match-string (nth 5 (car patterns)) line)))
+                  (and err-text (string-match "^[wW]arning" err-text)))
+                     (setq err-type "w")
+              )
+	  (flymake-log 3 "parse line: file-idx=%s line-idx=%s file=%s line=%s text=%s" file-idx line-idx
+		       raw-file-name line-no err-text)
+	  (setq matched t)))
+      (setq patterns (cdr patterns)))
+    (if matched
+	(flymake-ler-make-ler raw-file-name line-no err-type err-text)
+      ())))
+
 
 (provide 'flymake-stuff)
