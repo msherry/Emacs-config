@@ -122,7 +122,7 @@
     (require 'old-emacs-git)
     (require 'vc-svn)))
 ; Autoloads
-;; (autoload 'js2-mode "js2" nil t)
+(autoload 'js2-mode "js2" nil t)
 (autoload 'actionscript-mode "actionscript" nil t)
 (autoload 'php-mode "php-mode" nil t) ; either Mac or 22 only
 ;; Use python-mode, instead of the crappy built-in python.el on the mac
@@ -134,7 +134,9 @@
 
 ;; File/mode associations
 (add-to-list 'auto-mode-alist '("\\.php$" . php-mode))
-(add-to-list 'auto-mode-alist '("\\.js$" . js-mode))
+(if (< emacs-minor-version 2)           ; js-mode was made standard in 23.1
+    (add-to-list 'auto-mode-alist '("\\.js$" . js2-mode))
+    (add-to-list 'auto-mode-alist '("\\.js$" . js-mode)))
 (add-to-list 'auto-mode-alist '("\\.as$" . actionscript-mode))
 (add-to-list 'auto-mode-alist '("\\.py$" . python-mode))
 (add-to-list 'auto-mode-alist '("\\.org$" . org-mode))
@@ -198,6 +200,7 @@
               fill-column 80            ; default of 72 is too narrow
               save-place t)             ; This didn't used to be buffer-local
 (put 'upcase-region 'disabled nil)
+(put 'narrow-to-region 'disabled nil)
 (fset 'yes-or-no-p 'y-or-n-p)            ; stop forcing me to spell out "yes"
 
 ; Uniquifying
@@ -241,7 +244,7 @@
 
 
 ;; Mode hooks
-(defvar programming-modes '(python-mode js-mode java-mode c-mode
+(defvar programming-modes '(python-mode js-mode js2-mode java-mode c-mode
                             lisp-mode emacs-lisp-mode sh-mode
                             makefile-mode conf-mode)
   "Modes used for programming")
