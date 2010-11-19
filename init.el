@@ -84,7 +84,8 @@
 (when (eq window-system 'ns)
   (add-to-list 'exec-path "/usr/local/bin")
   (add-to-list 'exec-path "/opt/local/bin")
-  (setenv "PATH" (concat "/usr/local/bin:/opt/local/bin:/opt/local/mysql/bin:/opt/local/sbin:" (getenv "PATH"))))
+  (add-to-list 'exec-path "/opt/local/bin/flex/bin")
+  (setenv "PATH" (concat "/usr/local/bin:/opt/local/bin:/opt/local/mysql/bin:/opt/local/sbin:/opt/local/bin/flex/bin:" (getenv "PATH"))))
 
 ;; Set up environment
 (set-language-environment "UTF-8")
