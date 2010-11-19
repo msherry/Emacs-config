@@ -152,11 +152,6 @@
 (setq c-basic-offset 4)                 ; imo uses two
 ;; (setq js2-basic-offset 4)               ; imo uses four
 
-;; Second line of arglists gets two indents
-(c-set-offset 'arglist-cont-nonempty '++)
-(c-set-offset 'arglist-cont '++)
-(c-set-offset 'arglist-close '++)
-
 ;; Other settings that 23 broke
 (when (>= emacs-major-version 23)
     (setq mac-command-modifier 'meta
@@ -200,7 +195,6 @@
               fill-column 80            ; default of 72 is too narrow
               save-place t)             ; This didn't used to be buffer-local
 (put 'upcase-region 'disabled nil)
-(put 'narrow-to-region 'disabled nil)
 (fset 'yes-or-no-p 'y-or-n-p)            ; stop forcing me to spell out "yes"
 
 ; Uniquifying
@@ -261,7 +255,13 @@
   (flyspell-prog-mode)
   (really-set-keys)
   (highlight-beyond-fill-column)
-  (font-lock-fontify-numbers))
+  (font-lock-fontify-numbers)
+
+  ;; Second line of arglists gets two indents
+  (c-set-offset 'arglist-cont-nonempty '+)
+  (c-set-offset 'arglist-cont '+)
+  (c-set-offset 'arglist-close '+))
+
 
 ; Add a common hook to every programming mode
 (mapc '(lambda (x)
@@ -475,3 +475,4 @@ inconsolata. Really only applicable on the Mac."
     (set-frame-font (if (string= current monaco) inconsolata monaco))))
 
 (global-set-key (kbd "C-c C-v") 'switch-font)
+(put 'narrow-to-region 'disabled nil)
