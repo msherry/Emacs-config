@@ -34,7 +34,7 @@
 ;; If we're highlighting beyond 80 characters, make it noticeable. The default
 ;; is to underline, which sucks.
 ;; TODO: use defface here
-(set-face-background 'highlight-beyond-fill-column-face "#99FF99");;"#FFAFD7")
+(set-face-background 'highlight-beyond-fill-column-face "#D2FFD2");;"#FFAFD7")
 (set-face-underline-p 'highlight-beyond-fill-column-face nil)
 
 ;; WTF? I didn't ask for this
