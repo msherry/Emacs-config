@@ -123,7 +123,7 @@
     (require 'vc-svn)))
 ; Autoloads
 (autoload 'js2-mode "js2" nil t)
-(autoload 'actionscript-mode "actionscript" nil t)
+(autoload 'actionscript-mode "actionscript-mode" nil t) ; Connors' version
 (autoload 'php-mode "php-mode" nil t) ; either Mac or 22 only
 ;; Use python-mode, instead of the crappy built-in python.el on the mac
 (autoload 'python-mode "python-mode" "Python Mode." t)
