@@ -239,7 +239,7 @@
 
 ;; Mode hooks
 (defvar programming-modes '(python-mode js-mode js2-mode java-mode c-mode
-                            lisp-mode emacs-lisp-mode sh-mode
+                            actionscript-mode lisp-mode emacs-lisp-mode sh-mode
                             makefile-mode conf-mode)
   "Modes used for programming")
 
