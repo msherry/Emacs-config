@@ -259,9 +259,9 @@
   (font-lock-fontify-numbers)
 
   ;; Second line of arglists gets two indents
-  (c-set-offset 'arglist-cont-nonempty '+)
-  (c-set-offset 'arglist-cont '+)
-  (c-set-offset 'arglist-close '+))
+  (c-set-offset 'arglist-cont-nonempty '++)
+  (c-set-offset 'arglist-cont '++)
+  (c-set-offset 'arglist-close '++))
 
 
 ; Add a common hook to every programming mode
