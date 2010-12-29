@@ -150,7 +150,7 @@
 (setq lisp-indent-function 'common-lisp-indent-function)
 (setq standard-indent 4)
 (setq c-default-style "bsd")
-(setq c-basic-offset 4)                 ; imo uses two
+(setq c-basic-offset 4)                 ; imo uses four
 ;; (setq js2-basic-offset 4)               ; imo uses four
 
 ;; Other settings that 23 broke
@@ -227,6 +227,9 @@
 ; Give us the ability to leave certain words highlighted - always got jealous
 ; when I saw this in vim
 (global-hi-lock-mode 1)
+
+; Warn about suspicious C/C++ constructs
+(global-cwarn-mode 1)
 
 ; Create two windows initially if we have the room. Check both current width and
 ; width from default-frame-alist (if present), since the frame may not have been
@@ -349,26 +352,26 @@ annotations"
       (vc-svn-command buf 't file "annotate" (if rev (concat "-r" rev))))))
 
 
-(eval-after-load "vc-hg"
-  '(progn
-    (defun vc-hg-annotate-command (file buffer &optional revision)
-      "Marc's version of vc-hg-annotate-command. The original
-      doesn't allow arguments, and by default shows useless
-      information."
-      (vc-hg-command buffer 0 file "annotate" "-u" "-n"
-                     (when revision (concat "-r" revision))))
-    ;; TODO: Since we modified the annotate command, we have to retell vc how to
-    ;; get the version information. This is dumb.
-    ;; Format:
-    ;; username VERSION_NUMBER: CONTENTS
-    (defconst vc-hg-annotate-re
-      "^[ \t]*\\([^ ]+\\) \\([0-9]+\\):[ \t]+[^\t ]+")
-      ;; "^[ \t]*\\([0-9]+\\) \\(.\\{30\\}\\)\\(?:\\(: \\)\\|\\(?: +\\(.+\\): \\)\\)")
+;; (eval-after-load "vc-hg"
+;;   '(progn
+;;     (defun vc-hg-annotate-command (file buffer &optional revision)
+;;       "Marc's version of vc-hg-annotate-command. The original
+;;       doesn't allow arguments, and by default shows useless
+;;       information."
+;;       (vc-hg-command buffer 0 file "annotate" "-u" "-n"
+;;                      (when revision (concat "-r" revision))))
+;;     ;; TODO: Since we modified the annotate command, we have to retell vc how to
+;;     ;; get the version information. This is dumb.
+;;     ;; Format:
+;;     ;; username VERSION_NUMBER: CONTENTS
+;;     (defconst vc-hg-annotate-re
+;;       "^[ \t]*\\([^ ]+\\) \\([0-9]+\\):[ \t]+[^\t ]+")
+;;       ;; "^[ \t]*\\([0-9]+\\) \\(.\\{30\\}\\)\\(?:\\(: \\)\\|\\(?: +\\(.+\\): \\)\\)")
 
-    (defun vc-hg-annotate-extract-revision-at-line ()
-      (save-excursion
-        (beginning-of-line)
-        (if (looking-at vc-hg-annotate-re) (match-string 2))))))
+;;     (defun vc-hg-annotate-extract-revision-at-line ()
+;;       (save-excursion
+;;         (beginning-of-line)
+;;         (if (looking-at vc-hg-annotate-re) (match-string 2))))))
 
 
 
