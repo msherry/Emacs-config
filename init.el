@@ -110,6 +110,7 @@
 (require 'highlight-beyond-fill-column)
 (require 'tramp)
 (require 'paredit)
+(require 'doxymacs)
 ; Mine
 (require 'load-edict)
 (require 'tags-funcs)
@@ -260,6 +261,7 @@
   (really-set-keys)
   (highlight-beyond-fill-column)
   (font-lock-fontify-numbers)
+  (doxymacs-mode)
 
   ;; Second line of arglists gets two indents
   (c-set-offset 'arglist-cont-nonempty '++)
@@ -276,7 +278,9 @@
 
 (add-hook 'text-mode-hook
           '(lambda ()
-            (flyspell-mode t)))
+            (flyspell-mode t)
+            ;(longlines-mode t)
+            ))
 
 ; Trailing whitespace is annoying in some modes
 (defvar no-trailing-whitespace-modes '(shell-mode slime-repl-mode text-mode

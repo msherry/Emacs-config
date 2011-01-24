@@ -19,6 +19,8 @@
 (defvar python-check-command pyflakes-command)
 
 ; JS checker
+; On OS X, this doesn't use the IMO_HOME set in the user's init scripts, since
+; emacs is an app, but rather the one set in /etc/launchd.conf
 (defvar js-check-command (concat (getenv "IMO_HOME") "/scripts/jslint/imojslint"))
 
 (eval-after-load "flymake"
@@ -41,6 +43,9 @@
              (local-file (file-relative-name
                           temp-file
                           (file-name-directory buffer-file-name))))
+        (make-variable-buffer-local 'flymake-parse-line)
+        ;; This one is modified to handle Iskren's imojslint script
+        (fset 'flymake-parse-line 'imo-flymake-parse-line)
         (list js-check-command
               (list
                ;; "-errors"
@@ -51,7 +56,7 @@
     (add-to-list 'flymake-err-line-patterns imojslint-err-line-pattern)))
 
 
-(defvar flymake-modes '(python-mode c-mode-common js-mode js2-mode))   ;c-mode-common is a pain to get working
+(defvar flymake-modes '(python-mode c-mode-common js-mode js2-mode javascript-mode))   ;c-mode-common is a pain to get working
 
 (defvar flymake-tramp-modes '())
 
@@ -125,7 +130,7 @@ A prefix argument means to unmark them instead.
 
 ;; Modified version of this function - allows a 5th element in patterns to
 ;; specify whether a line is a warning. Used only for Iskren's imojslist script
-(defun flymake-parse-line (line)
+(defun imo-flymake-parse-line (line)
   "Parse LINE to see if it is an error or warning.
 Return its components if so, nil otherwise."
   (let ((raw-file-name nil)
