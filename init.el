@@ -111,6 +111,7 @@
 (require 'tramp)
 (require 'paredit)
 (require 'doxymacs)
+(require 'xclip)         ; OMG I love you - now I can copy and paste from linux
 ; Mine
 (require 'load-edict)
 (require 'tags-funcs)
