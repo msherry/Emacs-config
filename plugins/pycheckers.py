@@ -39,7 +39,7 @@ unknown.
 # default_checkers = 'pep8, pyflakes'
 default_checkers = 'pyflakes,pep8'
 
-# A list of error codes to ignore.
+# A list of error codes to ignore for PEP8
 # default_ignore_codes = ['E225', 'W114']
 default_ignore_codes = \
     [

@@ -154,6 +154,8 @@
 (setq c-basic-offset 4)                 ; imo uses four
 ;; (setq js2-basic-offset 4)               ; imo uses four
 
+(setq mac-pass-command-to-system nil)
+
 ;; Other settings that 23 broke
 (when (>= emacs-major-version 23)
     (setq mac-command-modifier 'meta

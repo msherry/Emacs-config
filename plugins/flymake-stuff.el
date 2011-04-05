@@ -43,9 +43,9 @@
              (local-file (file-relative-name
                           temp-file
                           (file-name-directory buffer-file-name))))
-        (make-variable-buffer-local 'flymake-parse-line)
-        ;; This one is modified to handle Iskren's imojslint script
-        (fset 'flymake-parse-line 'imo-flymake-parse-line)
+        ;; (make-variable-buffer-local 'flymake-parse-line)
+        ;; ;; This one is modified to handle Iskren's imojslint script
+        ;; (fset 'flymake-parse-line 'imo-flymake-parse-line)
         (list js-check-command
               (list
                ;; "-errors"
