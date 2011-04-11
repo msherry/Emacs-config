@@ -359,27 +359,36 @@ annotations"
       (vc-svn-command buf 't file "annotate" (if rev (concat "-r" rev))))))
 
 
-;; (eval-after-load "vc-hg"
-;;   '(progn
-;;     (defun vc-hg-annotate-command (file buffer &optional revision)
-;;       "Marc's version of vc-hg-annotate-command. The original
-;;       doesn't allow arguments, and by default shows useless
-;;       information."
-;;       (vc-hg-command buffer 0 file "annotate" "-u" "-n"
-;;                      (when revision (concat "-r" revision))))
-;;     ;; TODO: Since we modified the annotate command, we have to retell vc how to
-;;     ;; get the version information. This is dumb.
-;;     ;; Format:
-;;     ;; username VERSION_NUMBER: CONTENTS
-;;     (defconst vc-hg-annotate-re
-;;       "^[ \t]*\\([^ ]+\\) \\([0-9]+\\):[ \t]+[^\t ]+")
-;;       ;; "^[ \t]*\\([0-9]+\\) \\(.\\{30\\}\\)\\(?:\\(: \\)\\|\\(?: +\\(.+\\): \\)\\)")
+(eval-after-load "vc-hg"
+  '(progn
+    (defun vc-hg-annotate-command (file buffer &optional revision)
+      "Marc's version of vc-hg-annotate-command. Adds the -u option"
+      (vc-hg-command buffer 0 file "annotate" "-u" "-d" "-n"
+                     (when revision (concat "-r" revision))))
+    ;; Since we modified the annotate command, we have to retell vc how to
+    ;; get the version information. This is dumb.
+    ;; Format:
+    ;; username (VERSION_NUMBER) (DATE) (FILENAME)/NOTHING: CONTENTS
+    (defconst vc-hg-annotate-re
+      "^[ \t]*[^ ]+ +\\([0-9]+\\) \\(.\\{30\\}\\)\\(?:\\(: \\)\\|\\([^:]+\\): \\)")
+      ;; "^[ \t]*\\([0-9]+\\) \\(.\\{30\\}\\)\\(?:\\(: \\)\\|\\(?: +\\(.+\\): \\)\\)")
 
-;;     (defun vc-hg-annotate-extract-revision-at-line ()
-;;       (save-excursion
-;;         (beginning-of-line)
-;;         (if (looking-at vc-hg-annotate-re) (match-string 2))))))
+    ;; (defun vc-hg-annotate-time ()
+    ;;   (when (looking-at vc-hg-annotate-re)
+    ;;     (goto-char (match-end 0))
+    ;;     (vc-annotate-convert-time
+    ;;      (date-to-time (match-string-no-properties 3)))))
 
+    ;; (defun vc-hg-annotate-extract-revision-at-line ()
+    ;;   (save-excursion
+    ;;     (beginning-of-line)
+    ;;     (when (looking-at vc-hg-annotate-re)
+    ;;       (if (match-beginning 4)
+    ;;           (match-string-no-properties 2)
+    ;;           (cons (match-string-no-properties 2)
+    ;;                 (expand-file-name (match-string-no-properties 5)
+    ;;                                   (vc-hg-root default-directory)))))))
+))
 
 
 (custom-set-faces
