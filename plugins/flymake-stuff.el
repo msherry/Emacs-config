@@ -61,7 +61,7 @@
 (defvar flymake-tramp-modes '())
 
 ;; parse Iskren's imojslint output into something flymake can use
-(defvar imojslint-err-line-pattern
+(defvar imojslint-err-line-pattern; regexp file-idx line-idx col-idx (optional) text-idx(optional), match-end to end of string is error text
   '("\\(^[0-9]+\\)|##|\\([0-9]+\\)|##|\\([^|]+\\)|##|\\([^|]+\\)|##|\\([^|]+\\)"
     3 1 2 5 4))
 
