@@ -266,6 +266,8 @@
   (font-lock-fontify-numbers)
   (doxymacs-mode)
 
+  (add-hook 'before-save-hook 'delete-trailing-whitespace)
+
   ;; Second line of arglists gets two indents
   (c-set-offset 'arglist-cont-nonempty '++)
   (c-set-offset 'arglist-cont '++)
