@@ -55,8 +55,13 @@
                          (width . 186)
                          (height . 87))))
           (set-default-font "-unknown-DejaVu Sans Mono-normal-normal-normal-*-14-*-*-*-m-0-iso10646-1")))
-  (if (fboundp 'tool-bar-mode) (tool-bar-mode -1)))
+  (if (fboundp 'tool-bar-mode) (tool-bar-mode -1))
 ;;   (if (fboundp 'scroll-bar-mode) (scroll-bar-mode -1))
+
+  ;;(set-frame-parameter (selected-frame) 'alpha '(<active> [<inactive>]))
+  (set-frame-parameter (selected-frame) 'alpha '(85 50))
+  (add-to-list 'default-frame-alist '(alpha 85 50)))
+
 
 ;; I edit these files a lot, so put them in registers
 (set-register ?z '(file . "~/.emacs.d/init.el"))
