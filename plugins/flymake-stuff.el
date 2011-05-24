@@ -23,6 +23,9 @@
 ; emacs is an app, but rather the one set in /etc/launchd.conf
 (defvar js-check-command (concat (getenv "IMO_HOME") "/scripts/jslint/imojslint"))
 
+(defvar use-hacked-flymake-parse-line nil)
+(make-variable-buffer-local 'use-hacked-flymake-parse-line)
+
 (eval-after-load "flymake"
   '(progn
     (defun flymake-pyflakes-init ()
@@ -43,9 +46,6 @@
              (local-file (file-relative-name
                           temp-file
                           (file-name-directory buffer-file-name))))
-        ;; (make-variable-buffer-local 'flymake-parse-line)
-        ;; ;; This one is modified to handle Iskren's imojslint script
-        ;; (fset 'flymake-parse-line 'imo-flymake-parse-line)
         (list js-check-command
               (list
                ;; "-errors"
@@ -53,10 +53,23 @@
     (add-to-list 'flymake-allowed-file-name-masks
      '("\\.js\\'" flymake-js-init))
 
-    (add-to-list 'flymake-err-line-patterns imojslint-err-line-pattern)))
+    (add-to-list 'flymake-err-line-patterns imojslint-err-line-pattern)
 
+    ;; We have two separate line-parsing functions, and emacs doesn't provide a way
+    ;; to do buffer-local symbol-function definitions -- only symbol value. Hack up
+    ;; a dispatch function
+    (fset 'orig-flymake-parse-line (symbol-function 'flymake-parse-line))
+
+    (defun flymake-parse-line (line)
+      "Replacement for the original that dispatches to the stock or hacked
+version, depending on the value of the variable `use-hacked-flymake-parse-line'"
+      (if use-hacked-flymake-parse-line
+          (imo-flymake-parse-line line)
+          (orig-flymake-parse-line line)))))
 
 (defvar flymake-modes '(python-mode c-mode-common js-mode js2-mode javascript-mode))   ;c-mode-common is a pain to get working
+
+(defvar flymake-js-modes '(js-mode js2-mode javascript-mode))
 
 (defvar flymake-tramp-modes '())
 
@@ -70,25 +83,24 @@
   (when (file-is-local-and-writable-p)
     (flymake-mode 1)))
 
-(defun turn-on-flymake-unconditionally ()
-  "Flymake works remotely for these modes (over TRAMP) -
-let's turn it on. If we're editing over tramp, only syntax check on save -
-not on every change."
-  (progn
-    (flymake-mode 1)
-    (remove-hook 'after-change-functions 'flymake-after-change-function)))
+(defun use-imo-flymake-fun ()
+  "Use the 5-argument flymake-parse-line, which is required for
+Iskren's jslint script"
+  (setq use-hacked-flymake-parse-line 1))
 
+;; Turn on flymake for local, writable files
 (mapc '(lambda (x)
         (let ((mode-hook (intern (concat (symbol-name x) "-hook"))))
           (add-hook mode-hook
                     'turn-on-flymake-if-local)))
       flymake-modes)
 
+;; Use a different line-parsing function for javascript
 (mapc '(lambda (x)
         (let ((mode-hook (intern (concat (symbol-name x) "-hook"))))
           (add-hook mode-hook
-                    'turn-on-flymake-unconditionally)))
-      flymake-tramp-modes)
+                    'use-imo-flymake-fun)))
+      flymake-js-modes)
 
 ;; Prepend a different java handler, since flymake defaults to using Makefiles
 ;; TODO: this doesn't actually work - running flymake on java hangs emacs
