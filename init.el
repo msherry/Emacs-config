@@ -65,8 +65,7 @@
 
 ;; I edit these files a lot, so put them in registers
 (set-register ?z '(file . "~/.emacs.d/init.el"))
-(set-register ?l '(file . "~/Desktop/notes-for-lyd.txt"))
-(set-register ?g '(file . "~/repos/imo.im/imo/imop/GraphHead.py"))
+(set-register ?g '(file . "~/repos/release/imo/imop/GraphHead.py"))
 (set-register ?t '(file . "~/TODO.org"))
 (set-register ?b '(file . "/imo25:repos/imo.im/scripts/host/root/run_on_first_boot"))
 
@@ -251,7 +250,7 @@
 
 
 ;; Mode hooks
-(defvar programming-modes '(python-mode js-mode js2-mode java-mode c-mode
+(defvar programming-modes '(python-mode js-mode js2-mode java-mode c-mode objc-mode
                             actionscript-mode lisp-mode emacs-lisp-mode sh-mode
                             makefile-mode conf-mode)
   "Modes used for programming")
@@ -314,6 +313,10 @@
                                (interactive)
                                (scroll-up 5))))
 
+
+(add-hook 'objc-mode-hook
+          '(lambda ()
+            (setq c-basic-offset 2)))
 
 ;; Tramp adds a hook to auto-save files. Remove it
 (remove-hook 'find-file-hook 'tramp-set-auto-save)
