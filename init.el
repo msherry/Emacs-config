@@ -102,6 +102,12 @@
   (when (file-directory-p dir)
     (add-to-list 'load-path dir)))
 
+;; Configure ELPA (package loader)
+(require 'package)
+(add-to-list 'package-archives
+             '("marmalade" . "http://marmalade-repo.org/packages/"))
+(package-initialize)
+
 ; Others'
 (require 'saveplace)
 (when (locate-library "auctex")
@@ -134,6 +140,7 @@
 (autoload 'php-mode "php-mode" nil t) ; either Mac or 22 only
 ;; Use python-mode, instead of the crappy built-in python.el on the mac
 (autoload 'python-mode "python-mode" "Python Mode." t)
+(autoload 'clojure-mode "clojure-mode" "Clojure Mode" t)
 (autoload 'turn-on-cldoc-mode "cldoc" "CL docs" t)
 
 ;; Enable preview-latex
