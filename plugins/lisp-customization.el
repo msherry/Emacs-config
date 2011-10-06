@@ -37,12 +37,11 @@
       eldoc-supported-modes)
 
 ;; need this on the Mac - maybe it's a 22.x thing?
-(if (eq window-system 'ns)              ;used to be 'mac'
-    (eval-after-load "slime"
-      '(progn
-        (slime-setup '(slime-fancy slime-banner slime-asdf))
-        ; That just turned on slime-autodoc, which uses eldoc, which sucks. Turn
-        ; off eldoc and use the better built-in(?) doc mode
-        (eldoc-mode nil))))
+(eval-after-load "slime"
+  '(progn
+    (slime-setup '(slime-fancy slime-banner slime-asdf))
+    ; That just turned on slime-autodoc, which uses eldoc, which sucks. Turn
+    ; off eldoc and use the better built-in(?) doc mode
+    (eldoc-mode nil)))
 
 (provide 'lisp-customization)
