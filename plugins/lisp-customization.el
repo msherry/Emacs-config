@@ -36,7 +36,6 @@
           (add-hook mode-hook 'turn-on-eldoc-mode)))
       eldoc-supported-modes)
 
-;; need this on the Mac - maybe it's a 22.x thing?
 (eval-after-load "slime"
   '(progn
     (slime-setup '(slime-fancy slime-banner slime-asdf))
