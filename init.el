@@ -499,10 +499,14 @@ annotations"
   "Temporary function to quickly switch between monaco and
 inconsolata. Really only applicable on the Mac."
   (interactive)
-  (let ((monaco "-apple-Monaco-medium-normal-normal-*-12-*-*-*-m-0-iso10646-1")
-        (inconsolata "-apple-Inconsolata-medium-normal-normal-*-14-*-*-*-m-0-iso10646-1")
-        (current (cdr (assoc 'font (frame-parameters)))))
-    (set-frame-font (if (string= current monaco) inconsolata monaco))))
+  (let* ((monaco "-apple-Monaco-medium-normal-normal-*-12-*-*-*-m-0-iso10646-1")
+         (inconsolata "-apple-Inconsolata-medium-normal-normal-*-14-*-*-*-m-0-iso10646-1")
+         (current (cdr (assoc 'font (frame-parameters))))
+         (new (if (string= current monaco)
+                  inconsolata
+                  monaco)))
+    (message "New font: %s" new)
+    (set-frame-font new)))
 
 (global-set-key (kbd "C-c C-v") 'switch-font)
 (put 'narrow-to-region 'disabled nil)
