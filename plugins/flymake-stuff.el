@@ -129,8 +129,12 @@ A prefix argument means to unmark them instead.
                        (string-match "\.py$" fn))
               (progn
                 (message "Checking %s" fn)
-                (> (call-process-shell-command
-                    (concat pyflakes-command " " fn) nil nil)
+                ;; (> (call-process-shell-command
+                ;;     (concat pyflakes-command " " fn) nil nil)
+                ;;    0)))))
+                (= (call-process-shell-command
+                    (concat python-multiple-checker-command " -c pyflakes "
+                            fn " | grep ^ERROR"))
                    0)))))
      "errorful file")))
 
