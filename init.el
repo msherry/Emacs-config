@@ -341,19 +341,28 @@
   "Choose the correct c style (Objective-C, C++, C) when opening a .h file, based
 on the presence of a similarly-named .m/.cpp file.
 
-Stolen from http://bretthutley.com/programming/emacs/opening-a-cobjective-cc-header-file-in-emacs/"
+Based on http://bretthutley.com/programming/emacs/opening-a-cobjective-cc-header-file-in-emacs/ , but with additional hacks for frameworks by Marc Sherry"
   (interactive)
-  (if (string-equal (substring (buffer-file-name) -2) ".h")
-      (progn
-        ;; OK, we got a .h file, if a .m file exists we'll assume it's
-        ; an objective c file. Otherwise, we'll look for a .cpp file.
-        (let ((dot-m-file (concat (substring (buffer-file-name) 0 -1) "m"))
-              (dot-cpp-file (concat (substring (buffer-file-name) 0 -1) "cpp")))
-          (if (file-exists-p dot-m-file)
+  (let ((fn (buffer-file-name)))
+    (if (string-equal (substring fn -2) ".h")
+        (progn
+          ;; OK, we got a .h file, if a .m file exists we'll assume it's an
+          ;; objective c file. Otherwise, we'll look for a .cpp file.
+          (let ((dot-m-file (concat (substring fn 0 -1) "m"))
+                (dot-cpp-file (concat (substring fn 0 -1) "cpp")))
+            (if (file-exists-p dot-m-file)
                 (objc-mode)
-              (if (file-exists-p dot-cpp-file)
-                  (c++-mode)))))))
-
+                (if (file-exists-p dot-cpp-file)
+                    (c++-mode))
+                ;; Could be C, or could be Objective-C with no matching .m file
+                ;; (e.g., framework headers). Check the #import directive, which
+                ;; is mostly Objective-C (and Microsoft-specific C++).
+                (progn
+                  (if (with-temp-buffer
+                        (insert-file-contents fn)
+                        (goto-char (point-min))
+                        (re-search-forward "^#import" nil t))
+                        (objc-mode)))))))))
 (add-hook 'find-file-hook 'bh-choose-header-mode)
 
 (defun show-whitespace-in-diffs ()
