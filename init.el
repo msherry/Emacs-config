@@ -362,7 +362,7 @@ Based on http://bretthutley.com/programming/emacs/opening-a-cobjective-cc-header
                         (insert-file-contents fn)
                         (goto-char (point-min))
                         (re-search-forward "^#import" nil t))
-                        (objc-mode)))))))))
+                      (objc-mode)))))))))
 (add-hook 'find-file-hook 'bh-choose-header-mode)
 
 (defun show-whitespace-in-diffs ()
