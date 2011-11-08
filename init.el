@@ -355,8 +355,8 @@ Based on http://bretthutley.com/programming/emacs/opening-a-cobjective-cc-header
                 (if (file-exists-p dot-cpp-file)
                     (c++-mode))
                 ;; Could be C, or could be Objective-C with no matching .m file
-                ;; (e.g., framework headers). Check the #import directive, which
-                ;; is mostly Objective-C (and Microsoft-specific C++).
+                ;; (e.g., framework headers). Check for the #import directive,
+                ;; which is mostly Objective-C (and Microsoft-specific C++).
                 (progn
                   (if (with-temp-buffer
                         (insert-file-contents fn)
