@@ -89,7 +89,7 @@
   (add-to-list 'exec-path "/usr/local/bin")
   (add-to-list 'exec-path "/opt/local/bin")
   (add-to-list 'exec-path "/opt/local/bin/flex/bin")
-  (setenv "PATH" (concat "/usr/local/bin:/opt/local/bin:/opt/local/mysql/bin:/opt/local/sbin:/opt/local/bin/flex/bin:" (getenv "PATH"))))
+  (setenv "PATH" (concat "/usr/local/bin:/opt/local/bin:/opt/local/mysql/bin:/opt/local/sbin:/opt/local/bin/flex/bin:/Users/msherry/opt/leiningen/:" (getenv "PATH"))))
 
 ;; Set up environment
 (set-language-environment "UTF-8")
@@ -337,6 +337,25 @@
 (add-hook 'find-file-hook 'turn-off-auto-save-mode-if-tramp)
 
 
+(defun bh-choose-header-mode ()
+  "Choose the correct c style (Objective-C, C++, C) when opening a .h file, based
+on the presence of a similarly-named .m/.cpp file.
+
+Stolen from http://bretthutley.com/programming/emacs/opening-a-cobjective-cc-header-file-in-emacs/"
+  (interactive)
+  (if (string-equal (substring (buffer-file-name) -2) ".h")
+      (progn
+        ;; OK, we got a .h file, if a .m file exists we'll assume it's
+        ; an objective c file. Otherwise, we'll look for a .cpp file.
+        (let ((dot-m-file (concat (substring (buffer-file-name) 0 -1) "m"))
+              (dot-cpp-file (concat (substring (buffer-file-name) 0 -1) "cpp")))
+          (if (file-exists-p dot-m-file)
+                (objc-mode)
+              (if (file-exists-p dot-cpp-file)
+                  (c++-mode)))))))
+
+(add-hook 'find-file-hook 'bh-choose-header-mode)
+
 (defun show-whitespace-in-diffs ()
   "Toggle showing whitespace in svn diffs"
   (interactive)
@@ -347,6 +366,12 @@
 
 ;; Modify functions that aren't quite right
 (defadvice dired-mark-files-containing-regexp (before unmark-all-first
+                                                      (regexp &optional marker-char)
+                                                      activate)
+  "Unmark marked files in dired mode before searching for new ones"
+  (dired-unmark-all-files ?\r))
+
+(defadvice dired-mark-python-with-errors (before unmark-all-first-2
                                                       (regexp &optional marker-char)
                                                       activate)
   "Unmark marked files in dired mode before searching for new ones"
