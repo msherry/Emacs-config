@@ -66,6 +66,7 @@
 ;; I edit these files a lot, so put them in registers
 (set-register ?z '(file . "~/.emacs.d/init.el"))
 (set-register ?g '(file . "~/repos/release/imo/imop/GraphHead.py"))
+(set-register ?s '(file . "~/repos/iphone_ads/iphone/imo.im/Classes/SimpleAdManager.m"))
 (set-register ?t '(file . "~/TODO.org"))
 (set-register ?b '(file . "/imo25:repos/imo.im/scripts/host/root/run_on_first_boot"))
 
