@@ -366,7 +366,7 @@ Based on http://bretthutley.com/programming/emacs/opening-a-cobjective-cc-header
                   (if (with-temp-buffer
                         (insert-file-contents fn)
                         (goto-char (point-min))
-                        (re-search-forward "^#import\\|@\"" nil t))
+                        (re-search-forward "^#import\\|@\"\\|@protocol" nil t))
                       (objc-mode)))))))))
 (add-hook 'find-file-hook 'bh-choose-header-mode)
 
