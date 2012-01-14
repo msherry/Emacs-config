@@ -132,6 +132,9 @@ A prefix argument means to unmark them instead.
                 ;; (> (call-process-shell-command
                 ;;     (concat pyflakes-command " " fn) nil nil)
                 ;;    0)))))
+
+                ;; TODO: make this work for all types of files -- I want to
+                ;; check .js this way too
                 (= (call-process-shell-command
                     (concat python-multiple-checker-command " -c pyflakes "
                             fn " | grep ^ERROR"))
