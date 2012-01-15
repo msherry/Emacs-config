@@ -85,12 +85,15 @@
 
 ; That doesn't work on the mac because it's started from the dock -
 ; retarded. Bring in the macports paths ourselves, both for emacs and
-; subprocesses
+; subprocesses. Also Clojure classpath stuff
 (when (eq window-system 'ns)
   (add-to-list 'exec-path "/usr/local/bin")
   (add-to-list 'exec-path "/opt/local/bin")
   (add-to-list 'exec-path "/opt/local/bin/flex/bin")
-  (setenv "PATH" (concat "/usr/local/bin:/opt/local/bin:/opt/local/mysql/bin:/opt/local/sbin:/opt/local/bin/flex/bin:/Users/msherry/opt/leiningen/:" (getenv "PATH"))))
+  (setenv "PATH" (concat "/usr/local/bin:/opt/local/bin:/opt/local/mysql/bin:/opt/local/sbin:/opt/local/bin/flex/bin:/Users/msherry/opt/leiningen/:" (getenv "PATH")))
+  ;; J/K - this is done in lein
+  ;(setenv "CLOJURE_EXT" "~/opt/clojure:~/opt/clojure-contrib/src/main/clojure")
+  )
 
 ;; Set up environment
 (set-language-environment "UTF-8")
@@ -110,18 +113,19 @@
 (package-initialize)
 
 ; Others'
-(require 'saveplace)
 (when (locate-library "auctex")
   (require 'tex-site))
-(require 'erlang-start)
-(require 'slime-autoloads)
-(require 'flymake-point) ; shows errors in the minibuffer when highlighted
-(require 'uniquify)      ; stop naming buffers <2>
 (require 'comint)        ; better key handling in shell mode
-(require 'highlight-beyond-fill-column)
-(require 'tramp)
-(require 'paredit)
 (require 'doxymacs)
+(require 'erlang-start)
+(require 'flymake-point) ; shows errors in the minibuffer when highlighted
+(require 'highlight-beyond-fill-column)
+(require 'paredit)
+(require 'rainbow-mode)
+(require 'saveplace)
+(require 'slime-autoloads)
+(require 'tramp)
+(require 'uniquify)      ; stop naming buffers <2>
 (require 'xclip)         ; OMG I love you - now I can copy and paste from linux
 ; Mine
 (require 'load-edict)
@@ -289,6 +293,10 @@
   (c-set-offset 'arglist-cont '++)
   (c-set-offset 'arglist-close '++))
 
+
+;; Colors in files where it makes sense
+(add-hook 'css-mode-hook 'rainbow-mode)
+(add-hook 'sass-mode-hook 'rainbow-mode)
 
 ; Add a common hook to every programming mode
 (mapc '(lambda (x)
