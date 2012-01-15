@@ -1,4 +1,7 @@
 (1
+ (adaptive-wrap .
+		[(0 1)
+		 nil "Smart line-wrapping with wrap-prefix" single])
  (all .
       [(1 0)
        nil "Edit all lines matching a given regexp" single])
@@ -11,6 +14,15 @@
  (debbugs .
 	  [(0 3)
 	   nil "SOAP library to access debbugs servers" tar])
+ (djvu .
+       [(0 5)
+	nil "edit and view Djvu files via djvused" single])
+ (ediprolog .
+	    [(1 0)
+	     nil "Emacs Does Interactive Prolog" single])
+ (eldoc-eval .
+	     [(0 1)
+	      nil "Enable eldoc support when minibuffer is in use." single])
  (epoch-view .
 	     [(0 0 1)
 	      nil "Minor mode to visualize epoch timestamps" single])
@@ -29,6 +41,9 @@
  (markchars .
 	    [(0 2 0)
 	     nil "Mark chars fitting certain characteristics" single])
+ (memory-usage .
+	       [(0 1)
+		nil "Analyze the memory usage of Emacs in various ways" single])
  (minimap .
 	  [(1 0)
 	   nil "Sidebar showing a \"mini-map\" of a buffer" single])
@@ -36,10 +51,10 @@
        [(3 20)
 	nil "Authoring and publishing tool" tar])
  (oauth2 .
-	 [(0 1)
+	 [(0 2)
 	  nil "OAuth 2.0 Authorization Protocol" single])
  (org .
-      [(20111006)
+      [(20120114)
        nil "Outline-based notes management and organizer" tar])
  (quarter-plane .
 		[(0 1)
@@ -50,11 +65,14 @@
  (register-list .
 		[(0 1)
 		 nil "Interactively list/edit registers" single])
+ (shen-mode .
+	    [(0 1)
+	     nil "Utilities for working with Shen code." tar])
  (sisu-mode .
 	    [(3 0 3)
 	     nil "Major mode for SiSU markup text" single])
  (svg-clock .
-	    [(0 2)
+	    [(0 3)
 	     nil "Analog clock using Scalable Vector Graphics" single])
  (undo-tree .
 	    [(0 3 1)
