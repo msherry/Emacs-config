@@ -18,10 +18,11 @@
 
 (add-hook 'slime-repl-mode-hook
           '(lambda ()
-            (local-set-key (kbd "M-<up>") 'slime-repl-backward-input)
-            (local-set-key (kbd "M-<down>") 'slime-repl-forward-input)
             (cliki:start-slime)
-            (eldoc-mode nil)))
+            (eldoc-mode nil)
+            (paredit-mode)
+            (local-set-key (kbd "M-<up>") 'slime-repl-backward-input)
+            (local-set-key (kbd "M-<down>") 'slime-repl-forward-input)))
 
 ;; CLdoc
 ;; (dolist (hook '(lisp-mode-hook
@@ -35,6 +36,18 @@
         (let ((mode-hook (intern (concat (symbol-name x) "-hook"))))
           (add-hook mode-hook 'turn-on-eldoc-mode)))
       eldoc-supported-modes)
+
+;; Lisp editing modes
+(defun lisp-editing-hook ()
+    (progn
+      (paredit-mode)))
+
+(defvar lisp-editing-modes '(emacs-lisp-mode clojure-mode))
+
+(mapc '(lambda (x)
+        (let ((mode-hook (intern (concat (symbol-name x) "-hook"))))
+          (add-hook mode-hook 'lisp-editing-hook)))
+      lisp-editing-modes)
 
 (eval-after-load "slime"
   '(progn

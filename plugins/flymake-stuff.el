@@ -112,7 +112,7 @@ Iskren's jslint script"
 ;; python-check-command set is nice. XXX Actually, we always use
 ;; pyflakes-command now, since python-check-command may be set up to give us
 ;; PEP8 style warnings.
-(defun dired-mark-python-with-errors (&optional marker-char)
+(defun dired-mark-files-with-errors (&optional marker-char)
   "Run `python-check-command' on all python files in directory, and mark all
 files containing errors for use in later commands.
 A prefix argument means to unmark them instead.
@@ -141,10 +141,10 @@ A prefix argument means to unmark them instead.
                    0)))))
      "errorful file")))
 
-;; Provide dired with a way of calling dired-mark-python-with-errors
+;; Provide dired with a way of calling dired-mark-files-with-errors
 (eval-after-load "dired"
   '(progn
-    (define-key dired-mode-map (kbd "% p") 'dired-mark-python-with-errors)))
+    (define-key dired-mode-map (kbd "% p") 'dired-mark-files-with-errors)))
 
 
 ;; Modified version of this function - allows a 5th element in patterns to
