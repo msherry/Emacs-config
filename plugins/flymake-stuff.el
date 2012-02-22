@@ -9,7 +9,7 @@
 
 ; On-the-fly pyflakes checking
 (defvar pyflakes-command (if (eq system-type 'darwin)
-                                 "pyflakes-2.6" ; dumb
+                                 "pyflakes" ; dumb
                                  "pyflakes"))
 
 ; Script that runs pyflakes, pep8, and maybe pydo

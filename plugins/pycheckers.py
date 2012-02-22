@@ -145,8 +145,6 @@ class PyflakesRunner(LintRunner):
     # On the mac, we have 'pyflakes-2.6', but on linux, just pyflakes. A symlink
     # might be easier, but this is probably more robust
     command = 'pyflakes'
-    if sys.platform == 'darwin':
-        command = 'pyflakes-2.6'
 
     output_matcher = re.compile(
         r'(?P<filename>[^:]+):'
