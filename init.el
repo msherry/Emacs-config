@@ -192,6 +192,12 @@
 ;; (global-set-key [kp-delete] [delete])
 (global-set-key (kbd "<kp-delete>") (kbd "<deletechar>"))
 
+;; I don't really need a key bound to the GPL
+(global-set-key (kbd "C-h C-c") 'hc)
+
+;; Forward-deletion of words
+(global-set-key (kbd "M-<kp-delete>") 'kill-word)
+
 (show-paren-mode t)
 ; Display
 (setq transient-mark-mode t            ; on by default in 23.x
@@ -217,7 +223,7 @@
       mouse-yank-at-point t)            ; middle-click paste at point, not mouse
 
 (setq-default show-trailing-whitespace t
-              fill-column 80            ; default of 72 is too narrow
+              fill-column 79            ; default of 72 is too narrow
               save-place t)             ; This didn't used to be buffer-local
 (put 'upcase-region 'disabled nil)
 (fset 'yes-or-no-p 'y-or-n-p)            ; stop forcing me to spell out "yes"

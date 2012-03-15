@@ -142,8 +142,6 @@ class PyflakesRunner(LintRunner):
             ^
     """
 
-    # On the mac, we have 'pyflakes-2.6', but on linux, just pyflakes. A symlink
-    # might be easier, but this is probably more robust
     command = 'pyflakes'
 
     output_matcher = re.compile(
@@ -228,6 +226,28 @@ class PydoRunner(LintRunner):
         return data
 
 
+class PylintRunner(LintRunner):
+    """Run pylint.
+
+    Raw output looks like:
+        C: 93,4:LintRunner.fixup_data: Missing docstring
+        W: 93,25:LintRunner.fixup_data: Unused argument 'line'
+        R: 93,4:LintRunner.fixup_data: Method could be a function
+    """
+
+    command = 'pylint'
+
+    output_matcher = re.compile(
+        r'(?P<error_number>.):'
+        r'(?P<line_number>[^,]+)'
+        r'[^:]+:'
+        r' (?P<description>.*)')
+
+    @classmethod
+    def fixup_data(cls, line, data):
+        return data
+
+
 def croak(*msgs):
     for m in msgs:
         print >> sys.stderr, m.strip()
@@ -238,6 +258,7 @@ RUNNERS = {
     'pyflakes': PyflakesRunner,
     'pep8': Pep8Runner,
     'pydo': PydoRunner,
+    'pylint': PylintRunner
     }
 
 
