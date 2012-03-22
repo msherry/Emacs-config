@@ -5,7 +5,8 @@
 # contributor: Yasser González Fernández <yglez@uh.cu>
 # --
 class ${1:ClassName}(${2:object}):
-    """$3
+    """
+    $3
     """
 
     def __init__(self, $4):
@@ -39,7 +40,7 @@ class ${1:ClassName}(${2:object}):
         (mapconcat
          '(lambda (x)
             (if (not (string= (nth 0 x) ""))
-                (concat "self._" (nth 0 x) " = " (nth 0 x))))
+                (concat "self." (nth 0 x) " = " (nth 0 x))))
          (mapcar
           '(lambda (x)
              (mapcar
