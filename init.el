@@ -219,7 +219,8 @@
       vc-log-show-limit 0               ; I like seeing the full log
 
 ; put the dabbrev (regular M-/ functionality) first
-      hippie-expand-try-functions-list '(try-expand-dabbrev
+      hippie-expand-try-functions-list '(yas/hippie-try-expand
+          try-expand-dabbrev
           try-expand-dabbrev-all-buffers try-expand-dabbrev-from-kill
           try-complete-file-name-partially try-complete-file-name
           try-expand-all-abbrevs try-expand-list try-expand-line
