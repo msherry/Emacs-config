@@ -127,6 +127,7 @@
 (require 'tramp)
 (require 'uniquify)      ; stop naming buffers <2>
 (require 'xclip)         ; OMG I love you - now I can copy and paste from linux
+(require 'yasnippet)
 ; Mine
 (require 'load-edict)
 (require 'tags-funcs)
@@ -147,6 +148,10 @@
 (autoload 'python-mode "python-mode" "Python Mode." t)
 (autoload 'clojure-mode "clojure-mode" "Clojure Mode" t)
 (autoload 'turn-on-cldoc-mode "cldoc" "CL docs" t)
+
+;; Configure snippets
+(yas/initialize)
+(yas/load-directory "~/.emacs.d/snippets")
 
 ;; Enable preview-latex
 (add-hook 'LaTeX-mode-hook 'LaTeX-preview-setup)
