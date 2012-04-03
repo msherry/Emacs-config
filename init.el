@@ -278,7 +278,7 @@
 ;; Mode hooks
 (defvar programming-modes '(python-mode js-mode js2-mode java-mode c-mode objc-mode
                             actionscript-mode lisp-mode emacs-lisp-mode sh-mode
-                            makefile-mode conf-mode)
+                            makefile-mode conf-mode ruby-mode)
   "Modes used for programming")
 
 (defun really-set-keys ()
