@@ -1,3 +1,4 @@
+;;; python-mode
 (defun prev-def-name ()
   (save-excursion
     (if (re-search-backward "def +\\(.+?\\)(" nil t)
@@ -12,3 +13,9 @@
   (save-excursion
     (if (re-search-backward "class +\\(.+?\\) *[(:]" nil t)
     (match-string 1))))
+
+;;; ruby-mode (chef)
+(defun recipe-name ()
+  "Assumes that the recipe file being edited is in a
+properly-structured cookbook -- <recipe>/recipes/<recipe_file>.rb"
+  (file-name-nondirectory (directory-file-name (locate-dominating-file default-directory "recipes"))))

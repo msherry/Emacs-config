@@ -1,0 +1,12 @@
+# -*- coding: utf-8 -*-
+# name: template
+# contributor: Marc Sherry <msherry@gmail.com>
+# key: template
+# --
+template "${1:file}" do
+  owner "${2:root}"
+  group "$2"
+  mode "${3:0644}"
+  source "$1.erb"
+  notifies :reload, "service[${4:`(recipe-name)`}]"
+end
