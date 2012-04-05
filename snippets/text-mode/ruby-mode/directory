@@ -1,0 +1,10 @@
+# -*- coding: utf-8 -*-
+# name: directory
+# contributor: Marc Sherry <msherry@gmail.com>
+# key: directory
+# --
+directory "${1:dir}" do
+  owner "${2:root}"
+  group "$2"
+  mode "${3:0755}"
+end
