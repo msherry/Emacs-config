@@ -5,3 +5,6 @@ backups/*
 emacs-places
 games/
 tramp
+pass.org.gpg
+swank/
+url/
