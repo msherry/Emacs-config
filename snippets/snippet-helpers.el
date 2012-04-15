@@ -19,3 +19,8 @@
   "Assumes that the recipe file being edited is in a
 properly-structured cookbook -- <recipe>/recipes/<recipe_file>.rb"
   (file-name-nondirectory (directory-file-name (locate-dominating-file default-directory "recipes"))))
+
+(defun strip-leading-slash (text)
+  (if (char-equal ?/ (string-to-char text))
+      (substring text 1)
+      text))

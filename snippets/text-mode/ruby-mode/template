@@ -7,6 +7,6 @@ template "${1:file}" do
   owner "${2:root}"
   group "$2"
   mode "${3:0644}"
-  source "$1.erb"
+  source "${1:$(strip-leading-slash text)}.erb"
   notifies :reload, "service[${4:`(recipe-name)`}]"
 end
