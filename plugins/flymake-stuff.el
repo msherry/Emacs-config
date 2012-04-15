@@ -52,12 +52,31 @@
                local-file))))
     (add-to-list 'flymake-allowed-file-name-masks
      '("\\.js\\'" flymake-js-init))
-
     (add-to-list 'flymake-err-line-patterns imojslint-err-line-pattern)
 
-    ;; We have two separate line-parsing functions, and emacs doesn't provide a way
-    ;; to do buffer-local symbol-function definitions -- only symbol value. Hack up
-    ;; a dispatch function
+    (defun flymake-ruby-init ()
+      (let* ((temp-file   (flymake-init-create-temp-buffer-copy
+                           'flymake-create-temp-inplace))
+             (local-file  (file-relative-name
+                           temp-file
+                           (file-name-directory buffer-file-name))))
+        (list "ruby" (list "-c" local-file))))
+    (push '(".+\\.rb$" flymake-ruby-init) flymake-allowed-file-name-masks)
+    (push '("Rakefile$" flymake-ruby-init) flymake-allowed-file-name-masks)
+
+    (push '("^\\(.*\\):\\([0-9]+\\): \\(.*\\)$" 1 2 nil 3) flymake-err-line-patterns)
+
+    (add-hook 'ruby-mode-hook
+     '(lambda ()
+       ;; Don't want flymake mode for ruby regions in rhtml files and also on
+       ;; read only files
+       (if (and (not (null buffer-file-name)) (file-writable-p buffer-file-name))
+           (flymake-mode))))
+
+    ;; We have two separate line-parsing functions (one for js, one for
+    ;; everything else), and emacs doesn't provide a way to do buffer-local
+    ;; symbol-function definitions -- only symbol value. Hack up a dispatch
+    ;; function
     (fset 'orig-flymake-parse-line (symbol-function 'flymake-parse-line))
 
     (defun flymake-parse-line (line)
@@ -67,7 +86,7 @@ version, depending on the value of the variable `use-hacked-flymake-parse-line'"
           (imo-flymake-parse-line line)
           (orig-flymake-parse-line line)))))
 
-(defvar flymake-modes '(python-mode c-mode-common js-mode js2-mode javascript-mode))   ;c-mode-common is a pain to get working
+(defvar flymake-modes '(python-mode c-mode-common js-mode js2-mode javascript-mode ruby-mode))   ;c-mode-common is a pain to get working
 
 (defvar flymake-js-modes '(js-mode js2-mode javascript-mode))
 
