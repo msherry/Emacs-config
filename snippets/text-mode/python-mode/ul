@@ -1,0 +1,3 @@
+#name : unicode_literals
+# --
+from __future__ import unicode_literals$0
