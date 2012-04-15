@@ -59,8 +59,8 @@
 ;;   (if (fboundp 'scroll-bar-mode) (scroll-bar-mode -1))
 
   ;;(set-frame-parameter (selected-frame) 'alpha '(<active> [<inactive>]))
-  (set-frame-parameter (selected-frame) 'alpha '(85 50))
-  (add-to-list 'default-frame-alist '(alpha 85 50)))
+  (set-frame-parameter (selected-frame) 'alpha '(100 50))
+  (add-to-list 'default-frame-alist '(alpha 100 50)))
 
 
 ;; I edit these files a lot, so put them in registers
@@ -226,7 +226,7 @@
       vc-log-show-limit 0               ; I like seeing the full log
 
 ; put the dabbrev (regular M-/ functionality) first
-      hippie-expand-try-functions-list '(yas/hippie-try-expand
+      hippie-expand-try-functions-list '(
           try-expand-dabbrev
           try-expand-dabbrev-all-buffers try-expand-dabbrev-from-kill
           try-complete-file-name-partially try-complete-file-name
