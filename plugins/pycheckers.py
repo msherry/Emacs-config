@@ -31,13 +31,14 @@ Original work taken from http://www.emacswiki.org/emacs/PythonMode, author
 unknown.
 
 """
+import re
 
 ## Customization ##
 
 # Checkers to run be default, when no --checkers options are supplied.
 # One or more of pydo, pep8 or pyflakes, separated by commas
 # default_checkers = 'pep8, pyflakes'
-default_checkers = 'pyflakes,pep8,pylint'
+default_checkers = 'pylint'
 
 # A list of error codes to ignore for PEP8
 # default_ignore_codes = ['E225', 'W114']
@@ -112,6 +113,7 @@ class LintRunner(object):
             return
 
         for line in process.stdout:
+            print line
             match = self.process_output(line)
             if match:
                 tokens = dict(self.output_template)
@@ -324,6 +326,19 @@ if __name__ == '__main__':
         source_file = sys.argv[1]
         checkers = default_checkers
         ignore_codes = default_ignore_codes
+
+    # Attempt to determine if the current file is in a virtualenv, and munge
+    # paths appropriately
+    # TODO: this is very pp-specific
+    full_path = os.path.abspath(source_file)
+    if '/pp/' in full_path:
+        package = re.search(r'/pp/([^/]+)', full_path).group(1)
+        virtualenv_path = os.path.expanduser('~{}/.virtualenvs/{}'.format(
+                os.environ['USER'], package))
+        if os.path.exists(virtualenv_path):
+            bin_path = os.path.join(virtualenv_path, 'bin')
+            os.environ['PATH'] = \
+              bin_path + ':' + os.environ['PATH']
 
     errors_or_warnings = 0
     for checker in checkers.split(','):
