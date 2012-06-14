@@ -36,7 +36,7 @@ unknown.
 # Checkers to run be default, when no --checkers options are supplied.
 # One or more of pydo, pep8 or pyflakes, separated by commas
 # default_checkers = 'pep8, pyflakes'
-default_checkers = 'pylint'
+default_checkers = 'pylint,pep8'
 
 # A list of error codes to ignore for PEP8
 # default_ignore_codes = ['E225', 'W114']
@@ -254,6 +254,8 @@ class PylintRunner(LintRunner):
         "W0511",
         "E1002",  # Use super on old-style class
         "E1101",
+        "E1103",  # Instance of x has no y member
+                  # (but some types could not be inferred")
         "R0201",  # Method could be a function
         "R0801",  # Similar lines in * files
         "R0902",  # Too many instance attributes
