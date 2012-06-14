@@ -37,7 +37,7 @@ unknown.
 # Checkers to run be default, when no --checkers options are supplied.
 # One or more of pydo, pep8 or pyflakes, separated by commas
 # default_checkers = 'pep8, pyflakes'
-default_checkers = 'pyflakes,pep8'
+default_checkers = 'pyflakes,pep8,pylint'
 
 # A list of error codes to ignore for PEP8
 # default_ignore_codes = ['E225', 'W114']
@@ -227,25 +227,54 @@ class PydoRunner(LintRunner):
 
 
 class PylintRunner(LintRunner):
-    """Run pylint.
+    """ Run pylint, producing flymake readable output.
 
-    Raw output looks like:
-        C: 93,4:LintRunner.fixup_data: Missing docstring
-        W: 93,25:LintRunner.fixup_data: Unused argument 'line'
-        R: 93,4:LintRunner.fixup_data: Method could be a function
-    """
+    The raw output looks like:
+    render.py:49: [C0301] Line too long (82/80)
+    render.py:1: [C0111] Missing docstring
+    render.py:3: [E0611] No name 'Response' in module 'werkzeug'
+    render.py:32: [C0111, render] Missing docstring """
 
     command = 'pylint'
 
     output_matcher = re.compile(
-        r'(?P<error_number>.):'
-        r'(?P<line_number>[^,]+)'
-        r'[^:]+:'
-        r' (?P<description>.*)')
+        r'(?P<filename>[^:]+):'
+        r'(?P<line_number>\d+):'
+        r'\s*\[(?P<error_type>[WECR])(?P<error_number>[^,]+),'
+        r'\s*(?P<context>[^\]]+)\]'
+        r'\s*(?P<description>.*)$')
+
+    sane_default_ignore_codes = set([
+        "C0103",  # Naming convention
+        "C0111",  # Missing Docstring
+        "W0142",
+        "W0201",  # "Attribute defined outside __init__"
+        "W0232",  # No __init__
+        "W0403",
+        "W0511",
+        "E1002",  # Use super on old-style class
+        "E1101",
+        "R0201",  # Method could be a function
+        "R0801",  # Similar lines in * files
+        "R0902",  # Too many instance attributes
+        "R0903",  # Too few public methods
+        "R0904",  # Too many public methods
+    ])
 
     @classmethod
     def fixup_data(cls, line, data):
+        if data['error_type'].startswith('E'):
+            data['level'] = 'ERROR'
+        else:
+            data['level'] = 'WARNING'
         return data
+
+    @property
+    def run_flags(self):
+        return ('--output-format', 'parseable',
+                '--include-ids', 'y',
+                '--reports', 'n',
+                '--disable=' + ','.join(self.sane_default_ignore_codes))
 
 
 def croak(*msgs):
@@ -277,7 +306,7 @@ if __name__ == '__main__':
                           default=[], action='append',
                           help="error codes to ignore")
         parser.add_option("-c", "--checkers", dest="checkers",
-                          default='pep8,pyflakes',
+                          default=default_checkers,
                           help="comma separated list of checkers")
         options, args = parser.parse_args()
         if not args:
