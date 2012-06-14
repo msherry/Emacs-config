@@ -31,8 +31,6 @@ Original work taken from http://www.emacswiki.org/emacs/PythonMode, author
 unknown.
 
 """
-import re
-
 ## Customization ##
 
 # Checkers to run be default, when no --checkers options are supplied.
@@ -44,18 +42,18 @@ default_checkers = 'pylint'
 # default_ignore_codes = ['E225', 'W114']
 default_ignore_codes = \
     [
-    # 'E202',                          # Whitespace before ']'
-    # 'E221',                          # Multiple spaces before operator
-    # 'E225',                          # Missing whitespace around operator
-    # 'E231',                          # Missing whitespace after ':'
-    # 'E241',                          # Multiple spaces after ':'
-    # 'E261',                          # At least two spaces before inline comment
-    # 'W291',                          # Trailing whitespace
-    # 'E301',                          # Expected 1 blank line, found 0
-    # 'E302',                          # Expected 2 blank lines, found 1
-    # 'E303',                          # Too many blank lines
-    # 'E401',                          # Multiple imports on one line
-    # 'E501',                          # Line too long
+    # 'E202',                       # Whitespace before ']'
+    # 'E221',                       # Multiple spaces before operator
+    # 'E225',                       # Missing whitespace around operator
+    # 'E231',                       # Missing whitespace after ':'
+    # 'E241',                       # Multiple spaces after ':'
+    # 'E261',                       # At least two spaces before inline comment
+    # 'W291',                       # Trailing whitespace
+    # 'E301',                       # Expected 1 blank line, found 0
+    # 'E302',                       # Expected 2 blank lines, found 1
+    # 'E303',                       # Too many blank lines
+    # 'E401',                       # Multiple imports on one line
+    # 'E501',                       # Line too long
     ]
 
 ## End of customization ##
@@ -64,6 +62,7 @@ import os
 from os import path
 import re
 import sys
+
 
 from subprocess import Popen, PIPE
 
@@ -113,7 +112,6 @@ class LintRunner(object):
             return
 
         for line in process.stdout:
-            print line
             match = self.process_output(line)
             if match:
                 tokens = dict(self.output_template)
@@ -242,8 +240,8 @@ class PylintRunner(LintRunner):
     output_matcher = re.compile(
         r'(?P<filename>[^:]+):'
         r'(?P<line_number>\d+):'
-        r'\s*\[(?P<error_type>[WECR])(?P<error_number>[^,]+),'
-        r'\s*(?P<context>[^\]]+)\]'
+        r'\s*\[(?P<error_type>[WECR])(?P<error_number>[^,\]]+),?'
+        r'\s*(?P<context>[^\]]*)\]'
         r'\s*(?P<description>.*)$')
 
     sane_default_ignore_codes = set([
