@@ -59,8 +59,8 @@
 ;;   (if (fboundp 'scroll-bar-mode) (scroll-bar-mode -1))
 
   ;;(set-frame-parameter (selected-frame) 'alpha '(<active> [<inactive>]))
-  (set-frame-parameter (selected-frame) 'alpha '(100 50))
-  (add-to-list 'default-frame-alist '(alpha 100 50)))
+  (set-frame-parameter (selected-frame) 'alpha '(100 100))
+  (add-to-list 'default-frame-alist '(alpha 100 100)))
 
 
 ;; I edit these files a lot, so put them in registers
@@ -131,6 +131,7 @@
 (require 'uniquify)      ; stop naming buffers <2>
 (require 'xclip)         ; OMG I love you - now I can copy and paste from linux
 (require 'yasnippet)
+;; (load "~/.emacs.d/plugins/vendor/nxhtml/autostart.el")
 ; Mine
 (require 'load-edict)
 (require 'tags-funcs)
@@ -219,7 +220,7 @@
       truncate-partial-width-windows nil
       ediff-split-window-function 'split-window-horizontally
 ; Functionality
-      require-final-newline 'visit-save ; add on both visit and save
+      require-final-newline t           ; add only on save
       inferior-erlang-prompt-timeout t
       vc-delete-logbuf-window nil       ; don't close vc window when done
       vc-follow-symlinks t              ; don't always ask
@@ -247,6 +248,8 @@
 (setq uniquify-after-kill-buffer-p t)
 (setq uniquify-ignore-buffers-re "^\\*")
 
+;; Copy files between dired buffers easily
+(setq dired-dwim-target t)
 
 ;; Bindings
 (global-set-key (kbd "M-g") 'goto-line)
@@ -266,6 +269,8 @@
 ; Don't prompt when creating scratch buffers
 (setq iswitchb-prompt-newbuffer nil)
 
+;; ; Trailing newlines are annoying in snippets
+;; (setq-default mode-require-final-newline nil)
 
 ; Give us the ability to leave certain words highlighted - always got jealous
 ; when I saw this in vim
@@ -481,7 +486,6 @@ annotations"
   ;; If there is more than one, they won't work right.
  '(ediff-current-diff-B ((((class color) (min-colors 16)) (:background "#ff00ff" :foreground "blue"))))
  '(ediff-even-diff-B ((((class color) (min-colors 16)) (:background "Grey" :foreground "black"))))
- ;; Called both cyan and brightcyan
  '(region ((((class color) (min-colors 24)) (:background "#00ffff")))))
 
 
@@ -567,7 +571,6 @@ annotations"
 ;;       smtpmail-local-domain "imo.im")
 
 
-
 (defun switch-font ()
   "Temporary function to quickly switch between monaco and
 inconsolata. Really only applicable on the Mac."
@@ -613,3 +616,9 @@ http://blogs.fluidinfo.com/terry/2011/11/10/emacs-buffer-mode-histogram/"
               (setq key (substring key 0 -5)))
           (princ (format "%2d %20s %s\n" count key
                          (make-string count ?+))))))))
+(custom-set-variables
+  ;; custom-set-variables was added by Custom.
+  ;; If you edit it by hand, you could mess it up, so be careful.
+  ;; Your init file should contain only one such instance.
+  ;; If there is more than one, they won't work right.
+ '(mumamo-chunk-coloring 999))

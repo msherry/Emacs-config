@@ -4,7 +4,7 @@
 # key: cookbook
 # --
 cookbook_file "${1:file}" do
-  source "$1"
+  source "${1:$(strip-leading-slash text)}"
   owner "${2:root}"
   group "$2"
   mode "${3:0644}"

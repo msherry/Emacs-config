@@ -36,7 +36,7 @@
                           (file-name-directory buffer-file-name))))
         (list python-multiple-checker-command
               ;; -c option allows for comma-separated list of checkers
-              (list "-c" "pyflakes,pep8" local-file))))
+              (list local-file))))
     (add-to-list 'flymake-allowed-file-name-masks
      '("\\.py\\'" flymake-pyflakes-init))
 

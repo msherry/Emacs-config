@@ -54,6 +54,11 @@ default_ignore_codes = \
     # 'E303',                       # Too many blank lines
     # 'E401',                       # Multiple imports on one line
     # 'E501',                       # Line too long
+
+    # 'E127',                # continuation line over-indented for visual indent
+    # 'E128',                # continuation line under-indented for visual indent
+    'E711',                # comparison to None should be...
+    'E712',                # comparison to True/False should be ...
     ]
 
 ## End of customization ##
