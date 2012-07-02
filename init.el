@@ -43,10 +43,11 @@
          (setq default-frame-alist
                (append `((left . ,(cond ((< emacs-major-version 23) 15)
                                         (t 8)))
-                         (top . 22)
+                         (top . 20)
                          (width . 175)
                          (height . ,(cond ((< emacs-major-version 23) 47)
-                                          (t 52))))
+                                          ((< emacs-major-version 24) 52)
+                                          (t 49))))
                        default-frame-alist)))
         ((eq system-type 'gnu/linux)
          (setq default-frame-alist
@@ -189,6 +190,10 @@
 ;; (setq js2-basic-offset 4)               ; imo uses four
 
 (setq mac-pass-command-to-system nil)
+
+;; Settings that 24 broke
+;; TODO: figure out why this doesn't work on the mac
+(setq-default grep-find-use-xargs t)
 
 ;; Other settings that 23 broke
 (when (>= emacs-major-version 23)
