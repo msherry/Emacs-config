@@ -72,30 +72,30 @@
 ;;; Set the PATH, even if not started from the shell -- stolen from Mahmoud
 (setenv "PATH" (shell-command-to-string "/bin/bash -l -c 'echo -n $PATH'"))
 
-;; (defun set-path-from-shell ()
-;;   "Set PATH/exec-path based on the shell's configuration"
-;;   (if (get-buffer "*set-path-from-shell*")
-;;       (kill-buffer "*set-path-from-shell*"))
-;;   (call-process-shell-command "echo $PATH" nil "*set-path-from-shell*")
-;;   (with-current-buffer "*set-path-from-shell*"
-;;     (let ((output (buffer-substring (point-min) (- (point-max) 1)))
-;;           (emacs-path (nth 0 (last exec-path))))
-;;       (setenv "PATH" (concat output emacs-path))
-;;       (setq exec-path `(,@(split-string output ":") ,emacs-path))
-;;       (kill-buffer nil))))
-;; (set-path-from-shell)
+(defun set-path-from-shell ()
+  "Set PATH/exec-path based on the shell's configuration"
+  (if (get-buffer "*set-path-from-shell*")
+      (kill-buffer "*set-path-from-shell*"))
+  (call-process-shell-command "echo $PATH" nil "*set-path-from-shell*")
+  (with-current-buffer "*set-path-from-shell*"
+    (let ((output (buffer-substring (point-min) (- (point-max) 1)))
+          (emacs-path (nth 0 (last exec-path))))
+      (setenv "PATH" (concat output emacs-path))
+      (setq exec-path `(,@(split-string output ":") ,emacs-path))
+      (kill-buffer nil))))
+(set-path-from-shell)
 
-;; ; That doesn't work on the mac because it's started from the dock -
-;; ; retarded. Bring in the macports paths ourselves, both for emacs and
-;; ; subprocesses. Also Clojure classpath stuff
-;; (when (eq window-system 'ns)
-;;   (add-to-list 'exec-path "/usr/local/bin")
-;;   (add-to-list 'exec-path "/opt/local/bin")
-;;   (add-to-list 'exec-path "/opt/local/bin/flex/bin")
-;;   (setenv "PATH" (concat "/usr/local/bin:/opt/local/bin:/opt/local/mysql/bin:/opt/local/sbin:/opt/local/bin/flex/bin:/Users/msherry/opt/leiningen/:" (getenv "PATH")))
-;;   ;; J/K - this is done in lein
-;;   ;(setenv "CLOJURE_EXT" "~/opt/clojure:~/opt/clojure-contrib/src/main/clojure")
-;;   )
+; That doesn't work on the mac because it's started from the dock -
+; retarded. Bring in the macports paths ourselves, both for emacs and
+; subprocesses. Also Clojure classpath stuff
+(when (eq window-system 'ns)
+  (add-to-list 'exec-path "/usr/local/bin")
+  (add-to-list 'exec-path "/opt/local/bin")
+  (add-to-list 'exec-path "/opt/local/bin/flex/bin")
+  (setenv "PATH" (concat "/usr/local/bin:/opt/local/bin:/opt/local/mysql/bin:/opt/local/sbin:/opt/local/bin/flex/bin:/Users/msherry/opt/leiningen/:" (getenv "PATH")))
+  ;; J/K - this is done in lein
+  ;(setenv "CLOJURE_EXT" "~/opt/clojure:~/opt/clojure-contrib/src/main/clojure")
+  )
 
 ;; Set up environment
 (set-language-environment "UTF-8")
@@ -193,7 +193,7 @@
 
 ;; Settings that 24 broke
 ;; TODO: figure out why this doesn't work on the mac
-(setq-default grep-find-use-xargs t)
+(setq-default grep-find-use-xargs 'exec)
 
 ;; Other settings that 23 broke
 (when (>= emacs-major-version 23)
