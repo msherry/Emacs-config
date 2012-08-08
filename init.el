@@ -145,6 +145,14 @@
   (progn
     (require 'old-emacs-git)
     (require 'vc-svn)))
+
+(require 'ipython)
+(require 'anything)
+(require 'anything-ipython)
+(when (require 'anything-show-completion nil t)
+   (use-anything-show-completion 'anything-ipython-complete
+                                 '(length initial-pattern)))
+
 ; Autoloads
 (autoload 'js2-mode "js2" nil t)
 (autoload 'actionscript-mode "actionscript-mode" nil t) ; Connors' version
@@ -551,3 +559,4 @@ http://blogs.fluidinfo.com/terry/2011/11/10/emacs-buffer-mode-histogram/"
   ;; Your init file should contain only one such instance.
   ;; If there is more than one, they won't work right.
  '(mumamo-chunk-coloring 999))
+(put 'downcase-region 'disabled nil)
