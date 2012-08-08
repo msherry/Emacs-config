@@ -1,0 +1,19 @@
+#contributor : Marc Sherry <msherry@gmail.com>
+#name : letter
+# --
+\documentclass{letter}
+
+\signature{${1:Marc Sherry}}
+\address{${2:Marc Sherry \\\\ 58 Winfield St. \\\\ San Francisco, CA 94110}}
+
+\begin{document}
+\begin{letter}{${3:IRS People \\\\ Some address \\\\ Some place}}
+  \opening{${4:To whom it may concern:}}
+
+  ${5:This is the text.}
+
+\closing{Sincerely,}
+
+\encl{Some Enclosure}
+\end{letter}
+\end{document}
