@@ -122,6 +122,7 @@
 (require 'comint)        ; better key handling in shell mode
 (require 'doxymacs)
 (require 'erlang-start)
+(require 'ess)
 (require 'flymake-point) ; shows errors in the minibuffer when highlighted
 (require 'highlight-beyond-fill-column)
 (require 'paredit)
@@ -292,9 +293,9 @@
 ; Warn about suspicious C/C++ constructs
 (global-cwarn-mode 1)
 
-; Create two windows initially if we have the room. Check both current width and
-; width from default-frame-alist (if present), since the frame may not have been
-; resized yet
+; Create two windows initially if we have the room. Check both current width
+; and width from default-frame-alist (if present), since the frame may not have
+; been resized yet
 (if (> (max (window-width)
             (or (cdr (assoc 'width default-frame-alist))
                 0))
@@ -303,9 +304,10 @@
 
 
 ;; Mode hooks
-(defvar programming-modes '(python-mode js-mode js2-mode java-mode c-mode objc-mode
-                            actionscript-mode lisp-mode emacs-lisp-mode sh-mode
-                            makefile-mode conf-mode ruby-mode)
+(defvar programming-modes '(python-mode js-mode js2-mode java-mode c-mode
+                            objc-mode actionscript-mode lisp-mode
+                            emacs-lisp-mode sh-mode makefile-mode conf-mode
+                            ruby-mode)
   "Modes used for programming")
 
 (defun really-set-keys ()
