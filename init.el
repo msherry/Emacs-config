@@ -277,6 +277,8 @@
 ; Readline in shell mode
 (define-key comint-mode-map [up] 'comint-previous-input)
 (define-key comint-mode-map [down] 'comint-next-input)
+; I never use list-buffers, but I end up accidentally hitting it all the time
+(global-set-key (kbd "C-x C-b") 'switch-to-buffer)
 
 ; Better buffer switching
 (iswitchb-mode t)
