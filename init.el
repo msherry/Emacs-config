@@ -142,17 +142,12 @@
 (require 'flymake-stuff)
 (require 'lambda)
 (require 'totd)
+(require 'disaster)
 (when (< emacs-major-version 23)
   (progn
     (require 'old-emacs-git)
     (require 'vc-svn)))
 
-(require 'ipython)
-(require 'anything)
-(require 'anything-ipython)
-(when (require 'anything-show-completion nil t)
-   (use-anything-show-completion 'anything-ipython-complete
-                                 '(length initial-pattern)))
 
 ; Autoloads
 (autoload 'js2-mode "js2" nil t)
@@ -277,8 +272,8 @@
 ; Readline in shell mode
 (define-key comint-mode-map [up] 'comint-previous-input)
 (define-key comint-mode-map [down] 'comint-next-input)
-; I never use list-buffers, but I end up accidentally hitting it all the time
-(global-set-key (kbd "C-x C-b") 'switch-to-buffer)
+; IBuffer is better than list-buffers
+(global-set-key (kbd "C-x C-b") 'ibuffer)
 
 ; Better buffer switching
 (iswitchb-mode t)
@@ -338,6 +333,7 @@
 ;; Colors in files where it makes sense
 (add-hook 'css-mode-hook 'rainbow-mode)
 (add-hook 'sass-mode-hook 'rainbow-mode)
+(add-hook 'dot-mode-hook 'rainbow-mode)
 
 ; Add a common hook to every programming mode
 (mapc '(lambda (x)
@@ -568,12 +564,19 @@ http://blogs.fluidinfo.com/terry/2011/11/10/emacs-buffer-mode-histogram/"
 (put 'downcase-region 'disabled nil)
 
 
+(eval-after-load 'cc-mode
+  '(progn
+     (require 'disaster)
+     (defun my-c-mode-common-hook ()
+       (define-key c-mode-base-map (kbd "C-c C-d") 'disaster))
+    (add-hook 'c-mode-common-hook 'my-c-mode-common-hook)))
+
 ;; Python/Rope
 ;; Move this elsewhere
-(autoload 'pymacs-apply "pymacs")
-(autoload 'pymacs-call "pymacs")
-(autoload 'pymacs-eval "pymacs" nil t)
-(autoload 'pymacs-exec "pymacs" nil t)
-(autoload 'pymacs-load "pymacs" nil t)
-(pymacs-load "ropemacs" "rope-")
-(setq ropemacs-enable-autoimport t)
+;; (autoload 'pymacs-apply "pymacs")
+;; (autoload 'pymacs-call "pymacs")
+;; (autoload 'pymacs-eval "pymacs" nil t)
+;; (autoload 'pymacs-exec "pymacs" nil t)
+;; (autoload 'pymacs-load "pymacs" nil t)
+;; (pymacs-load "ropemacs" "rope-")
+;; (setq ropemacs-enable-autoimport t)
