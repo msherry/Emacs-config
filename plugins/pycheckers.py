@@ -245,7 +245,7 @@ class PylintRunner(LintRunner):
     output_matcher = re.compile(
         r'(?P<filename>[^:]+):'
         r'(?P<line_number>\d+):'
-        r'\s*\[(?P<error_type>[WECR])(?P<error_number>[^,\]]+),?'
+        r'\s*\[(?P<error_type>[WECR])(?P<error_number>[^(,\]]+),?'
         r'\s*(?P<context>[^\]]*)\]'
         r'\s*(?P<description>.*)$')
 
@@ -279,7 +279,6 @@ class PylintRunner(LintRunner):
     @property
     def run_flags(self):
         return ('--output-format', 'parseable',
-                '--include-ids', 'y',
                 '--reports', 'n',
                 '--disable=' + ','.join(self.sane_default_ignore_codes))
 
@@ -295,14 +294,14 @@ RUNNERS = {
     'pep8': Pep8Runner,
     'pydo': PydoRunner,
     'pylint': PylintRunner
-    }
+}
 
 
 if __name__ == '__main__':
     # transparently add a virtualenv to the path when launched with a venv'd
     # python.
-    os.environ['PATH'] = \
-      path.dirname(sys.executable) + ':' + os.environ['PATH']
+    os.environ['PATH'] = (path.dirname(sys.executable) + ':' +
+                          os.environ['PATH'])
 
     if len(sys.argv) < 2:
         croak("Usage: %s [file]" % sys.argv[0])

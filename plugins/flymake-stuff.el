@@ -10,9 +10,7 @@
 (setq flymake-gui-warnings-enabled nil)
 
 ; On-the-fly pyflakes checking
-(defvar pyflakes-command (if (eq system-type 'darwin)
-                                 "pyflakes" ; dumb
-                                 "pyflakes"))
+(defvar pyflakes-command "pyflakes")
 
 ; Script that runs pyflakes, pep8, and maybe pydo
 (defvar python-multiple-checker-command "~/.emacs.d/plugins/pycheckers.py")
