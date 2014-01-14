@@ -39,8 +39,6 @@
           (?\x4E00 . ?\x9FBF)           ; Kanji
           )))
 
-(set-fontset-font "fontset-startup" 'japanese-jisx0208 "-apple-Osaka-medium-normal-normal-*-12-*-*-*-m-0-iso10646-1")
-
 ;; Set up GUI as soon as possible
 (when window-system
   (cond ((eq system-type 'darwin)
