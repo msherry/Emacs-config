@@ -29,15 +29,15 @@
 ;; a crap chinese font. It seems that it's kind of random when a font is used,
 ;; and can change, so we specify all three ranges manually. Obviously we could
 ;; combine hiragana and katakana ranges.
-;; これ は 煮本語 です
-  (mapc '(lambda (x)
-          (set-fontset-font "fontset-startup"
-           x
-           "-apple-Osaka-medium-normal-normal-*-12-*-*-*-m-0-iso10646-1"))
-        '((?\x3040 . ?\x309F)           ; Hiragana
-          (?\x30A0 . ?\x30FF)           ; Katakana
-          (?\x4E00 . ?\x9FBF)           ; Kanji
-          )))
+;; これ は 二本語 です
+ (mapc '(lambda (x)
+         (set-fontset-font "fontset-default"
+          x
+          "-apple-Osaka-medium-normal-normal-*-13-*-*-*-m-0-iso10646-1"))
+       '((?\x3040 . ?\x309F)           ; Hiragana
+         (?\x30A0 . ?\x30FF)           ; Katakana
+         (?\x4E00 . ?\x9FBF)           ; Kanji
+         )))
 
 ;; Set up GUI as soon as possible
 (when window-system
@@ -64,7 +64,6 @@
   ;;(set-frame-parameter (selected-frame) 'alpha '(<active> [<inactive>]))
   (set-frame-parameter (selected-frame) 'alpha '(100 100))
   (add-to-list 'default-frame-alist '(alpha 100 100)))
-
 
 ;; I edit these files a lot, so put them in registers
 (set-register ?z '(file . "~/.emacs.d/init.el"))
@@ -134,6 +133,8 @@ This is particularly useful under Mac OSX, where GUI apps are not started from a
     (require 'old-emacs-git)
     (require 'vc-svn)))
 
+; Theme
+(load-theme 'solarized-dark t)
 
 ; Autoloads
 (autoload 'js2-mode "js2" nil t)
@@ -490,7 +491,7 @@ annotations"
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(ediff-current-diff-B ((((class color) (min-colors 16)) (:background "#ff00ff" :foreground "blue"))))
- '(ediff-even-diff-B ((((class color) (min-colors 16)) (:background "Grey" :foreground "black"))))
+ '(ediff-even-diff-B ((((class color) (min-colors 16)) (:background "Grey" :foreground "black"))) t)
  '(error ((t (:background "LightCoral"))))
  '(region ((((class color) (min-colors 24)) (:background "#00ffff"))))
  '(warning ((t (:background "#a4caff")))))
@@ -546,6 +547,7 @@ http://blogs.fluidinfo.com/terry/2011/11/10/emacs-buffer-mode-histogram/"
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
+ '(custom-safe-themes (quote ("8aebf25556399b58091e533e455dd50a6a9cba958cc4ebb0aab175863c25b9a4" default)))
  '(mumamo-chunk-coloring 999))
 (put 'downcase-region 'disabled nil)
 
