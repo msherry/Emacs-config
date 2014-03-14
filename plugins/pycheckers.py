@@ -257,13 +257,11 @@ class PylintRunner(LintRunner):
         "W0232",  # No __init__
         "W0403",
         "W0511",
-        "E1002",  # Use super on old-style class
         "E1101",
         "E1103",  # Instance of x has no y member
                   # (but some types could not be inferred")
         "R0201",  # Method could be a function
         "R0801",  # Similar lines in * files
-        "R0902",  # Too many instance attributes
         "R0903",  # Too few public methods
         "R0904",  # Too many public methods
     ])
@@ -280,7 +278,9 @@ class PylintRunner(LintRunner):
     def run_flags(self):
         return ('--output-format', 'parseable',
                 '--reports', 'n',
-                '--disable=' + ','.join(self.sane_default_ignore_codes))
+                '--disable=' + ','.join(self.sane_default_ignore_codes),
+                '--dummy-variables-rgx=' + '_.*'
+                )
 
 
 def croak(*msgs):
@@ -338,21 +338,20 @@ if __name__ == '__main__':
     if '/pp/' in full_path:
         package = re.search(r'/pp/([^/]+)', full_path).group(1)
         virtualenv_path = os.path.expanduser('~{}/.virtualenvs/{}'.format(
-                os.environ['USER'], package))
+            os.environ['USER'], package))
         if os.path.exists(virtualenv_path):
             bin_path = os.path.join(virtualenv_path, 'bin')
-            os.environ['PATH'] = \
-              bin_path + ':' + os.environ['PATH']
+            os.environ['PATH'] = bin_path + ':' + os.environ['PATH']
 
     errors_or_warnings = 0
     for checker in checkers.split(','):
         try:
-            cls = RUNNERS[checker.strip()]
+            klass = RUNNERS[checker.strip()]
         except KeyError:
             croak(("Unknown checker %s" % checker),
                   ("Expected one of %s" % ', '.join(RUNNERS.keys())))
             break
-        runner = cls(ignore_codes=ignore_codes)
+        runner = klass(ignore_codes=ignore_codes)
         errors_or_warnings += runner.run(source_file)
 
     exit_status = 0
