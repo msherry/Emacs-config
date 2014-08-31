@@ -1,17 +1,17 @@
 ;; Much of this is organized similar to:
 ;; http://bitbucket.org/brodie/dotfiles/src/tip/.emacs
 
-;; Do these early so if there's an error in config we don't pollute ~/ with junk
-;; files
+;; Do these early so if there's an error in config we don't pollute ~/ with
+;; junk files
 (setq save-place-file "~/.emacs.d/emacs-places"
       backup-directory-alist '(("." . "~/.emacs.d/backups")))
 
 ; Seed RNG
 (random t)
 
-;; While emacs23 handles greek poorly on the mac, use a different font. See last
-;; http ref in plugins/lambda.el. "fontset-startup" (or fontsets at all, it
-;; seems) don't exist in 22, so only do this on the mac for now
+;; While emacs23 handles greek poorly on the mac, use a different font. See
+;; last http ref in plugins/lambda.el. "fontset-startup" (or fontsets at all,
+;; it seems) don't exist in 22, so only do this on the mac for now
 (when (eq system-type 'darwin)
   ;; Default on mac - "-apple-Monaco-medium-normal-normal-*-12-*-*-*-m-0-iso10646-1"
 
@@ -21,14 +21,15 @@
                     )
 
   (set-fontset-font t
-                    ; used to use 'greek-iso8859-7, but that overwrote more than
-                    ; just the lambda character, so now we specify a range of 1 char
+                    ; used to use 'greek-iso8859-7, but that overwrote more
+                    ; than just the lambda character, so now we specify a range of 1
+                    ; char
         	    '(955 . 955)
         	    "-apple-Andale_Mono-medium-normal-normal-*-14-*-*-*-p-0-iso10646-1")
-;; Use a decent japanese font for all kanji, hiragana, and katakana, rather than
-;; a crap chinese font. It seems that it's kind of random when a font is used,
-;; and can change, so we specify all three ranges manually. Obviously we could
-;; combine hiragana and katakana ranges.
+;; Use a decent japanese font for all kanji, hiragana, and katakana, rather
+;; than a crap chinese font. It seems that it's kind of random when a font is
+;; used, and can change, so we specify all three ranges manually. Obviously we
+;; could combine hiragana and katakana ranges.
 ;; これ は 二本語 です
  (mapc '(lambda (x)
          (set-fontset-font "fontset-default"
@@ -69,13 +70,15 @@
 (set-register ?z '(file . "~/.emacs.d/init.el"))
 (set-register ?p '(file . "~/.emacs.d/pass.org.gpg"))
 (set-register ?t '(file . "~/TODO.org"))
+(set-register ?f '(file . "~/Desktop/fraud/fraud_scripts.py"))
 
 ;;; Set the PATH, even if not started from the shell
 ;;; https://stackoverflow.com/questions/8606954/path-and-exec-path-set-but-emacs-does-not-find-executable
 (defun set-exec-path-from-shell-PATH ()
   "Set up Emacs' `exec-path' and PATH environment variable to match that used by the user's shell.
 
-This is particularly useful under Mac OSX, where GUI apps are not started from a shell."
+This is particularly useful under Mac OSX, where GUI apps are not
+started from a shell."
   (interactive)
   (let ((path-from-shell (replace-regexp-in-string "[ \t\n]*$" "" (shell-command-to-string "$SHELL --login -i -c 'echo $PATH'"))))
     (setenv "PATH" path-from-shell)
@@ -277,6 +280,9 @@ This is particularly useful under Mac OSX, where GUI apps are not started from a
 ; Warn about suspicious C/C++ constructs
 (global-cwarn-mode 1)
 
+; Don't complain about utf8 as a coding system name
+(define-coding-system-alias 'utf8 'utf-8)
+
 ; Create two windows initially if we have the room. Check both current width
 ; and width from default-frame-alist (if present), since the frame may not have
 ; been resized yet
@@ -291,7 +297,7 @@ This is particularly useful under Mac OSX, where GUI apps are not started from a
 (defvar programming-modes '(python-mode js-mode js2-mode java-mode c-mode
                             objc-mode actionscript-mode lisp-mode
                             emacs-lisp-mode sh-mode makefile-mode conf-mode
-                            ruby-mode)
+                            ruby-mode ess-mode)
   "Modes used for programming")
 
 (defun really-set-keys ()

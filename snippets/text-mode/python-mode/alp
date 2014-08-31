@@ -1,0 +1,6 @@
+# -*- coding: utf-8 -*-
+# name: alp
+# contributor: Marc Sherry
+# key: alp
+# --
+fxrd.Alphanumeric(length=$0)

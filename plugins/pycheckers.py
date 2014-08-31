@@ -257,6 +257,7 @@ class PylintRunner(LintRunner):
         "W0232",  # No __init__
         "W0403",
         "W0511",
+        "E1002",  # Use super on old-style class
         "E1101",
         "E1103",  # Instance of x has no y member
                   # (but some types could not be inferred")
