@@ -107,6 +107,7 @@ started from a shell."
 ; Others'
 (when (locate-library "auctex")
   (require 'tex-site))
+(require 'auto-complete)
 (require 'comint)        ; better key handling in shell mode
 (require 'doxymacs)
 (require 'erlang-start)
@@ -147,6 +148,8 @@ started from a shell."
 (autoload 'python-mode "python-mode" "Python Mode." t)
 (autoload 'clojure-mode "clojure-mode" "Clojure Mode" t)
 (autoload 'turn-on-cldoc-mode "cldoc" "CL docs" t)
+(autoload 'jedi-setup-venv "jedi-local" nil t)
+(autoload 'jedi:setup "jedi" nil t)
 
 ;;; Configure snippets
 ;; load all el files in the snippets directory, they're usually lisp
@@ -283,6 +286,10 @@ started from a shell."
 ; Don't complain about utf8 as a coding system name
 (define-coding-system-alias 'utf8 'utf-8)
 
+; Just adding this for Jedi for python - no clue what effect it has on other
+; languages
+(global-auto-complete-mode)
+
 ; Create two windows initially if we have the room. Check both current width
 ; and width from default-frame-alist (if present), since the frame may not have
 ; been resized yet
@@ -352,21 +359,18 @@ started from a shell."
       no-trailing-whitespace-modes)
 
 
-;; Mouse wheel scrolling in xterm
-(unless window-system
-  (xterm-mouse-mode 1)
-  (mouse-wheel-mode 1)
-  (global-set-key [mouse-4] '(lambda ()
-                               (interactive)
-                               (scroll-down 5)))
-  (global-set-key [mouse-5] '(lambda ()
-                               (interactive)
-                               (scroll-up 5))))
-
-
 (add-hook 'objc-mode-hook
           '(lambda ()
             (setq c-basic-offset 2)))
+
+(add-hook 'python-mode-hook
+          '(lambda ()
+            ()
+            (setq jedi:setup-keys t)
+            (jedi-setup-venv)
+            (jedi:setup)
+            (setq jedi:complete-on-dot t)
+            (setq jedi:tooltip-method nil)))
 
 ;; Tramp adds a hook to auto-save files. Remove it
 (remove-hook 'find-file-hook 'tramp-set-auto-save)
@@ -379,6 +383,16 @@ started from a shell."
 
 (add-hook 'find-file-hook 'turn-off-auto-save-mode-if-tramp)
 
+;; Mouse wheel scrolling in xterm
+(unless window-system
+  (xterm-mouse-mode 1)
+  (mouse-wheel-mode 1)
+  (global-set-key [mouse-4] '(lambda ()
+                               (interactive)
+                               (scroll-down 5)))
+  (global-set-key [mouse-5] '(lambda ()
+                               (interactive)
+                               (scroll-up 5))))
 
 (defun bh-choose-header-mode ()
   "Choose the correct c style (Objective-C, C++, C) when opening a .h file, based
