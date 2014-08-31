@@ -9,3 +9,5 @@ pass.org.gpg
 swank/
 url/
 elpa/archives/*
+elpa/jedi-0.1.2/env/
+eshell/history
