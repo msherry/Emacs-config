@@ -187,6 +187,7 @@ started from a shell."
 ;; (setq js2-basic-offset 4)               ; imo uses four
 
 (setq mac-pass-command-to-system nil)
+(setq mac-option-modifier 'super)
 
 ;; Settings that 24 broke
 ;; TODO: figure out why this doesn't work on the mac
