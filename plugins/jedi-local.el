@@ -34,6 +34,6 @@ is considered to be a project root."
 (defun jedi-setup-venv ()
   "Activates the virtualenv of the current buffer."
   (let ((project-name (project-name buffer-file-name)))
-    (when project-name (venv-workon project-name))))
+    (when project-name (ignore-errors (venv-workon project-name)))))
 
 (provide 'jedi-local)
