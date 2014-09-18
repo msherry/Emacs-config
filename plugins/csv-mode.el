@@ -781,7 +781,7 @@ the mode line after `csv-field-index-delay' seconds of Emacs idle time."
 			  (buffer-list)))
 	  (setq csv-field-index-idle-timer
 		(run-with-idle-timer csv-field-index-delay t
-				     'csv-field-index)))
+				     'csv-field-index-display)))
     ;; but if the mode is off then remove the display from the mode
     ;; lines of all CSV buffers:
     (mapc (lambda (buffer)
@@ -793,8 +793,7 @@ the mode line after `csv-field-index-delay' seconds of Emacs idle time."
 	    (buffer-list))))
 
 (defun csv-field-index ()
-  "Construct `csv-field-index-string' to display in mode line.
-Called by `csv-field-index-idle-timer'."
+  "Find the index of the current field"
   (if (eq major-mode 'csv-mode)
       (save-excursion
 	(let ((lbp (line-beginning-position)) (field 1))
@@ -802,12 +801,34 @@ Called by `csv-field-index-idle-timer'."
 	    ;; Move as far as possible, i.e. to beginning of line.
 	    (setq field (1+ field)))
 	  (if (csv-not-looking-at-record) (setq field nil))
-	  (when (not (eq field csv-field-index-old))
-	    (setq csv-field-index-old field
-		  csv-field-index-string
-		  (and field (propertize (format "F%d" field)
-					 'help-echo csv-mode-line-help-echo)))
-	    (force-mode-line-update))))))
+          field))))
+
+(defun csv-field-name (&optional field)
+  "Find the name of the specified field. If no field is
+specified, find the name of the current field."
+  (interactive "p")
+  (let ((field (if field field (csv-field-index))))
+    (save-excursion
+      (beginning-of-buffer)
+      (let ((lep (line-end-position)))
+        (if (> field 1)
+            (progn
+              (re-search-forward csv-separator-regexp lep 1 (- field 1))))
+        (word-at-point)))))
+
+(defun csv-field-index-display ()
+  "Construct `csv-field-index-string' to display in mode line.
+Called by `csv-field-index-idle-timer'."
+  (if (eq major-mode 'csv-mode)
+      (let ((field (csv-field-index)))
+        (when (not (eq field csv-field-index-old))
+          (setq csv-field-index-old field
+                csv-field-index-string
+                (and field (propertize (format "F%d:%s" field
+                                               (csv-field-name field))
+                                       'help-echo csv-mode-line-help-echo)))
+          (force-mode-line-update)))))
+
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;  Killing and yanking fields
