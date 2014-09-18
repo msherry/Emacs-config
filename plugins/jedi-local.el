@@ -32,7 +32,7 @@ is considered to be a project root."
       nil)))
 
 (defun jedi-setup-venv ()
-  "Activates the virtualenv of the current buffer."
+  "Activates the virtualenv of the current buffer, if one exists."
   (let ((project-name (project-name buffer-file-name)))
     (when project-name (ignore-errors (venv-workon project-name)))))
 
