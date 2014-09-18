@@ -164,18 +164,20 @@ started from a shell."
 (add-hook 'LaTeX-mode-hook 'LaTeX-preview-setup)
 
 ;; File/mode associations
-(add-to-list 'auto-mode-alist '("\\.php$" . php-mode))
-(if (< emacs-minor-version 2)           ; js-mode was made standard in 23.2
+(add-to-list 'auto-mode-alist '("\\.as$" . actionscript-mode))
+(add-to-list 'auto-mode-alist '("\\.csv$" . csv-mode))
+(if (or (> emacs-major-version 23)     ; js-mode was made standard in 23.2
+        (and (= emacs-major-version 23)
+             (>= emacs-minor-version 2)))
     (progn
       (add-to-list 'auto-mode-alist '("\\.js$" . js2-mode))
       (add-to-list 'auto-mode-alist '("\\.pac$" . js2-mode)))
     (progn
       (add-to-list 'auto-mode-alist '("\\.js$" . js-mode))
       (add-to-list 'auto-mode-alist '("\\.pac$" . js-mode))))
-(add-to-list 'auto-mode-alist '("\\.as$" . actionscript-mode))
-(add-to-list 'auto-mode-alist '("\\.py$" . python-mode))
 (add-to-list 'auto-mode-alist '("\\.org$" . org-mode))
-(add-to-list 'auto-mode-alist '("\\.csv$" . csv-mode))
+(add-to-list 'auto-mode-alist '("\\.php$" . php-mode))
+(add-to-list 'auto-mode-alist '("\\.py$" . python-mode))
 (add-to-list 'interpreter-mode-alist '("python" . python-mode))
 
 
@@ -205,9 +207,6 @@ started from a shell."
 (blink-cursor-mode 1)
 (global-set-key (kbd "C-l") 'recenter)  ; recenter-top-bottom? No thanks
 
-;; This doesn't work, but fn-delete should be <delete>, not DEL
-;(define-key function-key-map (kbd "<kp-delete>") (kbd "<delete>"))
-;; (global-set-key [kp-delete] [delete])
 (global-set-key (kbd "<kp-delete>") (kbd "<deletechar>"))
 
 ;; I don't really need a key bound to the GPL
@@ -401,7 +400,9 @@ started from a shell."
   "Choose the correct c style (Objective-C, C++, C) when opening a .h file, based
 on the presence of a similarly-named .m/.cpp file.
 
-Based on http://bretthutley.com/programming/emacs/opening-a-cobjective-cc-header-file-in-emacs/ , but with additional hacks for frameworks by Marc Sherry"
+Based on
+http://bretthutley.com/programming/emacs/opening-a-cobjective-cc-header-file-in-emacs/,
+but with additional hacks for frameworks by Marc Sherry"
   (interactive)
   (let ((fn (buffer-file-name)))
     (if (string-equal (substring fn -2) ".h")
@@ -581,13 +582,3 @@ http://blogs.fluidinfo.com/terry/2011/11/10/emacs-buffer-mode-histogram/"
      (defun my-c-mode-common-hook ()
        (define-key c-mode-base-map (kbd "C-c C-d") 'disaster))
     (add-hook 'c-mode-common-hook 'my-c-mode-common-hook)))
-
-;; Python/Rope
-;; Move this elsewhere
-;; (autoload 'pymacs-apply "pymacs")
-;; (autoload 'pymacs-call "pymacs")
-;; (autoload 'pymacs-eval "pymacs" nil t)
-;; (autoload 'pymacs-exec "pymacs" nil t)
-;; (autoload 'pymacs-load "pymacs" nil t)
-;; (pymacs-load "ropemacs" "rope-")
-;; (setq ropemacs-enable-autoimport t)
