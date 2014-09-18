@@ -109,7 +109,7 @@ started from a shell."
   (require 'tex-site))
 (require 'auto-complete)
 (require 'comint)        ; better key handling in shell mode
-(require 'doxymacs)
+;; (require 'doxymacs)
 (require 'erlang-start)
 (require 'ess)
 (require 'flymake-point) ; shows errors in the minibuffer when highlighted
@@ -190,8 +190,8 @@ started from a shell."
 (setq c-basic-offset 4)                 ; imo uses four
 ;; (setq js2-basic-offset 4)               ; imo uses four
 
-(setq mac-pass-command-to-system nil)
-(setq mac-option-modifier 'super)
+(setq mac-command-modifier 'meta
+      mac-option-modifier 'super)
 
 ;; Settings that 24 broke
 ;; TODO: figure out why this doesn't work on the mac
@@ -199,8 +199,7 @@ started from a shell."
 
 ;; Other settings that 23 broke
 (when (>= emacs-major-version 23)
-    (setq mac-command-modifier 'meta
-          ring-bell-function 'ignore
+    (setq ring-bell-function 'ignore
           split-height-threshold nil))      ; TODO: Not sure this is good -
                                             ; only seems needed in a terminal
                                             ; on Linux
@@ -322,7 +321,7 @@ started from a shell."
   (really-set-keys)
   (highlight-beyond-fill-column)
   (font-lock-fontify-numbers)
-  (doxymacs-mode)
+  ;; (doxymacs-mode)
 
   (add-hook 'before-save-hook 'delete-trailing-whitespace)
 
