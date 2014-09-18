@@ -262,8 +262,7 @@ Number of spaces used by `csv-align-fields' after separators."
   ;; See bindings.el for details of `mode-line-format' construction.
   (append (butlast default-mode-line-format 2)
 	  (cons `(csv-field-index-string
-		  ("" csv-field-index-string
-		   ,(propertize "--" 'help-echo csv-mode-line-help-echo)))
+		  ("" csv-field-index-string))
 		(last default-mode-line-format 2)))
   "Mode line format string for CSV mode.")
 
@@ -806,7 +805,6 @@ the mode line after `csv-field-index-delay' seconds of Emacs idle time."
 (defun csv-field-name (&optional field)
   "Find the name of the specified field. If no field is
 specified, find the name of the current field."
-  (interactive "p")
   (let ((field (if field field (csv-field-index))))
     (save-excursion
       (beginning-of-buffer)
