@@ -148,6 +148,7 @@ started from a shell."
 (autoload 'python-mode "python-mode" "Python Mode." t)
 (autoload 'clojure-mode "clojure-mode" "Clojure Mode" t)
 (autoload 'turn-on-cldoc-mode "cldoc" "CL docs" t)
+(autoload 'csv-mode "csv-mode" nil t)
 (autoload 'jedi-setup-venv "jedi-local" nil t)
 (autoload 'jedi:setup "jedi" nil t)
 
@@ -174,6 +175,7 @@ started from a shell."
 (add-to-list 'auto-mode-alist '("\\.as$" . actionscript-mode))
 (add-to-list 'auto-mode-alist '("\\.py$" . python-mode))
 (add-to-list 'auto-mode-alist '("\\.org$" . org-mode))
+(add-to-list 'auto-mode-alist '("\\.csv$" . csv-mode))
 (add-to-list 'interpreter-mode-alist '("python" . python-mode))
 
 
