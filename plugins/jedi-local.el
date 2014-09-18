@@ -10,12 +10,14 @@
 
 (defun project-directory (buffer-name)
   "Returns the root directory of the project that contains the
-given buffer. Any directory with a .git or .jedi file/directory
+given buffer. Any directory with a .git, .svn, .hg, or .jedi file/directory
 is considered to be a project root."
   (interactive)
   (let ((root-dir (file-name-directory buffer-name)))
     (while (and root-dir
                 (not (file-exists-p (concat root-dir ".git")))
+                (not (file-exists-p (concat root-dir ".svn")))
+                (not (file-exists-p (concat root-dir ".hg")))
                 (not (file-exists-p (concat root-dir ".jedi"))))
       (setq root-dir
             (if (equal root-dir "/")
