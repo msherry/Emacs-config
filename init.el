@@ -102,6 +102,10 @@ started from a shell."
 (require 'package)
 (add-to-list 'package-archives
              '("marmalade" . "http://marmalade-repo.org/packages/"))
+(add-to-list 'package-archives
+             '("melpa" . "http://melpa.milkbox.net/packages/") t)
+(add-to-list 'package-archives
+             '("melpa-stable" . "http://melpa-stable.milkbox.net/packages/") t)
 (package-initialize)
 
 ; Others'
@@ -132,7 +136,7 @@ started from a shell."
 (require 'lambda)
 (require 'totd)
 (require 'disaster)
-(when (< emacs-major-version 23)
+(when (version< emacs-version "23")
   (progn
     (require 'old-emacs-git)
     (require 'vc-svn)))
@@ -166,9 +170,7 @@ started from a shell."
 ;; File/mode associations
 (add-to-list 'auto-mode-alist '("\\.as$" . actionscript-mode))
 (add-to-list 'auto-mode-alist '("\\.csv$" . csv-mode))
-(if (or (> emacs-major-version 23)     ; js-mode was made standard in 23.2
-        (and (= emacs-major-version 23)
-             (>= emacs-minor-version 2)))
+(if (version< emacs-version "23.2")     ; js-mode was made standard in 23.2
     (progn
       (add-to-list 'auto-mode-alist '("\\.js$" . js2-mode))
       (add-to-list 'auto-mode-alist '("\\.pac$" . js2-mode)))
