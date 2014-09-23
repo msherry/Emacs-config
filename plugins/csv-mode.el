@@ -808,7 +808,13 @@ the mode line after `csv-field-index-delay' seconds of Emacs idle time."
 specified, find the name of the current field."
   (let ((field (if field field (csv-field-index))))
     (save-excursion
-      (goto-char (point-min))
+      ;; Find the beginning of the current csv table -- this mode encourages
+      ;; (or at least supports) multiple tables per file, so not necessarily
+      ;; the first line of the buffer
+      (beginning-of-line)
+      (while (not (or (bobp) (csv-not-looking-at-record)))
+        (forward-line -1))
+      (if (csv-not-looking-at-record) (forward-line 1))
       (let ((lep (line-end-position)))
         (if (> field 1)
             (progn
