@@ -819,7 +819,7 @@ specified, find the name of the current field."
         (if (> field 1)
             (progn
               (re-search-forward csv-separator-regexp lep 1 (- field 1))))
-        (word-at-point)))))
+        (symbol-at-point)))))
 
 (defun csv-field-index-display ()
   "Construct `csv-field-index-string' to display in mode line.
