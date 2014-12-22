@@ -801,7 +801,8 @@ the mode line after `csv-field-index-delay' seconds of Emacs idle time."
 	    ;; Move as far as possible, i.e. to beginning of line, counting
 	    ;; separators that are NOT recognized as part of a string (i.e.,
 	    ;; quoted). Uses hacks with emacs string formatting.
-            (if (not (eq (nth 1 (text-properties-at (point))) font-lock-string-face))
+            (if (not (eq (nth 1 (text-properties-at (point)))
+                         font-lock-string-face))
                 (setq field (1+ field))))
 	  (if (csv-not-looking-at-record) (setq field nil))
           field))))
