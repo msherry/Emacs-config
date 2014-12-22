@@ -819,7 +819,14 @@ specified, find the name of the current field."
         (if (> field 1)
             (progn
               (re-search-forward csv-separator-regexp lep 1 (- field 1))))
-        (symbol-at-point)))))
+        (let ((start (point)))
+             ;; Move forwards to the next separator
+          (re-search-forward csv-separator-regexp lep 1)
+          ;; If not at EOL, don't include the separator itself
+          (if (not (eq (point) lep))
+              (backward-char 1))
+          (let ((end (point)))
+               (buffer-substring start end)))))))
 
 (defun csv-field-index-display ()
   "Construct `csv-field-index-string' to display in mode line.
