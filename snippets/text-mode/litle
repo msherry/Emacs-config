@@ -1,0 +1,17 @@
+#name : (litle)
+# --
+Hello there. We are currently experiencing timeouts connecting to Litle in production. We can connect everywhere else, so we believe the issue is on Litle's end.
+
+The IP addresses we are connecting from are 50.18.213.180 and 50.18.213.193.
+
+The URL we are attempting to reach is https://payments.litle.com/vap/communicator/online
+
+The user id is 'BALPAY'.
+
+We are unable to connect, to this site only. We believe that our packets aren't reaching you, possibly due to issues with your ISP or routing misconfigurations, which have both caused this issue between us and Litle in the past.
+
+Please escalate this issue as appropriate, and let us know ASAP what the status is.
+
+Thank you,
+marc sherry
+Balanced
