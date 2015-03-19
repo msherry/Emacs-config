@@ -1,0 +1,56 @@
+# -*- coding: utf-8 -*-
+# name: setup
+# contributor: Marc Sherry
+# key: setup
+# expand-env: ((yas/indent-line 'fixed))
+# --
+import re
+from setuptools import setup, find_packages
+
+packages = find_packages(
+    '.',
+    exclude=(
+        'tests', 'tests.*',
+        'db', 'db.*',
+        'tools', 'tools.*',
+    )
+)
+
+version = (
+    re
+    .compile(r".*__version__ = '(.*?)'", re.S)
+    .match(open('${1:package name}/__init__.py').read())
+    .group(1)
+)
+
+tests_require = [
+    # 'mock >= 0.8, < 0.9',
+    # 'nose',
+    'pytest',
+]
+
+setup(
+    name='$1',
+    description='${1:$(capitalize yas/text)}',
+    version=version,
+    license='Apache',
+    url='http://github.com/msherry/$1',
+    author='Marc Sherry',
+    author_email='msherry@gmail.com',
+    packages=packages,
+    scripts=[
+        # 'bin/script1',
+    ],
+    include_package_data=True,
+    zip_safe=False,
+    install_requires=[
+        # 'balanced == 1.2',
+        'ipdb',
+    ],
+    extras_require={
+        'tests': tests_require,
+    },
+    tests_require=tests_require,
+    test_suite='py.test',
+)
+$0
