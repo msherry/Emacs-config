@@ -19,7 +19,7 @@ packages = find_packages(
 version = (
     re
     .compile(r".*__version__ = '(.*?)'", re.S)
-    .match(open('${1:package name}/__init__.py').read())
+    .match(open('${1:`(file-name-base (directory-file-name (file-name-directory buffer-file-name)))`}/__init__.py').read())
     .group(1)
 )
 
