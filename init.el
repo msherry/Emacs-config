@@ -135,7 +135,8 @@ started from a shell."
 (require 'flymake-stuff)
 (require 'lambda)
 (require 'totd)
-(require 'disaster)
+(when (locate-library "disaster")
+  (require 'disaster))
 (when (version< emacs-version "23")
   (progn
     (require 'old-emacs-git)
@@ -578,9 +579,8 @@ http://blogs.fluidinfo.com/terry/2011/11/10/emacs-buffer-mode-histogram/"
 (put 'downcase-region 'disabled nil)
 
 
-(eval-after-load 'cc-mode
-  '(progn
-     (require 'disaster)
-     (defun my-c-mode-common-hook ()
-       (define-key c-mode-base-map (kbd "C-c C-d") 'disaster))
-    (add-hook 'c-mode-common-hook 'my-c-mode-common-hook)))
+;; (eval-after-load 'cc-mode
+;;   '(progn
+;;      (defun my-c-mode-common-hook ()
+;;        (define-key c-mode-base-map (kbd "C-c C-d") 'disaster))
+;;     (add-hook 'c-mode-common-hook 'my-c-mode-common-hook)))
