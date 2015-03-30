@@ -1,10 +1,8 @@
-;;; jedi.el --- a Python auto-completion for Emacs
-
-;; Copyright (C) 2012 Takafumi Arakaki
+;;; jedi-core.el --- Common code of jedi.el and company-jedi.el -*- lexical-binding: t; -*-
 
 ;; Author: Takafumi Arakaki <aka.tkf at gmail.com>
-;; Package-Requires: ((epc "0.1.0") (auto-complete "1.4"))
-;; Version: 0.1.2
+;; Package-Requires: ((emacs "24") (epc "0.1.0") (python-environment "0.0.2") (cl-lib "0.5"))
+;; Version: 0.2.2
 
 ;; This file is NOT part of GNU Emacs.
 
@@ -28,10 +26,13 @@
 
 ;;; Code:
 
+(require 'cl-lib)
 (require 'ring)
 
 (require 'epc)
-(require 'auto-complete)
+(require 'python-environment)
+
+(declare-function popup-tip "popup")
 (declare-function pos-tip-show "pos-tip")
 
 
@@ -40,7 +41,7 @@
   :group 'completion
   :prefix "jedi:")
 
-(defconst jedi:version "0.1.2")
+(defconst jedi:version "0.2.1")
 
 (defvar jedi:source-dir (if load-file-name
                             (file-name-directory load-file-name)
@@ -54,33 +55,78 @@
    (expand-file-name "jediepcserver.py" jedi:source-dir))
   "Full path to Jedi server script file ``jediepcserver.py``.")
 
+(defvar jedi:setup-function nil)
+(defvar jedi:mode-function nil)
+
 
 ;;; Configuration variables
 
+(defcustom jedi:environment-root nil
+  "Name of Python environment to use.
+If it is nil, `python-environment-default-root-name' is used.
+
+You can specify a full path instead of a name (relative path).
+In that case, `python-environment-directory' is ignored and
+Python virtual environment is created at the specified path."
+  :group 'jedi)
+
+(defcustom jedi:environment-virtualenv nil
+  "``virtualenv`` command to use.  A list of string.
+If it is nil, `python-environment-virtualenv' is used instead.
+
+You must set non-`nil' value to `jedi:environment-root' in order
+to make this setting work."
+  :group 'jedi)
+
+(defun jedi:-env-server-command ()
+  (let* ((getbin (lambda (x) (python-environment-bin x jedi:environment-root)))
+         (script (or (funcall getbin "jediepcserver")
+                     (funcall getbin "jediepcserver.py"))))
+    (when script
+      (list script))))
+
 (defcustom jedi:server-command
-  (list (let ((py (expand-file-name "env/bin/python" jedi:source-dir)))
-          (if (file-exists-p py) py "python"))
-        jedi:server-script)
+  (or (jedi:-env-server-command)
+      (list "python" jedi:server-script))
   "Command used to run Jedi server.
 
-If you setup Jedi requirements using ``make requirements`` command,
-`jedi:server-command' should be automatically set to::
+.. NOTE::
 
-    '(\"JEDI:SOURCE-DIR/env/bin/python\"
-      \"JEDI:SOURCE-DIR/jediepcserver.py\")
+   If you used `jedi:install-server' (recommended) to install
+   Python server jediepcserver.py, you don't need to mess around
+   with jediepcserver.py.  Jedi.el handles everything
+   automatically.
 
-Otherwise, it should be set to::
+If you install Python server jediepcserver.py using
+`jedi:install-server' command, `jedi:server-command' should be
+automatically set to::
+
+    '(\"~/.emacs.d/.python-environments/default/bin/jediepcserver.py\")
+
+Otherwise, it is set to::
 
     '(\"python\" \"JEDI:SOURCE-DIR/jediepcserver.py\")
 
-If you want to use your favorite Python executable, set
-`jedi:server-command' using::
+.. NOTE:: If you installed jediepcserver.py manually, then you
+   have to set `jedi:server-command' appropriately.
 
-    (setq jedi:server-command
-          (list \"YOUR-FAVORITE-PYTHON\" jedi:server-script))
+   If you can run ``jediepcserver.py --help`` in your shell, then
+   you can simply set::
+
+       (setq jedi:server-command '(\"jediepcserver.py\"))
+
+   Otherwise, you need to find where you installed
+   jediepcserver.py then set the path directly::
+
+       (setq jedi:server-command '(\"PATH/TO/jediepcserver.py\"))
+
+If you want to use a specific version of Python, setup
+`jedi:environment-virtualenv' variable appropriately and
+reinstall jediepcserver.py.
 
 If you want to pass some arguments to the Jedi server command,
-use `jedi:server-command'."
+use `jedi:server-args' instead of appending them
+`jedi:server-command'."
   :group 'jedi)
 
 (defcustom jedi:server-args nil
@@ -93,8 +139,9 @@ server, do something like this::
           '(\"--sys-path\" \"MY/SPECIAL/PATH\"
             \"--sys-path\" \"MY/OTHER/SPECIAL/PATH\"))
 
-If you want to include some virtualenv, do something like this.
-Note that actual `VIRTUAL_ENV' is treated automatically.  Also,
+If you want to include some virtualenv, do something like the
+following.  Note that actual environment variable ``VIRTUAL_ENV``
+is treated automatically so you don't need to pass it.  Also,
 you need to start Jedi EPC server with the same python version
 that you use for the virtualenv.::
 
@@ -226,8 +273,13 @@ This can be set to `jedi:create-flat-imenu-index'.
 Default is `jedi:create-nested-imenu-index'."
   :group 'jedi)
 
+(make-obsolete-variable 'jedi:setup-keys nil "0.1.3")
 (defcustom jedi:setup-keys nil
   "Setup recommended keybinds.
+
+.. warning:: Use of this value is obsolete now.  As of 0.1.3,
+   jedi.el has default keybinds, which are different than these. See also
+   `jedi-mode'.
 
 .. admonition:: Default keybinds
 
@@ -238,7 +290,7 @@ Default is `jedi:create-nested-imenu-index'."
        Goto the definition of the object at point. (`jedi:goto-definition')
 
    ``C-c d`` : = `jedi:key-show-doc'
-       Goto the definition of the object at point. (`jedi:show-doc')
+       Show the documentation of the object at point. (`jedi:show-doc')
 
    ``C-c r`` : = `jedi:key-related-names'
        Find related names of the object at point.
@@ -297,6 +349,14 @@ avoid collision by something like this::
   "Keybind for command `jedi:goto-definition-pop-marker'."
   :group 'jedi)
 
+(defcustom jedi:use-shortcuts nil
+  "If non-`nil', enable the following shortcuts:
+
+| ``M-.``  `jedi:goto-definition'
+| ``M-,``  `jedi:goto-definition-pop-marker'
+"
+  :group 'jedi)
+
 (defcustom jedi:import-python-el-settings t
   "Automatically import setting from python.el variables."
   :group 'jedi)
@@ -331,21 +391,37 @@ toolitp when inside of function call.
   :keymap jedi-mode-map
   :group 'jedi
   (let ((map jedi-mode-map))
-    (if jedi:complete-on-dot
-        (define-key map "." 'jedi:dot-complete)
-      (define-key map "." nil)))
+    (when jedi:use-shortcuts
+      (define-key map (kbd "M-.") 'jedi:goto-definition)
+      (define-key map (kbd "M-,") 'jedi:goto-definition-pop-marker)))
   (if jedi-mode
       (progn
         (when jedi:install-imenu
-          (add-hook 'after-change-functions 'jedi:after-change-handler nil t)
           (jedi:defined-names-deferred)
           (setq imenu-create-index-function jedi:imenu-create-index-function))
         (add-hook 'post-command-hook 'jedi:handle-post-command nil t)
         (add-hook 'kill-buffer-hook 'jedi:server-pool--gc-when-idle nil t))
     (remove-hook 'post-command-hook 'jedi:handle-post-command t)
-    (remove-hook 'after-change-functions 'jedi:after-change-handler t)
     (remove-hook 'kill-buffer-hook 'jedi:server-pool--gc-when-idle t)
-    (jedi:server-pool--gc-when-idle)))
+    (jedi:server-pool--gc-when-idle))
+  (when jedi:mode-function
+    (funcall jedi:mode-function)))
+
+;; Define keybinds.
+;; See: https://github.com/tkf/emacs-jedi/issues/47
+(let ((map jedi-mode-map))
+  (when (and (boundp 'auto-complete-mode) auto-complete-mode)
+    (define-key map (kbd "<C-tab>") 'jedi:complete))
+  (define-key map (kbd "C-c ?") 'jedi:show-doc)
+  (define-key map (kbd "C-c .") 'jedi:goto-definition)
+  (define-key map (kbd "C-c ,") 'jedi:goto-definition-pop-marker)
+  (let ((command (cond
+                  ((featurep 'helm) 'helm-jedi-related-names)
+                  ((featurep 'anything) 'anything-jedi-related-names)
+                  ((locate-library "helm") 'helm-jedi-related-names)
+                  ((locate-library "anything") 'anything-jedi-related-names))))
+    (when command
+      (define-key map (kbd "C-c /") command))))
 
 (when jedi:setup-keys
   (let ((map jedi-mode-map))
@@ -372,10 +448,26 @@ connection."
          ;; Same as `process-live-p' in Emacs >= 24:
          (memq (process-status proc) '(run open listen connect stop)))))
 
+(defmacro jedi:-with-run-on-error (body &rest run-on-error)
+  (declare (indent 1))
+  `(let ((something-happened t))
+     (unwind-protect
+         (prog1 ,body
+           (setq something-happened nil))
+       (when something-happened
+         ,@run-on-error))))
+
 (defun jedi:epc--start-epc (server-prog server-args)
   "Same as `epc:start-epc', but set query-on-exit flag for
 associated processes to nil."
-  (let ((mngr (epc:start-epc server-prog server-args)))
+  (let ((mngr (jedi:-with-run-on-error
+                  (epc:start-epc server-prog server-args)
+                (display-warning 'jedi "\
+Failed to start Jedi EPC server.
+*** You may need to run \"M-x jedi:install-server\". ***
+This could solve the problem especially if you haven't run the command yet
+since Jedi.el installation or update and if the server complains about
+Python module imports." :error))))
     (set-process-query-on-exit-flag (epc:connection-process
                                      (epc:manager-connection mngr))
                                     nil)
@@ -394,7 +486,7 @@ key, or start new one if there is none."
   (let ((cached (gethash command jedi:server-pool--table)))
     (if (and cached (jedi:epc--live-p cached))
         cached
-      (let* ((default-directory jedi:source-dir)
+      (let* ((default-directory "/")
              (mngr (jedi:epc--start-epc (car command) (cdr command))))
         (puthash command mngr jedi:server-pool--table)
         (jedi:server-pool--gc-when-idle)
@@ -402,12 +494,12 @@ key, or start new one if there is none."
 
 (defun jedi:-get-servers-in-use ()
   "Return a list of non-nil `jedi:epc' in all buffers."
-  (loop with mngr-list
-        for buffer in (buffer-list)
-        for mngr = (with-current-buffer buffer jedi:epc)
-        when (and mngr (not (memq mngr mngr-list)))
-        collect mngr into mngr-list
-        finally return mngr-list))
+  (cl-loop with mngr-list
+           for buffer in (buffer-list)
+           for mngr = (with-current-buffer buffer jedi:epc)
+           when (and mngr (not (memq mngr mngr-list)))
+           collect mngr into mngr-list
+           finally return mngr-list))
 
 (defvar jedi:server-pool--gc-timer nil)
 
@@ -499,7 +591,7 @@ See: https://github.com/tkf/emacs-jedi/issues/54"
   "Call ``Script(...).METHOD-NAME`` and return a deferred object."
   (let ((source      (buffer-substring-no-properties (point-min) (point-max)))
         (line        (count-lines (point-min) (min (1+ (point)) (point-max))))
-        (column      (current-column))
+        (column      (- (point) (line-beginning-position)))
         (source-path (jedi:-buffer-file-name)))
     (epc:call-deferred (jedi:get-epc)
                        method-name
@@ -523,57 +615,6 @@ See: https://github.com/tkf/emacs-jedi/issues/54"
     (lambda (reply)
       (setq jedi:complete-reply reply))))
 
-;;;###autoload
-(defun* jedi:complete (&key (expand ac-expand-on-auto-complete))
-  "Complete code at point."
-  (interactive)
-  (lexical-let ((expand expand))
-    (deferred:nextc (jedi:complete-request)
-      (lambda ()
-        (let ((ac-expand-on-auto-complete expand))
-          (ac-start))))))
-;; Calling `auto-complete' or `ac-update-greedy' instead of `ac-start'
-;; here did not work.
-
-(defun jedi:dot-complete ()
-  "Insert dot and complete code at point."
-  (interactive)
-  (insert ".")
-  (unless (ac-cursor-on-diable-face-p)
-    (jedi:complete :expand nil)))
-
-
-;;; AC source
-
-(defun jedi:ac-direct-matches ()
-  (mapcar
-   (lambda (x)
-     (destructuring-bind (&key word doc description symbol)
-         x
-       (popup-make-item word
-                        :symbol symbol
-                        :document (unless (equal doc "") doc)
-                        :summary description)))
-   jedi:complete-reply))
-
-(defun jedi:ac-direct-prefix ()
-  (or (ac-prefix-default)
-      (when (= jedi:complete-request-point (point))
-        jedi:complete-request-point)))
-
-;; (makunbound 'ac-source-jedi-direct)
-(ac-define-source jedi-direct
-  '((candidates . jedi:ac-direct-matches)
-    (prefix . jedi:ac-direct-prefix)
-    (init . jedi:complete-request)
-    (requires . -1)))
-
-;;;###autoload
-(defun jedi:ac-setup ()
-  "Add Jedi AC sources to `ac-sources'."
-  (interactive)
-  (add-to-list 'ac-sources 'ac-source-jedi-direct))
-
 
 ;;; Call signature (get_in_function_call)
 
@@ -582,16 +623,18 @@ See: https://github.com/tkf/emacs-jedi/issues/54"
   "Face used for the argument at point in a function's argument list"
   :group 'jedi)
 
-(defun* jedi:get-in-function-call--construct-call-signature
+(cl-defun jedi:get-in-function-call--construct-call-signature
     (&key params index call_name)
-  (let ((current-arg (nth index params)))
-    (when (and current-arg (null jedi:tooltip-method))
-      (setf (nth index params)
-            (propertize current-arg 'face 'jedi:highlight-function-argument)))
-    (concat call_name "(" (mapconcat #'identity params ", ") ")")))
+  (if (not index)
+      (concat call_name "()")
+    (let ((current-arg (nth index params)))
+      (when (and current-arg (null jedi:tooltip-method))
+        (setf (nth index params)
+              (propertize current-arg 'face 'jedi:highlight-function-argument)))
+      (concat call_name "(" (mapconcat #'identity params ", ") ")"))))
 
 (defun jedi:get-in-function-call--tooltip-show (args)
-  (when (and args (not ac-completing))
+  (when (and args (and (boundp 'ac-completing) (not ac-completing)))
     (jedi:tooltip-show
      (apply #'jedi:get-in-function-call--construct-call-signature args))))
 
@@ -682,14 +725,13 @@ INDEX-th result."
     (jedi:goto-definition-next other-window))
    (t
     (setq jedi:goto-definition--index (or index 0))
-    (lexical-let ((other-window other-window))
-      (deferred:nextc (jedi:call-deferred
-                       (case deftype
-                         ((assignment nil) 'goto)
-                         (definition 'get_definition)
-                         (t (error "Unsupported deftype: %s" deftype))))
-        (lambda (reply)
-          (jedi:goto-definition--callback reply other-window)))))))
+    (deferred:nextc (jedi:call-deferred
+                     (cl-case deftype
+                       ((assignment nil) 'goto)
+                       (definition 'get_definition)
+                       (t (error "Unsupported deftype: %s" deftype))))
+      (lambda (reply)
+        (jedi:goto-definition--callback reply other-window))))))
 
 (defun jedi:goto-definition-push-marker ()
   "Push point onto goto-definition marker ring."
@@ -732,11 +774,11 @@ INDEX-th result."
          (n jedi:goto-definition--index)
          (next (lambda ()
                  (when (< n (1- len))
-                   (incf jedi:goto-definition--index)
+                   (cl-incf jedi:goto-definition--index)
                    (jedi:goto-definition--nth other-window)
                    t))))
-    (destructuring-bind (&key line_nr column module_path module_name
-                              &allow-other-keys)
+    (cl-destructuring-bind (&key line_nr column module_path module_name
+                                 &allow-other-keys)
         (nth n jedi:goto-definition--cache)
       (cond
        ((equal module_name "__builtin__")
@@ -774,13 +816,13 @@ INDEX-th result."
     (jedi:call-deferred 'get_definition)
     (deferred:nextc it
       (lambda (reply)
-        (loop for def in reply
-              do (destructuring-bind (&key full_name &allow-other-keys)
-                     def
-                   (when full_name
-                     (return full_name))))))))
+        (cl-loop for def in reply
+                 do (cl-destructuring-bind (&key full_name &allow-other-keys)
+                        def
+                      (when full_name
+                        (return full_name))))))))
 
-(defun* jedi:get-full-name-sync (&key (timeout 500))
+(cl-defun jedi:get-full-name-sync (&key (timeout 500))
   (epc:sync
    (jedi:get-epc)
    (deferred:timeout timeout nil (jedi:get-full-name-deferred))))
@@ -797,28 +839,27 @@ INDEX-th result."
 (defun jedi:related-names--to-file-line (reply)
   (mapcar
    (lambda (x)
-     (destructuring-bind
-         (&key line_nr column module_name module_path description)
+     (cl-destructuring-bind
+         (&key line_nr module_name module_path description &allow-other-keys)
          x
        (format "%s:%s: %s - %s" module_path line_nr
                module_name description)))
    reply))
 
 (defun jedi:related-names--helm (helm)
-  (lexical-let ((helm helm))
-    (deferred:nextc
-      (let ((to-file-line #'jedi:related-names--to-file-line))
-        (deferred:parallel
-          (deferred:nextc (jedi:call-deferred 'related_names) to-file-line)
-          (deferred:nextc (jedi:call-deferred 'goto)          to-file-line)))
-      (lambda (candidates-list)
-        (funcall
-         helm
-         :sources (list (jedi:related-names--source "Jedi Related Names"
-                                                    (car candidates-list))
-                        (jedi:related-names--source "Jedi Goto"
-                                                    (cadr candidates-list)))
-         :buffer (format "*%s jedi:related-names*" helm))))))
+  (deferred:nextc
+    (let ((to-file-line #'jedi:related-names--to-file-line))
+      (deferred:parallel
+        (deferred:nextc (jedi:call-deferred 'related_names) to-file-line)
+        (deferred:nextc (jedi:call-deferred 'goto)          to-file-line)))
+    (lambda (candidates-list)
+      (funcall
+       helm
+       :sources (list (jedi:related-names--source "Jedi Related Names"
+                                                  (car candidates-list))
+                      (jedi:related-names--source "Jedi Goto"
+                                                  (cadr candidates-list)))
+       :buffer (format "*%s jedi:related-names*" helm)))))
 
 ;;;###autoload
 (defun helm-jedi-related-names ()
@@ -843,30 +884,29 @@ INDEX-th result."
   (deferred:nextc (jedi:call-deferred 'get_definition)
     (lambda (reply)
       (with-current-buffer (get-buffer-create jedi:doc-buffer-name)
-        (loop with has-doc = nil
-              with first = t
-              with inhibit-read-only = t
-              initially (erase-buffer)
-              for def in reply
-              do (destructuring-bind
-                     (&key doc desc_with_module line_nr module_path
-                           &allow-other-keys)
-                     def
-                   (unless (or (null doc) (equal doc ""))
-                     (if first
-                         (setq first nil)
-                       (insert "\n\n---\n\n"))
-                     (insert "Docstring for " desc_with_module "\n\n" doc)
-                     (setq has-doc t)))
-              finally do
-              (if (not has-doc)
-                  (message "Document not found.")
-                (progn
-                  (goto-char (point-min))
-                  (when (fboundp jedi:doc-mode)
-                    (funcall jedi:doc-mode))
-                  (run-hooks 'jedi:doc-hook)
-                  (funcall jedi:doc-display-buffer (current-buffer)))))))))
+        (cl-loop with has-doc = nil
+                 with first = t
+                 with inhibit-read-only = t
+                 initially (erase-buffer)
+                 for def in reply
+                 do (cl-destructuring-bind
+                        (&key doc desc_with_module &allow-other-keys)
+                        def
+                      (unless (or (null doc) (equal doc ""))
+                        (if first
+                            (setq first nil)
+                          (insert "\n\n---\n\n"))
+                        (insert "Docstring for " desc_with_module "\n\n" doc)
+                        (setq has-doc t)))
+                 finally do
+                 (if (not has-doc)
+                     (message "Document not found.")
+                   (progn
+                     (goto-char (point-min))
+                     (when (fboundp jedi:doc-mode)
+                       (funcall jedi:doc-mode))
+                     (run-hooks 'jedi:doc-hook)
+                     (funcall jedi:doc-display-buffer (current-buffer)))))))))
 
 
 ;;; Defined names (imenu)
@@ -897,12 +937,8 @@ one request at the time is emitted."
     (epc:sync (jedi:get-epc) (jedi:defined-names--singleton-deferred)))
   jedi:defined-names--cache)
 
-(defun jedi:after-change-handler (&rest _)
-  (unless (or (ac-menu-live-p) (ac-inline-live-p))
-    (jedi:defined-names--singleton-deferred)))
-
 (defun jedi:imenu-make-marker (def)
-  (destructuring-bind (&key line_nr column &allow-other-keys) def
+  (cl-destructuring-bind (&key line_nr column &allow-other-keys) def
     (save-excursion (jedi:goto--line-column line_nr column)
                     (point-marker))))
 
@@ -916,14 +952,14 @@ See also `jedi:imenu-create-index-function'."
   (jedi:create-nested-imenu-index-1))
 
 (defun jedi:create-nested-imenu-index-1 (&optional items)
-  (loop for (def . subdefs) in (or items jedi:defined-names--cache)
-        if subdefs
-        collect (append
-                 (list (plist-get def :local_name)
-                       (jedi:create-nested-imenu-index--item def))
-                 (jedi:create-nested-imenu-index-1 subdefs))
-        else
-        collect (jedi:create-nested-imenu-index--item def)))
+  (cl-loop for (def . subdefs) in (or items jedi:defined-names--cache)
+           if subdefs
+           collect (append
+                    (list (plist-get def :local_name)
+                          (jedi:create-nested-imenu-index--item def))
+                    (jedi:create-nested-imenu-index-1 subdefs))
+           else
+           collect (jedi:create-nested-imenu-index--item def)))
 
 (defun jedi:create-flat-imenu-index ()
   "`imenu-create-index-function' for Jedi.el to create flatten index.
@@ -932,19 +968,90 @@ See also `jedi:imenu-create-index-function'."
   (jedi:create-flat-imenu-index-1))
 
 (defun jedi:create-flat-imenu-index-1 (&optional items)
-  (loop for (def . subdefs) in (or items jedi:defined-names--cache)
-        collect (cons (plist-get def :local_name) (jedi:imenu-make-marker def))
-        when subdefs
-        append (jedi:create-flat-imenu-index-1 subdefs)))
+  (cl-loop for (def . subdefs) in (or items jedi:defined-names--cache)
+           collect (cons (plist-get def :local_name) (jedi:imenu-make-marker def))
+           when subdefs
+           append (jedi:create-flat-imenu-index-1 subdefs)))
 
 
 ;;; Meta info
+
+(defun jedi:show-setup-info ()
+  "Show installation and configuration info in a buffer.
+Paste the result of this function when asking question or
+reporting bug.  This command also tries to detect errors when
+communicating with Jedi EPC server.  If you have some problem you
+may find some information about communication error."
+  (interactive)
+  (let (epc get-epc-error version-reply)
+    (condition-case err
+        (setq epc (jedi:get-epc))
+      (error (setq get-epc-error err)))
+    (when epc
+      (setq version-reply
+            (condition-case err
+                (epc:sync
+                 epc
+                 (deferred:$
+                   (deferred:timeout 500
+                     '(:timeout nil)
+                     (epc:call-deferred epc 'get_jedi_version nil))
+                   (deferred:error it
+                     (lambda (err) `(:error ,err)))))
+              (error `(:sync-error ,err)))))
+    (let ((standard-output (get-buffer-create "*jedi:show-setup-info*")))
+      (with-current-buffer standard-output
+        (emacs-lisp-mode)
+        (erase-buffer)
+        (insert ";; Emacs Lisp version:\n")
+        (pp `(:emacs-version ,emacs-version
+              :jedi-version ,jedi:version
+              :python-environment-version ,python-environment-version))
+        (insert ";; Python version:\n")
+        (pp version-reply)
+        (when get-epc-error
+          (insert "\n;; EPC error:\n")
+          (pp `(:get-epc-error ,get-epc-error)))
+        (insert ";; Command line:\n")
+        (pp `(:virtualenv
+              ,(executable-find (car python-environment-virtualenv))
+              :virtualenv-version
+              ,(ignore-errors (jedi:-virtualenv-version))))
+        (insert ";; Customization:\n")
+        (pp (jedi:-list-customization))
+        (display-buffer standard-output)))))
+
+(defun jedi:-list-defcustoms ()
+  (cl-loop for sym being the symbols
+           for name = (symbol-name sym)
+           when (and (or (string-prefix-p "jedi:" name)
+                         (string-prefix-p "python-environment-" name))
+                     (custom-variable-p sym))
+           collect sym))
+
+(defun jedi:-list-customization ()
+  (cl-loop for sym in (sort (jedi:-list-defcustoms)
+                            (lambda (x y)
+                              (string< (symbol-name x)
+                                       (symbol-name y))))
+           collect (cons sym (symbol-value sym))))
+
+(defun jedi:-virtualenv-version ()
+  "Return output of virtualenv --version"
+  (with-temp-buffer
+    (erase-buffer)
+    (call-process (executable-find (car python-environment-virtualenv))
+                  nil t nil
+                  "--version")
+    (buffer-string)))
 
 (defun jedi:get-jedi-version-request ()
   "Request version of Python modules and return a deferred object."
   (epc:call-deferred (jedi:get-epc) 'get_jedi_version nil))
 
-(defun jedi:show-jedi-version ()
+(defun jedi:show-version-info ()
+  "Show version info of Python modules used by the server.
+Paste the result of this function in bug report."
   (interactive)
   (deferred:nextc (jedi:get-jedi-version-request)
     (lambda (reply)
@@ -952,8 +1059,12 @@ See also `jedi:imenu-create-index-function'."
         (with-current-buffer standard-output
           (emacs-lisp-mode)
           (erase-buffer)
+          (pp `(:emacs-version ,emacs-version :jedi-version ,jedi:version))
           (pp reply)
           (display-buffer standard-output))))))
+
+(define-obsolete-function-alias
+  'jedi:show-jedi-version 'jedi:show-version-info "0.1.3")
 
 (defun jedi:print-jedi-version ()
   (pp (epc:sync (jedi:get-epc) (jedi:get-jedi-version-request))))
@@ -983,7 +1094,7 @@ This is automatically added to the `jedi-mode-hook' when
 ;;;###autoload
 (defun jedi:setup ()
   "Fully setup jedi.el for current buffer.
-It setups `ac-sources' (calls `jedi:ac-setup') and turns
+It setups `ac-sources' or `company-backends' and turns
 `jedi-mode' on.
 
 This function is intended to be called from `python-mode-hook',
@@ -994,7 +1105,8 @@ like this::
 You can also call this function as a command, to quickly test
 what jedi can do."
   (interactive)
-  (jedi:ac-setup)
+  (when jedi:setup-function
+    (funcall jedi:setup-function))
   (when jedi:import-python-el-settings
     ;; Hack to access buffer/dir-local vars: http://bit.ly/Y5IfMV.
     ;; Given that `jedi:setup' is added to the `python-mode-hook'
@@ -1006,8 +1118,112 @@ what jedi can do."
   (jedi-mode 1))
 
 
+;;; Virtualenv setup
+(defvar jedi:install-server--command
+  `("pip" "install" "--upgrade" ,(convert-standard-filename jedi:source-dir)))
+
+;;;###autoload
+(defun jedi:install-server ()
+  "This command installs Jedi server script jediepcserver.py in a
+Python environment dedicated to Emacs.  By default, the
+environment is at ``~/.emacs.d/.python-environments/default/``.
+This environment is automatically created by ``virtualenv`` if it
+does not exist.
+
+Run this command (i.e., type ``M-x jedi:install-server RET``)
+whenever Jedi.el shows a message to do so.  It is a good idea to
+run this every time after you update Jedi.el to sync version of
+Python modules used by Jedi.el and Jedi.el itself.
+
+You can modify the location of the environment by changing
+`jedi:environment-root' and/or `python-environment-directory'.  More
+specifically, Jedi.el will install Python modules under the directory
+``PYTHON-ENVIRONMENT-DIRECTORY/JEDI:ENVIRONMENT-ROOT``.  Note that you
+need command line program ``virtualenv``.  If you have the command in
+an unusual location, use `python-environment-virtualenv' to specify the
+location.
+
+.. NOTE:: jediepcserver.py is installed in a virtual environment but it
+   does not mean Jedi.el cannot recognize the modules in virtual
+   environment you are using for your Python development.  Jedi
+   EPC server recognize the virtualenv it is in (i.e., the
+   environment variable ``VIRTUAL_ENV`` in your Emacs) and then
+   add modules in that environment to its ``sys.path``.  You can
+   also add ``--virtual-env PATH/TO/ENV`` to `jedi:server-args'
+   to include modules of virtual environment even you launch
+   Emacs outside of the virtual environment.
+
+.. NOTE:: It is highly recommended to use this command to install
+   Python modules for Jedi.el.  You still can install Python
+   modules used by Jedi.el manually.  However, you are then
+   responsible for keeping Jedi.el and Python modules compatible.
+
+See also:
+
+- https://github.com/tkf/emacs-jedi/pull/72
+- https://github.com/tkf/emacs-jedi/issues/140#issuecomment-37358527"
+  (interactive)
+  (deferred:$
+    (python-environment-run jedi:install-server--command
+                            jedi:environment-root
+                            jedi:environment-virtualenv)
+    (deferred:watch it
+      (lambda (_)
+        (setq-default jedi:server-command (jedi:-env-server-command))))))
+
+;;;###autoload
+(defun jedi:install-server-block ()
+  "Blocking version `jedi:install-server'."
+  (prog1
+      (python-environment-run-block jedi:install-server--command
+                                    jedi:environment-root
+                                    jedi:environment-virtualenv)
+    (setq-default jedi:server-command (jedi:-env-server-command))))
+
+(defcustom jedi:install-python-jedi-dev-command
+  '("pip" "install" "--upgrade"
+    "git+https://github.com/davidhalter/jedi.git@dev#egg=jedi")
+  "Pip command to be used for `jedi:install-python-jedi-dev'."
+  :group 'jedi)
+
+(defun jedi:install-python-jedi-dev ()
+  "Install developmental version of Python-Jedi from GitHub."
+  (interactive)
+  (deferred:$
+    (python-environment-run jedi:install-python-jedi-dev-command
+                            jedi:environment-root
+                            jedi:environment-virtualenv)
+    (deferred:watch it
+      (lambda (_)
+        (message "\
+Now restart EPC servers.  Then you are ready to go with Jedi-dev!")))))
+
+
 ;;; Debugging
 
+(defun jedi:pop-to-epc-buffer ()
+  "Open the buffer associated with EPC server process.
+Use this command to see the output (e.g., traceback) of the server process."
+  (interactive)
+  (pop-to-buffer (process-buffer (epc:manager-server-process jedi:epc))))
+
+(defun jedi:toggle-log-traceback ()
+  "Toggle on/off traceback logging for EPC server for the current buffer.
+When there is an error during traceback logging is enabled, traceback
+is printed in the EPC buffer.  You can use `jedi:pop-to-epc-buffer' to
+open that buffer.
+
+You can also pass ``--log-traceback`` option to jediepcserver.py
+to start server with traceback logging turned on.  This is useful when
+there is a problem in communication (thus this command does not work).
+You can use `jedi:start-dedicated-server' to restart EPC server for the
+current buffer with specific arguments."
+  (interactive)
+  (deferred:$
+    (epc:call-deferred (jedi:get-epc) 'toggle_log_traceback nil)
+    (deferred:nextc it
+      (lambda (flag)
+        (message "Traceback logging is %s" (if flag "enabled" "disabled"))))))
 
 (defvar jedi:server-command--backup nil)
 (defvar jedi:server-args--backup nil)
@@ -1057,11 +1273,11 @@ running server."
  (command is copied in the kill-ring)")))
 
 
-(provide 'jedi)
+(provide 'jedi-core)
 
 ;; Local Variables:
 ;; coding: utf-8
 ;; indent-tabs-mode: nil
 ;; End:
 
-;;; jedi.el ends here
+;;; jedi-core.el ends here
