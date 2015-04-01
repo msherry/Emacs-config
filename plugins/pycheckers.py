@@ -42,23 +42,23 @@ default_checkers = 'pylint,pep8'
 # default_ignore_codes = ['E225', 'W114']
 default_ignore_codes = \
     [
-    # 'E202',                       # Whitespace before ']'
-    # 'E221',                       # Multiple spaces before operator
-    # 'E225',                       # Missing whitespace around operator
-    # 'E231',                       # Missing whitespace after ':'
-    # 'E241',                       # Multiple spaces after ':'
-    # 'E261',                       # At least two spaces before inline comment
-    # 'W291',                       # Trailing whitespace
-    # 'E301',                       # Expected 1 blank line, found 0
-    # 'E302',                       # Expected 2 blank lines, found 1
-    # 'E303',                       # Too many blank lines
-    # 'E401',                       # Multiple imports on one line
-    # 'E501',                       # Line too long
+        # 'E202',          # Whitespace before ']'
+        # 'E221',          # Multiple spaces before operator
+        # 'E225',          # Missing whitespace around operator
+        # 'E231',          # Missing whitespace after ':'
+        # 'E241',          # Multiple spaces after ':'
+        # 'E261',          # At least two spaces before inline comment
+        # 'W291',          # Trailing whitespace
+        # 'E301',          # Expected 1 blank line, found 0
+        # 'E302',          # Expected 2 blank lines, found 1
+        # 'E303',          # Too many blank lines
+        # 'E401',          # Multiple imports on one line
+        # 'E501',          # Line too long
 
-    # 'E127',                # continuation line over-indented for visual indent
-    # 'E128',                # continuation line under-indented for visual indent
-    'E711',                # comparison to None should be...
-    'E712',                # comparison to True/False should be ...
+        # 'E127',          # continuation line over-indented for visual indent
+        # 'E128',          # continuation line under-indented for visual indent
+        'E711',            # comparison to None should be...
+        'E712',            # comparison to True/False should be ...
     ]
 
 ## End of customization ##
