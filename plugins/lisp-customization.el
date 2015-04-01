@@ -18,7 +18,6 @@
 
 (add-hook 'slime-repl-mode-hook
           '(lambda ()
-            (cliki:start-slime)
             (eldoc-mode nil)
             (paredit-mode)
             (local-set-key (kbd "M-<up>") 'slime-repl-backward-input)
@@ -51,7 +50,8 @@
 
 (eval-after-load "slime"
   '(progn
-    (slime-setup '(slime-fancy slime-banner slime-asdf))
+    (setq slime-contribs '(slime-fancy slime-banner slime-asdf))
+    (slime-setup)
     ; That just turned on slime-autodoc, which uses eldoc, which sucks. Turn
     ; off eldoc and use the better built-in(?) doc mode
     (eldoc-mode nil)))
