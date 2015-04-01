@@ -7,7 +7,7 @@
 (defun sm-lambda-mode-hook ()
   "Stupid hook to turn the word Lambda (lowercase) into λ using
 font-lock-mode"
-  (if (version< emacs-version "24.4")
+  (if (version< emacs-version "29.4")
       (progn
         (font-lock-add-keywords
          nil `(("\\<lambda\\>"
@@ -15,8 +15,8 @@ font-lock-mode"
                                           ,(make-char 'greek-iso8859-7 107))
                           nil))))))
       (progn
-        ;; Untested so far
-        (push '("lambda" . λ) prettify-symbols-alist))))
+        ;; Supposed to work in 24.4, requires prettify-symbols-mode
+        (push '("lambda" . ?λ) prettify-symbols-alist))))
 
 ;; Which modes use 'lambda'
 (add-hook 'emacs-lisp-mode-hook 'sm-lambda-mode-hook)
