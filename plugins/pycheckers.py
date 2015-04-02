@@ -36,7 +36,7 @@ unknown.
 # Checkers to run be default, when no --checkers options are supplied.
 # One or more of pydo, pep8 or pyflakes, separated by commas
 # default_checkers = 'pep8, pyflakes'
-default_checkers = 'pylint,pep8'
+default_checkers = 'pylint,pep8,flake8'
 
 # A list of error codes to ignore for PEP8
 # default_ignore_codes = ['E225', 'W114']
@@ -292,6 +292,7 @@ def croak(*msgs):
 
 RUNNERS = {
     'pyflakes': PyflakesRunner,
+    'flake8': PyflakesRunner,
     'pep8': Pep8Runner,
     'pydo': PydoRunner,
     'pylint': PylintRunner
