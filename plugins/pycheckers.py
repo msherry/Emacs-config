@@ -271,6 +271,7 @@ class PylintRunner(LintRunner):
         "E1101",
         "E1103",  # Instance of x has no y member
                   # (but some types could not be inferred")
+        "R0201",  # Method could be a function
         "R0801",  # Similar lines in * files
         "R0903",  # Too few public methods
         "R0904",  # Too many public methods
