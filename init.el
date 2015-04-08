@@ -374,7 +374,9 @@ started from a shell."
             (jedi-setup-venv)
             (jedi:setup)
             (setq jedi:complete-on-dot t)
-            (setq jedi:tooltip-method nil)))
+            (setq jedi:tooltip-method nil)
+            (define-key jedi-mode-map (kbd "C-c .") nil)
+            ))
 
 ;; Tramp adds a hook to auto-save files. Remove it
 (remove-hook 'find-file-hook 'tramp-set-auto-save)
