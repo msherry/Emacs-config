@@ -9,14 +9,8 @@
 ; Disable popup windows
 (setq flymake-gui-warnings-enabled nil)
 
-; On-the-fly pyflakes checking
-(defvar pyflakes-command "pyflakes")
-
 ; Script that runs pyflakes, pep8, and maybe pydo
 (defvar python-multiple-checker-command "~/.emacs.d/plugins/pycheckers.py")
-
-; Which checker should we use?
-(defvar python-check-command pyflakes-command)
 
 ; JS checker
 ; On OS X, this doesn't use the IMO_HOME set in the user's init scripts, since
@@ -115,10 +109,6 @@ version, depending on the value of the variable `use-hacked-flymake-parse-line'"
 ;;       flymake-allowed-file-name-masks)
 
 
-;; This doesn't strictly depend on flymake, but the side effect of having
-;; python-check-command set is nice. XXX Actually, we always use
-;; pyflakes-command now, since python-check-command may be set up to give us
-;; PEP8 style warnings.
 (defun dired-mark-files-with-errors (&optional marker-char)
   "Run `python-check-command' on all python files in directory, and mark all
 files containing errors for use in later commands.
