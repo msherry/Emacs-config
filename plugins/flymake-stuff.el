@@ -22,7 +22,7 @@
 
 (eval-after-load "flymake"
   '(progn
-    (defun flymake-pyflakes-init ()
+    (defun flymake-python-init ()
       (let* ((temp-file (flymake-init-create-temp-buffer-copy
                          'flymake-create-temp-inplace))
              (local-file (file-relative-name
@@ -32,7 +32,7 @@
               ;; -c option allows for comma-separated list of checkers
               (list local-file))))
     (add-to-list 'flymake-allowed-file-name-masks
-     '("\\.py\\'" flymake-pyflakes-init))
+     '("\\.py\\'" flymake-python-init))
 
     (defun flymake-js-init ()
       (let* ((temp-file (flymake-init-create-temp-buffer-copy
@@ -126,10 +126,6 @@ A prefix argument means to unmark them instead.
                        (string-match "\.py$" fn))
               (progn
                 (message "Checking %s" fn)
-                ;; (> (call-process-shell-command
-                ;;     (concat pyflakes-command " " fn) nil nil)
-                ;;    0)))))
-
                 ;; TODO: make this work for all types of files -- I want to
                 ;; check .js this way too
                 (= (call-process-shell-command
