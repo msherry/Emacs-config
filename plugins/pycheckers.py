@@ -37,6 +37,7 @@ Further modified and extended by Marc Sherry.
 """
 
 from argparse import ArgumentParser
+import ConfigParser
 import os
 import re
 from subprocess import Popen, PIPE
@@ -306,6 +307,37 @@ RUNNERS = {
 }
 
 
+def update_options_locally(options):
+    """
+    Traverse the project directory until a config file is found or the
+    filesystem root is reached. If found, use overrides from config as
+    project-specific settings.
+    """
+    dir_path = os.path.dirname(os.path.abspath(options.file))
+    config_file_path = os.path.join(dir_path, '.pycheckers')
+    found = False
+    while True:
+        if os.path.exists(config_file_path):
+            found = True
+            break
+        if os.path.dirname(dir_path) == dir_path:
+            break
+        dir_path = os.path.dirname(dir_path)
+        config_file_path = os.path.join(dir_path, '.pycheckers')
+
+    if not found:
+        return options
+    config = ConfigParser.ConfigParser()
+    config.read(config_file_path)
+    for key, value in config.defaults().iteritems():
+        print key, value
+        setattr(options, key, value)
+    for _section in config.sections():
+        # Parse the section -- per-linter, maybe
+        pass
+    return options
+
+
 def main():
     # transparently add a virtualenv to the path when launched with a venv'd
     # python.
@@ -331,6 +363,8 @@ def main():
     source_file = options.file
     checkers = options.checkers
     ignore_codes = options.ignore_codes
+
+    options = update_options_locally(options)
 
     # Attempt to determine if the current file is in a virtualenv, and munge
     # paths appropriately
