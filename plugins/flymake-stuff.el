@@ -113,10 +113,10 @@ version, depending on the value of the variable `use-hacked-flymake-parse-line'"
 
 
 (defun dired-mark-files-with-errors (&optional marker-char)
-  "Run `python-check-command' on all python files in directory, and mark all
-files containing errors for use in later commands.
-A prefix argument means to unmark them instead.
-`.' and `..' are never marked."
+  "Run `python-multiple-checker-command' on all python files in
+directory, and mark all files containing errors for use in later
+commands.  A prefix argument means to unmark them instead.  `.'
+and `..' are never marked."
   (interactive
    (list (if current-prefix-arg ?\040)))
   (let ((dired-marker-char (or marker-char dired-marker-char)))
@@ -132,8 +132,10 @@ A prefix argument means to unmark them instead.
                 ;; TODO: make this work for all types of files -- I want to
                 ;; check .js this way too
                 (= (call-process-shell-command
-                    (concat python-multiple-checker-command " -c pyflakes "
-                            fn " | grep ^ERROR"))
+                    (mapconcat 'identity
+                               `(,python-multiple-checker-command
+                                 " -c pyflakes "
+                                 ,fn " | grep ^ERROR") " "))
                    0)))))
      "errorful file")))
 
