@@ -36,13 +36,11 @@ unknown.
 Further modified and extended by Marc Sherry.
 """
 
+from argparse import ArgumentParser
 import os
-from os import path
 import re
-import sys
-
-
 from subprocess import Popen, PIPE
+import sys
 
 
 ## Customization ##
@@ -307,39 +305,28 @@ RUNNERS = {
 }
 
 
-if __name__ == '__main__':
+def main():
     # transparently add a virtualenv to the path when launched with a venv'd
     # python.
-    os.environ['PATH'] = (path.dirname(sys.executable) + ':' +
+    os.environ['PATH'] = (os.path.dirname(sys.executable) + ':' +
                           os.environ['PATH'])
 
     if len(sys.argv) < 2:
         croak("Usage: %s [file]" % sys.argv[0])
-    elif len(sys.argv) > 2:
-        from optparse import OptionParser
-        parser = OptionParser()
-        parser.add_option("-i", "--ignore_codes", dest="ignore_codes",
-                          default=[], action='append',
-                          help="error codes to ignore")
-        parser.add_option("-c", "--checkers", dest="checkers",
-                          default=default_checkers,
-                          help="comma separated list of checkers")
-        options, args = parser.parse_args()
-        if not args:
-            croak("Usage: %s [file]" % sys.argv[0])
-        if options.checkers:
-            checkers = options.checkers
-        else:
-            checkers = default_checkers
-        if options.ignore_codes:
-            ignore_codes = options.ignore_codes
-        else:
-            ignore_codes = default_ignore_codes
-        source_file = args[0]
-    else:
-        source_file = sys.argv[1]
-        checkers = default_checkers
-        ignore_codes = default_ignore_codes
+
+    parser = ArgumentParser()
+    parser.add_argument('file', type=str, help='Filename to check')
+    parser.add_argument("-c", "--checkers", dest="checkers",
+                        default=default_checkers,
+                        help="Comma-separated list of checkers")
+    parser.add_argument("-i", "--ignore_codes", dest="ignore_codes",
+                        default=default_ignore_codes, action='append',
+                        help="Error codes to ignore")
+    options = parser.parse_args()
+
+    source_file = options.file
+    checkers = options.checkers
+    ignore_codes = options.ignore_codes
 
     # Attempt to determine if the current file is in a virtualenv, and munge
     # paths appropriately
@@ -368,3 +355,7 @@ if __name__ == '__main__':
     if errors_or_warnings > 0:
         exit_status = 1
     sys.exit(exit_status)
+
+
+if __name__ == '__main__':
+    main()
