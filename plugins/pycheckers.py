@@ -199,7 +199,7 @@ class Pep8Runner(LintRunner):
         r'(?P<description>.+)$')
 
     @classmethod
-    def fixup_data(cls, line, data):
+    def fixup_data(cls, _line, data):
         data['level'] = 'WARNING'
         return data
 
@@ -232,7 +232,7 @@ class PydoRunner(LintRunner):
         r'(?P<description>.*)$')
 
     @classmethod
-    def fixup_data(cls, line, data):
+    def fixup_data(cls, _line, data):
         number = data['error_number'] = data['error_number'].upper()
         if number == 'FIXME':
             data['level'] = 'ERROR'
@@ -271,14 +271,13 @@ class PylintRunner(LintRunner):
         "E1101",
         "E1103",  # Instance of x has no y member
                   # (but some types could not be inferred")
-        "R0201",  # Method could be a function
         "R0801",  # Similar lines in * files
         "R0903",  # Too few public methods
         "R0904",  # Too many public methods
     ])
 
     @classmethod
-    def fixup_data(cls, line, data):
+    def fixup_data(cls, _line, data):
         if data['error_type'].startswith('E'):
             data['level'] = 'ERROR'
         else:
