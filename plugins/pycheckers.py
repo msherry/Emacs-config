@@ -290,7 +290,7 @@ class PylintRunner(LintRunner):
         return (
             '--output-format', 'parseable',
             '--reports', 'n',
-            '--disable=' + ','.join(self.sane_default_ignore_codes),
+            '--disable=' + ','.join(self.ignore_codes),
             '--dummy-variables-rgx=' + '_.*',
             '--max-line-length', str(self.options.max_line_length),
         )
@@ -334,11 +334,18 @@ def update_options_locally(options):
     config = ConfigParser.ConfigParser()
     config.read(config_file_path)
     for key, value in config.defaults().iteritems():
-        print key, value
         setattr(options, key, value)
     for _section in config.sections():
         # Parse the section -- per-linter, maybe
         pass
+
+    if hasattr(options, 'extra_ignore_codes'):
+        print options.extra_ignore_codes, type(options.extra_ignore_codes)
+        extra_ignore_codes = options.extra_ignore_codes.replace(',', '').split()
+        # Allow for extending, rather than replacing, ignore codes
+        options.ignore_codes.extend(extra_ignore_codes)
+
+    print options
     return options
 
 
