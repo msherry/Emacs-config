@@ -30,7 +30,21 @@ http://creativecommons.org/licenses/sa/1.0/
 Original work taken from http://www.emacswiki.org/emacs/PythonMode, author
 unknown.
 
+
+==============================================================================
+
+Further modified and extended by Marc Sherry.
 """
+
+import os
+from os import path
+import re
+import sys
+
+
+from subprocess import Popen, PIPE
+
+
 ## Customization ##
 
 # Checkers to run be default, when no --checkers options are supplied.
@@ -62,14 +76,6 @@ default_ignore_codes = \
     ]
 
 ## End of customization ##
-
-import os
-from os import path
-import re
-import sys
-
-
-from subprocess import Popen, PIPE
 
 
 class LintRunner(object):
