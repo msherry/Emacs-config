@@ -277,11 +277,13 @@ class PylintRunner(LintRunner):
 
     @property
     def run_flags(self):
-        return ('--output-format', 'parseable',
-                '--reports', 'n',
-                '--disable=' + ','.join(self.sane_default_ignore_codes),
-                '--dummy-variables-rgx=' + '_.*'
-                )
+        return (
+            '--output-format', 'parseable',
+            '--reports', 'n',
+            '--disable=' + ','.join(self.sane_default_ignore_codes),
+            '--dummy-variables-rgx=' + '_.*',
+            '--max-line-length', '100',
+        )
 
 
 def croak(*msgs):
