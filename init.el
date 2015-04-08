@@ -511,20 +511,6 @@ annotations"
 ))
 
 
-(custom-set-faces
- ;; custom-set-faces was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(button ((t (:foreground "#b58900" :underline t))))
- '(csv-separator-face ((t (:foreground "cornflower blue"))))
- '(ediff-current-diff-B ((((class color) (min-colors 16)) (:background "#ff00ff" :foreground "blue"))))
- '(ediff-even-diff-B ((((class color) (min-colors 16)) (:background "Grey" :foreground "black"))))
- '(error ((t (:background "LightCoral"))))
- '(region ((((class color) (min-colors 24)) (:background "#00ffff"))))
- '(warning ((t (:background "#a4caff")))))
-
-
 (defun switch-font ()
   "Temporary function to quickly switch between monaco and
 inconsolata. Really only applicable on the Mac."
@@ -570,6 +556,20 @@ http://blogs.fluidinfo.com/terry/2011/11/10/emacs-buffer-mode-histogram/"
               (setq key (substring key 0 -5)))
           (princ (format "%2d %20s %s\n" count key
                          (make-string count ?+))))))))
+
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(button ((t (:foreground "#b58900" :underline t))))
+ '(csv-separator-face ((t (:foreground "cornflower blue"))))
+ '(ediff-current-diff-B ((((class color) (min-colors 16)) (:background "#ff00ff" :foreground "blue"))))
+ '(ediff-even-diff-B ((((class color) (min-colors 16)) (:background "Grey" :foreground "black"))))
+ '(error ((t (:background "LightCoral"))))
+ '(region ((((class color) (min-colors 24)) (:background "#00ffff"))))
+ '(warning ((t (:background "#a4caff")))))
+
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
