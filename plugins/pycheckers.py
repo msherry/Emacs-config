@@ -94,12 +94,13 @@ class LintRunner(object):
 
     run_flags = ()
 
-    def __init__(self, ignore_codes=(), use_sane_defaults=True):
+    def __init__(self, ignore_codes=(), use_sane_defaults=True, options=None):
         self.ignore_codes = set(ignore_codes)
         if use_sane_defaults:
             self.ignore_codes ^= self.sane_default_ignore_codes
+        self.options = options
 
-    def fixup_data(self, line, data):
+    def fixup_data(self, _line, data):
         return data
 
     def process_output(self, line):
@@ -159,7 +160,7 @@ class PyflakesRunner(LintRunner):
         r'(?P<description>.+)$')
 
     @classmethod
-    def fixup_data(cls, line, data):
+    def fixup_data(cls, _line, data):
         if 'imported but unused' in data['description']:
             data['level'] = 'WARNING'
         elif 'redefinition of unused' in data['description']:
@@ -286,7 +287,7 @@ class PylintRunner(LintRunner):
             '--reports', 'n',
             '--disable=' + ','.join(self.sane_default_ignore_codes),
             '--dummy-variables-rgx=' + '_.*',
-            '--max-line-length', '100',
+            '--max-line-length', str(self.options.max_line_length),
         )
 
 
@@ -322,6 +323,9 @@ def main():
     parser.add_argument("-i", "--ignore_codes", dest="ignore_codes",
                         default=default_ignore_codes, action='append',
                         help="Error codes to ignore")
+    parser.add_argument('--max-line-length', dest='max_line_length',
+                        default=100, action='store',
+                        help='Maximum line length')
     options = parser.parse_args()
 
     source_file = options.file
@@ -348,7 +352,7 @@ def main():
             croak(("Unknown checker %s" % checker),
                   ("Expected one of %s" % ', '.join(RUNNERS.keys())))
             break
-        runner = klass(ignore_codes=ignore_codes)
+        runner = klass(ignore_codes=ignore_codes, options=options)
         errors_or_warnings += runner.run(source_file)
 
     exit_status = 0
