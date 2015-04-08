@@ -113,7 +113,9 @@ version, depending on the value of the variable `use-hacked-flymake-parse-line'"
 
 
 (defun dired-mark-files-with-errors (&optional marker-char)
-  "Run `python-multiple-checker-command' on all python files in
+  "Mark all files in `dired' buffer containing Python errors.
+
+Run `python-multiple-checker-command' on all python files in
 directory, and mark all files containing errors for use in later
 commands.  A prefix argument means to unmark them instead.  `.'
 and `..' are never marked."
