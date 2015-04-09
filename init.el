@@ -105,6 +105,8 @@ started from a shell."
 (add-to-list 'package-archives
              '("melpa" . "http://melpa.milkbox.net/packages/") t)
 (add-to-list 'package-archives
+             '("melpa" . "http://melpa.org/packages/") t)
+(add-to-list 'package-archives
              '("melpa-stable" . "http://melpa-stable.milkbox.net/packages/") t)
 (package-initialize)
 
@@ -566,8 +568,10 @@ http://blogs.fluidinfo.com/terry/2011/11/10/emacs-buffer-mode-histogram/"
  ;; If there is more than one, they won't work right.
  '(button ((t (:foreground "#b58900" :underline t))))
  '(csv-separator-face ((t (:foreground "cornflower blue"))))
+ '(diff-refine-added ((t (:inherit diff-refine-change :background "dark green"))))
+ '(diff-refine-removed ((t (:inherit diff-refine-change :background "red4"))))
  '(ediff-current-diff-B ((((class color) (min-colors 16)) (:background "#ff00ff" :foreground "blue"))))
- '(ediff-even-diff-B ((((class color) (min-colors 16)) (:background "Grey" :foreground "black"))))
+ '(ediff-even-diff-B ((((class color) (min-colors 16)) (:background "Grey" :foreground "black"))) t)
  '(error ((t (:background "LightCoral"))))
  '(region ((((class color) (min-colors 24)) (:background "#00ffff"))))
  '(warning ((t (:background "#a4caff")))))
