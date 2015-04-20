@@ -209,15 +209,15 @@ started from a shell."
                                             ; only seems needed in a terminal
                                             ; on Linux
 (blink-cursor-mode 1)
+
+;;; Global keybindings
 (global-set-key (kbd "C-l") 'recenter)  ; recenter-top-bottom? No thanks
-
 (global-set-key (kbd "<kp-delete>") (kbd "<deletechar>"))
-
 ;; I don't really need a key bound to the GPL
 (global-set-key (kbd "C-h C-c") 'hc)
-
 ;; Forward-deletion of words
 (global-set-key (kbd "M-<kp-delete>") 'kill-word)
+
 
 (show-paren-mode t)
 ; Display
@@ -324,7 +324,7 @@ started from a shell."
   (add-todo-to-current-mode)
   (flyspell-prog-mode)
   (really-set-keys)
-  (highlight-beyond-fill-column)
+  ;; (highlight-beyond-fill-column)
   (font-lock-fontify-numbers)
   ;; (doxymacs-mode)
 
