@@ -381,8 +381,7 @@ def main():
     full_path = os.path.abspath(source_file)
     if '/pp/' in full_path:
         package = re.search(r'/pp/([^/]+)', full_path).group(1)
-        virtualenv_path = os.path.expanduser('~{}/.virtualenvs/{}'.format(
-            os.environ['USER'], package))
+        virtualenv_path = os.path.expanduser('~/.virtualenvs/{}'.format(package))
         if os.path.exists(virtualenv_path):
             bin_path = os.path.join(virtualenv_path, 'bin')
             os.environ['PATH'] = bin_path + ':' + os.environ['PATH']
