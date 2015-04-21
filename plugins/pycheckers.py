@@ -375,9 +375,11 @@ def main():
 
     options = update_options_locally(options)
 
-    # Attempt to determine if the current file is in a virtualenv, and munge
-    # paths appropriately
+    # Attempt to determine if the current file is part of a package that has a
+    # virtualenv, and munge paths appropriately
     # TODO: this is very pp-specific
+    # TODO: find the project root dir (check out project-directory in
+    # jedi-local.el, check ~/.virtualenvs for a project with the same name)
     full_path = os.path.abspath(source_file)
     if '/pp/' in full_path:
         package = re.search(r'/pp/([^/]+)', full_path).group(1)
