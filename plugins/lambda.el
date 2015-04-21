@@ -25,6 +25,7 @@ font-lock-mode"
 (add-hook 'slime-repl-mode-hook 'sm-lambda-mode-hook)
 (add-hook 'scheme-mode-hook 'sm-lambda-mode-hook)
 (add-hook 'python-mode-hook 'sm-lambda-mode-hook)
+(add-hook 'diff-mode-hook 'sm-lambda-mode-hook)
 
 (provide 'lambda)
 
