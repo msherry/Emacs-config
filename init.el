@@ -267,6 +267,8 @@ started from a shell."
 ; Readline in shell mode
 (define-key comint-mode-map [up] 'comint-previous-input)
 (define-key comint-mode-map [down] 'comint-next-input)
+; Util functions for dired
+(define-key dired-mode-map "F" 'find-matching-pattern-under-dir)
 ; IBuffer is better than list-buffers
 (global-set-key (kbd "C-x C-b") 'ibuffer)
 

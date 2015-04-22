@@ -15,4 +15,16 @@ tramp."
        (or (not (fboundp 'tramp-handle-file-remote-p))
            (not (tramp-handle-file-remote-p buffer-file-name)))))
 
+
+(defun find-matching-pattern-under-dir (pattern)
+  "A version of `find-name-dired` that doesn't prompt for the directory.
+
+Finds filenames containing the given pattern under the current directory. Equivalent to calling
+
+    find . -iname \\*'PATTERN'\\*
+"
+  (interactive
+   "sFind-name (filename wildcard): ")
+  (find-dired "." (concat find-name-arg " " "*" (shell-quote-argument pattern) "*")))
+
 (provide 'custom-utils)
