@@ -311,6 +311,22 @@ RUNNERS = {
 }
 
 
+def update_options_from_file(options, config_file_path):
+    config = ConfigParser.ConfigParser()
+    config.read(config_file_path)
+
+    for key, value in config.defaults().iteritems():
+        setattr(options, key, value)
+    for _section in config.sections():
+        # Parse the section -- per-linter, maybe
+        pass
+    if hasattr(options, 'extra_ignore_codes'):
+        extra_ignore_codes = options.extra_ignore_codes.replace(',', '').split()
+        # Allow for extending, rather than replacing, ignore codes
+        options.ignore_codes.extend(extra_ignore_codes)
+    return options
+
+
 def update_options_locally(options):
     """
     Traverse the project directory until a config file is found or the
@@ -331,18 +347,8 @@ def update_options_locally(options):
 
     if not found:
         return options
-    config = ConfigParser.ConfigParser()
-    config.read(config_file_path)
 
-    for key, value in config.defaults().iteritems():
-        setattr(options, key, value)
-    for _section in config.sections():
-        # Parse the section -- per-linter, maybe
-        pass
-    if hasattr(options, 'extra_ignore_codes'):
-        extra_ignore_codes = options.extra_ignore_codes.replace(',', '').split()
-        # Allow for extending, rather than replacing, ignore codes
-        options.ignore_codes.extend(extra_ignore_codes)
+    options = update_options_from_file(options, config_file_path)
 
     return options
 
