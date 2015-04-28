@@ -94,6 +94,7 @@ started from a shell."
 ;; excluding . and ..
 (add-to-list 'load-path "~/.emacs.d/plugins")
 (add-to-list 'load-path "~/.emacs.d/plugins/vendor")
+(add-to-list 'load-path "~/.emacs.d/plugins/language-specific")
 (dolist (dir (directory-files "~/.emacs.d/plugins/vendor" t "^[^.]"))
   (when (file-directory-p dir)
     (add-to-list 'load-path dir)))
@@ -264,11 +265,14 @@ started from a shell."
 (global-set-key (kbd "M-p") (lambda() (interactive) (scroll-down 1)))
 (global-set-key (kbd "C-x \\") 'align-regexp)
 (global-set-key (kbd "M-/") 'hippie-expand) ; better than dabbrev
+(global-set-key (kbd "C-M-z") 'ack)
 ; Readline in shell mode
 (define-key comint-mode-map [up] 'comint-previous-input)
 (define-key comint-mode-map [down] 'comint-next-input)
 ; Util functions for dired
-(define-key dired-mode-map "F" 'find-matching-pattern-under-dir)
+(eval-after-load "dired"
+  (lambda ()
+    (define-key dired-mode-map "F" 'find-matching-pattern-under-dir)))
 ; IBuffer is better than list-buffers
 (global-set-key (kbd "C-x C-b") 'ibuffer)
 
@@ -377,6 +381,8 @@ started from a shell."
             (setq jedi:tooltip-method nil)
             (define-key jedi-mode-map (kbd "C-c .") nil)
             ))
+
+(require 'java-settings)
 
 ;; Tramp adds a hook to auto-save files. Remove it
 (remove-hook 'find-file-hook 'tramp-set-auto-save)
