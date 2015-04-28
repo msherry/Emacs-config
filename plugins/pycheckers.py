@@ -341,9 +341,7 @@ def update_options_locally(options):
     config_file_path = os.path.join(dir_path, '.pycheckers')
     while True:
         if os.path.exists(config_file_path):
-            print config_file_path
             options = update_options_from_file(options, config_file_path)
-            print options
             if not options.merge_configs:
                 # We found a file and parsed it, now we're done
                 break
