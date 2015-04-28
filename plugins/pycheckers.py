@@ -316,6 +316,10 @@ def update_options_from_file(options, config_file_path):
     config.read(config_file_path)
 
     for key, value in config.defaults().iteritems():
+        if value in ['False', 'false', 'F', 'f']:
+            value = False
+        elif value in ['True', 'true', 'T', 't']:
+            value = True
         setattr(options, key, value)
     for _section in config.sections():
         # Parse the section -- per-linter, maybe
@@ -335,20 +339,18 @@ def update_options_locally(options):
     """
     dir_path = os.path.dirname(os.path.abspath(options.file))
     config_file_path = os.path.join(dir_path, '.pycheckers')
-    found = False
     while True:
         if os.path.exists(config_file_path):
-            found = True
-            break
+            print config_file_path
+            options = update_options_from_file(options, config_file_path)
+            print options
+            if not options.merge_configs:
+                # We found a file and parsed it, now we're done
+                break
         if os.path.dirname(dir_path) == dir_path:
             break
         dir_path = os.path.dirname(dir_path)
         config_file_path = os.path.join(dir_path, '.pycheckers')
-
-    if not found:
-        return options
-
-    options = update_options_from_file(options, config_file_path)
 
     return options
 
@@ -373,6 +375,10 @@ def main():
     parser.add_argument('--max-line-length', dest='max_line_length',
                         default=100, action='store',
                         help='Maximum line length')
+    parser.add_argument('--no-merge-configs', dest='merge_configs',
+                        action='store_false',
+                        help=('Whether to ignore config files found at a higher '
+                              'directory than this one'))
     options = parser.parse_args()
 
     source_file = options.file
