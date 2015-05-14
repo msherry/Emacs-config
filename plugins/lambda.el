@@ -2,12 +2,18 @@
 
 ;; This is retarded :)
 
+(defvar min-prettify-emacs-version "24999.4")
+
+;;; Note: on OS X, conflicts in the font we use (andale mono) can cause this to
+;;; break. Using OS X's FontBook's 'Resolve Automatically' button fixed the
+;;; issue.
+
 ;; real lisp hackers use the lambda character
 ;; courtesy of stefan monnier on c.l.l
 (defun sm-lambda-mode-hook ()
   "Stupid hook to turn the word Lambda (lowercase) into λ using
 font-lock-mode"
-  (if (version< emacs-version "29.4")
+  (if (version< emacs-version min-prettify-emacs-version)
       (progn
         (font-lock-add-keywords
          nil `(("\\<lambda\\>"
@@ -15,17 +21,14 @@ font-lock-mode"
                                           ,(make-char 'greek-iso8859-7 107))
                           nil))))))
       (progn
-        ;; Supposed to work in 24.4, requires prettify-symbols-mode
-        (push '("lambda" . ?λ) prettify-symbols-alist))))
+        ;; Requires prettify-symbols-mode, which only became available in 24.4
+        (push '("lambda" . ?λ) prettify-symbols-alist)
+        (prettify-symbols-mode 1))))
 
-;; Which modes use 'lambda'
-(add-hook 'emacs-lisp-mode-hook 'sm-lambda-mode-hook)
-(add-hook 'lisp-interactive-mode-hook 'sm-lamba-mode-hook)
-(add-hook 'lisp-mode-hook 'sm-lambda-mode-hook)
-(add-hook 'slime-repl-mode-hook 'sm-lambda-mode-hook)
-(add-hook 'scheme-mode-hook 'sm-lambda-mode-hook)
-(add-hook 'python-mode-hook 'sm-lambda-mode-hook)
-(add-hook 'diff-mode-hook 'sm-lambda-mode-hook)
+(mapc '(lambda (hook)
+        (progn
+          (add-hook hook 'sm-lambda-mode-hook)))
+      '(emacs-lisp-mode-hook lisp-interactive-mode-hook lisp-mode-hook slime-repl-mode-hook scheme-mode-hook python-mode-hook diff-mode-hook))
 
 (provide 'lambda)
 
