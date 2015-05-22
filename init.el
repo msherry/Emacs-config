@@ -38,6 +38,14 @@
        '((?\x3040 . ?\x309F)           ; Hiragana
          (?\x30A0 . ?\x30FF)           ; Katakana
          (?\x4E00 . ?\x9FBF)           ; Kanji
+         ))
+
+ (mapc '(lambda (x)
+         (set-fontset-font t
+          x
+          "-apple-Andale_Mono-medium-normal-normal-*-14-*-*-*-p-0-iso10646-1"))
+       '((?\x898 . ?\x898)           ; ∀
+         (?\x8A0 . ?\x8A0)           ; ∈
          )))
 
 ;; Set up GUI as soon as possible

@@ -2,7 +2,7 @@
 
 ;; This is retarded :)
 
-(defvar min-prettify-emacs-version "24999.4")
+(defvar min-prettify-emacs-version "24.4")
 
 ;;; Note: on OS X, conflicts in the font we use (andale mono) can cause this to
 ;;; break. Using OS X's FontBook's 'Resolve Automatically' button fixed the
@@ -19,7 +19,14 @@ font-lock-mode"
          nil `(("\\<lambda\\>"
                 (0 (progn (compose-region (match-beginning 0) (match-end 0)
                                           ,(make-char 'greek-iso8859-7 107))
-                          nil))))))
+                          nil)))
+               ;; ("\\(\\<for\\>\\).+\\(\\<in\\>\\)"
+               ;;  (0 (progn (compose-region (match-beginning 1) (match-end 1)
+               ;;                            "∀")
+               ;;            (compose-region (match-beginning 2) (match-end 2)
+               ;;                            "∈")
+               ;;            nil)))
+               )))
       (progn
         ;; Requires prettify-symbols-mode, which only became available in 24.4
         (push '("lambda" . ?λ) prettify-symbols-alist)
