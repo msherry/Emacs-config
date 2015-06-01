@@ -312,7 +312,7 @@ RUNNERS = {
 
 
 def update_options_from_file(options, config_file_path):
-    config = ConfigParser.ConfigParser()
+    config = ConfigParser.SafeConfigParser()
     config.read(config_file_path)
 
     for key, value in config.defaults().iteritems():
@@ -321,9 +321,15 @@ def update_options_from_file(options, config_file_path):
         elif value in ['True', 'true', 'T', 't']:
             value = True
         setattr(options, key, value)
-    for _section in config.sections():
-        # Parse the section -- per-linter, maybe
-        pass
+    for section_name in config.sections():
+        if (re.search(section_name, options.file) or
+                re.search(section_name, options.file.replace('_flymake', ''))):
+            for key, value in config.items(section_name):
+                if value in ['False', 'false', 'F', 'f']:
+                    value = False
+                elif value in ['True', 'true', 'T', 't']:
+                    value = True
+                setattr(options, key, value)
     if hasattr(options, 'extra_ignore_codes'):
         extra_ignore_codes = options.extra_ignore_codes.replace(',', '').split()
         # Allow for extending, rather than replacing, ignore codes
