@@ -377,7 +377,7 @@ def main():
                         default=default_ignore_codes, action='append',
                         help="Error codes to ignore")
     parser.add_argument('--max-line-length', dest='max_line_length',
-                        default=100, action='store',
+                        default=80, action='store',
                         help='Maximum line length')
     parser.add_argument('--no-merge-configs', dest='merge_configs',
                         action='store_false',
