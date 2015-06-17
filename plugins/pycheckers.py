@@ -100,6 +100,7 @@ class LintRunner(object):
         if use_sane_defaults:
             self.ignore_codes ^= self.sane_default_ignore_codes
         self.options = options
+        self.out_lines = []
 
     def fixup_data(self, _line, data):
         return data
@@ -109,12 +110,22 @@ class LintRunner(object):
         if m:
             return m.groupdict()
 
+    def _process_stream(self, stream):
+        # This runs over both stdout and stderr
+        errors_or_warnings = 0
+        for line in stream:
+            match = self.process_output(line)
+            if match:
+                tokens = dict(self.output_template)
+                tokens.update(self.fixup_data(line, match))
+                self.out_lines.append(self.output_format % tokens)
+                errors_or_warnings += 1
+        return errors_or_warnings
+
     def run(self, filename):
         args = [self.command]
         args.extend(self.run_flags)
         args.append(filename)
-
-        errors_or_warnings = 0
 
         try:
             process = Popen(args, stdout=PIPE, stderr=PIPE)
@@ -122,21 +133,8 @@ class LintRunner(object):
             print e, args
             return
 
-        for line in process.stdout:
-            match = self.process_output(line)
-            if match:
-                tokens = dict(self.output_template)
-                tokens.update(self.fixup_data(line, match))
-                print self.output_format % tokens
-                errors_or_warnings += 1
-
-        for line in process.stderr:
-            match = self.process_output(line)
-            if match:
-                tokens = dict(self.output_template)
-                tokens.update(self.fixup_data(line, match))
-                print self.output_format % tokens
-                errors_or_warnings += 1
+        errors_or_warnings = (self._process_stream(process.stdout) +
+                              self._process_stream(process.stderr))
 
         return errors_or_warnings
 
@@ -405,16 +403,19 @@ def main():
             os.environ['PATH'] = bin_path + ':' + os.environ['PATH']
 
     errors_or_warnings = 0
-    for checker in checkers.split(','):
-        try:
-            klass = RUNNERS[checker.strip()]
-        except KeyError:
+    checkers = [checker.strip() for checker in checkers.split(',')]
+    for checker in checkers:
+        if checker not in RUNNERS:
             croak(("Unknown checker %s" % checker),
                   ("Expected one of %s" % ', '.join(RUNNERS.keys())))
             break
+
+    for checker in checkers:
+        klass = RUNNERS[checker.strip()]
         runner = klass(ignore_codes=ignore_codes, options=options)
         errors_or_warnings += runner.run(source_file)
-
+        for out_line in runner.out_lines:
+            print out_line
     exit_status = 0
     if errors_or_warnings > 0:
         exit_status = 1
