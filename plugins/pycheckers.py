@@ -38,6 +38,7 @@ Further modified and extended by Marc Sherry.
 
 from argparse import ArgumentParser
 import ConfigParser
+from functools import partial
 import os
 import re
 from subprocess import Popen, PIPE
@@ -357,6 +358,13 @@ def update_options_locally(options):
     return options
 
 
+def run_one_checker(ignore_codes, options, source_file, checker_name):
+    checker_class = RUNNERS[checker_name]
+    runner = checker_class(ignore_codes=ignore_codes, options=options)
+    errors_or_warnings = runner.run(source_file)
+    return (errors_or_warnings, runner.out_lines)
+
+
 def main():
     # transparently add a virtualenv to the path when launched with a venv'd
     # python.
@@ -402,24 +410,29 @@ def main():
             bin_path = os.path.join(virtualenv_path, 'bin')
             os.environ['PATH'] = bin_path + ':' + os.environ['PATH']
 
-    errors_or_warnings = 0
-    checkers = [checker.strip() for checker in checkers.split(',')]
-    for checker in checkers:
-        if checker not in RUNNERS:
-            croak(("Unknown checker %s" % checker),
-                  ("Expected one of %s" % ', '.join(RUNNERS.keys())))
-            break
+    checker_names = [checker.strip() for checker in checkers.split(',')]
+    try:
+        [RUNNERS[checker_name] for checker_name in checker_names]
+    except KeyError:
+        croak(("Unknown checker %s" % checker_name),
+              ("Expected one of %s" % ', '.join(RUNNERS.keys())))
 
-    for checker in checkers:
-        klass = RUNNERS[checker.strip()]
-        runner = klass(ignore_codes=ignore_codes, options=options)
-        errors_or_warnings += runner.run(source_file)
-        for out_line in runner.out_lines:
-            print out_line
-    exit_status = 0
-    if errors_or_warnings > 0:
-        exit_status = 1
-    sys.exit(exit_status)
+    from multiprocessing import Pool
+    p = Pool(5)
+
+    func = partial(run_one_checker, ignore_codes, options, source_file)
+
+    outputs = p.map(func, checker_names)
+    p.close()
+    p.join()
+
+    counts, out_lines_list = zip(*outputs)
+    errors_or_warnings = sum(counts)
+    for out_lines in out_lines_list:
+        for line in out_lines:
+            print line
+
+    sys.exit(errors_or_warnings > 0)
 
 
 if __name__ == '__main__':
