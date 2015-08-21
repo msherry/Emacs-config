@@ -79,6 +79,7 @@
 (set-register ?p '(file . "~/.emacs.d/pass.org.gpg"))
 (set-register ?t '(file . "~/TODO.org"))
 (set-register ?f '(file . "~/Desktop/fraud/fraud_scripts.py"))
+(set-register ?g '(file . "~/code/pinboard/schemas/goldpick_commons/ttypes.py"))
 
 ;;; Set the PATH, even if not started from the shell
 ;;; https://stackoverflow.com/questions/8606954/path-and-exec-path-set-but-emacs-does-not-find-executable
@@ -198,7 +199,7 @@ started from a shell."
 (setq standard-indent 4)
 (setq c-default-style "bsd")
 (setq c-basic-offset 4)                 ; imo uses four
-;; (setq js2-basic-offset 4)               ; imo uses four
+(setq js2-basic-offset 2)               ; imo uses four
 
 (setq mac-command-modifier 'meta
       mac-option-modifier 'super)
@@ -310,7 +311,7 @@ started from a shell."
 ; and width from default-frame-alist (if present), since the frame may not have
 ; been resized yet
 (if (> (max (window-width)
-            (or (cdr (assoc 'width default-frame-alist))
+          z  (or (cdr (assoc 'width default-frame-alist))
                 0))
        160)
     (split-window-horizontally))
@@ -366,7 +367,7 @@ started from a shell."
 
 ; Trailing whitespace is annoying in some modes
 (defvar no-trailing-whitespace-modes '(shell-mode slime-repl-mode text-mode
-                                       fundamental-mode term-mode))
+                                       fundamental-mode term-mode vc-git-log-view-mode))
 
 (mapc '(lambda (x)
         (let ((mode-hook (intern (concat (symbol-name x) "-hook"))))
