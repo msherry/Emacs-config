@@ -311,7 +311,7 @@ started from a shell."
 ; and width from default-frame-alist (if present), since the frame may not have
 ; been resized yet
 (if (> (max (window-width)
-          z  (or (cdr (assoc 'width default-frame-alist))
+            (or (cdr (assoc 'width default-frame-alist))
                 0))
        160)
     (split-window-horizontally))
