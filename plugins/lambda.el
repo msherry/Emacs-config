@@ -2,7 +2,7 @@
 
 ;; This is retarded :)
 
-(defvar min-prettify-emacs-version "24.4")
+(defvar min-prettify-emacs-version "24444.4")
 
 ;;; Note: on OS X, conflicts in the font we use (andale mono) can cause this to
 ;;; break. Using OS X's FontBook's 'Resolve Automatically' button fixed the

@@ -12,7 +12,7 @@
 ;; While emacs23 handles greek poorly on the mac, use a different font. See
 ;; last http ref in plugins/lambda.el. "fontset-startup" (or fontsets at all,
 ;; it seems) don't exist in 22, so only do this on the mac for now
-(when (eq system-type 'darwin)
+(when (and (eq system-type 'darwin) window-system)
   ;; Default on mac - "-apple-Monaco-medium-normal-normal-*-12-*-*-*-m-0-iso10646-1"
 
   ;; Try this font for a while. Either syntax is acceptable here
@@ -25,7 +25,7 @@
                     ; than just the lambda character, so now we specify a range of 1
                     ; char
         	    '(955 . 955)
-        	    "-apple-Andale_Mono-medium-normal-normal-*-14-*-*-*-p-0-iso10646-1")
+        	    "-*-Andale Mono-normal-normal-normal-*-14-*-*-*-m-0-iso10646-1")
 ;; Use a decent japanese font for all kanji, hiragana, and katakana, rather
 ;; than a crap chinese font. It seems that it's kind of random when a font is
 ;; used, and can change, so we specify all three ranges manually. Obviously we
@@ -97,6 +97,7 @@ started from a shell."
 ;; Set up environment
 (set-language-environment "UTF-8")
 
+;; TODO: user-emacs-directory depends on emacs >=23
 (setq expanded-user-emacs-directory (expand-file-name user-emacs-directory))
 
 ;; Plugins - add plugins dir, vendors dir, and all dirs under vendor
