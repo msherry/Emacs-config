@@ -224,7 +224,9 @@ started from a shell."
 (global-set-key (kbd "C-h C-c") 'hc)
 ;; Forward-deletion of words
 (global-set-key (kbd "M-<kp-delete>") 'kill-word)
+(global-set-key (kbd "C-c a") 'org-agenda)
 
+(setq org-agenda-files (list "~/.emacs.d/org/TODO.org"))
 
 (show-paren-mode t)
 ; Display
@@ -368,7 +370,7 @@ started from a shell."
 
 ; Trailing whitespace is annoying in some modes
 (defvar no-trailing-whitespace-modes '(shell-mode slime-repl-mode text-mode
-                                       fundamental-mode term-mode vc-git-log-view-mode))
+                                       fundamental-mode term-mode vc-git-log-view-mode calendar-mode))
 
 (mapc '(lambda (x)
         (let ((mode-hook (intern (concat (symbol-name x) "-hook"))))
