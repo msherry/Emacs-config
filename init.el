@@ -226,7 +226,7 @@ started from a shell."
 (global-set-key (kbd "M-<kp-delete>") 'kill-word)
 (global-set-key (kbd "C-c a") 'org-agenda)
 
-(setq org-agenda-files (list "~/.emacs.d/org/TODO.org"))
+(setq org-agenda-files (list "~/.emacs.d/org"))
 
 (show-paren-mode t)
 ; Display
