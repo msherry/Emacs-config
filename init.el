@@ -137,15 +137,16 @@ started from a shell."
 (require 'yasnippet)
 ;; (load "~/.emacs.d/plugins/vendor/nxhtml/autostart.el")
 ; Mine
-(require 'load-edict)
-(require 'tags-funcs)
-(require 'lisp-customization)
 (require 'custom-faces)
-(require 'flymake-stuff)
-(require 'lambda)
-(require 'totd)
 (when (locate-library "disaster")
   (require 'disaster))
+(require 'flymake-stuff)
+(require 'lambda)
+(require 'lisp-customization)
+(require 'load-edict)
+(require 'org-customization)
+(require 'tags-funcs)
+(require 'totd)
 (when (version< emacs-version "23")
   (progn
     (require 'old-emacs-git)
@@ -224,35 +225,6 @@ started from a shell."
 (global-set-key (kbd "C-h C-c") 'hc)
 ;; Forward-deletion of words
 (global-set-key (kbd "M-<kp-delete>") 'kill-word)
-
-;;; Org-mode customizations
-(if (file-accessible-directory-p "~/.emacs.d/org")
-    (progn
-      (global-set-key (kbd "C-c a") 'org-agenda)
-      (global-set-key (kbd "C-c c") 'org-capture)
-      ; This should be a symlink to a Dropbox dir
-      (setq org-agenda-files (list "~/.emacs.d/org"))
-      (setq org-default-notes-file "~/.emacs.d/org/refile.org")
-      (setq org-agenda-start-on-weekday 0)
-      (setq org-log-done t)
-      ;; http://doc.norang.ca/org-mode.html
-      ;; Targets include this file and any file contributing to the agenda - up
-      ;; to 9 levels deep
-      (setq org-refile-targets (quote ((nil :maxlevel . 9)
-                                       (org-agenda-files :maxlevel . 9))))
-      ;; Use full outline paths for refile targets - we file directly with IDO
-      (setq org-refile-use-outline-path t)
-      ;; Targets complete directly with IDO
-      (setq org-outline-path-complete-in-steps nil)
-      ;; Allow refile to create parent tasks with confirmation
-      (setq org-refile-allow-creating-parent-nodes (quote confirm))
-      ;; Use IDO for both buffer and file completion and ido-everywhere to t
-      (setq org-completion-use-ido t)
-      (setq org-agenda-time-grid '((daily today today)
-                                   #("----------------" 0 16 (org-heading t))
-                                   (800 1000 1200 1400 1600 1800 2000))))
-    ;; No org/ directory, avoid setup
-    (message "You seem to be missing an org/ directory in your .emacs.d -- please check for this to enable org-mode agenda tools."))
 
 (show-paren-mode t)
 ; Display
