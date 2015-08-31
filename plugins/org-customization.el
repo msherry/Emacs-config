@@ -29,9 +29,11 @@
             (quote (("t" "todo" entry (file "~/.emacs.d/org/refile.org")
                          "* TODO %?\n%U\n%a\n" :clock-in t :clock-resume t)
                     ("n" "note" entry (file "~/.emacs.d/org/refile.org")
-                         "* %? :NOTE:\n%U\n%a\n" :clock-in t :clock-resume t))))
+                         "* %? :NOTE:\n%U\n%a\n" :clock-in t :clock-resume t)
+                    ("m" "Meeting" entry (file "~/.emacs.d/org/refile.org")
+                         "* %? :MEETING:\n%U" :clock-in t :clock-resume t))))
       (setq org-agenda-custom-commands
-            '(("n" "Agenda and all TODO's" ((agenda "") (alltodo "")))
+            '(("n" "Agenda and all TODO's/unfiled" ((agenda "") (alltodo "") (tags "REFILE")))
               ("N" "Notes" tags "NOTE"
                ((org-agenda-overriding-header "Notes")
                 (org-tags-match-list-sublevels t)))))
