@@ -41,4 +41,6 @@
     ;; No org/ directory, avoid setup
     (message "You seem to be missing an org/ directory in your .emacs.d -- please check for this to enable org-mode agenda tools."))
 
+(add-hook 'org-mode-hook 'auto-revert-mode)
+
 (provide 'org-customization)
