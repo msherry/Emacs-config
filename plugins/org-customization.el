@@ -1,5 +1,20 @@
 ;;; Setup and customizations for org-mode
 
+(add-hook 'org-mode-hook 'auto-revert-mode)
+
+;;; Auto-save all org-mode buffers while agenda open -
+;;; http://emacs.stackexchange.com/a/483/7169
+(add-hook 'org-agenda-mode-hook
+          (lambda ()
+            (add-hook 'auto-save-hook 'org-save-all-org-buffers nil t)
+            (auto-save-mode)))
+
+;;; Persist clock history across emacs runs -
+;;; http://orgmode.org/manual/Clocking-work-time.html
+(setq org-clock-persist t)
+(org-clock-persistence-insinuate)
+
+;;; Agenda-related setup -- skip if we can't find the agenda directory
 (if (file-accessible-directory-p "~/.emacs.d/org")
     (progn
       (global-set-key (kbd "C-c a") 'org-agenda)
@@ -31,7 +46,7 @@
                     ("n" "note" entry (file "~/.emacs.d/org/refile.org")
                          "* %? :NOTE:\n%U\n%a\n" :clock-in t :clock-resume t)
                     ("m" "Meeting" entry (file "~/.emacs.d/org/refile.org")
-                         "* %? :MEETING:\n%U" :clock-in t :clock-resume t))))
+                         "* %? :MEETING:\n%U" ))))
       (setq org-agenda-custom-commands
             '(("n" "Agenda and all TODO's/unfiled" ((agenda "") (alltodo "") (tags "REFILE")))
               ("N" "Notes" tags "NOTE"
@@ -40,7 +55,5 @@
       )
     ;; No org/ directory, avoid setup
     (message "You seem to be missing an org/ directory in your .emacs.d -- please check for this to enable org-mode agenda tools."))
-
-(add-hook 'org-mode-hook 'auto-revert-mode)
 
 (provide 'org-customization)
