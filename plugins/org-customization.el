@@ -7,7 +7,9 @@
 (add-hook 'org-agenda-mode-hook
           (lambda ()
             (add-hook 'auto-save-hook 'org-save-all-org-buffers nil t)
-            (auto-save-mode)))
+            (auto-save-mode)
+            ;; Muscle memory from VC mode means I hit this all the time
+            (local-unset-key (kbd "x"))))
 
 ;;; Persist clock history across emacs runs -
 ;;; http://orgmode.org/manual/Clocking-work-time.html
