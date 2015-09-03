@@ -1,15 +1,30 @@
 ;;; Setup and customizations for org-mode
 
-(add-hook 'org-mode-hook 'auto-revert-mode)
+;;; From comments on https://emacs.stackexchange.com/questions/12475/
+(defun msherry/org-save-all-org-buffers ()
+  "Save all Org-mode buffers without user confirmation."
+  (interactive)
+  (message "Saving all Org-mode buffers...")
+  (save-some-buffers t (lambda () (and (derived-mode-p 'org-mode)
+                                  (buffer-file-name))))
+  (when (featurep 'org-id) (org-id-locations-save))
+  (message "Saving all Org-mode buffers... done"))
+
 
 ;;; Auto-save all org-mode buffers while agenda open -
 ;;; http://emacs.stackexchange.com/a/483/7169
 (add-hook 'org-agenda-mode-hook
-          (lambda ()
-            (add-hook 'auto-save-hook 'org-save-all-org-buffers nil t)
-            (auto-save-mode)
+          '(lambda ()
+            (add-hook 'auto-save-hook 'msherry/org-save-all-org-buffers nil t)
+            (auto-save-mode t)
             ;; Muscle memory from VC mode means I hit this all the time
             (local-unset-key (kbd "x"))))
+
+(add-hook 'org-mode-hook
+          '(lambda ()
+            (add-hook 'auto-save-hook 'msherry/org-save-all-org-buffers nil t)
+            (auto-save-mode t)
+            (auto-revert-mode)))
 
 ;;; Persist clock history across emacs runs -
 ;;; http://orgmode.org/manual/Clocking-work-time.html
@@ -60,7 +75,9 @@
                 (todo ""
                       ((org-agenda-overriding-header "Unscheduled TODOs")
                        (org-agenda-skip-function
-                        '(org-agenda-skip-entry-if 'deadline 'scheduled))))))
+                        '(org-agenda-skip-entry-if 'deadline 'scheduled))))
+                (tags "REFILE"
+                      ((org-agenda-overriding-header "To refile")))))
               ("N" "Notes" tags "NOTE"
                ((org-agenda-overriding-header "Notes")
                 (org-tags-match-list-sublevels t)))))
