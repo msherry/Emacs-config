@@ -576,6 +576,8 @@ http://blogs.fluidinfo.com/terry/2011/11/10/emacs-buffer-mode-histogram/"
           (princ (format "%2d %20s %s\n" count key
                          (make-string count ?+))))))))
 
+(put 'downcase-region 'disabled nil)
+
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
@@ -600,8 +602,9 @@ http://blogs.fluidinfo.com/terry/2011/11/10/emacs-buffer-mode-histogram/"
    (quote
     ("8aebf25556399b58091e533e455dd50a6a9cba958cc4ebb0aab175863c25b9a4" default)))
  '(global-eldoc-mode nil)
- '(mumamo-chunk-coloring 999))
-(put 'downcase-region 'disabled nil)
+ '(package-selected-packages
+   (quote
+    (zenburn-theme yasnippet yaml-mode virtualenv thrift solarized-theme slime sass-mode s rainbow-mode pymacs paredit org markdown-mode jedi httpcode graphviz-dot-mode go-mode flymake-sass flymake ess diff-hl debbugs dash clojure-mode auctex ack))))
 
 
 ;; (eval-after-load 'cc-mode
