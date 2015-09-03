@@ -55,7 +55,7 @@
                 (alltodo "")
                 (tags "REFILE"
                       ((org-agenda-overriding-header "To refile")))))
-              ("x" "Agenda and all unscheduled TODO's / unfiled"
+              ("c" "Agenda and all unscheduled TODO's / unfiled"
                ((agenda "")
                 (todo ""
                       ((org-agenda-overriding-header "Unscheduled TODOs")
