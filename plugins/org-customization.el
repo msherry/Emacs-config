@@ -50,7 +50,17 @@
                     ("m" "Meeting" entry (file "~/.emacs.d/org/refile.org")
                          "* %? :MEETING:\n%U" ))))
       (setq org-agenda-custom-commands
-            '(("n" "Agenda and all TODO's/unfiled" ((agenda "") (alltodo "") (tags "REFILE")))
+            '(("n" "Agenda and all TODO's (including scheduled) / unfiled"
+               ((agenda "")
+                (alltodo "")
+                (tags "REFILE"
+                      ((org-agenda-overriding-header "To refile")))))
+              ("x" "Agenda and all unscheduled TODO's / unfiled"
+               ((agenda "")
+                (todo ""
+                      ((org-agenda-overriding-header "Unscheduled TODOs")
+                       (org-agenda-skip-function
+                        '(org-agenda-skip-entry-if 'deadline 'scheduled))))))
               ("N" "Notes" tags "NOTE"
                ((org-agenda-overriding-header "Notes")
                 (org-tags-match-list-sublevels t)))))
