@@ -83,8 +83,6 @@
       ;; This should be a symlink to a Dropbox dir in order to share across machines
       (setq org-agenda-files (list "~/.emacs.d/org"))
       (setq org-default-notes-file "~/.emacs.d/org/refile.org")
-
-
       )
     ;; No org/ directory, avoid setup
     (message "You seem to be missing an org/ directory in your .emacs.d -- please check for this to enable org-mode agenda tools."))
