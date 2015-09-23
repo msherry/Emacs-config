@@ -11,6 +11,38 @@
   (message "Saving all Org-mode buffers... done"))
 
 
+;;; Display popup alerts From
+;;; http://orgmode.org/worg/org-hacks.html#org-agenda-appt-zenity /
+;;; http://orgmode.org/worg/org-faq.html#automatic-reminders
+(defun msherry/org-agenda-to-appt ()
+  (interactive)
+  (setq appt-time-msg-list nil)
+  (let ((org-deadline-warning-days 0))
+    (org-agenda-to-appt)))
+
+;; Run once, activate and schedule refresh
+(msherry/org-agenda-to-appt)
+(appt-activate t)
+(run-at-time "24:01" nil 'my-org-agenda-to-appt)
+
+;; 10-minute warnings
+(setq appt-message-warning-time 15)
+(setq appt-display-interval 5)
+
+;; Update appt each time agenda opened
+(add-hook 'org-finalize-agenda-hook 'msherry/org-agenda-to-appt)
+
+;; Setup alerts -- tell appt to use window, and replace default function
+(setq appt-display-format 'window)
+(setq appt-disp-window-function 'msherry/appt-disp-window)
+
+(defun msherry/appt-disp-window (min-to-app new-time msg)
+  (save-window-excursion
+    (shell-command
+     (concat
+      "terminal-notifier -title 'Appointment' -message '" msg "'")
+     nil nil)))
+
 ;;; Auto-save all org-mode buffers while agenda open -
 ;;; http://emacs.stackexchange.com/a/483/7169
 (add-hook 'org-agenda-mode-hook
