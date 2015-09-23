@@ -40,7 +40,7 @@
   (save-window-excursion
     (shell-command
      (concat
-      "terminal-notifier -title 'Appointment' -message '" msg "'")
+      "terminal-notifier -sound Bottle -title 'Appointment' -message '" msg "'")
      nil nil)))
 
 ;;; Auto-save all org-mode buffers while agenda open -
