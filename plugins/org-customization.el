@@ -40,7 +40,11 @@
   (save-window-excursion
     (shell-command
      (concat
-      "terminal-notifier -sound Bottle -title 'Appointment' -message '" msg "'")
+      "terminal-notifier"
+      " -title 'Appointment'"
+      " -message '" msg "'"
+      " -sound Bottle"
+      " -execute \"/usr/local/bin/emacsclient --eval '(org-agenda nil \\\"c\\\")'\"")
      nil nil)))
 
 ;;; Auto-save all org-mode buffers while agenda open -
