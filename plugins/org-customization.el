@@ -11,6 +11,20 @@
   (message "Saving all Org-mode buffers... done"))
 
 
+;;; Automatically update org-mode agenda
+;;; http://orgmode.org/worg/org-hacks.html
+(defun msherry/org-agenda-redo-in-other-window ()
+  "Call org-agenda-redo function even in non-agenda buffers"
+  ;; TODO: doesn't work unless agenda is being displayed
+  (interactive)
+  (let ((agenda-window (get-buffer-window org-agenda-buffer-name t)))
+    ;; TODO: would be nice to auto-update appt timers even when we don't have
+    ;; an agenda buffer open
+    (when agenda-window
+      (with-selected-window agenda-window (org-agenda-redo)))))
+(run-at-time nil 300 'msherry/org-agenda-redo-in-other-window)
+
+
 ;;; Display popup alerts From
 ;;; http://orgmode.org/worg/org-hacks.html#org-agenda-appt-zenity /
 ;;; http://orgmode.org/worg/org-faq.html#automatic-reminders
@@ -23,7 +37,7 @@
 ;; Run once, activate and schedule refresh
 (msherry/org-agenda-to-appt)
 (appt-activate t)
-(run-at-time "24:01" nil 'my-org-agenda-to-appt)
+(run-at-time "24:01" nil 'msherry/org-agenda-to-appt)
 
 ;; 10-minute warnings
 (setq appt-message-warning-time 15)
@@ -35,6 +49,7 @@
 ;; Setup alerts -- tell appt to use window, and replace default function
 (setq appt-display-format 'window)
 (setq appt-disp-window-function 'msherry/appt-disp-window)
+(setq appt-delete-window-function '(lambda ()))  ; Popups are external to emacs, no delete needed
 
 (defun msherry/appt-disp-window (min-to-app new-time msg)
   (save-window-excursion
@@ -51,8 +66,8 @@
 ;;; http://emacs.stackexchange.com/a/483/7169
 (add-hook 'org-agenda-mode-hook
           '(lambda ()
-            (add-hook 'auto-save-hook 'msherry/org-save-all-org-buffers nil t)
-            (auto-save-mode t)
+            ;; (add-hook 'auto-save-hook 'msherry/org-save-all-org-buffers nil t)
+            ;; (auto-save-mode t)
             ;; Muscle memory from VC mode means I hit this all the time
             (local-unset-key (kbd "x"))))
 
