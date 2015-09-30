@@ -592,7 +592,7 @@ http://blogs.fluidinfo.com/terry/2011/11/10/emacs-buffer-mode-histogram/"
  '(global-eldoc-mode nil)
  '(org-agenda-clockreport-parameter-plist (quote (:link t :maxlevel 3)))
  '(org-agenda-span (quote day))
- '(org-agenda-start-on-weekday nil t)
+ '(org-agenda-start-on-weekday nil)
  '(package-selected-packages
    (quote
     (feature-mode zenburn-theme yasnippet yaml-mode virtualenv thrift solarized-theme slime sass-mode s rainbow-mode pymacs paredit org markdown-mode jedi httpcode graphviz-dot-mode go-mode flymake-sass flymake ess diff-hl debbugs dash clojure-mode auctex ack))))
