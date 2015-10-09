@@ -3,13 +3,6 @@
 ;; Orchid is a terrible color for builtins
 (set-face-foreground 'font-lock-builtin-face "Blue1")
 
-;; Make diff mode colorful on the mac, and not psychotic on linux
-(eval-after-load 'diff-mode
-  '(progn
-     (set-face-foreground 'diff-added "green4")
-     (set-face-foreground 'diff-removed "red3")))
-
-
 ;; Default "orange" color doesn't show up nicely if we don't have >8 colors, so
 ;; pick something that stands out more if we're color-impaired
 (when (<= (length (list-colors-duplicates (defined-colors))) 8)
