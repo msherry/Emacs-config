@@ -127,6 +127,7 @@ started from a shell."
 (require 'ess)
 (require 'flymake-point) ; shows errors in the minibuffer when highlighted
 (require 'highlight-beyond-fill-column)
+(require 'magit)
 (require 'paredit)
 (require 'rainbow-mode)
 (require 'saveplace)
@@ -226,6 +227,8 @@ started from a shell."
 (global-set-key (kbd "C-h C-c") 'hc)
 ;; Forward-deletion of words
 (global-set-key (kbd "M-<kp-delete>") 'kill-word)
+;; Magit
+(global-set-key (kbd "C-x g") 'magit-status)
 
 (show-paren-mode t)
 ; Display
@@ -370,7 +373,7 @@ started from a shell."
 ; Trailing whitespace is annoying in some modes
 (defvar no-trailing-whitespace-modes '(shell-mode slime-repl-mode text-mode
                                        fundamental-mode term-mode vc-git-log-view-mode
-                                       calendar-mode))
+                                       calendar-mode magit-popup-mode))
 
 (mapc '(lambda (x)
         (let ((mode-hook (intern (concat (symbol-name x) "-hook"))))
