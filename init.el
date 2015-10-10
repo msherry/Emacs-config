@@ -124,7 +124,6 @@ started from a shell."
 (require 'comint)        ; better key handling in shell mode
 ;; (require 'doxymacs)
 (require 'erlang-start)
-(require 'ess)
 (require 'flymake-point) ; shows errors in the minibuffer when highlighted
 (require 'highlight-beyond-fill-column)
 (require 'magit)
@@ -167,6 +166,7 @@ started from a shell."
 (autoload 'csv-mode "csv-mode" nil t)
 (autoload 'jedi-setup-venv "jedi-local" nil t)
 (autoload 'jedi:setup "jedi" nil t)
+(autoload 'ess-mode "ess-mode" "ESS mode" t)
 
 ;;; Configure snippets
 ;; load all el files in the snippets directory, they're usually lisp
@@ -194,6 +194,7 @@ started from a shell."
 (add-to-list 'auto-mode-alist '("\\.php$" . php-mode))
 (add-to-list 'auto-mode-alist '("\\.py$" . python-mode))
 (add-to-list 'interpreter-mode-alist '("python" . python-mode))
+(add-to-list 'auto-mode-alist '("\\.R$" . ess-mode))
 
 
 ;; Indentation settings
@@ -302,9 +303,6 @@ started from a shell."
 ; when I saw this in vim
 (global-hi-lock-mode 1)
 
-; Warn about suspicious C/C++ constructs
-(global-cwarn-mode 1)
-
 ; Don't complain about utf8 as a coding system name
 (define-coding-system-alias 'utf8 'utf-8)
 
@@ -349,7 +347,8 @@ started from a shell."
   ;; Second line of arglists gets two indents
   (c-set-offset 'arglist-cont-nonempty '++)
   (c-set-offset 'arglist-cont '++)
-  (c-set-offset 'arglist-close '++))
+  (c-set-offset 'arglist-close '++)
+  (cwarn-mode))
 
 
 ;; Colors in files where it makes sense
@@ -575,6 +574,7 @@ http://blogs.fluidinfo.com/terry/2011/11/10/emacs-buffer-mode-histogram/"
  ;; If there is more than one, they won't work right.
  '(button ((t (:foreground "#b58900" :underline t))))
  '(csv-separator-face ((t (:foreground "cornflower blue"))))
+ '(diff-added ((t (:background "#002b36" :foreground "green4"))))
  '(diff-refine-added ((t (:inherit diff-refine-change :background "dark green"))))
  '(diff-refine-removed ((t (:inherit diff-refine-change :background "red4"))))
  '(ediff-current-diff-B ((((class color) (min-colors 16)) (:background "#ff00ff" :foreground "blue"))))
@@ -594,13 +594,16 @@ http://blogs.fluidinfo.com/terry/2011/11/10/emacs-buffer-mode-histogram/"
  '(gc-cons-threshold 100000000)
  '(global-eldoc-mode nil)
  '(magit-push-always-verify nil)
+<<<<<<< HEAD
  '(magit-tag-arguments (quote ("--annotate")))
+=======
+>>>>>>> 52223d3725c1a2b0db63d47ffd6dece12623436e
  '(org-agenda-clockreport-parameter-plist (quote (:link t :maxlevel 3)))
  '(org-agenda-span (quote day))
  '(org-agenda-start-on-weekday nil)
  '(package-selected-packages
    (quote
-    (magit feature-mode zenburn-theme yasnippet yaml-mode virtualenv thrift solarized-theme slime sass-mode s rainbow-mode pymacs paredit org markdown-mode jedi httpcode graphviz-dot-mode go-mode flymake-sass flymake ess diff-hl debbugs dash clojure-mode auctex ack))))
+    (esup magit feature-mode zenburn-theme yasnippet yaml-mode virtualenv thrift solarized-theme slime sass-mode s rainbow-mode pymacs paredit org markdown-mode jedi httpcode graphviz-dot-mode go-mode flymake-sass flymake ess diff-hl debbugs dash clojure-mode auctex ack))))
 
 
 ;; (eval-after-load 'cc-mode
