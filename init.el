@@ -594,10 +594,7 @@ http://blogs.fluidinfo.com/terry/2011/11/10/emacs-buffer-mode-histogram/"
  '(gc-cons-threshold 100000000)
  '(global-eldoc-mode nil)
  '(magit-push-always-verify nil)
-<<<<<<< HEAD
  '(magit-tag-arguments (quote ("--annotate")))
-=======
->>>>>>> 52223d3725c1a2b0db63d47ffd6dece12623436e
  '(org-agenda-clockreport-parameter-plist (quote (:link t :maxlevel 3)))
  '(org-agenda-span (quote day))
  '(org-agenda-start-on-weekday nil)
