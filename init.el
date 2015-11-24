@@ -578,6 +578,7 @@ http://blogs.fluidinfo.com/terry/2011/11/10/emacs-buffer-mode-histogram/"
  '(diff-refine-added ((t (:inherit diff-refine-change :background "dark green"))))
  '(diff-refine-removed ((t (:inherit diff-refine-change :background "red4"))))
  '(ediff-current-diff-B ((((class color) (min-colors 16)) (:background "#ff00ff" :foreground "blue"))))
+ '(ediff-current-diff-C ((t (:background "#888833" :foreground "black"))))
  '(ediff-even-diff-B ((((class color) (min-colors 16)) (:background "Grey" :foreground "black"))))
  '(error ((t (:background "LightCoral"))))
  '(region ((((class color) (min-colors 24)) (:background "#00ffff"))))
