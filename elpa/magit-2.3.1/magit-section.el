@@ -34,6 +34,8 @@
 
 (require 'magit-utils)
 
+(defvar magit-keep-region-overlay)
+
 ;;; Options
 
 (defgroup magit-section nil
@@ -45,6 +47,22 @@
   :package-version '(magit . "2.1.0")
   :group 'magit-section
   :type 'boolean)
+
+(defcustom magit-section-movement-hook
+  '(magit-hunk-set-window-start
+    magit-log-maybe-update-revision-buffer
+    magit-log-maybe-show-more-commits)
+  "Hook run by `magit-section-goto'.
+That function in turn is used by all section movement commands."
+  :package-version '(magit . "2.3.0")
+  :group 'magit-section
+  :type 'hook
+  :options '(magit-hunk-set-window-start
+             magit-status-maybe-update-revision-buffer
+             magit-status-maybe-update-blob-buffer
+             magit-log-maybe-update-revision-buffer
+             magit-log-maybe-update-blob-buffer
+             magit-log-maybe-show-more-commits))
 
 (defcustom magit-section-highlight-hook
   '(magit-diff-highlight
@@ -85,7 +103,7 @@ section specific default (see `magit-insert-section')."
   :options '(magit-diff-expansion-threshold magit-revision-set-visibility))
 
 (defface magit-section-highlight
-  '((((class color) (background light)) :background "grey85")
+  '((((class color) (background light)) :background "grey95")
     (((class color) (background  dark)) :background "grey20"))
   "Face for highlighting the current section."
   :group 'magit-faces)
@@ -238,13 +256,6 @@ If there is no previous sibling section, then move to the parent."
              (setq arg (magit-current-section)))
     (goto-char (magit-section-start arg)))
   (run-hook-with-args 'magit-section-movement-hook arg))
-
-(defvar magit-section-movement-hook
-  '(magit-hunk-set-window-start
-    magit-log-maybe-show-commit
-    magit-log-maybe-show-more-commits)
-  "Hook run by `magit-section-goto'.
-That function in turn is used by all section movement commands.")
 
 (defun magit-section-set-window-start (section)
   "Ensure the beginning of SECTION is visible."
@@ -902,13 +913,20 @@ invisible."
     t))
 
 (defun magit-section-make-overlay (start end face)
+  ;; Yes, this doesn't belong here.  But the alternative of
+  ;; spreading this hack across the code base is even worse.
+  (when (and magit-keep-region-overlay
+             (memq face '(magit-section-heading-selection
+                          magit-diff-file-heading-selection
+                          magit-diff-hunk-heading-selection)))
+    (setq face (list :foreground (face-foreground face))))
   (let ((ov (make-overlay start end nil t)))
     (overlay-put ov 'face face)
     (overlay-put ov 'evaporate t)
     (push ov magit-section-highlight-overlays)
     ov))
 
-(defun magit-section-goto-successor (section line char)
+(defun magit-section-goto-successor (section line char arg)
   (let ((ident (magit-section-ident section)))
     (--if-let (magit-get-section ident)
         (let ((start (magit-section-start it)))
@@ -919,21 +937,35 @@ invisible."
               (forward-char char))
             (unless (eq (magit-current-section) it)
               (goto-char start))))
-      (goto-char (--if-let (magit-section-goto-successor-1 section)
-                     (if (eq (magit-section-type it) 'button)
-                         (point-min)
-                       (magit-section-start it))
-                   (point-min))))))
+      (or (and (eq (magit-section-type section) 'hunk)
+               (-when-let (parent (magit-get-section
+                                   (magit-section-ident
+                                    (magit-section-parent section))))
+                 (let* ((children (magit-section-children parent))
+                        (siblings (magit-section-siblings section 'prev))
+                        (previous (nth (length siblings) children)))
+                   (if (not arg)
+                       (--when-let (or previous (car (last children)))
+                         (goto-char (magit-section-start it)))
+                     (when previous
+                       (goto-char (magit-section-start previous)))
+                     (if (and (stringp arg)
+                              (re-search-forward
+                               arg (magit-section-end parent) t))
+                         (goto-char (match-beginning 0))
+                       (goto-char (magit-section-end (car (last children))))
+                       (forward-line -1)
+                       (while (looking-at "^ ")    (forward-line -1))
+                       (while (looking-at "^[-+]") (forward-line -1))
+                       (forward-line))))))
+          (goto-char (--if-let (magit-section-goto-successor-1 section)
+                         (if (eq (magit-section-type it) 'button)
+                             (point-min)
+                           (magit-section-start it))
+                       (point-min)))))))
 
 (defun magit-section-goto-successor-1 (section)
-  (or (--when-let (and (eq (magit-section-type section) 'hunk)
-                       (magit-get-section
-                        (magit-section-ident
-                         (magit-section-parent section))))
-        (let ((children (magit-section-children it)))
-          (or (nth (length (magit-section-siblings section 'prev)) children)
-              (car (last children)))))
-      (--when-let (pcase (magit-section-type section)
+  (or (--when-let (pcase (magit-section-type section)
                     (`staged 'unstaged)
                     (`unstaged 'staged)
                     (`unpushed 'unpulled)
@@ -968,7 +1000,7 @@ invisible."
 If optional DIRECTION is `prev' then return siblings that come
 before SECTION, if it is `next' then return siblings that come
 after SECTION.  For all other values return all siblings
-including SECTION itself."
+excluding SECTION itself."
   (-when-let (parent (magit-section-parent section))
     (let ((siblings  (magit-section-children parent)))
       (pcase direction
@@ -985,13 +1017,9 @@ or is not a valid section selection, then return nil.  If optional
 TYPES is non-nil then the selection not only has to be valid; the
 types of all selected sections additionally have to match one of
 TYPES, or nil is returned."
-  (when (use-region-p)
-    (let ((sections (magit-region-sections)))
-      (when (or (not types)
-                (--all-p (memq (magit-section-type it) types) sections))
-        (mapcar 'magit-section-value sections)))))
+  (mapcar 'magit-section-value (apply 'magit-region-sections types)))
 
-(defun magit-region-sections ()
+(defun magit-region-sections (&rest types)
   "Return a list of the selected sections.
 
 When the region is active and constitutes a valid section
@@ -1007,7 +1035,11 @@ the selection is invalid.  When the selection is valid then the
 region uses the `magit-section-highlight'.  This does not apply
 to diffs were things get a bit more complicated, but even here
 if the region looks like it usually does, then that's not a
-valid selection as far as this function is concerned."
+valid selection as far as this function is concerned.
+
+If optional TYPES is non-nil then the selection not only has to
+be valid; the types of all selected sections additionally have to
+match one of TYPES, or nil is returned."
   (when (use-region-p)
     (let* ((rbeg (region-beginning))
            (rend (region-end))
@@ -1022,7 +1054,10 @@ valid selection as far as this function is concerned."
               (push (car siblings) sections)
               (when (eq (pop siblings) send)
                 (setq siblings nil)))
-            (cons sbeg (nreverse sections))))))))
+            (setq sections (cons sbeg (nreverse sections)))
+            (when (or (not types)
+                      (--all-p (memq (magit-section-type it) types) sections))
+              sections)))))))
 
 (defun magit-section-position-in-heading-p (section pos)
   "Return t if POSITION is inside the heading of SECTION."

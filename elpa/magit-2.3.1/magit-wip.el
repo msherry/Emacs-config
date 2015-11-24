@@ -106,12 +106,12 @@ Also see `magit-wip-after-save-mode' which calls this function
 automatically whenever a buffer visiting a tracked file is saved."
   (interactive)
   (--when-let (magit-wip-get-ref)
-    (let* ((default-directory (magit-toplevel))
-           (file (file-relative-name buffer-file-name )))
-      (magit-wip-commit-worktree it (list file)
-                                 (if (called-interactively-p 'any)
-                                     (format "wip-save %s after save" file)
-                                   (format "autosave %s after save" file))))))
+    (magit-with-toplevel
+      (let ((file (file-relative-name buffer-file-name)))
+        (magit-wip-commit-worktree
+         it (list file) (if (called-interactively-p 'any)
+                            (format "wip-save %s after save" file)
+                          (format "autosave %s after save" file)))))))
 
 ;;;###autoload
 (define-minor-mode magit-wip-after-apply-mode
@@ -152,7 +152,7 @@ command which is about to be called are committed."
 
 (defun magit-wip-commit-before-change (&optional files msg)
   (when magit-wip-before-change-mode
-    (let ((default-directory (magit-toplevel)))
+    (magit-with-toplevel
       (magit-wip-commit files msg))))
 
 ;;; Core
@@ -185,10 +185,10 @@ commit message."
 (defun magit-wip-commit-worktree (ref files msg)
   (let* ((wipref (concat magit-wip-namespace "wtree/" ref))
          (parent (magit-wip-get-parent ref wipref))
-         (tree (magit-with-temp-index parent
+         (tree (magit-with-temp-index parent "--reset"
                  (if files
                      (magit-call-git "add" "--" files)
-                   (let ((default-directory (magit-toplevel)))
+                   (magit-with-toplevel
                      (magit-call-git "add" "-u" ".")))
                  (magit-git-string "write-tree"))))
     (when (magit-git-failure "diff-tree" "--quiet" parent tree "--" files)
