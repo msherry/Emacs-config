@@ -376,7 +376,7 @@ started from a shell."
 (defvar no-trailing-whitespace-modes '(shell-mode slime-repl-mode text-mode
                                        fundamental-mode term-mode vc-git-log-view-mode
                                        calendar-mode magit-popup-mode
-                                       tso6-mode))
+                                       fxrd-mode))
 
 (mapc '(lambda (x)
         (let ((mode-hook (intern (concat (symbol-name x) "-hook"))))

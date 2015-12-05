@@ -1,48 +1,48 @@
-(defgroup TSO6 nil
-  "Major mode for editing TSO6 files"
+(defgroup FXRD nil
+  "Major mode for editing fixed field width files"
   :group 'convenience)
 
-(defface tso6-current-field-face
+(defface fxrd-current-field-face
   '((t (:background "pink")))
   "Highlight the current field."
-  :group 'TSO6)
-(defvar tso6-current-field-face 'tso6-current-field-face)
+  :group 'FXRD)
+(defvar fxrd-current-field-face 'fxrd-current-field-face)
 
-(defconst tso6-mode-line-help-echo
+(defconst fxrd-mode-line-help-echo
   ;; See bindings.el for details of `mode-line-format' construction.
   (get-text-property 0 'help-echo (car default-mode-line-format))
   "Primary default mode line help echo text.")
 
-(defconst tso6-mode-line-format
+(defconst fxrd-mode-line-format
   ;; See bindings.el for details of `mode-line-format' construction.
   (append (butlast default-mode-line-format 2)
-	  (cons `(tso6-field-name-string
-		  ("" tso6-field-name-string
-		   ,(propertize "" 'help-echo tso6-mode-line-help-echo)))
+	  (cons `(fxrd-field-name-string
+		  ("" fxrd-field-name-string
+		   ,(propertize "" 'help-echo fxrd-mode-line-help-echo)))
 		(last default-mode-line-format 2)))
-  "Mode line format string for TSO6 mode.")
+  "Mode line format string for FXRD mode.")
 
-(defconst tso6-font-lock-keywords-1
+(defconst fxrd-font-lock-keywords-1
   (list
    '()
    '("\\('\\w*'\\)" . font-lock-variable-name-face))
-  "Minimal highlighting expressions for TSO6 mode")
+  "Minimal highlighting expressions for FXRD mode")
 
-(defvar tso6-mode-map
+(defvar fxrd-mode-map
   (let ((map (make-sparse-keymap)))
     (define-key map (kbd "M-<right>") 'next-field)
     (define-key map (kbd "M-<left>") 'previous-field)
     map)
-  "Keymap for TSO6 major mode")
+  "Keymap for FXRD major mode")
 
-(defvar tso6-mode-syntax-table
+(defvar fxrd-mode-syntax-table
   (let ((st (make-syntax-table)))
     st))
 
-(defvar tso6-font-lock-keywords tso6-font-lock-keywords-1
-  "Default highlighting expressions for TSO6 mode")
+(defvar fxrd-font-lock-keywords fxrd-font-lock-keywords-1
+  "Default highlighting expressions for FXRD mode")
 
-(defvar tso6-mode-hook nil)
+(defvar fxrd-mode-hook nil)
 
 (defvar header-spec
   (list
@@ -80,6 +80,12 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; Utility functions
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(defun get-mode ()
+  "Determines the correct mode for the file.
+
+Currently only supports TSO6 files."
+  "TSO6")
 
 (defun current-line-pos ()
   "Yields the current position within the line"
@@ -160,73 +166,73 @@ Returns nil if no hit found"
 ;;; Field name mode
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(defcustom tso6-field-name-delay 0.125
+(defcustom fxrd-field-name-delay 0.125
   "Time in seconds to delay before updating field name display."
-  :group 'TSO6
+  :group 'FXRD
   :type '(number :tag "seconds"))
 
-(defvar tso6-field-name-idle-timer nil)
+(defvar fxrd-field-name-idle-timer nil)
 
-(defvar tso6-field-name-string nil)
-(make-variable-buffer-local 'tso6-field-name-string)
+(defvar fxrd-field-name-string nil)
+(make-variable-buffer-local 'fxrd-field-name-string)
 
-(defvar tso6-field-name-string-old nil)
-(make-variable-buffer-local 'tso6-field-name-string-old)
+(defvar fxrd-field-name-string-old nil)
+(make-variable-buffer-local 'fxrd-field-name-string-old)
 
-(define-minor-mode tso6-field-name-mode
-  "Toggle TSO6-field-name mode.
+(define-minor-mode fxrd-field-name-mode
+  "Toggle FXRD-field-name mode.
 When enabled, the name of the current field appears in the mode line."
-  :group 'TSO6
+  :group 'FXRD
   :global t
   :init-value t
   ;; First, always disable current timer to avoid having two timers.
-  (when tso6-field-name-idle-timer
-    (cancel-timer tso6-field-name-idle-timer)
-    (setq tso6-field-name-idle-timer nil))
-  ;; Now, if mode is on and any buffer is in TSO6 mode then re-initialize and
+  (when fxrd-field-name-idle-timer
+    (cancel-timer fxrd-field-name-idle-timer)
+    (setq fxrd-field-name-idle-timer nil))
+  ;; Now, if mode is on and any buffer is in FXRD mode then re-initialize and
   ;; enable by setting up a new timer
-  (if tso6-field-name-mode
+  (if fxrd-field-name-mode
       (if (memq t (mapcar (lambda (buffer)
                             (with-current-buffer buffer
-                              (when (eq major-mode 'tso6-mode)
-                                (setq tso6-field-name-string nil
-                                      tso6-field-name-string-old nil)
+                              (when (eq major-mode 'fxrd-mode)
+                                (setq fxrd-field-name-string nil
+                                      fxrd-field-name-string-old nil)
                                 t)))
                           (buffer-list)))
-          (setq tso6-field-name-idle-timer
-                (run-with-idle-timer tso6-field-name-delay t
-                                     'tso6-field-name-display)))
+          (setq fxrd-field-name-idle-timer
+                (run-with-idle-timer fxrd-field-name-delay t
+                                     'fxrd-field-name-display)))
     ;; but if the mode is off then remove the display from the mode lines of
-    ;; all TSO6 buffers
+    ;; all FXRD buffers
     (mapc (lambda (buffer)
             (with-current-buffer buffer
-              (when (eq major-mode 'tso6-mode)
-                (setq tso6-field-name-string nil
-                      tso6-field-name-string-old nil)
+              (when (eq major-mode 'fxrd-mode)
+                (setq fxrd-field-name-string nil
+                      fxrd-field-name-string-old nil)
                 (force-mode-line-update))))
           (buffer-list))))
 
-(defun tso6-field-name-display ()
-  "Construct `tso6-field-name-string' to display in mode line.
-Called by `tso6-field-name-idle-timer'."
-  (if (eq major-mode 'tso6-mode)
+(defun fxrd-field-name-display ()
+  "Construct `fxrd-field-name-string' to display in mode line.
+Called by `fxrd-field-name-idle-timer'."
+  (if (eq major-mode 'fxrd-mode)
       (let ((field-name (current-field-name))
             (field-boundaries (current-field-boundaries)))
-        (when (not (string= field-name tso6-field-name-string-old))
+        (when (not (string= field-name fxrd-field-name-string-old))
           ;; Update modeline
-          (setq tso6-field-name-string-old field-name
-                tso6-field-name-string
+          (setq fxrd-field-name-string-old field-name
+                fxrd-field-name-string
                 (and field-name (propertize (format "%s" field-name)
-                                            'help-echo tso6-mode-line-help-echo)))
+                                            'help-echo fxrd-mode-line-help-echo)))
           (force-mode-line-update)
           ;; Highlight current field
-          (remove-overlays nil nil 'tso6-overlay t)
+          (remove-overlays nil nil 'fxrd-overlay t)
           (let* ((line-start (line-beginning-position))
                  (begin (nth 0 field-boundaries))
                  (end (nth 1 field-boundaries))
                  (overlay (make-overlay begin end)))
-            (overlay-put overlay 'tso6-overlay t)
-            (overlay-put overlay 'face tso6-current-field-face))))))
+            (overlay-put overlay 'fxrd-overlay t)
+            (overlay-put overlay 'face fxrd-current-field-face))))))
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -234,20 +240,21 @@ Called by `tso6-field-name-idle-timer'."
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 
-(defun tso6-mode ()
-  "Major mode for editing TSO6 files"
+(defun fxrd-mode ()
+  "Major mode for editing fixed field width files"
   (interactive)
   (kill-all-local-variables)
-  (set-syntax-table tso6-mode-syntax-table)
-  (use-local-map tso6-mode-map)
-  (set (make-local-variable 'font-lock-defaults) '(tso6-font-lock-keywords))
-  (setq major-mode 'tso6-mode
-        mode-name "TSO6"
-        mode-line-format tso6-mode-line-format)
-  (overwrite-mode)
-  (run-hooks 'tso6-mode-hook))
+  (set-syntax-table fxrd-mode-syntax-table)
+  (use-local-map fxrd-mode-map)
+  (set (make-local-variable 'font-lock-defaults) '(fxrd-font-lock-keywords))
+  (let ((mode-name-1 (get-mode)))
+    (setq major-mode 'fxrd-mode
+          mode-name mode-name-1
+          mode-line-format fxrd-mode-line-format)
+    (overwrite-mode)
+    (run-hooks 'fxrd-mode-hook)))
 
 ;;; autoload
-(add-to-list 'auto-mode-alist '("\\.TSO6\\." . tso6-mode))
+(add-to-list 'auto-mode-alist '("\\.TSO6\\." . fxrd-mode))
 
-(provide 'tso6-mode)
+(provide 'fxrd-mode)
