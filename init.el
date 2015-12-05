@@ -167,6 +167,7 @@ started from a shell."
 (autoload 'jedi-setup-venv "jedi-local" nil t)
 (autoload 'jedi:setup "jedi" nil t)
 (autoload 'ess-mode "ess-mode" "ESS mode" t)
+(autoload 'fxrd-mode "fxrd-mode" "FXRD mode" t)
 
 ;;; Configure snippets
 ;; load all el files in the snippets directory, they're usually lisp
@@ -195,6 +196,7 @@ started from a shell."
 (add-to-list 'auto-mode-alist '("\\.py$" . python-mode))
 (add-to-list 'interpreter-mode-alist '("python" . python-mode))
 (add-to-list 'auto-mode-alist '("\\.R$" . ess-mode))
+(add-to-list 'auto-mode-alist '("\\.TSO6\\." . fxrd-mode))
 
 
 ;; Indentation settings

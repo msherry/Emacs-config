@@ -3,7 +3,8 @@
   :group 'convenience)
 
 (defface fxrd-current-field-face
-  '((t (:background "pink")))
+  '((t (:inherit highlight
+        :background "pink")))
   "Highlight the current field."
   :group 'FXRD)
 (defvar fxrd-current-field-face 'fxrd-current-field-face)
@@ -43,6 +44,10 @@
   "Default highlighting expressions for FXRD mode")
 
 (defvar fxrd-mode-hook nil)
+
+(defun disable-fxrd-mode ()
+  (fxrd-field-name-mode -1)
+  (fxrd-clear-overlays))
 
 (defvar header-spec
   (list
@@ -140,6 +145,9 @@ Returns nil if no hit found"
                  (end (+ line-start (nth 1 spec-item))))
             (list start end))))))
 
+(defun fxrd-clear-overlays ()
+  (remove-overlays nil nil 'fxrd-overlay t))
+
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; Public functions
@@ -209,7 +217,8 @@ When enabled, the name of the current field appears in the mode line."
               (when (eq major-mode 'fxrd-mode)
                 (setq fxrd-field-name-string nil
                       fxrd-field-name-string-old nil)
-                (force-mode-line-update))))
+                (force-mode-line-update)
+                (fxrd-clear-overlays))))
           (buffer-list))))
 
 (defun fxrd-field-name-display ()
@@ -241,7 +250,9 @@ Called by `fxrd-field-name-idle-timer'."
 
 
 (defun fxrd-mode ()
-  "Major mode for editing fixed field width files"
+  "Major mode for editing fixed field width files.
+
+\\{fxrd-mode-map}"
   (interactive)
   (kill-all-local-variables)
   (set-syntax-table fxrd-mode-syntax-table)
@@ -250,11 +261,10 @@ Called by `fxrd-field-name-idle-timer'."
   (let ((mode-name-1 (get-mode)))
     (setq major-mode 'fxrd-mode
           mode-name mode-name-1
-          mode-line-format fxrd-mode-line-format)
-    (overwrite-mode)
-    (run-hooks 'fxrd-mode-hook)))
-
-;;; autoload
-(add-to-list 'auto-mode-alist '("\\.TSO6\\." . fxrd-mode))
+          mode-line-format fxrd-mode-line-format))
+  (fxrd-field-name-mode 1)
+  (overwrite-mode)
+  (add-hook (make-local-variable 'change-major-mode-hook) 'disable-fxrd-mode)
+  (run-mode-hooks 'fxrd-mode-hook))
 
 (provide 'fxrd-mode)
