@@ -221,16 +221,6 @@ started from a shell."
                                             ; on Linux
 (blink-cursor-mode 1)
 
-;;; Global keybindings
-(global-set-key (kbd "C-l") 'recenter)  ; recenter-top-bottom? No thanks
-(global-set-key (kbd "<kp-delete>") (kbd "<deletechar>"))
-;; I don't really need a key bound to the GPL
-(global-set-key (kbd "C-h C-c") 'hc)
-;; Forward-deletion of words
-(global-set-key (kbd "M-<kp-delete>") 'kill-word)
-;; Magit
-(global-set-key (kbd "C-x g") 'magit-status)
-
 (show-paren-mode t)
 ; Display
 (setq transient-mark-mode t            ; on by default in 23.x
@@ -272,6 +262,15 @@ started from a shell."
 (setq dired-dwim-target t)
 
 ;; Bindings
+(global-set-key (kbd "C-l") 'recenter)  ; recenter-top-bottom? No thanks
+(global-set-key (kbd "<kp-delete>") (kbd "<deletechar>"))
+;; I don't really need a key bound to the GPL
+(global-set-key (kbd "C-h C-c") 'hc)
+;; Forward-deletion of words
+(global-set-key (kbd "M-<kp-delete>") 'kill-word)
+;; Magit
+(global-set-key (kbd "C-x g") 'magit-status)
+
 (global-set-key (kbd "M-g") 'goto-line)
 (global-set-key (kbd "C-c e") 'ediff-buffers)
 (global-set-key [insertchar] nil)       ; Right next to delete!!
@@ -284,6 +283,10 @@ started from a shell."
 ; Readline in shell mode
 (define-key comint-mode-map [up] 'comint-previous-input)
 (define-key comint-mode-map [down] 'comint-next-input)
+;;; On Mac OS, Ctrl-(arrow) changes desktops, so rebind these for paredit
+(define-key paredit-mode-map (kbd "s-<right>") 'paredit-forward-slurp-sexp)
+(define-key paredit-mode-map (kbd "s-<left>") 'paredit-forward-barf-sexp)
+
 ; Util functions for dired
 (eval-after-load "dired"
   (lambda ()
@@ -372,7 +375,8 @@ started from a shell."
 ; Trailing whitespace is annoying in some modes
 (defvar no-trailing-whitespace-modes '(shell-mode slime-repl-mode text-mode
                                        fundamental-mode term-mode vc-git-log-view-mode
-                                       calendar-mode magit-popup-mode))
+                                       calendar-mode magit-popup-mode
+                                       tso6-mode))
 
 (mapc '(lambda (x)
         (let ((mode-hook (intern (concat (symbol-name x) "-hook"))))
