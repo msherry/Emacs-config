@@ -2,8 +2,6 @@
   "Major mode for editing TSO6 files"
   :group 'convenience)
 
-(defvar tso6-mode-hook nil)
-
 (defface tso6-current-field-face
   '((t (:background "pink")))
   "Highlight the current field."
@@ -24,28 +22,27 @@
 		(last default-mode-line-format 2)))
   "Mode line format string for TSO6 mode.")
 
-(defvar tso6-mode-map
-  (let ((map (make-sparse-keymap)))
-    (define-key map "\C-j" 'newline-and-indent)
-    map)
-  "Keymap for TSO6 major mode")
-
-;;; autoload
-(add-to-list 'auto-mode-alist '("\\.TSO6\\." . tso6-mode))
-
-(defvar tso6-mode-syntax-table
-  (let ((st (make-syntax-table)))
-    st))
-
 (defconst tso6-font-lock-keywords-1
   (list
    '()
    '("\\('\\w*'\\)" . font-lock-variable-name-face))
   "Minimal highlighting expressions for TSO6 mode")
 
+(defvar tso6-mode-map
+  (let ((map (make-sparse-keymap)))
+    (define-key map (kbd "M-<right>") 'next-field)
+    (define-key map (kbd "M-<left>") 'previous-field)
+    map)
+  "Keymap for TSO6 major mode")
+
+(defvar tso6-mode-syntax-table
+  (let ((st (make-syntax-table)))
+    st))
+
 (defvar tso6-font-lock-keywords tso6-font-lock-keywords-1
   "Default highlighting expressions for TSO6 mode")
 
+(defvar tso6-mode-hook nil)
 
 (defvar header-spec
   (list
@@ -80,8 +77,25 @@
     '(49 201 "Filler")))
 
 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; Utility functions
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(defun current-line-pos ()
+  "Yields the current position within the line"
+  (+ 1 (- (point) (line-beginning-position))))
+
+(defun get-spec-for-line ()
+  "Finds the correct spec to use for the current line, based on the first character."
+  (let* ((type (line-type))
+         (spec (cond ((string= type "H") header-spec)
+                     ((string= type "D") data-spec)
+                     ((string= type "T") trailer-spec)
+                     (t nil))))
+    spec))
+
 (defun first-spec-hit (spec pos)
-  "Given a spec and a position, find and return the first hit.
+  "Given a spec and a position, find and return the first spec-item hit.
 
 Returns nil if no hit found"
   (dolist (spec-item spec)
@@ -91,19 +105,61 @@ Returns nil if no hit found"
         (return spec-item)))))
 
 (defun get-name-from-spec-item (spec-item)
+  "Given a spec item, extract the name part."
   (nth 2 spec-item))
 
 (defun line-type ()
   "Determines the record type of the current line"
-  (interactive)
   (let* ((char (char-after (line-beginning-position)))
-         (type (if char (char-to-string char)
-                      nil)))
+         (type (if char (char-to-string char))))
     type))
+
+(defun current-field-name ()
+  "Find the name of the field at the current position in the current line."
+  (let ((spec (get-spec-for-line)))
+    (if spec
+        ;; TODO: find a better way to find position within a line
+        (let ((line-pos (current-line-pos)))
+          (get-name-from-spec-item (first-spec-hit spec line-pos))))))
+
+(defun current-field-boundaries ()
+  "Find the (absolute) start and end position of the field at the current position."
+  (let ((spec (get-spec-for-line)))
+    (if spec
+        ;; TODO: find a better way to find position within a line
+        (let ((line-pos (current-line-pos)))
+          (let* ((line-start (line-beginning-position))
+                 (spec-item (first-spec-hit spec line-pos))
+                 (start (1- (+ line-start (nth 0 spec-item))))
+                 (end (+ line-start (nth 1 spec-item))))
+            (list start end))))))
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; Public functions
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+(defun next-field ()
+  "Move to the start of the next field."
+  (interactive)
+  (let* ((field-boundaries (current-field-boundaries))
+         (next-field-start (nth 1 field-boundaries)))
+    (goto-char (min next-field-start (point-max)))))
+
+(defun previous-field ()
+  "Move to the start of the previous field."
+  (interactive)
+  (let* ((field-boundaries (current-field-boundaries))
+         (prev-field-end (1- (nth 0 field-boundaries))))
+    (goto-char (max prev-field-end (point-min)))
+    (let* ((prev-field-boundaries (current-field-boundaries))
+           (begin (nth 0 prev-field-boundaries)))
+      (goto-char begin))))
+
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; Field name mode
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
 (defcustom tso6-field-name-delay 0.125
   "Time in seconds to delay before updating field name display."
   :group 'TSO6
@@ -150,41 +206,6 @@ When enabled, the name of the current field appears in the mode line."
                 (force-mode-line-update))))
           (buffer-list))))
 
-
-(defun current-line-pos ()
-  "Yields the current position within the line"
-  (interactive)
-  (+ 1 (- (point) (line-beginning-position))))
-
-(defun get-spec-for-line ()
-  (let* ((type (line-type))
-         (spec (cond ((string= type "H") header-spec)
-                     ((string= type "D") data-spec)
-                     ((string= type "T") trailer-spec)
-                     (t nil))))
-    spec))
-
-(defun current-field-name ()
-  "Find the name of the field at the current position in the current line."
-  (interactive)
-  (let ((spec (get-spec-for-line)))
-    (if spec
-        ;; TODO: find a better way to find position within a line
-        (let ((line-pos (current-line-pos)))
-          (get-name-from-spec-item (first-spec-hit spec line-pos))))))
-
-(defun current-field-boundaries ()
-  "Find the start and end position of the field at the current position in the current line."
-  (interactive)
-  (let ((spec (get-spec-for-line)))
-    (if spec
-        ;; TODO: find a better way to find position within a line
-        (let ((line-pos (current-line-pos)))
-          (let* ((spec-item (first-spec-hit spec line-pos))
-                 (start (nth 0 spec-item))
-                 (end (nth 1 spec-item)))
-            (list start end))))))
-
 (defun tso6-field-name-display ()
   "Construct `tso6-field-name-string' to display in mode line.
 Called by `tso6-field-name-idle-timer'."
@@ -201,8 +222,8 @@ Called by `tso6-field-name-idle-timer'."
           ;; Highlight current field
           (remove-overlays nil nil 'tso6-overlay t)
           (let* ((line-start (line-beginning-position))
-                 (begin (1- (+ line-start (nth 0 field-boundaries))))
-                 (end (+ line-start (nth 1 field-boundaries)))
+                 (begin (nth 0 field-boundaries))
+                 (end (nth 1 field-boundaries))
                  (overlay (make-overlay begin end)))
             (overlay-put overlay 'tso6-overlay t)
             (overlay-put overlay 'face tso6-current-field-face))))))
@@ -223,8 +244,10 @@ Called by `tso6-field-name-idle-timer'."
   (setq major-mode 'tso6-mode
         mode-name "TSO6"
         mode-line-format tso6-mode-line-format)
+  (overwrite-mode)
   (run-hooks 'tso6-mode-hook))
 
-
+;;; autoload
+(add-to-list 'auto-mode-alist '("\\.TSO6\\." . tso6-mode))
 
 (provide 'tso6-mode)
