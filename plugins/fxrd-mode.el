@@ -43,73 +43,68 @@
 (defvar fxrd-font-lock-keywords fxrd-font-lock-keywords-1
   "Default highlighting expressions for FXRD mode")
 
+(defvar fxrd-current-spec nil)
+(make-variable-buffer-local 'fxrd-current-spec)
+
 (defvar fxrd-mode-hook nil)
 
 (defun disable-fxrd-mode ()
   (fxrd-field-name-mode -1)
   (fxrd-clear-overlays))
 
-(defvar header-spec
-  (list
-    '(1 1 "Record Type (H)")
-    '(2 9 "Record Date")
-    '(10 15 "Record Time")
-    '(16 26 "Member ICA")
-    '(27 86 "File Name")
-    '(87 201 "Filler")))
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; Fxrd file specifications
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(defvar data-spec
-  (list
-    '(1 1 "Record Type (D)")
-    '(2 31 "Bank Customer Number")
-    '(32 50 "Bank Account Number")
-    '(51 70 "Bank Product Code")
-    '(71 92 "Transaction Description")
-    '(93 105 "Rebate Amount")
-    '(106 106 "Exception Reason Code")
-    '(107 136 "Exception Reason Description")
-    '(137 144 "Rebate File Sent Date")
-    '(145 157 "Transaction Sequence Number")
-    '(157 201 "Filler")))
-
-(defvar trailer-spec
-  (list
-    '(1 1 "Record Type (T)")
-    '(2 13 "Exception Record Count")
-    '(14 25 "Success Record Count")
-    '(26 37 "Total Processed Record Count")
-    '(38 48 "Member ICA")
-    '(49 201 "Filler")))
+(defconst tso6-spec
+  '(("H" (
+          (1 1 "Record Type (H)")
+          (2 9 "Record Date")
+          (10 15 "Record Time")
+          (16 26 "Member ICA")
+          (27 86 "File Name")
+          (87 201 "Filler")))
+    ("D" (
+          (1 1 "Record Type (D)")
+          (2 31 "Bank Customer Number")
+          (32 50 "Bank Account Number")
+          (51 70 "Bank Product Code")
+          (71 92 "Transaction Description")
+          (93 105 "Rebate Amount")
+          (106 106 "Exception Reason Code")
+          (107 136 "Exception Reason Description")
+          (137 144 "Rebate File Sent Date")
+          (145 157 "Transaction Sequence Number")
+          (157 201 "Filler")))
+    ("T" (
+          (1 1 "Record Type (T)")
+          (2 13 "Exception Record Count")
+          (14 25 "Success Record Count")
+          (26 37 "Total Processed Record Count")
+          (38 48 "Member ICA")
+          (49 201 "Filler")))))
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; Utility functions
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(defun get-mode ()
-  "Determines the correct mode for the file.
-
-Currently only supports TSO6 files."
-  "TSO6")
-
 (defun current-line-pos ()
   "Yields the current position within the line"
   (+ 1 (- (point) (line-beginning-position))))
 
 (defun get-spec-for-line ()
-  "Finds the correct spec to use for the current line, based on the first character."
-  (let* ((type (line-type))
-         (spec (cond ((string= type "H") header-spec)
-                     ((string= type "D") data-spec)
-                     ((string= type "T") trailer-spec)
-                     (t nil))))
-    spec))
+  "Finds the correct record spec to use for the current line, based on the first character."
+  (when fxrd-current-spec
+    (let* ((type (line-type))
+           (record-spec (cadr (assoc type fxrd-current-spec))))
+      record-spec)))
 
-(defun first-spec-hit (spec pos)
-  "Given a spec and a position, find and return the first spec-item hit.
+(defun first-spec-hit (record-spec pos)
+  "Given a record spec and a position, find and return the first spec-item hit.
 
 Returns nil if no hit found"
-  (dolist (spec-item spec)
+  (dolist (spec-item record-spec)
     (let ((start (nth 0 spec-item))
           (end (nth 1 spec-item)))
       (when (and (<= start pos end))
@@ -127,20 +122,20 @@ Returns nil if no hit found"
 
 (defun current-field-name ()
   "Find the name of the field at the current position in the current line."
-  (let ((spec (get-spec-for-line)))
-    (if spec
+  (let ((record-spec (get-spec-for-line)))
+    (if record-spec
         ;; TODO: find a better way to find position within a line
         (let ((line-pos (current-line-pos)))
-          (get-name-from-spec-item (first-spec-hit spec line-pos))))))
+          (get-name-from-spec-item (first-spec-hit record-spec line-pos))))))
 
 (defun current-field-boundaries ()
   "Find the (absolute) start and end position of the field at the current position."
-  (let ((spec (get-spec-for-line)))
-    (if spec
+  (let ((record-spec (get-spec-for-line)))
+    (if record-spec
         ;; TODO: find a better way to find position within a line
         (let ((line-pos (current-line-pos)))
           (let* ((line-start (line-beginning-position))
-                 (spec-item (first-spec-hit spec line-pos))
+                 (spec-item (first-spec-hit record-spec line-pos))
                  (start (1- (+ line-start (nth 0 spec-item))))
                  (end (+ line-start (nth 1 spec-item))))
             (list start end))))))
@@ -202,7 +197,7 @@ When enabled, the name of the current field appears in the mode line."
   (if fxrd-field-name-mode
       (if (memq t (mapcar (lambda (buffer)
                             (with-current-buffer buffer
-                              (when (eq major-mode 'fxrd-mode)
+                              (when (derived-mode-p'fxrd-mode)
                                 (setq fxrd-field-name-string nil
                                       fxrd-field-name-string-old nil)
                                 t)))
@@ -214,7 +209,7 @@ When enabled, the name of the current field appears in the mode line."
     ;; all FXRD buffers
     (mapc (lambda (buffer)
             (with-current-buffer buffer
-              (when (eq major-mode 'fxrd-mode)
+              (when (derived-mode-p 'fxrd-mode)
                 (setq fxrd-field-name-string nil
                       fxrd-field-name-string-old nil)
                 (force-mode-line-update)
@@ -224,7 +219,7 @@ When enabled, the name of the current field appears in the mode line."
 (defun fxrd-field-name-display ()
   "Construct `fxrd-field-name-string' to display in mode line.
 Called by `fxrd-field-name-idle-timer'."
-  (if (eq major-mode 'fxrd-mode)
+  (if (derived-mode-p 'fxrd-mode)
       (let ((field-name (current-field-name))
             (field-boundaries (current-field-boundaries)))
         (when (not (string= field-name fxrd-field-name-string-old))
@@ -248,23 +243,24 @@ Called by `fxrd-field-name-idle-timer'."
 ;;; Entry point
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-
-(defun fxrd-mode ()
+;;;###autoload
+(define-derived-mode fxrd-mode nil "FXRD"
   "Major mode for editing fixed field width files.
 
 \\{fxrd-mode-map}"
-  (interactive)
-  (kill-all-local-variables)
-  (set-syntax-table fxrd-mode-syntax-table)
+  :group 'fxrd
+  :syntax-table fxrd-mode-syntax-table
   (use-local-map fxrd-mode-map)
   (set (make-local-variable 'font-lock-defaults) '(fxrd-font-lock-keywords))
-  (let ((mode-name-1 (get-mode)))
-    (setq major-mode 'fxrd-mode
-          mode-name mode-name-1
-          mode-line-format fxrd-mode-line-format))
   (fxrd-field-name-mode 1)
   (overwrite-mode)
-  (add-hook (make-local-variable 'change-major-mode-hook) 'disable-fxrd-mode)
-  (run-mode-hooks 'fxrd-mode-hook))
+  (add-hook (make-local-variable 'change-major-mode-hook) 'disable-fxrd-mode))
+
+;;;###autoload
+(define-derived-mode tso6-mode fxrd-mode "TSO6"
+  "Major mode for editing TSO6 fixed field width files.
+
+\\{fxrd-mode-map}"
+  (setq fxrd-current-spec tso6-spec))
 
 (provide 'fxrd-mode)
