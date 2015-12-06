@@ -141,6 +141,7 @@ started from a shell."
 (when (locate-library "disaster")
   (require 'disaster))
 (require 'flymake-stuff)
+(require 'fxrd-autoloads)
 (require 'lambda)
 (require 'lisp-customization)
 (require 'load-edict)
@@ -167,7 +168,6 @@ started from a shell."
 (autoload 'jedi-setup-venv "jedi-local" nil t)
 (autoload 'jedi:setup "jedi" nil t)
 (autoload 'ess-mode "ess-mode" "ESS mode" t)
-(autoload 'tso6-mode "fxrd-mode" "TSO6 mode" t)
 
 ;;; Configure snippets
 ;; load all el files in the snippets directory, they're usually lisp
@@ -196,7 +196,6 @@ started from a shell."
 (add-to-list 'auto-mode-alist '("\\.py$" . python-mode))
 (add-to-list 'interpreter-mode-alist '("python" . python-mode))
 (add-to-list 'auto-mode-alist '("\\.R$" . ess-mode))
-(add-to-list 'auto-mode-alist '("\\.TSO6\\." . tso6-mode))
 
 
 ;; Indentation settings
