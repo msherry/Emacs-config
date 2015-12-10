@@ -141,7 +141,6 @@ started from a shell."
 (when (locate-library "disaster")
   (require 'disaster))
 (require 'flymake-stuff)
-(require 'fxrd-autoloads)
 (require 'lambda)
 (require 'lisp-customization)
 (require 'load-edict)
@@ -609,7 +608,7 @@ http://blogs.fluidinfo.com/terry/2011/11/10/emacs-buffer-mode-histogram/"
  '(org-agenda-sticky t)
  '(package-selected-packages
    (quote
-    (json-mode gitignore-mode esup feature-mode zenburn-theme yasnippet yaml-mode virtualenv thrift solarized-theme slime sass-mode s rainbow-mode pymacs paredit org markdown-mode jedi httpcode graphviz-dot-mode go-mode flymake-sass flymake ess diff-hl debbugs dash clojure-mode auctex ack))))
+    (auctex json-mode gitignore-mode esup feature-mode zenburn-theme yasnippet yaml-mode virtualenv thrift solarized-theme slime sass-mode s rainbow-mode pymacs paredit org markdown-mode jedi httpcode graphviz-dot-mode go-mode flymake-sass flymake ess diff-hl debbugs dash clojure-mode ack))))
 
 
 ;; (eval-after-load 'cc-mode
