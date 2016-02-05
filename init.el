@@ -31,7 +31,7 @@
 ;; used, and can change, so we specify all three ranges manually. Obviously we
 ;; could combine hiragana and katakana ranges.
 ;; これ は 二本語 です
- (mapc '(lambda (x)
+ (mapc #'(lambda (x)
          (set-fontset-font "fontset-default"
           x
           "-apple-Osaka-medium-normal-normal-*-13-*-*-*-m-0-iso10646-1"))
@@ -40,7 +40,7 @@
          (?\x4E00 . ?\x9FBF)           ; Kanji
          ))
 
- (mapc '(lambda (x)
+ (mapc #'(lambda (x)
          (set-fontset-font t
           x
           "-apple-Andale_Mono-medium-normal-normal-*-14-*-*-*-p-0-iso10646-1"))
@@ -67,8 +67,8 @@
                          (width . 186)
                          (height . 87))))
           (set-default-font "-unknown-DejaVu Sans Mono-normal-normal-normal-*-14-*-*-*-m-0-iso10646-1")))
-  (if (fboundp 'tool-bar-mode) (tool-bar-mode -1))
-;;   (if (fboundp 'scroll-bar-mode) (scroll-bar-mode -1))
+  (if (fboundp #'tool-bar-mode) (tool-bar-mode -1))
+;;   (if (fboundp #'scroll-bar-mode) (scroll-bar-mode -1))
 
   ;;(set-frame-parameter (selected-frame) 'alpha '(<active> [<inactive>]))
   (set-frame-parameter (selected-frame) 'alpha '(100 100))
@@ -194,13 +194,13 @@ started from a shell."
 (add-to-list 'auto-mode-alist '("\\.php$" . php-mode))
 (add-to-list 'auto-mode-alist '("\\.py$" . python-mode))
 (add-to-list 'interpreter-mode-alist '("python" . python-mode))
-(add-to-list 'auto-mode-alist '("\\.R$" . ess-mode))
+(add-to-list 'auto-mode-alist '("\\.R$" . r-mode))
 
 
 ;; Indentation settings
 (setq-default indent-tabs-mode nil)     ; indent with spaces instead of tabs
 ; Use SLIME-style indentation, instead of Emacs' huge tab stops
-(setq lisp-indent-function 'common-lisp-indent-function)
+(setq lisp-indent-function #'common-lisp-indent-function)
 (setq standard-indent 4)
 (setq c-default-style "bsd")
 (setq c-basic-offset 4)                 ; imo uses four
@@ -228,7 +228,7 @@ started from a shell."
       global-font-lock-mode t
       inhibit-splash-screen t
       truncate-partial-width-windows nil
-      ediff-split-window-function 'split-window-horizontally
+      ediff-split-window-function #'split-window-horizontally
 ; Functionality
       require-final-newline t           ; add only on save
       inferior-erlang-prompt-timeout t
@@ -262,37 +262,38 @@ started from a shell."
 (setq dired-dwim-target t)
 
 ;; Bindings
-(global-set-key (kbd "C-l") 'recenter)  ; recenter-top-bottom? No thanks
+(global-set-key (kbd "M-o") #'other-window)
+(global-set-key (kbd "C-l") #'recenter)  ; recenter-top-bottom? No thanks
 (global-set-key (kbd "<kp-delete>") (kbd "<deletechar>"))
 ;; I don't really need a key bound to the GPL
-(global-set-key (kbd "C-h C-c") 'hc)
+(global-set-key (kbd "C-h C-c") #'hc)
 ;; Forward-deletion of words
-(global-set-key (kbd "M-<kp-delete>") 'kill-word)
+(global-set-key (kbd "M-<kp-delete>") #'kill-word)
 ;; Magit
-(global-set-key (kbd "C-x g") 'magit-status)
+(global-set-key (kbd "C-x g") #'magit-status)
 
-(global-set-key (kbd "M-g") 'goto-line)
-(global-set-key (kbd "C-c e") 'ediff-buffers)
+(global-set-key (kbd "M-g") #'goto-line)
+(global-set-key (kbd "C-c e") #'ediff-buffers)
 (global-set-key [insertchar] nil)       ; Right next to delete!!
 ; scroll without moving point
 (global-set-key (kbd "M-n") (lambda() (interactive) (scroll-up 1)))
 (global-set-key (kbd "M-p") (lambda() (interactive) (scroll-down 1)))
-(global-set-key (kbd "C-x \\") 'align-regexp)
-(global-set-key (kbd "M-/") 'hippie-expand) ; better than dabbrev
-(global-set-key (kbd "C-M-z") 'ack)
+(global-set-key (kbd "C-x \\") #'align-regexp)
+(global-set-key (kbd "M-/") #'hippie-expand) ; better than dabbrev
+(global-set-key (kbd "C-M-z") #'ack)
 ; Readline in shell mode
-(define-key comint-mode-map [up] 'comint-previous-input)
-(define-key comint-mode-map [down] 'comint-next-input)
+(define-key comint-mode-map [up] #'comint-previous-input)
+(define-key comint-mode-map [down] #'comint-next-input)
 ;;; On Mac OS, Ctrl-(arrow) changes desktops, so rebind these for paredit
-(define-key paredit-mode-map (kbd "s-<right>") 'paredit-forward-slurp-sexp)
-(define-key paredit-mode-map (kbd "s-<left>") 'paredit-forward-barf-sexp)
+(define-key paredit-mode-map (kbd "s-<right>") #'paredit-forward-slurp-sexp)
+(define-key paredit-mode-map (kbd "s-<left>") #'paredit-forward-barf-sexp)
 
 ; Util functions for dired
 (eval-after-load "dired"
   (lambda ()
-    (define-key dired-mode-map "F" 'find-matching-pattern-under-dir)))
+    (define-key dired-mode-map "F" #'find-matching-pattern-under-dir)))
 ; IBuffer is better than list-buffers
-(global-set-key (kbd "C-x C-b") 'ibuffer)
+(global-set-key (kbd "C-x C-b") #'ibuffer)
 
 ; Better buffer switching
 (iswitchb-mode t)
