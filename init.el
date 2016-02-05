@@ -314,6 +314,9 @@ started from a shell."
 ; languages
 (global-auto-complete-mode)
 
+; Fast jumps to windows
+(window-numbering-mode)
+
 ; Create two windows initially if we have the room. Check both current width
 ; and width from default-frame-alist (if present), since the frame may not have
 ; been resized yet
@@ -609,7 +612,7 @@ http://blogs.fluidinfo.com/terry/2011/11/10/emacs-buffer-mode-histogram/"
  '(org-agenda-sticky t)
  '(package-selected-packages
    (quote
-    (fxrd-mode json-mode gitignore-mode esup feature-mode zenburn-theme yasnippet yaml-mode thrift solarized-theme slime sass-mode s rainbow-mode pymacs paredit org markdown-mode jedi httpcode go-mode flymake-sass flymake ess diff-hl debbugs clojure-mode ack))))
+    (window-numbering fxrd-mode json-mode gitignore-mode esup feature-mode zenburn-theme yasnippet yaml-mode thrift solarized-theme slime sass-mode s rainbow-mode pymacs paredit org markdown-mode jedi httpcode go-mode flymake-sass flymake ess diff-hl debbugs clojure-mode ack))))
 
 
 ;; (eval-after-load 'cc-mode

@@ -217,7 +217,7 @@
 	     ((:url . "http://www.dr-qubit.org/emacs.php")
 	      (:keywords "extensions" "matching" "data structures trie" "tree" "dictionary" "completion" "regexp"))])
  (diff-hl .
-	  [(1 8 2)
+	  [(1 8 3)
 	   ((cl-lib
 	     (0 2)))
 	   "Highlight uncommitted changes using VC" tar
@@ -698,7 +698,7 @@
        ((:url . "http://elpa.gnu.org/packages/svg.html")
 	(:keywords "image"))])
  (svg-clock .
-	    [(0 5)
+	    [(1 0)
 	     ((svg
 	       (0 1))
 	      (emacs
