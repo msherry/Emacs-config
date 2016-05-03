@@ -376,6 +376,12 @@ started from a shell."
             ;(longlines-mode t)
             ))
 
+;; Know what's useless? A lot of flyspell keybindings
+(eval-after-load "flyspell"
+  '(progn
+    (define-key flyspell-mode-map (kbd "C-.") nil)
+    (define-key flyspell-mode-map (kbd "C-,") nil)))
+
 ; Trailing whitespace is annoying in some modes
 (defvar no-trailing-whitespace-modes '(shell-mode slime-repl-mode text-mode
                                        fundamental-mode term-mode vc-git-log-view-mode
