@@ -192,10 +192,23 @@ class Flake8Runner(LintRunner):
 
     @classmethod
     def fixup_data(cls, line, data):
-        if data['error_type'].startswith('E'):
+        if data['error_type'] in ['E', 'F']:
             data['level'] = 'ERROR'
         else:
             data['level'] = 'WARNING'
+
+        # Unlike pyflakes, flake8 has an error/warning distinction, but some of
+        # them are incorrect. Borrow the correct definitions from the pyflakes
+        # runner
+        if 'imported but unused' in data['description']:
+            data['level'] = 'WARNING'
+        elif 'redefinition of unused' in data['description']:
+            data['level'] = 'WARNING'
+        elif 'assigned to but never used' in data['description']:
+            data['level'] = 'WARNING'
+        elif 'unable to detect undefined names' in data['description']:
+            data['level'] = 'WARNING'
+
         return data
 
     @property

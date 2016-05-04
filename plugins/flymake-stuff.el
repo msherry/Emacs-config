@@ -136,7 +136,6 @@ and `..' are never marked."
                 (= (call-process-shell-command
                     (mapconcat 'identity
                                `(,python-multiple-checker-command
-                                 " -c pyflakes "
                                  ,fn " | grep ^ERROR") " "))
                    0)))))
      "errorful file")))
