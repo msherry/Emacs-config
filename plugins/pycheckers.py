@@ -181,6 +181,8 @@ class Flake8Runner(LintRunner):
     """Flake8 has similar output to Pyflakes
     """
 
+    command = 'flake8'
+
     output_matcher = re.compile(
         r'(?P<filename>[^:]+):'
         '(?P<line_number>[^:]+):'
@@ -188,11 +190,11 @@ class Flake8Runner(LintRunner):
         '(?P<error_type>[WEFCN])(?P<error_number>[^ ]+) '
         '(?P<description>.+)$')
 
-    command = 'flake8'
-
     @classmethod
     def fixup_data(cls, line, data):
-        if data['error_type'] in ['E', 'F']:
+        if data['error_type'] in ['E']:
+            data['level'] = 'WARNING'
+        elif data['error_type'] in ['F']:
             data['level'] = 'ERROR'
         else:
             data['level'] = 'WARNING'
