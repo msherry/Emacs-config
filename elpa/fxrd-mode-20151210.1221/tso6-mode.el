@@ -1,1 +1,0 @@
-/Users/marc/projects/fxrd-mode/fxrd-modes/tso6-mode.el
