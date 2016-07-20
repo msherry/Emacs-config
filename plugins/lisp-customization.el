@@ -41,7 +41,7 @@
     (progn
       (paredit-mode)))
 
-(defvar lisp-editing-modes '(emacs-lisp-mode clojure-mode))
+(defvar lisp-editing-modes '(emacs-lisp-mode scheme-mode clojure-mode geiser-repl-mode))
 
 (mapc '(lambda (x)
         (let ((mode-hook (intern (concat (symbol-name x) "-hook"))))
