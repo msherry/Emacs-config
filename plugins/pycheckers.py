@@ -50,7 +50,7 @@ import sys
 # Checkers to run be default, when no --checkers options are supplied.
 # One or more of pydo, pep8 or pyflakes, separated by commas
 # default_checkers = 'pep8, pyflakes'
-default_checkers = 'pylint,pep8,flake8'
+default_checkers = 'flake8'
 
 # A list of error codes to ignore for PEP8
 # default_ignore_codes = ['E225', 'W114']
@@ -99,7 +99,7 @@ class LintRunner(object):
     def __init__(self, ignore_codes=(), use_sane_defaults=True, options=None):
         self.ignore_codes = set(ignore_codes)
         if use_sane_defaults:
-            self.ignore_codes ^= self.sane_default_ignore_codes
+            self.ignore_codes |= self.sane_default_ignore_codes
         self.options = options
         self.out_lines = []
 
@@ -175,6 +175,51 @@ class PyflakesRunner(LintRunner):
         data['error_number'] = 'F'
 
         return data
+
+
+class Flake8Runner(LintRunner):
+    """Flake8 has similar output to Pyflakes
+    """
+
+    command = 'flake8'
+
+    output_matcher = re.compile(
+        r'(?P<filename>[^:]+):'
+        '(?P<line_number>[^:]+):'
+        '(?P<column_number>[^:]+): '
+        '(?P<error_type>[WEFCN])(?P<error_number>[^ ]+) '
+        '(?P<description>.+)$')
+
+    @classmethod
+    def fixup_data(cls, line, data):
+        if data['error_type'] in ['E']:
+            data['level'] = 'WARNING'
+        elif data['error_type'] in ['F']:
+            data['level'] = 'ERROR'
+        else:
+            data['level'] = 'WARNING'
+
+        # Unlike pyflakes, flake8 has an error/warning distinction, but some of
+        # them are incorrect. Borrow the correct definitions from the pyflakes
+        # runner
+        if 'imported but unused' in data['description']:
+            data['level'] = 'WARNING'
+        elif 'redefinition of unused' in data['description']:
+            data['level'] = 'WARNING'
+        elif 'assigned to but never used' in data['description']:
+            data['level'] = 'WARNING'
+        elif 'unable to detect undefined names' in data['description']:
+            data['level'] = 'WARNING'
+
+        return data
+
+    @property
+    def run_flags(self):
+        print "ignore codes:", self.ignore_codes
+        return (
+            '--ignore=' + ','.join(self.ignore_codes),
+            '--max-line-length', str(self.options.max_line_length),
+        )
 
 
 class Pep8Runner(LintRunner):
@@ -303,7 +348,7 @@ def croak(*msgs):
 
 RUNNERS = {
     'pyflakes': PyflakesRunner,
-    'flake8': PyflakesRunner,
+    'flake8': Flake8Runner,
     'pep8': Pep8Runner,
     'pydo': PydoRunner,
     'pylint': PylintRunner
@@ -330,7 +375,8 @@ def update_options_from_file(options, config_file_path):
                     value = True
                 setattr(options, key, value)
     if hasattr(options, 'extra_ignore_codes'):
-        extra_ignore_codes = options.extra_ignore_codes.replace(',', '').split()
+        extra_ignore_codes = (options
+                              .extra_ignore_codes.replace(',', ' ').split())
         # Allow for extending, rather than replacing, ignore codes
         options.ignore_codes.extend(extra_ignore_codes)
     return options
@@ -387,8 +433,8 @@ def main():
                         help='Maximum line length')
     parser.add_argument('--no-merge-configs', dest='merge_configs',
                         action='store_false',
-                        help=('Whether to ignore config files found at a higher '
-                              'directory than this one'))
+                        help=('Whether to ignore config files found at a '
+                              'higher directory than this one'))
     options = parser.parse_args()
 
     source_file = options.file
@@ -405,7 +451,8 @@ def main():
     full_path = os.path.abspath(source_file)
     if '/pp/' in full_path:
         package = re.search(r'/pp/([^/]+)', full_path).group(1)
-        virtualenv_path = os.path.expanduser('~/.virtualenvs/{}'.format(package))
+        virtualenv_path = os.path.expanduser(
+            '~/.virtualenvs/{}'.format(package))
         if os.path.exists(virtualenv_path):
             bin_path = os.path.join(virtualenv_path, 'bin')
             os.environ['PATH'] = bin_path + ':' + os.environ['PATH']

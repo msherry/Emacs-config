@@ -36,16 +36,15 @@
           (add-hook mode-hook 'turn-on-eldoc-mode)))
       eldoc-supported-modes)
 
-;; Lisp editing modes
 (defun lisp-editing-hook ()
-    (progn
-      (paredit-mode)))
+  (paredit-mode)
+  (local-set-key (kbd "C-.") #'find-function-at-point))
 
 (defvar lisp-editing-modes '(emacs-lisp-mode scheme-mode clojure-mode geiser-repl-mode))
 
 (mapc '(lambda (x)
         (let ((mode-hook (intern (concat (symbol-name x) "-hook"))))
-          (add-hook mode-hook 'lisp-editing-hook)))
+          (add-hook mode-hook #'lisp-editing-hook)))
       lisp-editing-modes)
 
 (eval-after-load "slime"

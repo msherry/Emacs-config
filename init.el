@@ -376,6 +376,12 @@ started from a shell."
             ;(longlines-mode t)
             ))
 
+;; Know what's useless? A lot of flyspell keybindings
+(eval-after-load "flyspell"
+  '(progn
+    (define-key flyspell-mode-map (kbd "C-.") nil)
+    (define-key flyspell-mode-map (kbd "C-,") nil)))
+
 ; Trailing whitespace is annoying in some modes
 (defvar no-trailing-whitespace-modes '(shell-mode slime-repl-mode text-mode
                                        fundamental-mode term-mode vc-git-log-view-mode
@@ -612,7 +618,7 @@ http://blogs.fluidinfo.com/terry/2011/11/10/emacs-buffer-mode-histogram/"
  '(org-agenda-sticky t)
  '(package-selected-packages
    (quote
-    (latex-preview-pane fxrd-mode ac-geiser geiser window-numbering json-mode gitignore-mode esup feature-mode zenburn-theme yasnippet yaml-mode thrift solarized-theme slime sass-mode s rainbow-mode pymacs paredit org markdown-mode jedi httpcode go-mode flymake-sass flymake ess diff-hl debbugs clojure-mode ack))))
+    (puppet-mode latex-preview-pane fxrd-mode ac-geiser geiser window-numbering json-mode gitignore-mode esup feature-mode zenburn-theme yasnippet yaml-mode thrift solarized-theme slime sass-mode s rainbow-mode pymacs paredit org markdown-mode jedi httpcode go-mode flymake-sass flymake ess diff-hl debbugs clojure-mode ack))))
 
 
 ;; (eval-after-load 'cc-mode
