@@ -174,6 +174,7 @@ started from a shell."
 (setq core-custom-snippets (concat expanded-user-emacs-directory "snippets"))
 (mapc 'load (directory-files core-custom-snippets t "^[^#].*el$"))
 (yas/initialize)
+(yas-global-mode 1)
 (yas/load-directory (concat expanded-user-emacs-directory "snippets"))
 
 ;; Enable preview-latex
