@@ -115,6 +115,8 @@ started from a shell."
              '("melpa" . "http://melpa.org/packages/") t)
 (add-to-list 'package-archives
              '("melpa-stable" . "http://stable.melpa.org/packages/") t)
+(add-to-list 'package-archives
+             '("elpy" . "http://jorgenschaefer.github.io/packages/"))
 (package-initialize)
 
 ; Others'
@@ -337,7 +339,7 @@ started from a shell."
 
 (defun really-set-keys ()
   "Force our keys even in modes that try to override them"
-  (local-set-key (kbd "C-c C-c") 'compile) ;TODO: not in python mode
+  ;; (local-set-key (kbd "C-c C-c") 'compile) ;TODO: not in python mode
   (local-set-key (kbd "C-c .") 'flymake-goto-next-error))
 
 
@@ -619,7 +621,7 @@ http://blogs.fluidinfo.com/terry/2011/11/10/emacs-buffer-mode-histogram/"
  '(org-agenda-sticky t)
  '(package-selected-packages
    (quote
-    (puppet-mode latex-preview-pane fxrd-mode ac-geiser geiser window-numbering json-mode gitignore-mode esup feature-mode zenburn-theme yasnippet yaml-mode thrift solarized-theme slime sass-mode s rainbow-mode pymacs paredit org markdown-mode jedi httpcode go-mode flymake-sass flymake ess diff-hl debbugs clojure-mode ack))))
+    (elpy puppet-mode latex-preview-pane fxrd-mode ac-geiser geiser window-numbering json-mode gitignore-mode esup feature-mode zenburn-theme yasnippet yaml-mode thrift solarized-theme slime sass-mode s rainbow-mode pymacs paredit org markdown-mode jedi httpcode go-mode flymake-sass flymake ess diff-hl debbugs clojure-mode ack))))
 
 
 ;; (eval-after-load 'cc-mode
