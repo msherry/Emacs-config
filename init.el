@@ -337,11 +337,6 @@ started from a shell."
                             ruby-mode ess-mode)
   "Modes used for programming")
 
-(defun really-set-keys ()
-  "Force our keys even in modes that try to override them"
-  ;; (local-set-key (kbd "C-c C-c") 'compile) ;TODO: not in python mode
-  (local-set-key (kbd "C-c .") 'flymake-goto-next-error))
-
 
 (defun programming-mode-hook ()
   "Hook common to all programming modes"
@@ -404,13 +399,16 @@ started from a shell."
 
 (add-hook 'python-mode-hook
           '(lambda ()
-            ()
             (setq jedi:setup-keys t)
             (jedi-setup-venv)
             (jedi:setup)
             (setq jedi:complete-on-dot t)
             (setq jedi:tooltip-method nil)
             (define-key jedi-mode-map (kbd "C-c .") nil)
+            (elpy-mode)
+            (define-key elpy-mode-map (kbd "<M-left>") nil)
+            (define-key elpy-mode-map (kbd "<M-right>") nil)
+            (local-set-key (kbd "C-c .") 'flymake-goto-next-error)
             ))
 
 (require 'java-settings)
@@ -609,6 +607,9 @@ http://blogs.fluidinfo.com/terry/2011/11/10/emacs-buffer-mode-histogram/"
  '(custom-safe-themes
    (quote
     ("8aebf25556399b58091e533e455dd50a6a9cba958cc4ebb0aab175863c25b9a4" default)))
+ '(elpy-modules
+   (quote
+    (elpy-module-company elpy-module-eldoc elpy-module-pyvenv elpy-module-yasnippet elpy-module-sane-defaults)))
  '(gc-cons-threshold 100000000)
  '(git-commit-summary-max-length 79)
  '(global-eldoc-mode nil)
