@@ -342,7 +342,6 @@ started from a shell."
   "Hook common to all programming modes"
   (add-todo-to-current-mode)
   (flyspell-prog-mode)
-  (really-set-keys)
   ;; (highlight-beyond-fill-column)
   (font-lock-fontify-numbers)
   ;; (doxymacs-mode)
@@ -499,6 +498,14 @@ but with additional hacks for frameworks by Marc Sherry"
     ad-do-it))
 
 
+(defun dont-display-if-visible (orig-fun &rest args)
+  "Don't switch to the elpy Python buffer if it's already visible"
+  (if (not (get-buffer-window (process-buffer (elpy-shell-get-or-create-process))))
+      (apply orig-fun args)))
+
+(advice-add 'elpy-shell-display-buffer :around #'dont-display-if-visible)
+
+
 ;; Emacs server
 (server-start)
 ;; Don't prompt re: killing buffers with clients open
@@ -622,7 +629,7 @@ http://blogs.fluidinfo.com/terry/2011/11/10/emacs-buffer-mode-histogram/"
  '(org-agenda-sticky t)
  '(package-selected-packages
    (quote
-    (elpy puppet-mode latex-preview-pane fxrd-mode ac-geiser geiser window-numbering json-mode gitignore-mode esup feature-mode zenburn-theme yasnippet yaml-mode thrift solarized-theme slime sass-mode s rainbow-mode pymacs paredit org markdown-mode jedi httpcode go-mode flymake-sass flymake ess diff-hl debbugs clojure-mode ack))))
+    (markdown-preview-mode elpy puppet-mode latex-preview-pane fxrd-mode ac-geiser geiser window-numbering json-mode gitignore-mode esup feature-mode zenburn-theme yasnippet yaml-mode thrift solarized-theme slime sass-mode s rainbow-mode pymacs paredit org markdown-mode jedi httpcode go-mode flymake-sass flymake ess diff-hl debbugs clojure-mode ack))))
 
 
 ;; (eval-after-load 'cc-mode
