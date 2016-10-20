@@ -50,7 +50,7 @@ import sys
 # Checkers to run be default, when no --checkers options are supplied.
 # One or more of pydo, pep8 or pyflakes, separated by commas
 # default_checkers = 'pep8, pyflakes'
-default_checkers = 'flake8'
+default_checkers = 'flake8,pylint'
 
 # A list of error codes to ignore for PEP8
 # default_ignore_codes = ['E225', 'W114']
@@ -191,7 +191,7 @@ class Flake8Runner(LintRunner):
         '(?P<description>.+)$')
 
     @classmethod
-    def fixup_data(cls, line, data):
+    def fixup_data(cls, _line, data):
         if data['error_type'] in ['E']:
             data['level'] = 'WARNING'
         elif data['error_type'] in ['F']:
