@@ -13,40 +13,7 @@
 ;; last http ref in plugins/lambda.el. "fontset-startup" (or fontsets at all,
 ;; it seems) don't exist in 22, so only do this on the mac for now
 (when (and (eq system-type 'darwin) window-system)
-  ;; Default on mac - "-apple-Monaco-medium-normal-normal-*-12-*-*-*-m-0-iso10646-1"
-
-  ;; Try this font for a while. Either syntax is acceptable here
-  (set-default-font "Inconsolata-14"
-                    ;"-apple-Inconsolata-medium-normal-normal-*-14-*-*-*-m-0-iso10646-1")
-                    )
-
-  (set-fontset-font t
-                    ; used to use 'greek-iso8859-7, but that overwrote more
-                    ; than just the lambda character, so now we specify a range of 1
-                    ; char
-        	    '(955 . 955)
-        	    "-*-Andale Mono-normal-normal-normal-*-14-*-*-*-m-0-iso10646-1")
-;; Use a decent japanese font for all kanji, hiragana, and katakana, rather
-;; than a crap chinese font. It seems that it's kind of random when a font is
-;; used, and can change, so we specify all three ranges manually. Obviously we
-;; could combine hiragana and katakana ranges.
-;; これ は 二本語 です
- (mapc #'(lambda (x)
-         (set-fontset-font "fontset-default"
-          x
-          "-apple-Osaka-medium-normal-normal-*-13-*-*-*-m-0-iso10646-1"))
-       '((?\x3040 . ?\x309F)           ; Hiragana
-         (?\x30A0 . ?\x30FF)           ; Katakana
-         (?\x4E00 . ?\x9FBF)           ; Kanji
-         ))
-
- (mapc #'(lambda (x)
-         (set-fontset-font t
-          x
-          "-apple-Andale_Mono-medium-normal-normal-*-14-*-*-*-p-0-iso10646-1"))
-       '((?\x898 . ?\x898)           ; ∀
-         (?\x8A0 . ?\x8A0)           ; ∈
-         )))
+  (require 'msherry/macos))
 
 ;; Set up GUI as soon as possible
 (when window-system
@@ -146,6 +113,7 @@ started from a shell."
 (require 'lambda)
 (require 'lisp-customization)
 (require 'load-edict)
+(require 'msherry-python)
 (require 'org-customization)
 (require 'tags-funcs)
 (require 'totd)
@@ -155,19 +123,16 @@ started from a shell."
     (require 'vc-svn)))
 
 ; Theme
-(load-theme 'solarized-dark t)
+(when window-system
+  (load-theme 'solarized-dark t))
 
 ; Autoloads
 (autoload 'js2-mode "js2" nil t)
 (autoload 'actionscript-mode "actionscript-mode" nil t) ; Connors' version
 (autoload 'php-mode "php-mode" nil t) ; either Mac or 22 only
-;; Use python-mode, instead of the crappy built-in python.el on the mac
-(autoload 'python-mode "python-mode" "Python Mode." t)
 (autoload 'clojure-mode "clojure-mode" "Clojure Mode" t)
 (autoload 'turn-on-cldoc-mode "cldoc" "CL docs" t)
 (autoload 'csv-mode "csv-mode" nil t)
-(autoload 'jedi-setup-venv "jedi-local" nil t)
-(autoload 'jedi:setup "jedi" nil t)
 (autoload 'ess-mode "ess-mode" "ESS mode" t)
 
 ;;; Configure snippets
@@ -175,9 +140,8 @@ started from a shell."
 ;; helpers that help with snippet expansions.
 (setq core-custom-snippets (concat expanded-user-emacs-directory "snippets"))
 (mapc 'load (directory-files core-custom-snippets t "^[^#].*el$"))
-(yas/initialize)
 (yas-global-mode 1)
-(yas/load-directory (concat expanded-user-emacs-directory "snippets"))
+(yas-load-directory (concat expanded-user-emacs-directory "snippets"))
 
 ;; Enable preview-latex
 (add-hook 'LaTeX-mode-hook 'LaTeX-preview-setup)
@@ -195,8 +159,6 @@ started from a shell."
 (add-to-list 'auto-mode-alist '("\\.md$" . markdown-mode))
 (add-to-list 'auto-mode-alist '("\\.org$" . org-mode))
 (add-to-list 'auto-mode-alist '("\\.php$" . php-mode))
-(add-to-list 'auto-mode-alist '("\\.py$" . python-mode))
-(add-to-list 'interpreter-mode-alist '("python" . python-mode))
 (add-to-list 'auto-mode-alist '("\\.R$" . r-mode))
 
 
@@ -208,9 +170,6 @@ started from a shell."
 (setq c-default-style "bsd")
 (setq c-basic-offset 4)                 ; imo uses four
 (setq js2-basic-offset 2)               ; imo uses four
-
-(setq mac-command-modifier 'meta
-      mac-option-modifier 'super)
 
 ;; Settings that 24 broke
 ;; TODO: figure out why this doesn't work on the mac
@@ -396,20 +355,6 @@ started from a shell."
           '(lambda ()
             (setq c-basic-offset 2)))
 
-(add-hook 'python-mode-hook
-          '(lambda ()
-            (setq jedi:setup-keys t)
-            (jedi-setup-venv)
-            (jedi:setup)
-            (setq jedi:complete-on-dot t)
-            (setq jedi:tooltip-method nil)
-            (define-key jedi-mode-map (kbd "C-c .") nil)
-            (elpy-mode)
-            (define-key elpy-mode-map (kbd "<M-left>") nil)
-            (define-key elpy-mode-map (kbd "<M-right>") nil)
-            (local-set-key (kbd "C-c .") 'flymake-goto-next-error)
-            ))
-
 (require 'java-settings)
 
 ;; Tramp adds a hook to auto-save files. Remove it
@@ -485,26 +430,6 @@ but with additional hacks for frameworks by Marc Sherry"
   "Unmark marked files in dired mode before searching for new ones"
   (dired-unmark-all-files ?\r))
 
-(defadvice py-shift-region-left (around keep-region-active
-                                        (start end &optional count) activate)
-  "Keep the region active so we can do multiple shifts"
-  (let ((deactivate-mark nil))
-    ad-do-it))
-
-(defadvice py-shift-region-right (around keep-region-active
-                                         (start end &optional count) activate)
-  "Keep the region active so we can do multiple shifts"
-  (let ((deactivate-mark nil))
-    ad-do-it))
-
-
-(defun dont-display-if-visible (orig-fun &rest args)
-  "Don't switch to the elpy Python buffer if it's already visible"
-  (if (not (get-buffer-window (process-buffer (elpy-shell-get-or-create-process))))
-      (apply orig-fun args)))
-
-(advice-add 'elpy-shell-display-buffer :around #'dont-display-if-visible)
-
 
 ;; Emacs server
 (server-start)
@@ -556,6 +481,8 @@ annotations"
 
 
 (put 'narrow-to-region 'disabled nil)
+(put 'downcase-region 'disabled nil)
+
 
 (defun buffer-mode-histogram ()
   "Display a histogram of emacs buffer modes.
@@ -586,8 +513,6 @@ http://blogs.fluidinfo.com/terry/2011/11/10/emacs-buffer-mode-histogram/"
               (setq key (substring key 0 -5)))
           (princ (format "%2d %20s %s\n" count key
                          (make-string count ?+))))))))
-
-(put 'downcase-region 'disabled nil)
 
 (custom-set-faces
  ;; custom-set-faces was added by Custom.

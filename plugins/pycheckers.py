@@ -319,6 +319,7 @@ class PylintRunner(LintRunner):
         "R0801",  # Similar lines in * files
         "R0903",  # Too few public methods
         "R0904",  # Too many public methods
+        "R0914",  # Too many local variables
     ])
 
     @classmethod
