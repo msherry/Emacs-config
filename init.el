@@ -127,13 +127,13 @@ started from a shell."
   (load-theme 'solarized-dark t))
 
 ; Autoloads
-(autoload 'js2-mode "js2" nil t)
 (autoload 'actionscript-mode "actionscript-mode" nil t) ; Connors' version
-(autoload 'php-mode "php-mode" nil t) ; either Mac or 22 only
 (autoload 'clojure-mode "clojure-mode" "Clojure Mode" t)
-(autoload 'turn-on-cldoc-mode "cldoc" "CL docs" t)
 (autoload 'csv-mode "csv-mode" nil t)
 (autoload 'ess-mode "ess-mode" "ESS mode" t)
+(autoload 'js2-mode "js2" nil t)
+(autoload 'php-mode "php-mode" nil t) ; either Mac or 22 only
+(autoload 'turn-on-cldoc-mode "cldoc" "CL docs" t)
 
 ;;; Configure snippets
 ;; load all el files in the snippets directory, they're usually lisp
