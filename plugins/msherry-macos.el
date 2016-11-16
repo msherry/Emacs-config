@@ -11,6 +11,9 @@
  ;"-apple-Inconsolata-medium-normal-normal-*-14-*-*-*-m-0-iso10646-1")
  )
 
+;; While emacs23 handles greek poorly on the mac, use a different font. See
+;; last http ref in plugins/lambda.el. "fontset-startup" (or fontsets at all,
+;; it seems) don't exist in 22, so only do this on the mac for now
 (set-fontset-font
  t
  ; used to use 'greek-iso8859-7, but that overwrote more
@@ -41,4 +44,4 @@
         ))
 
 
-(provide 'msherry/mac-os)
+(provide 'msherry-macos)

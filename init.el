@@ -9,11 +9,18 @@
 ; Seed RNG
 (random t)
 
-;; While emacs23 handles greek poorly on the mac, use a different font. See
-;; last http ref in plugins/lambda.el. "fontset-startup" (or fontsets at all,
-;; it seems) don't exist in 22, so only do this on the mac for now
+;; Plugins - add plugins dir, vendors dir, and all dirs under vendor
+;; excluding . and ..
+(add-to-list 'load-path "/usr/local/share/emacs/site-lisp/mu/mu4e")
+(add-to-list 'load-path "~/.emacs.d/plugins")
+(add-to-list 'load-path "~/.emacs.d/plugins/vendor")
+(add-to-list 'load-path "~/.emacs.d/plugins/language-specific")
+(dolist (dir (directory-files "~/.emacs.d/plugins/vendor" t "^[^.]"))
+  (when (file-directory-p dir)
+    (add-to-list 'load-path dir)))
+
 (when (and (eq system-type 'darwin) window-system)
-  (require 'msherry/macos))
+  (require 'msherry-macos))
 
 ;; Set up GUI as soon as possible
 (when window-system
@@ -35,9 +42,7 @@
                          (height . 87))))
           (set-default-font "-unknown-DejaVu Sans Mono-normal-normal-normal-*-14-*-*-*-m-0-iso10646-1")))
   (if (fboundp #'tool-bar-mode) (tool-bar-mode -1))
-;;   (if (fboundp #'scroll-bar-mode) (scroll-bar-mode -1))
 
-  ;;(set-frame-parameter (selected-frame) 'alpha '(<active> [<inactive>]))
   (set-frame-parameter (selected-frame) 'alpha '(100 100))
   (add-to-list 'default-frame-alist '(alpha 100 100)))
 
@@ -66,15 +71,6 @@ started from a shell."
 
 ;; TODO: user-emacs-directory depends on emacs >=23
 (setq expanded-user-emacs-directory (expand-file-name user-emacs-directory))
-
-;; Plugins - add plugins dir, vendors dir, and all dirs under vendor
-;; excluding . and ..
-(add-to-list 'load-path "~/.emacs.d/plugins")
-(add-to-list 'load-path "~/.emacs.d/plugins/vendor")
-(add-to-list 'load-path "~/.emacs.d/plugins/language-specific")
-(dolist (dir (directory-files "~/.emacs.d/plugins/vendor" t "^[^.]"))
-  (when (file-directory-p dir)
-    (add-to-list 'load-path dir)))
 
 ;; Configure ELPA (package loader)
 (require 'package)
@@ -113,6 +109,7 @@ started from a shell."
 (require 'lambda)
 (require 'lisp-customization)
 (require 'load-edict)
+(require 'msherry-mail)
 (require 'msherry-python)
 (require 'org-customization)
 (require 'tags-funcs)
@@ -125,6 +122,10 @@ started from a shell."
 ; Theme
 (when window-system
   (load-theme 'solarized-dark t))
+
+; Modeline
+(display-time-mode 1)
+(setq display-time-mail-function 'msherry-new-important-mail)
 
 ; Autoloads
 (autoload 'actionscript-mode "actionscript-mode" nil t) ; Connors' version
@@ -539,6 +540,7 @@ http://blogs.fluidinfo.com/terry/2011/11/10/emacs-buffer-mode-histogram/"
  '(custom-safe-themes
    (quote
     ("8aebf25556399b58091e533e455dd50a6a9cba958cc4ebb0aab175863c25b9a4" default)))
+ '(display-time-mail-face (quote hi-blue))
  '(elpy-modules
    (quote
     (elpy-module-company elpy-module-eldoc elpy-module-pyvenv elpy-module-yasnippet elpy-module-sane-defaults)))
@@ -548,13 +550,24 @@ http://blogs.fluidinfo.com/terry/2011/11/10/emacs-buffer-mode-histogram/"
  '(magit-log-arguments (quote ("--graph" "--color" "--decorate")))
  '(magit-push-always-verify nil)
  '(magit-tag-arguments (quote ("--annotate")))
+ '(notmuch-saved-searches
+   (quote
+    ((:name "inbox" :query "tag:INBOX" :key "i")
+     (:name "unread" :query "tag:unread AND tag:INBOX" :key "u")
+     (:name "Ideas" :query "tag:Ideas AND tag:unread" :key "I")
+     (:name "flagged" :query "tag:flagged" :key "f")
+     (:name "Flawless" :query "tag:Flawless AND tag:unread")
+     (:name "sent" :query "tag:sent" :key "t")
+     (:name "drafts" :query "tag:draft" :key "d")
+     (:name "all mail" :query "*" :key "a"))))
+ '(notmuch-search-oldest-first nil)
  '(org-agenda-clockreport-parameter-plist (quote (:link t :maxlevel 3)))
  '(org-agenda-span (quote day))
  '(org-agenda-start-on-weekday nil)
  '(org-agenda-sticky t)
  '(package-selected-packages
    (quote
-    (markdown-preview-mode elpy puppet-mode latex-preview-pane fxrd-mode ac-geiser geiser window-numbering json-mode gitignore-mode esup feature-mode zenburn-theme yasnippet yaml-mode thrift solarized-theme slime sass-mode s rainbow-mode pymacs paredit org markdown-mode jedi httpcode go-mode flymake-sass flymake ess diff-hl debbugs clojure-mode ack))))
+    (notmuch markdown-preview-mode elpy puppet-mode latex-preview-pane fxrd-mode ac-geiser geiser window-numbering json-mode gitignore-mode esup feature-mode zenburn-theme yasnippet yaml-mode thrift solarized-theme slime sass-mode s rainbow-mode pymacs paredit org markdown-mode jedi httpcode go-mode flymake-sass flymake ess diff-hl debbugs clojure-mode ack))))
 
 
 ;; (eval-after-load 'cc-mode
