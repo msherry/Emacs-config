@@ -18,12 +18,12 @@
 
 ;;; Tagging keybindings
 
-;; Open links in emails -- super hacky, it uses org-mode's functionality
+;; Open links in emails
 (define-key notmuch-show-mode-map (kbd  "C-c C-o")
   (lambda ()
     "Open link at point"
     (interactive)
-    (org-open-link-from-string (url-get-url-at-point))))
+    (browse-url (url-get-url-at-point))))
 
 ;; Archive mail in search mode
 (define-key notmuch-search-mode-map "y"
@@ -36,7 +36,7 @@
 ;; Archive mail in show mode
 (define-key notmuch-show-mode-map "y"
   (lambda ()
-    "Remove thread from inbox, return to search mode"
+    "Remove message from inbox, return to search mode"
     (interactive)
     (notmuch-show-tag-message "-INBOX")
     (notmuch-bury-or-kill-this-buffer)
