@@ -16,6 +16,15 @@
 
 (global-set-key (kbd "C-c m") `notmuch)
 
+;;; Tagging keybindings
+
+;; Open links in emails -- super hacky, it uses org-mode's functionality
+(define-key notmuch-show-mode-map (kbd  "C-c C-o")
+  (lambda ()
+    "Open link at point"
+    (interactive)
+    (org-open-link-from-string (url-get-url-at-point))))
+
 ;; Archive mail in search mode
 (define-key notmuch-search-mode-map "y"
       (lambda (&optional beg end)
@@ -32,6 +41,24 @@
     (notmuch-show-tag-message "-INBOX")
     (notmuch-bury-or-kill-this-buffer)
     (notmuch-refresh-this-buffer)))
+
+;; Toggle unread in search mode
+(define-key notmuch-search-mode-map "u"
+  (lambda ()
+    "Toggle unread tag for message"
+    (interactive)
+    (notmuch-search-tag
+     (if (member "unread" (notmuch-search-get-tags))
+         "-unread" "+unread"))))
+
+;; Toggle unread in show mode
+(define-key notmuch-show-mode-map "u"
+  (lambda ()
+    "Toggle unread tag for message"
+    (interactive)
+    (notmuch-show-tag-message
+     (if (member "unread" (notmuch-show-get-tags))
+         "-unread" "+unread"))))
 
 
 ;; macros for quickly toggling tags - https://notmuchmail.org/emacstips/#index6h2

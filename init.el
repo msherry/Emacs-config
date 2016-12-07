@@ -126,6 +126,7 @@ started from a shell."
 ; Modeline
 (display-time-mode 1)
 (setq display-time-mail-function 'msherry-new-important-mail)
+(setq read-mail-command #'(lambda () (notmuch)))
 
 ; Autoloads
 (autoload 'actionscript-mode "actionscript-mode" nil t) ; Connors' version
