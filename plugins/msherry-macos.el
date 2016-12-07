@@ -1,8 +1,5 @@
 ;;; Mac-OS specific configuration
 
-(setq mac-command-modifier 'meta
-      mac-option-modifier 'super)
-
 ;; Default on mac - "-apple-Monaco-medium-normal-normal-*-12-*-*-*-m-0-iso10646-1"
 
 ;; Try this font for a while. Either syntax is acceptable here

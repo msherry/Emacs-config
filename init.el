@@ -562,6 +562,8 @@ http://blogs.fluidinfo.com/terry/2011/11/10/emacs-buffer-mode-histogram/"
      (:name "drafts" :query "tag:draft" :key "d")
      (:name "all mail" :query "*" :key "a"))))
  '(notmuch-search-oldest-first nil)
+ '(ns-alternate-modifier (quote super))
+ '(ns-command-modifier (quote meta))
  '(org-agenda-clockreport-parameter-plist (quote (:link t :maxlevel 3)))
  '(org-agenda-span (quote day))
  '(org-agenda-start-on-weekday nil)
