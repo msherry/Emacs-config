@@ -54,14 +54,14 @@ With a prefix argument, jump to the `notmuch' home screen."
      (if (member "unread" (notmuch-search-get-tags))
          (list "-unread") (list "+unread")))))
 
-; Toggle star
+; Toggle flagged (Gmail starred)
 (define-key notmuch-search-mode-map "S"
   (lambda ()
-    "Toggle unread tag for message"
+    "Toggle flagged state tag for message"
     (interactive)
     (notmuch-search-tag
-     (if (member "[Gmail].Starred" (notmuch-search-get-tags))
-         (list "-[Gmail].Starred" "-flagged") (list "+[Gmail].Starred" "+flagged")))))
+     (if (member "flagged" (notmuch-search-get-tags))
+         (list "-flagged") (list "+flagged")))))
 
 ;; Show mode keybindings
 
@@ -72,12 +72,9 @@ With a prefix argument, jump to the `notmuch' home screen."
     (interactive)
     (notmuch-show-tag-all (list "-INBOX"))
     (notmuch-bury-or-kill-this-buffer)
-    ;; Move to last message - http://stackoverflow.com/a/24969047/52550
-    (let ((column (current-column)))
-      (goto-char (point-max))
-      (forward-line -2)
-      (move-to-column column))
-    (notmuch-refresh-this-buffer)))
+    (notmuch-refresh-this-buffer)
+    (goto-char (point-max))
+    (forward-line -2)))
 
 ; Toggle unread in show mode
 (define-key notmuch-show-mode-map "u"
@@ -94,8 +91,8 @@ With a prefix argument, jump to the `notmuch' home screen."
     "Toggle star for message"
     (interactive)
     (notmuch-show-tag-message
-     (if (member "[Gmail].Starred" (notmuch-show-get-tags))
-         "-[Gmail].Starred" "-flagged" "+[Gmail].Starred" "+flagged"))))
+     (if (member "flagged" (notmuch-show-get-tags))
+         "-flagged" "+flagged"))))
 
 ;; macros for quickly toggling tags - https://notmuchmail.org/emacstips/#index6h2
 (eval-after-load 'notmuch-show
