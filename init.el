@@ -322,14 +322,14 @@ started from a shell."
 (add-hook 'dot-mode-hook 'rainbow-mode)
 
 ; Add a common hook to every programming mode
-(mapc '(lambda (x)
+(mapc #'(lambda (x)
         ; Get the mode's name and turn that into a mode hook
         (let ((mode-hook (intern (concat (symbol-name x) "-hook"))))
           (add-hook mode-hook 'programming-mode-hook)))
       programming-modes)
 
 (add-hook 'text-mode-hook
-          '(lambda ()
+          #'(lambda ()
             (flyspell-mode t)
             ;(longlines-mode t)
             ))
@@ -410,14 +410,6 @@ but with additional hacks for frameworks by Marc Sherry"
                         (re-search-forward "^#import\\|@\"\\|@protocol" nil t))
                       (objc-mode)))))))))
 (add-hook 'find-file-hook 'bh-choose-header-mode)
-
-(defun show-whitespace-in-diffs ()
-  "Toggle showing whitespace in svn diffs"
-  (interactive)
-  (setq vc-svn-diff-switches (if (eq vc-svn-diff-switches t)
-                                 '("-x" "-w")
-                                 t)))
-
 
 ;; Modify functions that aren't quite right
 (defadvice dired-mark-files-containing-regexp (before unmark-all-first
@@ -578,3 +570,5 @@ http://blogs.fluidinfo.com/terry/2011/11/10/emacs-buffer-mode-histogram/"
 ;;      (defun my-c-mode-common-hook ()
 ;;        (define-key c-mode-base-map (kbd "C-c C-d") 'disaster))
 ;;     (add-hook 'c-mode-common-hook 'my-c-mode-common-hook)))
+
+(byte-recompile-directory expanded-user-emacs-directory)
