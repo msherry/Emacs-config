@@ -124,8 +124,6 @@ started from a shell."
   (load-theme 'solarized-dark t))
 
 ; Modeline
-(display-time-mode 1)
-(setq display-time-mail-function 'msherry-new-important-mail)
 (setq read-mail-command #'(lambda () (notmuch)))
 
 ; Autoloads
@@ -533,7 +531,11 @@ http://blogs.fluidinfo.com/terry/2011/11/10/emacs-buffer-mode-histogram/"
  '(custom-safe-themes
    (quote
     ("8aebf25556399b58091e533e455dd50a6a9cba958cc4ebb0aab175863c25b9a4" default)))
+ '(display-time-default-load-average nil)
+ '(display-time-format "")
  '(display-time-mail-face (quote hi-blue))
+ '(display-time-mail-function (quote msherry-new-important-mail))
+ '(display-time-mode t)
  '(elpy-modules
    (quote
     (elpy-module-company elpy-module-eldoc elpy-module-pyvenv elpy-module-yasnippet elpy-module-sane-defaults)))
