@@ -545,6 +545,7 @@ http://blogs.fluidinfo.com/terry/2011/11/10/emacs-buffer-mode-histogram/"
  '(magit-log-arguments (quote ("--graph" "--color" "--decorate")))
  '(magit-push-always-verify nil)
  '(magit-tag-arguments (quote ("--annotate")))
+ '(notmuch-archive-tags (quote ("-INBOX")))
  '(notmuch-saved-searches
    (quote
     ((:name "inbox" :query "tag:INBOX" :key "i")
@@ -555,7 +556,7 @@ http://blogs.fluidinfo.com/terry/2011/11/10/emacs-buffer-mode-histogram/"
      (:name "sent" :query "tag:sent" :key "t")
      (:name "drafts" :query "tag:draft" :key "d")
      (:name "all mail" :query "*" :key "a"))))
- '(notmuch-search-oldest-first nil)
+ '(notmuch-search-oldest-first t)
  '(ns-alternate-modifier (quote super))
  '(ns-command-modifier (quote meta))
  '(org-agenda-clockreport-parameter-plist (quote (:link t :maxlevel 3)))
