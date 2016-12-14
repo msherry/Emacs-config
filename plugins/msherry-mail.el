@@ -130,4 +130,28 @@ https://gist.github.com/dbp/9627194"
       nil
     t))
 
+
+(defun msherry-notmuch-show-redraw-tags ()
+  "Redraw all tags in the current message based on their current state"
+  (notmuch-show-update-tags '())
+  (notmuch-show-update-tags (notmuch-show-get-tags))
+  )
+
+;; Fix up broken functions
+(defun msherry-notmuch-redisplay-search-with-highlight (&rest args)
+  (interactive)
+  (notmuch-refresh-this-buffer)
+  (notmuch-hl-line-mode))
+(advice-add 'notmuch-search-archive-thread
+            :after #'msherry-notmuch-redisplay-search-with-highlight)
+
+;;; Update mail flag more often
+(advice-add 'notmuch-refresh-this-buffer :after #'display-time-update)
+
+
+(defun msherry-highlight-myself (&rest args)
+  "Note - this doesn't use font-lock-mode, so it's not updated on the fly"
+  (highlight-regexp "\\<\\(marc\\)\\>\[^@\]" 'font-lock-constant-face))
+(advice-add 'notmuch-show-insert-message :after #'msherry-highlight-myself)
+
 (provide 'msherry-mail)
