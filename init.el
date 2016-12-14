@@ -299,10 +299,10 @@ started from a shell."
 
 (defun programming-mode-hook ()
   "Hook common to all programming modes"
-  (add-todo-to-current-mode)
+  (msherry-font-lock-fontify-todo)
+  (msherry-font-lock-fontify-numbers)
   (flyspell-prog-mode)
   ;; (highlight-beyond-fill-column)
-  (font-lock-fontify-numbers)
   ;; (doxymacs-mode)
 
   (add-hook 'before-save-hook 'delete-trailing-whitespace)
@@ -310,8 +310,7 @@ started from a shell."
   ;; Second line of arglists gets two indents
   (c-set-offset 'arglist-cont-nonempty '++)
   (c-set-offset 'arglist-cont '++)
-  (c-set-offset 'arglist-close '++)
-  (cwarn-mode))
+  (c-set-offset 'arglist-close '++))
 
 
 ;; Colors in files where it makes sense
@@ -342,7 +341,7 @@ started from a shell."
 (defvar no-trailing-whitespace-modes '(shell-mode slime-repl-mode text-mode
                                        fundamental-mode term-mode vc-git-log-view-mode
                                        calendar-mode magit-popup-mode
-                                       fxrd-mode))
+                                       fxrd-mode notmuch-show-mode))
 
 (mapc '(lambda (x)
         (let ((mode-hook (intern (concat (symbol-name x) "-hook"))))
