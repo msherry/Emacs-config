@@ -225,6 +225,11 @@ started from a shell."
 ;; Copy files between dired buffers easily
 (setq dired-dwim-target t)
 
+;; Magit settings
+(setq magit-popup-show-common-commands t)
+(add-to-list 'git-commit-style-convention-checks
+             'overlong-summary-line)
+
 ;; Bindings
 (global-set-key (kbd "M-o") #'other-window)
 (global-set-key (kbd "C-l") #'recenter)  ; recenter-top-bottom? No thanks
@@ -562,7 +567,7 @@ http://blogs.fluidinfo.com/terry/2011/11/10/emacs-buffer-mode-histogram/"
  '(org-agenda-sticky t)
  '(package-selected-packages
    (quote
-    (notmuch markdown-preview-mode elpy puppet-mode latex-preview-pane fxrd-mode ac-geiser geiser window-numbering json-mode gitignore-mode esup feature-mode zenburn-theme yasnippet yaml-mode thrift solarized-theme slime sass-mode s rainbow-mode pymacs paredit org markdown-mode jedi httpcode go-mode flymake-sass flymake ess diff-hl debbugs clojure-mode ack))))
+    (alchemist elixir-mode notmuch markdown-preview-mode elpy puppet-mode latex-preview-pane fxrd-mode ac-geiser geiser window-numbering json-mode gitignore-mode esup feature-mode zenburn-theme yasnippet yaml-mode thrift solarized-theme slime sass-mode s rainbow-mode pymacs paredit org markdown-mode jedi httpcode go-mode flymake-sass flymake ess diff-hl debbugs clojure-mode ack))))
 
 
 ;; (eval-after-load 'cc-mode
