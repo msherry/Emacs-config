@@ -18,12 +18,6 @@
 
 (set-face-background 'todo-face "#00FFFF")
 
-;; Add keywords we want highlighted
-(defun add-todo-to-current-mode ()
-  (font-lock-add-keywords nil
-                          '(("\\(TODO\\|HACK\\|FIXME\\):" 1 'todo-face prepend))
-                          t))
-
 ;; If we're highlighting beyond 80 characters, make it noticeable. The default
 ;; is to underline, which sucks.
 ;; TODO: use defface here
@@ -35,12 +29,18 @@
   '(progn
     (set-face-foreground 'py-XXX-tag-face 'unspecified)))
 
-(defun font-lock-fontify-numbers ()
- "Use this function as a hook to fontify numbers as constants"
+;; Add keywords we want highlighted
+(defun msherry-font-lock-fontify-todo ()
   (font-lock-add-keywords nil
-      '(("\\<\\(0x[0-9a-fA-F]+\\)\\>" 1 font-lock-constant-face) ; hex
-        ("\\<\\(-?[0-9]+\\.[0-9]+\\)\\>" 1 font-lock-constant-face) ; float
-        ("\\<\\(-?[0-9]+L?\\)\\>" 1 font-lock-constant-face)))) ; int
+                          '(("\\(TODO\\|HACK\\|FIXME\\):" 1 'todo-face prepend))
+                          t))
 
+(defun msherry-font-lock-fontify-numbers ()
+  "Use this function as a hook to fontify numbers as constants"
+  (font-lock-add-keywords
+   nil
+   '(("\\<\\(0x[0-9a-fA-F]+\\)\\>" 1 font-lock-constant-face) ; hex
+     ("\\<\\(-?[0-9]+\\.[0-9]+\\)\\>" 1 font-lock-constant-face) ; float
+     ("\\<\\(-?[0-9]+L?\\)\\>" 1 font-lock-constant-face)))) ; int
 
 (provide 'custom-faces)

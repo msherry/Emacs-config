@@ -124,8 +124,6 @@ started from a shell."
   (load-theme 'solarized-dark t))
 
 ; Modeline
-(display-time-mode 1)
-(setq display-time-mail-function 'msherry-new-important-mail)
 (setq read-mail-command #'(lambda () (notmuch)))
 
 ; Autoloads
@@ -306,10 +304,10 @@ started from a shell."
 
 (defun programming-mode-hook ()
   "Hook common to all programming modes"
-  (add-todo-to-current-mode)
+  (msherry-font-lock-fontify-todo)
+  (msherry-font-lock-fontify-numbers)
   (flyspell-prog-mode)
   ;; (highlight-beyond-fill-column)
-  (font-lock-fontify-numbers)
   ;; (doxymacs-mode)
 
   (add-hook 'before-save-hook 'delete-trailing-whitespace)
@@ -317,8 +315,7 @@ started from a shell."
   ;; Second line of arglists gets two indents
   (c-set-offset 'arglist-cont-nonempty '++)
   (c-set-offset 'arglist-cont '++)
-  (c-set-offset 'arglist-close '++)
-  (cwarn-mode))
+  (c-set-offset 'arglist-close '++))
 
 
 ;; Colors in files where it makes sense
@@ -349,7 +346,7 @@ started from a shell."
 (defvar no-trailing-whitespace-modes '(shell-mode slime-repl-mode text-mode
                                        fundamental-mode term-mode vc-git-log-view-mode
                                        calendar-mode magit-popup-mode
-                                       fxrd-mode))
+                                       fxrd-mode notmuch-show-mode))
 
 (mapc '(lambda (x)
         (let ((mode-hook (intern (concat (symbol-name x) "-hook"))))
@@ -538,7 +535,11 @@ http://blogs.fluidinfo.com/terry/2011/11/10/emacs-buffer-mode-histogram/"
  '(custom-safe-themes
    (quote
     ("8aebf25556399b58091e533e455dd50a6a9cba958cc4ebb0aab175863c25b9a4" default)))
+ '(display-time-default-load-average nil)
+ '(display-time-format "")
  '(display-time-mail-face (quote hi-blue))
+ '(display-time-mail-function (quote msherry-new-important-mail))
+ '(display-time-mode t)
  '(elpy-modules
    (quote
     (elpy-module-company elpy-module-eldoc elpy-module-pyvenv elpy-module-yasnippet elpy-module-sane-defaults)))
@@ -548,6 +549,7 @@ http://blogs.fluidinfo.com/terry/2011/11/10/emacs-buffer-mode-histogram/"
  '(magit-log-arguments (quote ("--graph" "--color" "--decorate")))
  '(magit-push-always-verify nil)
  '(magit-tag-arguments (quote ("--annotate")))
+ '(notmuch-archive-tags (quote ("-INBOX")))
  '(notmuch-saved-searches
    (quote
     ((:name "inbox" :query "tag:INBOX" :key "i")
@@ -558,7 +560,7 @@ http://blogs.fluidinfo.com/terry/2011/11/10/emacs-buffer-mode-histogram/"
      (:name "sent" :query "tag:sent" :key "t")
      (:name "drafts" :query "tag:draft" :key "d")
      (:name "all mail" :query "*" :key "a"))))
- '(notmuch-search-oldest-first nil)
+ '(notmuch-search-oldest-first t)
  '(ns-alternate-modifier (quote super))
  '(ns-command-modifier (quote meta))
  '(org-agenda-clockreport-parameter-plist (quote (:link t :maxlevel 3)))
