@@ -151,7 +151,8 @@ https://gist.github.com/dbp/9627194"
 
 (defun msherry-highlight-myself (&rest args)
   "Note - this doesn't use font-lock-mode, so it's not updated on the fly"
-  (highlight-regexp "\\<\\(marc\\)\\>\[^@\]" 'font-lock-constant-face))
-(advice-add 'notmuch-show-insert-message :after #'msherry-highlight-myself)
+  (highlight-regexp "\\<[Mm]arc\\>" 'font-lock-constant-face))
+(advice-add 'notmuch-show-insert-msg :after #'msherry-highlight-myself)
+(add-hook 'notmuch-show-hook #'msherry-highlight-myself)
 
 (provide 'msherry-mail)
