@@ -542,7 +542,7 @@ http://blogs.fluidinfo.com/terry/2011/11/10/emacs-buffer-mode-histogram/"
  '(display-time-mode t)
  '(elpy-modules
    (quote
-    (elpy-module-company elpy-module-eldoc elpy-module-pyvenv elpy-module-yasnippet elpy-module-sane-defaults)))
+    (elpy-module-company elpy-module-eldoc elpy-module-pyvenv elpy-module-sane-defaults)))
  '(gc-cons-threshold 100000000)
  '(git-commit-summary-max-length 79)
  '(global-eldoc-mode nil)
@@ -560,7 +560,6 @@ http://blogs.fluidinfo.com/terry/2011/11/10/emacs-buffer-mode-histogram/"
      (:name "sent" :query "tag:sent" :key "t")
      (:name "drafts" :query "tag:draft" :key "d")
      (:name "all mail" :query "*" :key "a"))))
- '(notmuch-search-oldest-first t)
  '(ns-alternate-modifier (quote super))
  '(ns-command-modifier (quote meta))
  '(org-agenda-clockreport-parameter-plist (quote (:link t :maxlevel 3)))
