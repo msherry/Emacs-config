@@ -47,20 +47,7 @@
 ;; no-byte-compile: t
 ;; End:
 
-;;;### (autoloads nil "slime" "slime.el" (0 0 0 0))
-;;; Generated autoloads from slime.el
-
-(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "slime" '("sldb-" "slime" "def" "??" "make-slime-" "inferior-lisp-program")))
-
-;;;***
-
-;;;### (autoloads nil nil ("slime-pkg.el") (0 0 0 0))
-
-;;;***
-
-;;;### (autoloads nil "slime-tests" "slime-tests.el" (0 0 0 0))
-;;; Generated autoloads from slime-tests.el
-
-(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "slime-tests" '("symbol-at-point." "sexp-at-point.1" "sbcl-world-lock" "report-condition-with-circular-list" "read" "traditional-recipe" "def-slime-test" "dis" "find-definition" "flow-control" "inspector" "indentation" "inter" "end-of-file" "loop-interrupt-" "locally-bound-debugger-hook" "break" "macroexpand" "utf-8-source" "unwind-to-previous-sldb-level" "arglist" "async-eval-debugging" "comp" "narrowing")))
+;;;### (autoloads nil nil ("slime-pkg.el" "slime-tests.el" "slime.el")
+;;;;;;  (22648 27223 0 0))
 
 ;;;***
