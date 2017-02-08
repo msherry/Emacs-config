@@ -16,6 +16,9 @@
 (setq mm-text-html-renderer 'w3m)
 (setq notmuch-fcc-dirs nil)             ; Gmail saves sent mails by itself
 
+(defvar msherry-email-update-file-path "/tmp/offlineimap_sync_required"
+  "Touch this file to force the external offlineimap-runner.sh to resync.")
+
 (defun msherry-notmuch-unread (arg)
   "Jump immediately to unread emails in notmuch.
 
@@ -58,6 +61,9 @@ With a prefix argument, jump to the `notmuch' home screen."
 (defun msherry-toggle-flagged ()
     (interactive)
     (msherry--toggle-tag-search-or-show "flagged"))
+(defun msherry-toggle-muted ()
+    (interactive)
+    (msherry--toggle-tag-search-or-show "muted"))
 
 ;; Open links in emails
 (define-key notmuch-show-mode-map (kbd  "C-c C-o")
@@ -77,6 +83,13 @@ With a prefix argument, jump to the `notmuch' home screen."
         (notmuch-search-tag (list "-INBOX") beg end)
         (notmuch-refresh-this-buffer)))
 
+; Mute mail in search mode
+(define-key notmuch-search-mode-map "M"
+  (lambda ()
+    "Mute the current thread"
+    (interactive)
+    (msherry-toggle-muted)))
+
 ; Toggle unread
 (define-key notmuch-search-mode-map "u" #'msherry-toggle-unread)
 
@@ -95,6 +108,13 @@ With a prefix argument, jump to the `notmuch' home screen."
     (notmuch-bury-or-kill-this-buffer)
     (notmuch-refresh-this-buffer)
     (notmuch-search-last-thread)))
+
+; Mute mail in show mode
+(define-key notmuch-show-mode-map "M"
+  (lambda ()
+    "Mute the current thread"
+    (interactive)
+    (msherry-toggle-muted)))
 
 ; Toggle unread in show mode
 (define-key notmuch-show-mode-map "u" #'msherry-toggle-unread)
@@ -125,7 +145,7 @@ With a prefix argument, jump to the `notmuch' home screen."
 
 https://gist.github.com/dbp/9627194"
   (if (string= (s-chomp
-                (shell-command-to-string "notmuch count tag:INBOX and tag:unread"))
+                (shell-command-to-string "/usr/local/bin/notmuch count tag:INBOX and tag:unread"))
                "0")
       nil
     t))
@@ -149,10 +169,16 @@ https://gist.github.com/dbp/9627194"
 (advice-add 'notmuch-refresh-this-buffer :after #'display-time-update)
 
 
+(add-hook 'notmuch-after-tag-hook
+          #'(lambda (&rest rest)
+              (shell-command (concat "touch " (shell-quote-argument msherry-email-update-file-path)))))
+
+
 (defun msherry-highlight-myself (&rest args)
   "Note - this doesn't use font-lock-mode, so it's not updated on the fly"
-  (highlight-regexp "\\<\\([Mm]arc\\)\\>" 'font-lock-constant-face)
-  (highlight-regexp "\\([Mm]arc\\)" 'font-lock-constant-face))
+  (dolist (regex (list "\\<\\([Mm]arc\\)\\>"))
+    (unhighlight-regexp regex)          ; Unhighlight to force a full redraw
+    (highlight-regexp regex 'font-lock-constant-face)))
 (advice-add 'notmuch-show-insert-msg :after #'msherry-highlight-myself)
 (add-hook 'notmuch-show-hook #'msherry-highlight-myself)
 
