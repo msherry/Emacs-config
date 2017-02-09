@@ -544,14 +544,28 @@ http://blogs.fluidinfo.com/terry/2011/11/10/emacs-buffer-mode-histogram/"
  '(elpy-modules
    (quote
     (elpy-module-company elpy-module-eldoc elpy-module-pyvenv elpy-module-sane-defaults)))
- '(epa-pinentry-mode (quote loopback))
  '(gc-cons-threshold 100000000)
  '(git-commit-summary-max-length 79)
  '(global-eldoc-mode nil)
+ '(jabber-account-list
+   (quote
+    (("msherry@gmail.com"
+      (:network-server . "talk.google.com")
+      (:port . 5223)
+      (:connection-type . ssl)))))
  '(magit-log-arguments (quote ("--graph" "--color" "--decorate")))
  '(magit-push-always-verify nil)
  '(magit-tag-arguments (quote ("--annotate")))
+ '(mm-text-html-renderer (quote shr))
+ '(notmuch-after-tag-hook
+   (quote
+    ((lambda
+         (&rest rest)
+       (shell-command
+        (concat "touch "
+                (shell-quote-argument msherry-email-update-file-path)))))))
  '(notmuch-archive-tags (quote ("-INBOX")))
+ '(notmuch-crypto-process-mime t)
  '(notmuch-saved-searches
    (quote
     ((:name "inbox" :query "tag:INBOX" :key "i")
