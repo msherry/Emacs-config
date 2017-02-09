@@ -55,4 +55,7 @@
     ; off eldoc and use the better built-in(?) doc mode
     (eldoc-mode nil)))
 
+(add-hook 'lisp-interaction-mode-hook 'turn-on-eldoc-mode)
+(add-hook 'ielm-mode-hook 'turn-on-eldoc-mode)
+
 (provide 'lisp-customization)

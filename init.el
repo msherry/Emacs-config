@@ -100,6 +100,9 @@ started from a shell."
 (require 'uniquify)      ; stop naming buffers <2>
 (require 'xclip)         ; OMG I love you - now I can copy and paste from linux
 (require 'yasnippet)
+
+; TODO: clean this up, it comes from http://www.braveclojure.com/basic-emacs/
+(load "setup-clojure.el")
 ;; (load "~/.emacs.d/plugins/vendor/nxhtml/autostart.el")
 ; Mine
 (require 'custom-faces)
@@ -347,12 +350,12 @@ started from a shell."
                                        fundamental-mode term-mode vc-git-log-view-mode
                                        calendar-mode magit-popup-mode
                                        fxrd-mode notmuch-show-mode
-                                       inferior-python-mode))
+                                       inferior-python-mode cider-repl-mode))
 
-(mapc '(lambda (x)
-        (let ((mode-hook (intern (concat (symbol-name x) "-hook"))))
-          (add-hook mode-hook '(lambda ()
-                                (setq show-trailing-whitespace nil)))))
+(mapc #'(lambda (x)
+          (let ((mode-hook (intern (concat (symbol-name x) "-hook"))))
+            (add-hook mode-hook '(lambda ()
+                                  (setq show-trailing-whitespace nil)))))
       no-trailing-whitespace-modes)
 
 
@@ -571,7 +574,7 @@ http://blogs.fluidinfo.com/terry/2011/11/10/emacs-buffer-mode-histogram/"
  '(org-agenda-sticky t)
  '(package-selected-packages
    (quote
-    (jabber fxrd-mode elixir-mode notmuch markdown-preview-mode elpy puppet-mode latex-preview-pane ac-geiser geiser window-numbering json-mode gitignore-mode esup feature-mode zenburn-theme yasnippet yaml-mode thrift solarized-theme slime sass-mode s rainbow-mode pymacs paredit org markdown-mode jedi httpcode go-mode flymake-sass flymake ess diff-hl debbugs clojure-mode ack))))
+    (cider tagedit projectile clojure-mode-extra-font-locking slime elixir-mode notmuch markdown-preview-mode elpy puppet-mode latex-preview-pane fxrd-mode ac-geiser geiser window-numbering json-mode gitignore-mode esup feature-mode zenburn-theme yasnippet yaml-mode thrift solarized-theme sass-mode s rainbow-mode pymacs paredit org markdown-mode jedi httpcode go-mode flymake-sass flymake ess diff-hl debbugs clojure-mode ack))))
 
 
 ;; (eval-after-load 'cc-mode

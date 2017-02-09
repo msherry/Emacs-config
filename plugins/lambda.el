@@ -32,9 +32,9 @@ font-lock-mode"
         (push '("lambda" . ?λ) prettify-symbols-alist)
         (prettify-symbols-mode 1))))
 
-(mapc '(lambda (hook)
-        (progn
-          (add-hook hook 'sm-lambda-mode-hook)))
+(mapc #'(lambda (hook)
+          (progn
+            (add-hook hook 'sm-lambda-mode-hook)))
       '(emacs-lisp-mode-hook lisp-interactive-mode-hook lisp-mode-hook slime-repl-mode-hook scheme-mode-hook python-mode-hook diff-mode-hook))
 
 (provide 'lambda)
