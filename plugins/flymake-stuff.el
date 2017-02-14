@@ -93,17 +93,17 @@ version, depending on the value of the variable `use-hacked-flymake-parse-line'"
     (flymake-mode 1)))
 
 ;; Turn on flymake for local, writable files
-(mapc '(lambda (x)
-        (let ((mode-hook (intern (concat (symbol-name x) "-hook"))))
-          (add-hook mode-hook
-                    'turn-on-flymake-if-local)))
+(mapc #'(lambda (x)
+          (let ((mode-hook (intern (concat (symbol-name x) "-hook"))))
+            (add-hook mode-hook
+                      'turn-on-flymake-if-local)))
       flymake-modes)
 
 ;; Use a different line-parsing function for javascript
-(mapc '(lambda (x)
-        (let ((mode-hook (intern (concat (symbol-name x) "-hook"))))
-          (add-hook mode-hook
-                    'use-imo-flymake-fun)))
+(mapc #'(lambda (x)
+          (let ((mode-hook (intern (concat (symbol-name x) "-hook"))))
+            (add-hook mode-hook
+                      'use-imo-flymake-fun)))
       flymake-js-modes)
 
 ;; Prepend a different java handler, since flymake defaults to using Makefiles
