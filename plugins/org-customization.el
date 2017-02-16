@@ -137,6 +137,21 @@
     ;; No org/ directory, avoid setup
     (message "You seem to be missing an org/ directory in your .emacs.d -- please check for this to enable org-mode agenda tools."))
 
+(defun color-agenda-events ()
+  "Color agenda events based on what calendar they're from.
+
+http://stackoverflow.com/a/17067170/52550"
+  (save-excursion
+    (goto-char (point-min))
+    (while (re-search-forward "calendar:" nil t) ; Personal calendar
+      (save-excursion
+        ; Only color agenda items, not unscheduled/to refile items
+        (when (not (re-search-backward "======" nil t))
+          (add-text-properties (match-beginning 0) (point-at-eol)
+                               '(face font-lock-constant-face)))))))
+
+(add-hook 'org-finalize-agenda-hook #'color-agenda-events)
+
 (org-clock-persistence-insinuate)
 
 

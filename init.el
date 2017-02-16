@@ -211,7 +211,7 @@ started from a shell."
       ediff-window-setup-function 'ediff-setup-windows-plain ; same window, pls
       mouse-yank-at-point t)            ; middle-click paste at point, not mouse
 
-(setq-default show-trailing-whitespace t
+(setq-default show-trailing-whitespace nil
               fill-column 79            ; default of 72 is too narrow
               save-place t)             ; This didn't used to be buffer-local
 (put 'upcase-region 'disabled nil)
@@ -318,7 +318,8 @@ started from a shell."
   ;; Second line of arglists gets two indents
   (c-set-offset 'arglist-cont-nonempty '++)
   (c-set-offset 'arglist-cont '++)
-  (c-set-offset 'arglist-close '++))
+  (c-set-offset 'arglist-close '++)
+  (setq show-trailing-whitespace t))
 
 
 ;; Colors in files where it makes sense
@@ -345,23 +346,6 @@ started from a shell."
     (define-key flyspell-mode-map (kbd "C-.") nil)
     (define-key flyspell-mode-map (kbd "C-,") nil)))
 
-; Trailing whitespace is annoying in some modes
-(defvar no-trailing-whitespace-modes '(shell-mode slime-repl-mode text-mode
-                                       fundamental-mode term-mode vc-git-log-view-mode
-                                       calendar-mode magit-popup-mode
-                                       fxrd-mode notmuch-show-mode
-                                       inferior-python-mode cider-repl-mode))
-
-(mapc #'(lambda (x)
-          (let ((mode-hook (intern (concat (symbol-name x) "-hook"))))
-            (add-hook mode-hook '(lambda ()
-                                  (setq show-trailing-whitespace nil)))))
-      no-trailing-whitespace-modes)
-
-
-(add-hook 'objc-mode-hook
-          '(lambda ()
-            (setq c-basic-offset 2)))
 
 (require 'java-settings)
 
@@ -528,6 +512,7 @@ http://blogs.fluidinfo.com/terry/2011/11/10/emacs-buffer-mode-histogram/"
  '(ediff-current-diff-C ((t (:background "#888833" :foreground "black"))))
  '(ediff-even-diff-B ((((class color) (min-colors 16)) (:background "Grey" :foreground "black"))))
  '(error ((t (:background "LightCoral"))))
+ '(org-agenda-current-time ((t (:inherit org-time-grid :foreground "SpringGreen3"))))
  '(region ((((class color) (min-colors 24)) (:background "#00ffff"))))
  '(warning ((t (:background "#a4caff")))))
 
@@ -547,6 +532,7 @@ http://blogs.fluidinfo.com/terry/2011/11/10/emacs-buffer-mode-histogram/"
  '(elpy-modules
    (quote
     (elpy-module-company elpy-module-eldoc elpy-module-pyvenv elpy-module-sane-defaults)))
+ '(epa-pinentry-mode nil)
  '(gc-cons-threshold 100000000)
  '(git-commit-summary-max-length 79)
  '(global-eldoc-mode nil)
@@ -556,6 +542,7 @@ http://blogs.fluidinfo.com/terry/2011/11/10/emacs-buffer-mode-histogram/"
       (:network-server . "talk.google.com")
       (:port . 5223)
       (:connection-type . ssl)))))
+ '(jabber-auto-reconnect t)
  '(magit-log-arguments (quote ("--graph" "--color" "--decorate")))
  '(magit-push-always-verify nil)
  '(magit-tag-arguments (quote ("--annotate")))
@@ -586,9 +573,16 @@ http://blogs.fluidinfo.com/terry/2011/11/10/emacs-buffer-mode-histogram/"
  '(org-agenda-span (quote day))
  '(org-agenda-start-on-weekday nil)
  '(org-agenda-sticky t)
+ '(org-babel-load-languages
+   (quote
+    ((awk . t)
+     (python . t)
+     (clojure . t)
+     (C . t)
+     (emacs-lisp . t))))
  '(package-selected-packages
    (quote
-    (cider tagedit projectile clojure-mode-extra-font-locking slime elixir-mode notmuch markdown-preview-mode elpy puppet-mode latex-preview-pane fxrd-mode ac-geiser geiser window-numbering json-mode gitignore-mode esup feature-mode zenburn-theme yasnippet yaml-mode thrift solarized-theme sass-mode s rainbow-mode pymacs paredit org markdown-mode jedi httpcode go-mode flymake-sass flymake ess diff-hl debbugs clojure-mode ack))))
+    (org-jira cider tagedit projectile clojure-mode-extra-font-locking slime elixir-mode notmuch markdown-preview-mode elpy puppet-mode latex-preview-pane fxrd-mode ac-geiser geiser window-numbering json-mode gitignore-mode esup feature-mode zenburn-theme yasnippet yaml-mode thrift solarized-theme sass-mode s rainbow-mode pymacs paredit org markdown-mode jedi httpcode go-mode flymake-sass flymake ess diff-hl debbugs clojure-mode ack))))
 
 
 ;; (eval-after-load 'cc-mode
