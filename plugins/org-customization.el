@@ -1,5 +1,7 @@
 ;;; Setup and customizations for org-mode
 
+(require 'org-agenda-property)          ; Show properties like :LOCATION: in agenda
+
 ;;; From comments on https://emacs.stackexchange.com/questions/12475/
 (defun msherry/org-save-all-org-buffers ()
   "Save all Org-mode buffers without user confirmation."
