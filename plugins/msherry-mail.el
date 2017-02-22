@@ -182,4 +182,16 @@ https://gist.github.com/dbp/9627194"
 (advice-add 'notmuch-show-insert-msg :after #'msherry-highlight-myself)
 (add-hook 'notmuch-show-hook #'msherry-highlight-myself)
 
+(defun offlineimap-get-password (user host port)
+  ;; TODO: this is probably pretty insecure, maybe even worse than just leaving
+  ;; a cleartext password in .offlineimaprc -- at least that would only expose
+  ;; one password, not potentially every one. Lock this down.
+  (let* ((secret
+          (plist-get (nth 0 (auth-source-search :user user :host host :port port :max 1 :require '(:secret))) :secret))
+         (real-secret (if (functionp secret)
+                          (funcall secret)
+                        secret)))
+    real-secret))
+
+
 (provide 'msherry-mail)
