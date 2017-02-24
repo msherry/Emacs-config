@@ -80,6 +80,8 @@ started from a shell."
              '("melpa-stable" . "http://stable.melpa.org/packages/") t)
 (add-to-list 'package-archives
              '("elpy" . "http://jorgenschaefer.github.io/packages/"))
+(add-to-list 'package-archives
+             '("marmalade" . "http://marmalade-repo.org/packages/"))
 (package-initialize)
 
 ; Others'
@@ -583,7 +585,7 @@ http://blogs.fluidinfo.com/terry/2011/11/10/emacs-buffer-mode-histogram/"
      (emacs-lisp . t))))
  '(package-selected-packages
    (quote
-    (org-agenda-property org-jira cider tagedit projectile clojure-mode-extra-font-locking slime notmuch markdown-preview-mode elpy puppet-mode latex-preview-pane fxrd-mode ac-geiser geiser window-numbering json-mode gitignore-mode esup feature-mode zenburn-theme yasnippet yaml-mode thrift solarized-theme sass-mode s rainbow-mode pymacs paredit markdown-mode jedi httpcode go-mode flymake-sass flymake ess diff-hl debbugs clojure-mode ack))))
+    (clojure-mode org-agenda-property org-jira cider tagedit projectile clojure-mode-extra-font-locking slime elixir-mode notmuch markdown-preview-mode elpy puppet-mode latex-preview-pane fxrd-mode ac-geiser geiser window-numbering json-mode gitignore-mode esup feature-mode zenburn-theme yasnippet yaml-mode thrift solarized-theme sass-mode s rainbow-mode pymacs paredit org markdown-mode jedi httpcode go-mode flymake-sass flymake ess diff-hl debbugs ack))))
 
 
 ;; (eval-after-load 'cc-mode

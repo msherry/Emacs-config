@@ -40,7 +40,8 @@
   (paredit-mode)
   (local-set-key (kbd "C-.") #'find-function-at-point))
 
-(defvar lisp-editing-modes '(emacs-lisp-mode scheme-mode clojure-mode geiser-repl-mode))
+(defvar lisp-editing-modes '(emacs-lisp-mode scheme-mode clojure-mode
+                             geiser-repl-mode cider-repl-mode))
 
 (mapc '(lambda (x)
         (let ((mode-hook (intern (concat (symbol-name x) "-hook"))))
@@ -55,7 +56,8 @@
     ; off eldoc and use the better built-in(?) doc mode
     (eldoc-mode nil)))
 
-(add-hook 'lisp-interaction-mode-hook 'turn-on-eldoc-mode)
-(add-hook 'ielm-mode-hook 'turn-on-eldoc-mode)
+(add-hook 'lisp-interaction-mode-hook #'turn-on-eldoc-mode)
+(add-hook 'ielm-mode-hook #'turn-on-eldoc-mode)
+(add-hook 'cider-repl-mode-hook #'turn-on-eldoc-mode)
 
 (provide 'lisp-customization)
