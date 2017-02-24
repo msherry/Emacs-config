@@ -587,7 +587,7 @@ http://blogs.fluidinfo.com/terry/2011/11/10/emacs-buffer-mode-histogram/"
      (emacs-lisp . t))))
  '(package-selected-packages
    (quote
-    (magit virtualenv python-mode org-agenda-property org-jira cider tagedit projectile clojure-mode-extra-font-locking slime notmuch markdown-preview-mode elpy puppet-mode latex-preview-pane fxrd-mode ac-geiser geiser window-numbering json-mode gitignore-mode esup feature-mode zenburn-theme yasnippet yaml-mode thrift solarized-theme sass-mode s rainbow-mode pymacs paredit org markdown-mode jedi httpcode go-mode flymake-sass flymake ess diff-hl debbugs ack))))
+    (ac-geiser ack cider clojure-mode-extra-font-locking debbugs diff-hl elpy ess esup feature-mode flymake flymake-sass fxrd-mode geiser gitignore-mode go-mode httpcode jedi json-mode latex-preview-pane magit markdown-mode markdown-preview-mode notmuch org org-agenda-property org-jira paredit projectile puppet-mode pymacs python-mode rainbow-mode s sass-mode slime solarized-theme tagedit thrift virtualenv window-numbering yaml-mode yasnippet zenburn-theme))))
 
 
 ;; (eval-after-load 'cc-mode
