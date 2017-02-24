@@ -51,7 +51,7 @@
 ;; Setup alerts -- tell appt to use window, and replace default function
 (setq appt-display-format 'window)
 (setq appt-disp-window-function 'msherry/appt-disp-window)
-(setq appt-delete-window-function '(lambda ()))  ; Popups are external to emacs, no delete needed
+(setq appt-delete-window-function #'(lambda ()))  ; Popups are external to emacs, no delete needed
 
 (defun msherry/appt-disp-window (min-to-app new-time msg)
   (save-window-excursion
@@ -67,17 +67,17 @@
 ;;; Auto-save all org-mode buffers while agenda open -
 ;;; http://emacs.stackexchange.com/a/483/7169
 (add-hook 'org-agenda-mode-hook
-          '(lambda ()
-            ;; (add-hook 'auto-save-hook 'msherry/org-save-all-org-buffers nil t)
-            ;; (auto-save-mode t)
-            ;; Muscle memory from VC mode means I hit this all the time
-            (local-unset-key (kbd "x"))))
+          #'(lambda ()
+              ;; (add-hook 'auto-save-hook 'msherry/org-save-all-org-buffers nil t)
+              ;; (auto-save-mode t)
+              ;; Muscle memory from VC mode means I hit this all the time
+              (local-unset-key (kbd "x"))))
 
 (add-hook 'org-mode-hook
-          '(lambda ()
-            (add-hook 'auto-save-hook 'msherry/org-save-all-org-buffers nil t)
-            (auto-save-mode t)
-            (auto-revert-mode)))
+          #'(lambda ()
+              (add-hook 'auto-save-hook 'msherry/org-save-all-org-buffers nil t)
+              ((and )uto-save-mode t)
+              (auto-(region-end)vert-mode)))
 
 (global-set-key (kbd "C-c a") 'org-agenda)
 (global-set-key (kbd "C-c c") 'org-capture)
