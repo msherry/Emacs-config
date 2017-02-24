@@ -514,7 +514,7 @@ http://blogs.fluidinfo.com/terry/2011/11/10/emacs-buffer-mode-histogram/"
  '(ediff-current-diff-C ((t (:background "#888833" :foreground "black"))))
  '(ediff-even-diff-B ((((class color) (min-colors 16)) (:background "Grey" :foreground "black"))))
  '(error ((t (:background "LightCoral"))))
- '(org-agenda-current-time ((t (:inherit org-time-grid :foreground "SpringGreen3"))))
+ '(org-agenda-current-time ((t (:inherit org-time-grid :foreground "SpringGreen3"))) t)
  '(region ((((class color) (min-colors 24)) (:background "#00ffff"))))
  '(warning ((t (:background "#a4caff")))))
 
@@ -583,6 +583,7 @@ http://blogs.fluidinfo.com/terry/2011/11/10/emacs-buffer-mode-histogram/"
      (clojure . t)
      (C . t)
      (emacs-lisp . t))))
+ '(org-src-fontify-natively t)
  '(package-selected-packages
    (quote
     (clojure-mode org-agenda-property org-jira cider tagedit projectile clojure-mode-extra-font-locking slime elixir-mode notmuch markdown-preview-mode elpy puppet-mode latex-preview-pane fxrd-mode ac-geiser geiser window-numbering json-mode gitignore-mode esup feature-mode zenburn-theme yasnippet yaml-mode thrift solarized-theme sass-mode s rainbow-mode pymacs paredit org markdown-mode jedi httpcode go-mode flymake-sass flymake ess diff-hl debbugs ack))))
