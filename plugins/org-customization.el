@@ -76,8 +76,8 @@
 (add-hook 'org-mode-hook
           #'(lambda ()
               (add-hook 'auto-save-hook 'msherry/org-save-all-org-buffers nil t)
-              ((and )uto-save-mode t)
-              (auto-(region-end)vert-mode)))
+              (auto-save-mode t)
+              (auto-revert-mode)))
 
 (global-set-key (kbd "C-c a") 'org-agenda)
 (global-set-key (kbd "C-c c") 'org-capture)
