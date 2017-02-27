@@ -95,6 +95,7 @@ started from a shell."
 (require 'erlang-start)
 (require 'flymake-point) ; shows errors in the minibuffer when highlighted
 (require 'highlight-beyond-fill-column)
+(require 'jabber-keymap) ; This loads inconsistently on its own
 (require 'magit)
 (require 'paredit)
 (require 'rainbow-mode)
