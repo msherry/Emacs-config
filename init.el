@@ -579,6 +579,7 @@ http://blogs.fluidinfo.com/terry/2011/11/10/emacs-buffer-mode-histogram/"
  '(org-agenda-span (quote day))
  '(org-agenda-start-on-weekday nil)
  '(org-agenda-sticky t)
+ '(org-agenda-timegrid-use-ampm t)
  '(org-babel-load-languages
    (quote
     ((awk . t)
