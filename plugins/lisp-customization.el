@@ -43,9 +43,9 @@
 (defvar lisp-editing-modes '(emacs-lisp-mode scheme-mode clojure-mode
                              geiser-repl-mode cider-repl-mode))
 
-(mapc '(lambda (x)
-        (let ((mode-hook (intern (concat (symbol-name x) "-hook"))))
-          (add-hook mode-hook #'lisp-editing-hook)))
+(mapc #'(lambda (x)
+          (let ((mode-hook (intern (concat (symbol-name x) "-hook"))))
+            (add-hook mode-hook #'lisp-editing-hook)))
       lisp-editing-modes)
 
 (eval-after-load "slime"

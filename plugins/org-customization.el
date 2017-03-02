@@ -139,6 +139,13 @@
     ;; No org/ directory, avoid setup
     (message "You seem to be missing an org/ directory in your .emacs.d -- please check for this to enable org-mode agenda tools."))
 
+;;; Auto-reload generated images in org-mode when re-executing a babel code block
+;;; http://emacs.stackexchange.com/a/9813/7169
+(defun shk-fix-inline-images ()
+  (when org-inline-image-overlays
+    (org-redisplay-inline-images)))
+(add-hook 'org-babel-after-execute-hook 'shk-fix-inline-images)
+
 (defun msherry-org-agenda-get-property (property)
   "Get a property for the current headline."
   (org-agenda-check-no-diary)
