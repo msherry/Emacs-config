@@ -262,6 +262,8 @@ started from a shell."
 ;;; On Mac OS, Ctrl-(arrow) changes desktops, so rebind these for paredit
 (define-key paredit-mode-map (kbd "s-<right>") #'paredit-forward-slurp-sexp)
 (define-key paredit-mode-map (kbd "s-<left>") #'paredit-forward-barf-sexp)
+;; C-j is useful in scratch buffers, and I don't use the paredit version
+(define-key paredit-mode-map (kbd "C-j") nil)
 
 ; Util functions for dired
 (eval-after-load "dired"
