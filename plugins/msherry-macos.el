@@ -41,4 +41,11 @@
         ))
 
 
+;;; Use https://github.com/leoliu/play-sound-osx to provide sound support on
+;;; Mac OS
+(unless (and (fboundp 'play-sound-internal)
+             (subrp (symbol-function 'play-sound-internal)))
+  (require 'play-sound))
+
+
 (provide 'msherry-macos)
