@@ -47,6 +47,13 @@ Display the version of Elpy.
 
 ;;;***
 
+;;;### (autoloads nil "elpy-profile" "elpy-profile.el" (0 0 0 0))
+;;; Generated autoloads from elpy-profile.el
+
+(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "elpy-profile" '("elpy-profile-")))
+
+;;;***
+
 ;;;### (autoloads nil "elpy-refactor" "elpy-refactor.el" (0 0 0 0))
 ;;; Generated autoloads from elpy-refactor.el
 
