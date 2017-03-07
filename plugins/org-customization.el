@@ -123,12 +123,12 @@
           (org-tags-match-list-sublevels t)))))
 
 (setq org-capture-templates
-      (quote (("t" "todo" entry (file "~/.emacs.d/org/refile.org")
-                   "* TODO %?\n%U\n%a\n" :clock-in t :clock-resume t)
-              ("n" "note" entry (file "~/.emacs.d/org/refile.org")
-                   "* %? :NOTE:\n%U\n%a\n" :clock-in t :clock-resume t)
-              ("m" "Meeting" entry (file "~/.emacs.d/org/refile.org")
-                   "* %? :MEETING:\n%U" ))))
+      '(("t" "todo" entry (file "~/.emacs.d/org/refile.org")
+         "* TODO %?\n%U\n%a\n" :clock-in t :clock-resume t)
+        ("n" "note" entry (file "~/.emacs.d/org/refile.org")
+         "* %? :NOTE:\n%U\n%a\n" :clock-in t :clock-resume t)
+        ("m" "Meeting" entry (file "~/.emacs.d/org/refile.org")
+         "* %? :MEETING:\n%U" )))
 
 ;;; Agenda file setup -- skip if we can't find the agenda directory
 (if (file-accessible-directory-p "~/.emacs.d/org")
