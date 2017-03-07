@@ -83,6 +83,14 @@ notmuch buffers exist, run `notmuch'.
 
 ;;;***
 
+;;;### (autoloads nil "notmuch-compat" "notmuch-compat.el" (0 0 0
+;;;;;;  0))
+;;; Generated autoloads from notmuch-compat.el
+
+(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "notmuch-compat" '("notmuch-message--fold-long-headers")))
+
+;;;***
+
 ;;;### (autoloads nil "notmuch-crypto" "notmuch-crypto.el" (0 0 0
 ;;;;;;  0))
 ;;; Generated autoloads from notmuch-crypto.el
@@ -231,8 +239,7 @@ matched.
 
 ;;;***
 
-;;;### (autoloads nil nil ("notmuch-compat.el" "notmuch-pkg.el")
-;;;;;;  (0 0 0 0))
+;;;### (autoloads nil nil ("notmuch-pkg.el") (0 0 0 0))
 
 ;;;***
 
