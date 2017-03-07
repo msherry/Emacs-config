@@ -519,6 +519,8 @@ http://blogs.fluidinfo.com/terry/2011/11/10/emacs-buffer-mode-histogram/"
  '(ediff-current-diff-C ((t (:background "#888833" :foreground "black"))))
  '(ediff-even-diff-B ((((class color) (min-colors 16)) (:background "Grey" :foreground "black"))))
  '(error ((t (:background "LightCoral"))))
+ '(font-lock-constant-face ((t nil)))
+ '(font-lock-variable-name-face ((t nil)))
  '(org-agenda-current-time ((t (:inherit org-time-grid :foreground "SpringGreen3"))))
  '(region ((((class color) (min-colors 24)) (:background "#00ffff"))))
  '(warning ((t (:background "#a4caff")))))
