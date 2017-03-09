@@ -554,7 +554,7 @@ If NO-ERROR is non-nil, show messages instead of throwing an error."
         (prog1 (list :proc (open-network-stream "nrepl-connection" nil host port)
                      :host host :port port)
           (message "[nREPL] Direct connection to %s:%s established" host port))
-      (error (let ((msg "[nREPL] Direct connection to %s:%s failed" host port))
+      (error (let ((msg (format "[nREPL] Direct connection to %s:%s failed" host port)))
                (if no-error
                    (message msg)
                  (error msg))
@@ -1115,6 +1115,11 @@ operations.")
 TYPE is either request or response.  The message is logged to a buffer
 described by `nrepl-message-buffer-name-template'."
   (when nrepl-log-messages
+    ;; append a time-stamp to the message before logging it
+    ;; the time-stamps are quite useful for debugging
+    (setq msg (cons (car msg)
+                    (lax-plist-put (cdr msg) "time-stamp"
+                                   (format-time-string "%Y-%m-%0d %H:%M:%S.%N"))))
     (with-current-buffer (nrepl-messages-buffer (current-buffer))
       (setq buffer-read-only nil)
       (when (> (buffer-size) nrepl-message-buffer-max-size)

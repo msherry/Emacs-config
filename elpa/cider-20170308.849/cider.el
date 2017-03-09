@@ -111,7 +111,7 @@ version from the CIDER package or library.")
   :group 'cider)
 
 (defcustom cider-lein-parameters
-  "repl :headless"
+  "repl :headless :host ::"
   "Params passed to Leiningen to start an nREPL server via `cider-jack-in'."
   :type 'string
   :group 'cider)
@@ -131,7 +131,7 @@ version from the CIDER package or library.")
   :package-version '(cider . "0.14.0"))
 
 (defcustom cider-boot-parameters
-  "repl -s wait"
+  "repl -s -H :: wait"
   "Params passed to boot to start an nREPL server via `cider-jack-in'."
   :type 'string
   :group 'cider
@@ -857,16 +857,20 @@ message in the REPL area."
 This function is appended to `nrepl-connected-hook' in the client process
 buffer."
   ;; `nrepl-connected-hook' is run in the connection buffer
-  (cider-make-connection-default (current-buffer))
-  (cider-repl-init (current-buffer))
-  (cider--check-required-nrepl-version)
-  (cider--check-clojure-version-supported)
-  (cider--check-middleware-compatibility)
-  (cider--debug-init-connection)
-  (cider--subscribe-repl-to-server-out)
-  (when cider-auto-mode
-    (cider-enable-on-existing-clojure-buffers))
-  (run-hooks 'cider-connected-hook))
+
+  ;; `cider-enlighten-mode' changes eval to include the debugger, so we inhibit
+  ;; it here as the debugger isn't necessarily initialized yet
+  (let ((cider-enlighten-mode nil))
+    (cider-make-connection-default (current-buffer))
+    (cider-repl-init (current-buffer))
+    (cider--check-required-nrepl-version)
+    (cider--check-clojure-version-supported)
+    (cider--check-middleware-compatibility)
+    (cider--debug-init-connection)
+    (cider--subscribe-repl-to-server-out)
+    (when cider-auto-mode
+      (cider-enable-on-existing-clojure-buffers))
+    (run-hooks 'cider-connected-hook)))
 
 (defun cider--disconnected-handler ()
   "Cleanup after nREPL connection has been lost or closed.
