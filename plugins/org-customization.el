@@ -37,6 +37,7 @@
     (org-agenda-to-appt)))
 
 ;; Run once, activate and schedule refresh
+;;; http://doc.norang.ca/org-mode.html
 (msherry/org-agenda-to-appt)
 (appt-activate t)
 (run-at-time "24:01" nil 'msherry/org-agenda-to-appt)
@@ -81,6 +82,7 @@
 
 (global-set-key (kbd "C-c a") 'org-agenda)
 (global-set-key (kbd "C-c c") 'org-capture)
+(global-set-key (kbd "C-c l") 'org-store-link)
 
 
 ;;; Persist clock history across emacs runs -
@@ -128,7 +130,7 @@
         ("n" "note" entry (file "~/.emacs.d/org/refile.org")
          "* %? :NOTE:\n%U\n%a\n" :clock-in t :clock-resume t)
         ("m" "Meeting" entry (file "~/.emacs.d/org/refile.org")
-         "* %? :MEETING:\n%U" )))
+         "* %? :MEETING:\n%U" :clock-in t :clock-resume t)))
 
 ;;; Agenda file setup -- skip if we can't find the agenda directory
 (if (file-accessible-directory-p "~/.emacs.d/org")
@@ -145,6 +147,16 @@
   (when org-inline-image-overlays
     (org-redisplay-inline-images)))
 (add-hook 'org-babel-after-execute-hook 'shk-fix-inline-images)
+
+;; Remove empty LOGBOOK drawers on clock out
+;; http://doc.norang.ca/org-mode.html
+(defun bh/remove-empty-drawer-on-clock-out ()
+  (interactive)
+  (save-excursion
+    (beginning-of-line 0)
+    (org-remove-empty-drawer-at "LOGBOOK" (point))))
+
+(add-hook 'org-clock-out-hook 'bh/remove-empty-drawer-on-clock-out 'append)
 
 (defun msherry-org-agenda-get-property (property)
   "Get a property for the current headline."
