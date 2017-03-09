@@ -256,6 +256,7 @@ started from a shell."
 (global-set-key (kbd "C-x \\") #'align-regexp)
 (global-set-key (kbd "M-/") #'hippie-expand) ; better than dabbrev
 (global-set-key (kbd "C-M-z") #'ack)
+
 ; Readline in shell mode
 (define-key comint-mode-map [up] #'comint-previous-input)
 (define-key comint-mode-map [down] #'comint-next-input)
