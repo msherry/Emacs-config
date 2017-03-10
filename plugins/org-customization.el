@@ -1,6 +1,7 @@
 ;;; Setup and customizations for org-mode
 
 (require 'org-agenda-property)          ; Show properties like :LOCATION: in agenda
+(require 'org-notmuch)                  ; Save links to emails
 
 ;;; From comments on https://emacs.stackexchange.com/questions/12475/
 (defun msherry/org-save-all-org-buffers ()
@@ -147,16 +148,6 @@
   (when org-inline-image-overlays
     (org-redisplay-inline-images)))
 (add-hook 'org-babel-after-execute-hook 'shk-fix-inline-images)
-
-;; Remove empty LOGBOOK drawers on clock out
-;; http://doc.norang.ca/org-mode.html
-(defun bh/remove-empty-drawer-on-clock-out ()
-  (interactive)
-  (save-excursion
-    (beginning-of-line 0)
-    (org-remove-empty-drawer-at "LOGBOOK" (point))))
-
-(add-hook 'org-clock-out-hook 'bh/remove-empty-drawer-on-clock-out 'append)
 
 (defun msherry-org-agenda-get-property (property)
   "Get a property for the current headline."
