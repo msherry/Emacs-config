@@ -113,8 +113,14 @@
           (alltodo "")
           (tags "REFILE"
                 ((org-agenda-overriding-header "To refile")))))
-        ("c" "Agenda and all unscheduled TODO's / unfiled"
+        ("c" "Agenda and all unscheduled/everyday TODO's / unfiled"
          ((agenda "")
+          (tags "EVERYDAY"
+                ((org-agenda-overriding-header "Every day")
+                 (org-agenda-skip-function
+                  ;; Skip the top-level headline itself
+                  '(org-agenda-skip-entry-if 'regexp "Everyday"))))
+          ;; All items that are not EVERYDAY items (which have their own section)
           (todo ""
                 ((org-agenda-overriding-header "Unscheduled TODOs")
                  (org-agenda-skip-function
@@ -126,8 +132,12 @@
           (org-tags-match-list-sublevels t)))))
 
 (setq org-capture-templates
-      '(("t" "todo" entry (file "~/.emacs.d/org/refile.org")
+      '(("t" "TODO" entry (file "~/.emacs.d/org/refile.org")
          "* TODO %?\n%U\n%a\n" :clock-in t :clock-resume t)
+        ("w" "work TODO" entry (file+headline "~/.emacs.d/org/work.org" "Tasks")
+         "** TODO %?\n%a\n" :clock-in t :clock-resume t)
+        ("p" "personal TODO" entry (file+headline "~/.emacs.d/org/personal.org" "Tasks")
+         "** TODO %?\n%a\n" :clock-in t :clock-resume t)
         ("n" "note" entry (file "~/.emacs.d/org/refile.org")
          "* %? :NOTE:\n%U\n%a\n" :clock-in t :clock-resume t)
         ("m" "Meeting" entry (file "~/.emacs.d/org/refile.org")
