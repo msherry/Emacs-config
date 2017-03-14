@@ -193,12 +193,13 @@ http://stackoverflow.com/a/17067170/52550"
 (org-clock-persistence-insinuate)
 
 ;;; MobileOrg - https://mobileorg.github.io/
-(require 'org-mobile)
-(org-mobile-pull)
-
+; These need to be set before org-mobile loads
 (setq org-directory "~/.emacs.d/org")
 (setq org-mobile-inbox-for-pull "~/.emacs.d/org/flagged.org")
 (setq org-mobile-directory "~/Dropbox/Apps/MobileOrg")
+
+(require 'org-mobile)
+(org-mobile-pull)
 
 ;; Auto-push to MobileOrg on file saves, w/delay
 ;; https://github.com/matburt/mobileorg-android/wiki/FAQ
