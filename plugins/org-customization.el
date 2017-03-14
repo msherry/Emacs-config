@@ -48,12 +48,15 @@
 (setq appt-display-interval 5)
 
 ;; Update appt each time agenda opened
-(add-hook 'org-finalize-agenda-hook 'msherry/org-agenda-to-appt)
+(add-hook 'org-finalize-agenda-hook #'msherry/org-agenda-to-appt)
 
 ;; Setup alerts -- tell appt to use window, and replace default function
 (setq appt-display-format 'window)
-(setq appt-disp-window-function 'msherry/appt-disp-window)
+(setq appt-disp-window-function #'msherry/appt-disp-window)
 (setq appt-delete-window-function #'(lambda ()))  ; Popups are external to emacs, no delete needed
+
+;; Limit inline image width
+(setq org-image-actual-width '(300))
 
 (defun msherry/appt-disp-window (min-to-app new-time msg)
   (save-window-excursion
@@ -108,12 +111,7 @@
                              #("----------------" 0 16 (org-heading t))
                              (800 1000 1200 1400 1600 1800 2000)))
 (setq org-agenda-custom-commands
-      '(("n" "Agenda and all TODO's (including scheduled) / unfiled"
-         ((agenda "")
-          (alltodo "")
-          (tags "REFILE"
-                ((org-agenda-overriding-header "To refile")))))
-        ("c" "Agenda and all unscheduled/everyday TODO's / unfiled"
+      '(("c" "Agenda and all unscheduled/everyday TODO's / unfiled"
          ((agenda "")
           (tags "EVERYDAY"
                 ((org-agenda-overriding-header "Every day")
@@ -194,5 +192,51 @@ http://stackoverflow.com/a/17067170/52550"
 
 (org-clock-persistence-insinuate)
 
+;;; MobileOrg - https://mobileorg.github.io/
+(require 'org-mobile)
+(org-mobile-pull)
+
+(setq org-directory "~/.emacs.d/org")
+(setq org-mobile-inbox-for-pull "~/.emacs.d/org/flagged.org")
+(setq org-mobile-directory "~/Dropbox/Apps/MobileOrg")
+
+;; Auto-push to MobileOrg on file saves, w/delay
+;; https://github.com/matburt/mobileorg-android/wiki/FAQ
+(defvar org-mobile-push-timer nil
+  "Timer that `org-mobile-push-timer' uses to reschedule itself, or nil.")
+
+(defun org-mobile-push-with-delay (secs)
+  (when org-mobile-push-timer
+    (cancel-timer org-mobile-push-timer))
+  (setq org-mobile-push-timer
+        (run-with-idle-timer
+         (* 1 secs) nil 'org-mobile-push)))
+
+(add-hook 'after-save-hook
+          #'(lambda ()
+              (when (eq major-mode 'org-mode)
+                (dolist (file (org-mobile-files-alist))
+                  (if (string= (file-truename (expand-file-name (car file)))
+                               (file-truename (buffer-file-name)))
+                      (org-mobile-push-with-delay 30))))))
+
+;; Auto-pull changes on Dropbox change notifications
+(defun install-monitor (file secs)
+  (run-with-timer
+   0 secs
+   (lambda (f p)
+     (unless (< p (float-time (time-since (elt (file-attributes f) 5))))
+       (org-mobile-pull)))
+   file secs))
+
+(install-monitor (file-truename
+                  (concat
+                   (file-name-as-directory org-mobile-directory)
+                   org-mobile-capture-file))
+                 60)
+
+;; Do a pull every 5 minutes to circumvent problems with timestamping
+;; (ie. dropbox bugs)
+(run-with-timer 0 (* 5 60) 'org-mobile-pull)
 
 (provide 'org-customization)
