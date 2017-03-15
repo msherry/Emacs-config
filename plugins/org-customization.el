@@ -240,4 +240,13 @@ http://stackoverflow.com/a/17067170/52550"
 ;; (ie. dropbox bugs)
 (run-with-timer 0 (* 5 60) 'org-mobile-pull)
 
+
+;;; Org-contrib stuff
+(require 'ox-extra)
+
+;; Enable :ignore: tags to ignore headlines while keeping their content in exports
+;; http://emacs.stackexchange.com/a/17677/7169
+(ox-extras-activate '(ignore-headlines))
+
+
 (provide 'org-customization)
