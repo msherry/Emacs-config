@@ -64,7 +64,7 @@
      (concat
       "terminal-notifier"
       " -title 'Appointment'"
-      " -message '" msg "'"
+      " -message " (shell-quote-argument msg)
       " -sound Bottle"
       " -execute \"/usr/local/bin/emacsclient --eval '(org-agenda nil \\\"c\\\")'\"")
      nil nil)))
