@@ -551,6 +551,9 @@ http://blogs.fluidinfo.com/terry/2011/11/10/emacs-buffer-mode-histogram/"
       (:network-server . "talk.google.com")
       (:port . 5223)
       (:connection-type . ssl)))))
+ '(jabber-alert-message-hooks
+   (quote
+    (jabber-message-wave jabber-message-echo jabber-message-scroll)))
  '(jabber-alert-message-wave "/System/Library/Sounds/Bottle.aiff")
  '(jabber-auto-reconnect t)
  '(magit-log-arguments (quote ("--graph" "--color" "--decorate")))
