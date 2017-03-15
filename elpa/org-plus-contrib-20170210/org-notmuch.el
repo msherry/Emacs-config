@@ -1,5 +1,3 @@
-;; http://orgmode.org/w/?p=org-mode.git;a=blob_plain;f=contrib/lisp/org-notmuch.el;hb=HEAD
-
 ;;; org-notmuch.el --- Support for links to notmuch messages from within Org-mode
 
 ;; Copyright (C) 2010-2014  Matthieu Lemerre

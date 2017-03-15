@@ -80,6 +80,8 @@ started from a shell."
              '("melpa-stable" . "http://stable.melpa.org/packages/") t)
 (add-to-list 'package-archives
              '("elpy" . "http://jorgenschaefer.github.io/packages/"))
+(add-to-list 'package-archives
+             '("org" . "http://orgmode.org/elpa/") t)
 ;; Marmalade is less up-to-date than melpa and is currently giving certificate
 ;; errors
 ;; (add-to-list 'package-archives
@@ -608,14 +610,16 @@ http://blogs.fluidinfo.com/terry/2011/11/10/emacs-buffer-mode-histogram/"
      (ruby . t)
      (shell . t))))
  '(org-clock-idle-time 15)
+ '(org-export-with-sub-superscripts (quote {}))
  '(org-image-actual-width nil)
  '(org-mobile-agendas (quote ("c")))
  '(org-mobile-files-exclude-regexp "-cal.org$")
  '(org-mobile-force-id-on-agenda-items nil)
  '(org-src-tab-acts-natively t)
+ '(org-use-sub-superscripts (quote {}))
  '(package-selected-packages
    (quote
-    (ac-geiser ack auctex cider clojure-mode clojure-mode-extra-font-locking diff-hl elpy ess esup feature-mode flymake flymake-sass fxrd-mode geiser gitignore-mode go-mode graphviz-dot-mode httpcode jabber jedi json-mode latex-preview-pane magit markdown-mode markdown-preview-mode notmuch org org-agenda-property org-jira org-pomodoro paredit projectile puppet-mode pymacs python-mode rainbow-mode s sass-mode slime solarized-theme tagedit thrift virtualenv window-numbering yaml-mode yasnippet zenburn-theme))))
+    (ac-geiser ack auctex cider clojure-mode clojure-mode-extra-font-locking diff-hl elpy ess esup feature-mode flymake flymake-sass fxrd-mode geiser gitignore-mode go-mode graphviz-dot-mode httpcode jabber jedi json-mode latex-preview-pane magit markdown-mode markdown-preview-mode notmuch org-agenda-property org-jira org-plus-contrib org-pomodoro paredit projectile puppet-mode pymacs python-mode rainbow-mode s sass-mode slime solarized-theme tagedit thrift virtualenv window-numbering yaml-mode yasnippet zenburn-theme))))
 
 
 ;; (eval-after-load 'cc-mode
