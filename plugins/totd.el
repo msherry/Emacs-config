@@ -26,6 +26,4 @@ Found at http://emacs.wordpress.com/2007/06/21/tip-of-the-day/, then modified"
   (interactive)
   (cancel-timer jao-totd-timer))
 
-(global-set-key (kbd "C-c t") 'totd)
-
 (provide 'totd)
