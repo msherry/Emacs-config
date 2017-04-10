@@ -58,16 +58,20 @@
 ;; Limit inline image width
 (setq org-image-actual-width '(300))
 
+;; Killswitch for org-agenda notifications
+(setq msherry-org-display-notifications t)
+
 (defun msherry/appt-disp-window (min-to-app new-time msg)
-  (save-window-excursion
-    (shell-command
-     (concat
-      "terminal-notifier"
-      " -title 'Appointment'"
-      " -message " (shell-quote-argument msg)
-      " -sound Bottle"
-      " -execute \"/usr/local/bin/emacsclient --eval '(org-agenda nil \\\"c\\\")'\"")
-     nil nil)))
+  (if msherry-org-display-notifications
+      (save-window-excursion
+        (shell-command
+         (concat
+          "terminal-notifier"
+          " -title 'Appointment'"
+          " -message " (shell-quote-argument msg)
+          " -sound Bottle"
+          " -execute \"/usr/local/bin/emacsclient --eval '(org-agenda nil \\\"c\\\")'\"")
+         nil nil))))
 
 ;;; Auto-save all org-mode buffers while agenda open -
 ;;; http://emacs.stackexchange.com/a/483/7169
