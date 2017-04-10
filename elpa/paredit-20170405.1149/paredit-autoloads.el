@@ -22,6 +22,8 @@ Turn on pseudo-structural editing of Lisp code.
 
 \(fn)" t nil)
 
+(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "paredit" '("paredit-" "?\\" "disable-paredit-mode")))
+
 ;;;***
 
 ;; Local Variables:
