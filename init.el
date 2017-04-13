@@ -153,6 +153,8 @@ started from a shell."
 (yas-global-mode 1)
 (yas-load-directory (concat expanded-user-emacs-directory "snippets"))
 
+(auto-insert-mode 1)
+
 ;; Enable preview-latex
 (add-hook 'LaTeX-mode-hook 'LaTeX-preview-setup)
 
