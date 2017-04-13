@@ -144,11 +144,17 @@ With prefix, goes to the REPL buffer afterwards (as
 
 With a prefix, revert the effect of `geiser-mode-eval-last-sexp-to-buffer' "
   (interactive "P")
-  (let* ((ret (geiser-eval-region (save-excursion (backward-sexp) (point))
-                                  (point)
-                                  nil
-                                  t
-                                  print-to-buffer-p))
+  (let* (bosexp
+         (eosexp (save-excursion (backward-sexp)
+                                 (setq bosexp (point))
+                                 (forward-sexp)
+                                 (point)))
+         (ret (save-excursion
+                (geiser-eval-region bosexp ;beginning of sexp
+                                    eosexp ;end of sexp
+                                    nil
+                                    t
+                                    print-to-buffer-p)))
 	 (err (geiser-eval--retort-error ret))
 	 (will-eval-to-buffer (if print-to-buffer-p
 				  (not geiser-mode-eval-last-sexp-to-buffer)
