@@ -1303,11 +1303,11 @@ To add this command to the push popup add this to your init file:
 
   (with-eval-after-load \\='magit-remote
     (magit-define-popup-action \\='magit-push-popup ?P
-      'magit-push-implicitly--desc
-      'magit-push-implicitly ?p t))
+      \\='magit-push-implicitly--desc
+      \\='magit-push-implicitly ?p t))
 
 The function `magit-push-implicitly--desc' attempts to predict
-what this command will do, the value it returns is displayed in
+what this command will do.  The value it returns is displayed in
 the popup buffer.
 
 \(fn ARGS)" t nil)
@@ -1327,8 +1327,8 @@ To add this command to the push popup add this to your init file:
 
   (with-eval-after-load \\='magit-remote
     (magit-define-popup-action \\='magit-push-popup ?r
-      'magit-push-to-remote--desc
-      'magit-push-to-remote ?p t))
+      \\='magit-push-to-remote--desc
+      \\='magit-push-to-remote ?p t))
 
 \(fn REMOTE ARGS)" t nil)
  (autoload 'magit-patch-popup "magit-remote" nil t)
@@ -1801,7 +1801,8 @@ Extract the history of the subtree PREFIX.
 ;;; Generated autoloads from magit-utils.el
 
 (autoload 'magit-emacs-Q-command "magit-utils" "\
-
+Show a shell command that runs an uncustomized Emacs with only Magit loaded.
+See info node `(magit)Debugging Tools' for more information.
 
 \(fn)" t nil)
 

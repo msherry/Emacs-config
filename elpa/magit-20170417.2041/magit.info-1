@@ -63,6 +63,7 @@ itself deserve to be called porcelains.
 * Customizing::
 * Plumbing::
 * FAQ::
+* Debugging Tools::
 * Keystroke Index::
 * Command Index::
 * Function Index::
@@ -531,6 +532,9 @@ install the gitman info manual?.
 
    If you are completely new to Magit then see *note Getting Started:
 Getting Started.
+
+   If you run into problems, then please see the *note FAQ: FAQ.  Also
+see the *note Debugging Tools: Debugging Tools.
 
    And last but not least please consider making a donation, to ensure
 that I can keep working on Magit.  See <https://magit.vc/donations>.
@@ -1721,8 +1725,9 @@ one you think you are using.
 
 ‘M-x magit-version’     (‘magit-version’)
 
-     Shows the currently used versions of Magit, Git, and Emacs in the
-     echo area.  Non-interactively this just returns the Magit version.
+     This command shows the currently used versions of Magit, Git, and
+     Emacs in the echo area.  Non-interactively this just returns the
+     Magit version.
 
    When the ‘system-type’ is ‘windows-nt’, then ‘magit-git-executable’
 is set to an absolute path when Magit is first loaded.  This is
@@ -7324,7 +7329,7 @@ that if you do not get this right, this will in some cases look to users
 like bugs in Magit - so please do it right or not at all.
 
 
-File: magit.info,  Node: FAQ,  Next: Keystroke Index,  Prev: Plumbing,  Up: Top
+File: magit.info,  Node: FAQ,  Next: Debugging Tools,  Prev: Plumbing,  Up: Top
 
 Appendix A FAQ
 **************
@@ -7333,6 +7338,8 @@ The next two nodes lists frequently asked questions.  For a list of
 frequently *and recently* asked questions, i.e.  questions that haven’t
 made it into the manual yet, see
 <https://github.com/magit/magit/wiki/FAQ>.
+
+   Please also use the *note Debugging Tools: Debugging Tools.
 
 * Menu:
 
@@ -7622,9 +7629,55 @@ can work around the problem by setting
 Google’s ‘8.8.8.8’) may also be sufficient to work around the issue.
 
 
-File: magit.info,  Node: Keystroke Index,  Next: Command Index,  Prev: FAQ,  Up: Top
+File: magit.info,  Node: Debugging Tools,  Next: Keystroke Index,  Prev: FAQ,  Up: Top
 
-Appendix B Keystroke Index
+B Debugging Tools
+*****************
+
+Magit and its dependencies provide a few debugging tools, and we
+appreciate it very much if you use those tools before reporting an
+issue.  Please include all relevant output when reporting an issue.
+
+‘M-x magit-version’     (‘magit-version’)
+
+     This command shows the currently used versions of Magit, Git, and
+     Emacs in the echo area.  Non-interactively this just returns the
+     Magit version.
+
+‘M-x magit-emacs-Q-command’     (‘magit-emacs-Q-command’)
+
+     This command shows a debugging shell command in the echo area and
+     adds it to the kill ring.  Paste that command into a shell an run
+     it.
+
+     This shell command starts ‘emacs’ with only ‘magit’ and its
+     dependencies loaded.  Neither your configuration nor other
+     installed packages are loaded.  This makes it easier to determine
+     whether some issue lays with Magit or something else.
+
+‘M-x magit-debug-git-executable’     (‘magit-debug-git-executable’)
+
+     This command displays a buffer containing information about the
+     available and used ‘git’ executable(s), and can be useful when
+     investigating ‘exec-path’ issues.
+
+     Also see *note Git Executable: Git Executable.
+
+‘M-x with-editor-debug’     (‘with-editor-debug’)
+
+     This command displays a buffer containing information about the
+     available and used ‘git’ executable(s), and can be useful when
+     investigating why Magit (or rather ‘with-editor’) cannot find an
+     appropriate ‘emacsclient’ executable.
+
+     Also see *note (with-editor)Debugging::.
+
+   Please also see the *note FAQ: FAQ.
+
+
+File: magit.info,  Node: Keystroke Index,  Next: Command Index,  Prev: Debugging Tools,  Up: Top
+
+Appendix C Keystroke Index
 **************************
 
  [index ]
@@ -7867,10 +7920,12 @@ Appendix B Keystroke Index
 * M-x magit-blame:                       Blaming.             (line   8)
 * M-x magit-blame-popup:                 Blaming.             (line  24)
 * M-x magit-clone:                       Repository Setup.    (line  16)
-* M-x magit-debug-git-executable:        Git Executable.      (line  44)
+* M-x magit-debug-git-executable:        Git Executable.      (line  45)
+* M-x magit-debug-git-executable <1>:    Debugging Tools.     (line  27)
 * M-x magit-describe-section:            Section Types and Values.
                                                               (line  13)
 * M-x magit-describe-section <1>:        Matching Sections.   (line   6)
+* M-x magit-emacs-Q-command:             Debugging Tools.     (line  16)
 * M-x magit-file-checkout:               Resetting.           (line  37)
 * M-x magit-find-file:                   Visiting Blobs.      (line   6)
 * M-x magit-find-file-other-window:      Visiting Blobs.      (line  11)
@@ -7889,7 +7944,9 @@ Appendix B Keystroke Index
 * M-x magit-unstage-file:                Staging from File-Visiting Buffers.
                                                               (line  18)
 * M-x magit-version:                     Git Executable.      (line  17)
+* M-x magit-version <1>:                 Debugging Tools.     (line  10)
 * M-x magit-wip-commit:                  Wip Modes.           (line 129)
+* M-x with-editor-debug:                 Debugging Tools.     (line  35)
 * n:                                     Section Movement.    (line  16)
 * n <1>:                                 Blaming.             (line  54)
 * N:                                     Blaming.             (line  58)
