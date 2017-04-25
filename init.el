@@ -261,6 +261,11 @@ started from a shell."
 (global-set-key (kbd "M-/") #'hippie-expand) ; better than dabbrev
 (global-set-key (kbd "C-M-z") #'ack)
 
+;; From http://doc.norang.ca/org-mode.html
+(global-set-key (kbd "<f9> I") 'bh/punch-in)
+(global-set-key (kbd "<f9> O") 'bh/punch-out)
+
+
 ; Readline in shell mode
 (define-key comint-mode-map [up] #'comint-previous-input)
 (define-key comint-mode-map [down] #'comint-next-input)
@@ -533,6 +538,7 @@ http://blogs.fluidinfo.com/terry/2011/11/10/emacs-buffer-mode-histogram/"
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
+ '(ack-command "ack -i ")
  '(auto-revert-verbose nil)
  '(custom-safe-themes
    (quote
@@ -614,6 +620,8 @@ http://blogs.fluidinfo.com/terry/2011/11/10/emacs-buffer-mode-histogram/"
      (js . t)
      (shell . t))))
  '(org-clock-idle-time 15)
+ '(org-clock-out-remove-zero-time-clocks t)
+ '(org-clock-report-include-clocking-task t)
  '(org-export-backends (quote (ascii html icalendar latex md odt)))
  '(org-export-with-sub-superscripts (quote {}))
  '(org-image-actual-width nil)

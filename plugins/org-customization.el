@@ -253,4 +253,82 @@ http://stackoverflow.com/a/17067170/52550"
 (ox-extras-activate '(ignore-headlines))
 
 
+;;; Clocking in/out -- from http://doc.norang.ca/org-mode.html and
+;;; http://aaron.baugher.biz/emacs/org-mode/back-to-last-task
+
+(setq bh/keep-clock-running nil)
+(defvar bh/default-task-id "9AEC31DC-3C08-43C2-98CA-342A257F8CB4")
+
+
+(defun bh/punch-in (arg)
+  "Start continuous clocking and set the default task to the
+selected task.  If no task is selected set the Organization task
+as the default task."
+  (interactive "p")
+  (setq bh/keep-clock-running t)
+  (if (equal major-mode 'org-agenda-mode)
+      ;;
+      ;; We're in the agenda
+      ;;
+      (let* ((marker (org-get-at-bol 'org-hd-marker))
+             (tags (org-with-point-at marker (org-get-tags-at))))
+        (if (and (eq arg 4) tags)
+            (org-agenda-clock-in '(16))
+          (bh/clock-in-organization-task-as-default)))
+    ;;
+    ;; We are not in the agenda
+    ;;
+    (save-restriction
+      (widen)
+      ; Find the tags on the current task
+      (if (and (equal major-mode 'org-mode) (not (org-before-first-heading-p)) (eq arg 4))
+          (org-clock-in '(16))
+        (bh/clock-in-organization-task-as-default)))))
+
+(defun bh/punch-out ()
+  (interactive)
+  (setq bh/keep-clock-running nil)
+  (when (org-clock-is-active)
+    (org-clock-out))
+  (org-agenda-remove-restriction-lock))
+
+(defun bh/clock-in-default-task ()
+  (save-excursion
+    (org-with-point-at org-clock-default-task
+      (org-clock-in))))
+
+(defun bh/clock-in-organization-task-as-default ()
+  (interactive)
+  (org-with-point-at (org-id-find bh/default-task-id 'marker)
+    (org-clock-in '(16))))
+
+(defun bh/clock-in-parent-task ()
+  "Move point to the parent (project) task if any and clock in"
+  (let ((parent-task))
+    (save-excursion
+      (save-restriction
+        (widen)
+        (while (and (not parent-task) (org-up-heading-safe))
+          (when (member (nth 2 (org-heading-components)) org-todo-keywords-1)
+            (setq parent-task (point))))
+        (if parent-task
+            (org-with-point-at parent-task
+              (org-clock-in))
+          (when bh/keep-clock-running
+            (bh/clock-in-default-task)))))))
+
+(defun msherry/clock-in-default-task ()
+  "Clock in to the default task. Based on bh/clock-in-parent-task"
+  (when bh/keep-clock-running
+    (bh/clock-in-default-task)))
+
+(defun bh/clock-out-maybe ()
+  (when (and bh/keep-clock-running
+             (not org-clock-clocking-in)
+             (marker-buffer org-clock-default-task)
+             (not org-clock-resolving-clocks-due-to-idleness))
+    (msherry/clock-in-default-task)))
+
+(add-hook 'org-clock-out-hook 'bh/clock-out-maybe 'append)
+
 (provide 'org-customization)
