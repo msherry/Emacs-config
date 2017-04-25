@@ -254,11 +254,17 @@ http://stackoverflow.com/a/17067170/52550"
 
 
 ;;; Clocking in/out -- from http://doc.norang.ca/org-mode.html and
-;;; http://aaron.baugher.biz/emacs/org-mode/back-to-last-task
+;;; http://aaron.baugher.biz/emacs/org-mode/back-to-last-task (for resuming
+;;; interrupted tasks)
 
 (setq bh/keep-clock-running nil)
 (defvar bh/default-task-id "9AEC31DC-3C08-43C2-98CA-342A257F8CB4")
+(defvar bh/mail-task-id "9F3295E9-28A8-4BCE-ACEF-D0F91FD68B80")
 
+
+(defun msherry/get-email-task-name ()
+  (org-with-point-at (org-id-find bh/mail-task-id 'marker)
+    (nth 4 (org-heading-components))))
 
 (defun bh/punch-in (arg)
   "Start continuous clocking and set the default task to the
@@ -297,6 +303,12 @@ as the default task."
     (org-with-point-at org-clock-default-task
       (org-clock-in))))
 
+(defun msherry/clock-in-email-task (&rest args)
+  (save-excursion
+    (org-with-point-at (org-id-find bh/mail-task-id 'marker)
+      (org-clock-in))))
+
+
 (defun bh/clock-in-organization-task-as-default ()
   (interactive)
   (org-with-point-at (org-id-find bh/default-task-id 'marker)
@@ -327,8 +339,23 @@ as the default task."
              (not org-clock-clocking-in)
              (marker-buffer org-clock-default-task)
              (not org-clock-resolving-clocks-due-to-idleness))
-    (msherry/clock-in-default-task)))
+    (if (marker-buffer org-clock-interrupted-task)
+        (org-with-point-at org-clock-interrupted-task
+          (org-clock-in))
+      (msherry/clock-in-default-task))))
 
 (add-hook 'org-clock-out-hook 'bh/clock-out-maybe 'append)
+
+;; Automatically clock in/out of persistent email task when reading/closing
+;; email
+(defun msherry/clock-out-of-email (&rest args)
+  "If we're not in a notmuch buffer (search or show), and we're current clocked into the email task, clock out."
+  (unless (derived-mode-p 'notmuch-search-mode 'notmuch-show-mode)
+    (when (and (org-clock-is-active)
+               (equal org-clock-current-task (msherry/get-email-task-name)))
+      (bh/clock-out-maybe))))
+
+(advice-add 'msherry-notmuch-unread :before #'msherry/clock-in-email-task)
+(advice-add 'notmuch-bury-or-kill-this-buffer :after #'msherry/clock-out-of-email)
 
 (provide 'org-customization)
