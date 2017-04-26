@@ -253,6 +253,15 @@ http://stackoverflow.com/a/17067170/52550"
 (ox-extras-activate '(ignore-headlines))
 
 
+;; Remove empty LOGBOOK drawers on clock out
+(defun bh/remove-empty-drawer-on-clock-out ()
+  (interactive)
+  (save-excursion
+    (beginning-of-line 0)
+    (org-remove-empty-drawer-at (point))))
+
+(add-hook 'org-clock-out-hook 'bh/remove-empty-drawer-on-clock-out 'append)
+
 ;;; Clocking in/out -- from http://doc.norang.ca/org-mode.html and
 ;;; http://aaron.baugher.biz/emacs/org-mode/back-to-last-task (for resuming
 ;;; interrupted tasks)
@@ -307,7 +316,6 @@ as the default task."
   (save-excursion
     (org-with-point-at (org-id-find bh/mail-task-id 'marker)
       (org-clock-in))))
-
 
 (defun bh/clock-in-organization-task-as-default ()
   (interactive)
