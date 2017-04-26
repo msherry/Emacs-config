@@ -353,7 +353,7 @@ as the default task."
   (unless (derived-mode-p 'notmuch-search-mode 'notmuch-show-mode)
     (when (and (org-clock-is-active)
                (equal org-clock-current-task (msherry/get-email-task-name)))
-      (bh/clock-out-maybe))))
+      (org-clock-out))))
 
 (advice-add 'msherry-notmuch-unread :before #'msherry/clock-in-email-task)
 (advice-add 'notmuch-bury-or-kill-this-buffer :after #'msherry/clock-out-of-email)
