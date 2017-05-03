@@ -567,7 +567,7 @@ http://blogs.fluidinfo.com/terry/2011/11/10/emacs-buffer-mode-histogram/"
     (jabber-message-wave jabber-message-echo jabber-message-scroll)))
  '(jabber-alert-message-wave "/System/Library/Sounds/Bottle.aiff")
  '(jabber-auto-reconnect t)
- '(magit-log-arguments (quote ("--graph" "--color" "--decorate")))
+ '(magit-log-arguments (quote ("--graph" "--color" "--decorate" "-n256")))
  '(magit-push-always-verify nil)
  '(magit-tag-arguments (quote ("--annotate")))
  '(mm-text-html-renderer (quote shr))
