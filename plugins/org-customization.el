@@ -363,6 +363,7 @@ as the default task."
       (msherry/clock-in-default-task))))
 
 (add-hook 'org-clock-out-hook 'bh/clock-out-maybe 'append)
+(add-hook 'org-clock-out-hook 'org-save-all-org-buffers 'append)
 
 ;; Automatically clock in/out of persistent email task when reading/closing
 ;; email
