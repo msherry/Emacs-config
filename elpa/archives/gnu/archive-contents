@@ -28,7 +28,7 @@
 	       ((:keywords "languages" "ada")
 		(:url . "http://stephe-leake.org/ada/arm.html"))])
  (adaptive-wrap .
-		[(0 5)
+		[(0 5 1)
 		 nil "Smart line-wrapping with wrap-prefix" single
 		 ((:url . "http://elpa.gnu.org/packages/adaptive-wrap.html")
 		  (:keywords))])
@@ -75,7 +75,7 @@
 			((:url . "http://www.gnuvola.org/software/aa2u/")
 			 (:keywords "ascii" "unicode" "box-drawing"))])
  (async .
-	[(1 9)
+	[(1 9 2)
 	 nil "Asynchronous processing in Emacs" tar
 	 ((:keywords "async")
 	  (:url . "http://elpa.gnu.org/packages/async.html"))])
@@ -670,7 +670,7 @@
 	     ((:url . "https://github.com/michael-heerdegen/on-screen.el")
 	      (:keywords "convenience"))])
  (org .
-      [(20170210)
+      [(20170502)
        nil "Outline-based notes management and organizer" tar nil])
  (osc .
       [(0 1)
@@ -790,7 +790,7 @@
 	    ((:url . "http://elpa.gnu.org/packages/sed-mode.html")
 	     (:keywords))])
  (seq .
-      [(2 19)
+      [(2 20)
        nil "Sequence manipulation functions" tar
        ((:keywords "sequences")
 	(:url . "http://elpa.gnu.org/packages/seq.html"))])
