@@ -177,7 +177,7 @@
   (org-entry-get (org-get-at-bol 'org-marker) property 'selective))
 
 (defun msherry-current-agenda-unconfirmed ()
-  (string= "NEEDS_ACTION" (msherry-org-agenda-get-property "ATTENDING")))
+  (member (msherry-org-agenda-get-property "ATTENDING") '("NEEDS_ACTION" "UNSET")))
 
 (defun color-agenda-events ()
   "Color agenda events based on what calendar they're from and other properties.
@@ -192,7 +192,7 @@ http://stackoverflow.com/a/17067170/52550"
           (add-text-properties (match-beginning 0) (point-at-eol)
                                '(face font-lock-constant-face)))))
     (goto-char (point-min))
-    (while (re-search-forward "pinterest:" nil t)
+    (while (re-search-forward "dropbox:" nil t)
       (save-excursion
         ;; Color unaccepted meetings
         (when (not (re-search-backward "======" nil t))
