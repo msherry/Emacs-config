@@ -70,7 +70,12 @@
           " -title 'Appointment'"
           " -message " (shell-quote-argument msg)
           " -sound Bottle"
-          " -execute \"/usr/local/bin/emacsclient --eval '(org-agenda nil \\\"c\\\")'\"")
+          ; terminal-notifier doesn't seem to exit now when expecting
+          ; input. https://github.com/julienXX/terminal-notifier/issues/173 is
+          ; one possible issue that claims to solve it, but it still happens.
+          ;; " -execute \"/usr/local/bin/emacsclient --eval '(org-agenda nil \"c\")'\""
+          "&"                           ; async
+          )
          nil nil))))
 
 ;;; Auto-save all org-mode buffers while agenda open -
