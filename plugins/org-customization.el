@@ -78,6 +78,23 @@
           )
          nil nil))))
 
+(defun org-show-current-heading-tidily ()
+  ;; https://stackoverflow.com/a/28031539/52550
+  (interactive)
+  "Show current entry, keeping other entries closed."
+  (if (save-excursion (end-of-line) (outline-invisible-p))
+      (progn (org-show-entry) (show-children))
+    (outline-back-to-heading)
+    (unless (and (bolp) (org-on-heading-p))
+      (org-up-heading-safe)
+      (hide-subtree)
+      (error "Boundary reached"))
+    (org-overview)
+    (org-reveal t)
+    (org-show-entry)
+    (show-children)))
+
+
 ;;; Auto-save all org-mode buffers while agenda open -
 ;;; http://emacs.stackexchange.com/a/483/7169
 (add-hook 'org-agenda-mode-hook
@@ -91,7 +108,8 @@
           #'(lambda ()
               (add-hook 'auto-save-hook 'msherry/org-save-all-org-buffers nil t)
               (auto-save-mode t)
-              (auto-revert-mode)))
+              (auto-revert-mode)
+              (visual-line-mode)))
 
 (global-set-key (kbd "C-c a") 'org-agenda)
 (global-set-key (kbd "C-c c") 'org-capture)
@@ -292,7 +310,7 @@ http://stackoverflow.com/a/17067170/52550"
 
 (defun bh/punch-in (arg)
   "Start continuous clocking and set the default task to the
-selected task.  If no task is selected set the Organization task
+selected task.  If no task is selected set the Wasting time task
 as the default task."
   (interactive "p")
   (setq bh/keep-clock-running t)

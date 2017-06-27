@@ -619,7 +619,6 @@ http://blogs.fluidinfo.com/terry/2011/11/10/emacs-buffer-mode-histogram/"
      (ruby . t)
      (js . t)
      (shell . t))))
- '(org-clock-idle-time 15)
  '(org-clock-out-remove-zero-time-clocks t)
  '(org-clock-report-include-clocking-task t)
  '(org-export-backends (quote (ascii html icalendar latex md odt)))
@@ -632,7 +631,7 @@ http://blogs.fluidinfo.com/terry/2011/11/10/emacs-buffer-mode-histogram/"
  '(org-use-sub-superscripts (quote {}))
  '(package-selected-packages
    (quote
-    (ac-geiser ack auctex cider clojure-mode clojure-mode-extra-font-locking diff-hl elpy ess esup feature-mode flymake flymake-sass fxrd-mode geiser gitignore-mode go-mode graphviz-dot-mode httpcode jabber jedi json-mode latex-preview-pane magit markdown-mode markdown-preview-mode notmuch org-agenda-property org-jira org-plus-contrib org-pomodoro paredit projectile puppet-mode pymacs python-mode rainbow-mode s sass-mode slime solarized-theme tagedit thrift virtualenv window-numbering yaml-mode yasnippet zenburn-theme)))
+    (ac-geiser ack auctex cider clojure-mode clojure-mode-extra-font-locking diff-hl dtrace-script-mode elpy ess esup feature-mode flymake flymake-sass fxrd-mode geiser gitignore-mode go-mode graphviz-dot-mode httpcode jabber jedi json-mode latex-preview-pane magit markdown-mode markdown-preview-mode notmuch org-agenda-property org-jira org-plus-contrib org-pomodoro paredit projectile puppet-mode pymacs python-mode rainbow-mode s sass-mode slime solarized-theme tagedit thrift virtualenv window-numbering yaml-mode yasnippet zenburn-theme)))
  '(tramp-syntax (quote simplified) nil (tramp)))
 
 
