@@ -45,37 +45,36 @@ from subprocess import Popen, PIPE
 import sys
 
 
-## Customization ##
+# Customization #
 
 # Checkers to run be default, when no --checkers options are supplied.
 # One or more of pydo, pep8 or pyflakes, separated by commas
 # default_checkers = 'pep8, pyflakes'
-default_checkers = 'flake8,pylint,mypy'
+default_checkers = 'flake8,pylint,mypy,mypy3'
 
 # A list of error codes to ignore for PEP8
 # default_ignore_codes = ['E225', 'W114']
-default_ignore_codes = \
-    [
-        # 'E202',          # Whitespace before ']'
-        # 'E221',          # Multiple spaces before operator
-        # 'E225',          # Missing whitespace around operator
-        # 'E231',          # Missing whitespace after ':'
-        # 'E241',          # Multiple spaces after ':'
-        # 'E261',          # At least two spaces before inline comment
-        # 'W291',          # Trailing whitespace
-        # 'E301',          # Expected 1 blank line, found 0
-        # 'E302',          # Expected 2 blank lines, found 1
-        # 'E303',          # Too many blank lines
-        # 'E401',          # Multiple imports on one line
-        # 'E501',          # Line too long
+default_ignore_codes = [
+    # 'E202',          # Whitespace before ']'
+    # 'E221',          # Multiple spaces before operator
+    # 'E225',          # Missing whitespace around operator
+    # 'E231',          # Missing whitespace after ':'
+    # 'E241',          # Multiple spaces after ':'
+    # 'E261',          # At least two spaces before inline comment
+    # 'W291',          # Trailing whitespace
+    # 'E301',          # Expected 1 blank line, found 0
+    # 'E302',          # Expected 2 blank lines, found 1
+    # 'E303',          # Too many blank lines
+    # 'E401',          # Multiple imports on one line
+    # 'E501',          # Line too long
 
-        # 'E127',          # continuation line over-indented for visual indent
-        # 'E128',          # continuation line under-indented for visual indent
-        'E711',            # comparison to None should be...
-        'E712',            # comparison to True/False should be ...
-    ]
+    # 'E127',          # continuation line over-indented for visual indent
+    # 'E128',          # continuation line under-indented for visual indent
+    'E711',            # comparison to None should be...
+    'E712',            # comparison to True/False should be ...
+]
 
-## End of customization ##
+# End of customization #
 
 
 class LintRunner(object):
@@ -88,11 +87,11 @@ class LintRunner(object):
         ('level', 'error_type', 'error_number', 'description',
          'filename', 'line_number'), '')
 
-    output_matcher = None
+    output_matcher = re.compile(r'')
 
-    sane_default_ignore_codes = set([])
+    sane_default_ignore_codes = set()
 
-    command = None
+    command = ''
 
     run_flags = ()
 
@@ -102,6 +101,16 @@ class LintRunner(object):
             self.ignore_codes |= self.sane_default_ignore_codes
         self.options = options
         self.out_lines = []
+
+    @property
+    def name(self):
+        """The linter's name, which is usually the same as the command.
+
+        They may be different if there are multiple versions run with
+        flags -- e.g. the MyPy2Runner's name may be 'mypy2', even though
+        the command is just 'mypy'.
+        """
+        return self.command
 
     def fixup_data(self, _line, data):
         return data
@@ -125,7 +134,7 @@ class LintRunner(object):
                     # so we know which checker threw which error
                     if 'description' in fixed_up:
                         fixed_up['description'] = '%s: %s' % (
-                            self.command, fixed_up['description'])
+                            self.name, fixed_up['description'])
                     tokens.update(fixed_up)
                     self.out_lines.append(self.output_format % tokens)
                     errors_or_warnings += 1
@@ -349,7 +358,7 @@ class PylintRunner(LintRunner):
         )
 
 
-class MyPyRunner(LintRunner):
+class MyPy2Runner(LintRunner):
 
     command = 'mypy'
 
@@ -373,6 +382,19 @@ class MyPyRunner(LintRunner):
         return data
 
 
+class MyPy3Runner(MyPy2Runner):
+
+    @property
+    def name(self):
+        return 'mypy3'
+
+    @property
+    def run_flags(self):
+        return (
+            '--ignore-missing-imports',
+        )
+
+
 def croak(*msgs):
     for m in msgs:
         print >> sys.stderr, m.strip()
@@ -385,7 +407,8 @@ RUNNERS = {
     'pep8': Pep8Runner,
     'pydo': PydoRunner,
     'pylint': PylintRunner,
-    'mypy': MyPyRunner,
+    'mypy': MyPy2Runner,
+    'mypy3': MyPy3Runner,
 }
 
 
@@ -445,15 +468,25 @@ def run_one_checker(ignore_codes, options, source_file, checker_name):
     return (errors_or_warnings, runner.out_lines)
 
 
-def main():
-    # transparently add a virtualenv to the path when launched with a venv'd
-    # python.
-    os.environ['PATH'] = (os.path.dirname(sys.executable) + ':' +
-                          os.environ['PATH'])
+def update_env_with_virtualenv(source_file):
+    """Determine if the current file is part of a package that has a
+    virtualenv, and munge paths appropriately"""
+    # TODO: this is very unix-specific
+    full_path = os.path.abspath(source_file)
+    dir_components = os.path.dirname(full_path).split('/')
+    # TODO: this should be a setting
+    virtualenv_base = os.path.expanduser('~/.virtualenvs/')
+    for component in dir_components:
+        if not component:
+            continue
+        virtualenv_path = os.path.join(virtualenv_base, component)
+        if os.path.exists(virtualenv_path):
+            bin_path = os.path.join(virtualenv_path, 'bin')
+            os.environ['PATH'] = bin_path + ':' + os.environ['PATH']
+            break
 
-    if len(sys.argv) < 2:
-        croak("Usage: %s [file]" % sys.argv[0])
 
+def parse_args():
     parser = ArgumentParser()
     parser.add_argument('file', type=str, help='Filename to check')
     parser.add_argument("-c", "--checkers", dest="checkers",
@@ -469,28 +502,26 @@ def main():
                         action='store_false',
                         help=('Whether to ignore config files found at a '
                               'higher directory than this one'))
-    options = parser.parse_args()
+    return parser.parse_args()
+
+
+def main():
+    # transparently add a virtualenv to the path when launched with a venv'd
+    # python.
+    os.environ['PATH'] = (os.path.dirname(sys.executable) + ':' +
+                          os.environ['PATH'])
+
+    if len(sys.argv) < 2:
+        croak("Usage: %s [file]" % sys.argv[0])
+
+    options = parse_args()
 
     source_file = options.file
     checkers = options.checkers
     ignore_codes = options.ignore_codes
 
     options = update_options_locally(options)
-
-    # Attempt to determine if the current file is part of a package that has a
-    # virtualenv, and munge paths appropriately
-    full_path = os.path.abspath(source_file)
-    dir_components = os.path.dirname(full_path).split('/')  # TODO: unix-specific
-    # TODO: this should be a setting
-    virtualenv_base = os.path.expanduser('~/.virtualenvs/')
-    for component in dir_components:
-        if not component:
-            continue
-        virtualenv_path = os.path.join(virtualenv_base, component)
-        if os.path.exists(virtualenv_path):
-            bin_path = os.path.join(virtualenv_path, 'bin')
-            os.environ['PATH'] = bin_path + ':' + os.environ['PATH']
-            break
+    update_env_with_virtualenv(source_file)
 
     checker_names = [checker.strip() for checker in checkers.split(',')]
     try:
