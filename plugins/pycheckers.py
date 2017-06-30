@@ -370,6 +370,7 @@ class MyPy2Runner(LintRunner):
         return (
             '--py2',
             '--ignore-missing-imports',
+            '--strict-optional',
         )
 
     def fixup_data(self, _line, data):
