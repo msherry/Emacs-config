@@ -118,16 +118,22 @@ class LintRunner(object):
             match = self.process_output(line)
             if match:
                 tokens = dict(self.output_template)
+                # Return None from fixup_data to ignore this error
                 fixed_up = self.fixup_data(line, match)
                 if fixed_up:
-                    # Return None from fixup_data to ignore this error
+                    # Prepend the command name to the description (if present)
+                    # so we know which checker threw which error
+                    if 'description' in fixed_up:
+                        fixed_up['description'] = '%s: %s' % (
+                            self.command, fixed_up['description'])
                     tokens.update(fixed_up)
                     self.out_lines.append(self.output_format % tokens)
                     errors_or_warnings += 1
         return errors_or_warnings
 
     def run(self, filename):
-        args = ['/usr/bin/env', self.command]  # `env` to use the virtualenv, if found
+        # `env` to use a virtualenv, if found
+        args = ['/usr/bin/env', self.command]
         args.extend(self.run_flags)
         args.append(filename)
 

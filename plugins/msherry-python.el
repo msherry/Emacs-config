@@ -20,23 +20,24 @@
             (elpy-mode)
             (define-key elpy-mode-map (kbd "<M-left>") nil)
             (define-key elpy-mode-map (kbd "<M-right>") nil)
-            (local-set-key (kbd "C-c .") 'flymake-goto-next-error)
+            ;; (local-set-key (kbd "C-c .") 'flymake-goto-next-error)
+            (local-set-key (kbd "C-c .") 'flycheck-next-error)
             ))
 
 
 ;;; Advice
 (defadvice py-shift-region-left (around keep-region-active
                                         (start end &optional count) activate)
-  "Keep the region active so we can do multiple shifts"
+  "Keep the region active so we can do multiple shifts."
   (let ((deactivate-mark nil))
     ad-do-it))
 (defadvice py-shift-region-right (around keep-region-active
                                          (start end &optional count) activate)
-  "Keep the region active so we can do multiple shifts"
+  "Keep the region active so we can do multiple shifts."
   (let ((deactivate-mark nil))
     ad-do-it))
 (defun dont-display-if-visible (orig-fun &rest args)
-  "Don't switch to the elpy Python buffer if it's already visible"
+  "Don't switch to the elpy Python buffer if it's already visible."
   (if (not (get-buffer-window (process-buffer (elpy-shell-get-or-create-process))))
       (apply orig-fun args)))
 (advice-add 'elpy-shell-display-buffer :around #'dont-display-if-visible)
