@@ -2,6 +2,11 @@
 
 (require 'org-agenda-property)          ; Show properties like :LOCATION: in agenda
 (require 'org-notmuch)                  ; Save links to emails
+(require 'org-id)                       ; global identifiers for org entries
+
+;;; Commentary:
+
+;;; Code:
 
 ;;; From comments on https://emacs.stackexchange.com/questions/12475/
 (defun msherry/org-save-all-org-buffers ()
@@ -17,7 +22,7 @@
 ;;; Automatically update org-mode agenda
 ;;; http://orgmode.org/worg/org-hacks.html
 (defun msherry/org-agenda-redo-in-other-window ()
-  "Call org-agenda-redo function even in non-agenda buffers"
+  "Call org-agenda-redo function even in non-agenda buffers."
   ;; TODO: doesn't work unless agenda is being displayed
   (interactive)
   (let ((agenda-window (get-buffer-window org-agenda-buffer-name t)))
@@ -32,7 +37,6 @@
 ;;; http://orgmode.org/worg/org-hacks.html#org-agenda-appt-zenity /
 ;;; http://orgmode.org/worg/org-faq.html#automatic-reminders
 (defun msherry/org-agenda-to-appt ()
-  (interactive)
   (setq appt-time-msg-list nil)
   (let ((org-deadline-warning-days 0))
     (org-agenda-to-appt)))
@@ -43,20 +47,8 @@
 (appt-activate t)
 (run-at-time "24:01" nil 'msherry/org-agenda-to-appt)
 
-;; 10-minute warnings
-(setq appt-message-warning-time 15)
-(setq appt-display-interval 5)
-
 ;; Update appt each time agenda opened
 (add-hook 'org-finalize-agenda-hook #'msherry/org-agenda-to-appt)
-
-;; Setup alerts -- tell appt to use window, and replace default function
-(setq appt-display-format 'window)
-(setq appt-disp-window-function #'msherry/appt-disp-window)
-(setq appt-delete-window-function #'(lambda ()))  ; Popups are external to emacs, no delete needed
-
-;; Limit inline image width
-(setq org-image-actual-width '(300))
 
 ;; Killswitch for org-agenda notifications
 (setq msherry-org-display-notifications t)
@@ -200,6 +192,7 @@
   (org-entry-get (org-get-at-bol 'org-marker) property 'selective))
 
 (defun msherry-current-agenda-unconfirmed ()
+  "Return t if attendance for the current agenda item is still unconfirmed."
   (member (msherry-org-agenda-get-property "ATTENDING") '("NEEDS_ACTION" "UNSET")))
 
 (defun color-agenda-events ()
@@ -400,4 +393,10 @@ as the default task."
 (advice-add 'msherry-notmuch-unread :before #'msherry/clock-in-email-task)
 (advice-add 'notmuch-bury-or-kill-this-buffer :after #'msherry/clock-out-of-email)
 
+
+;;; org-mru-clock stuff
+(global-set-key (kbd "C-c C-x i") #'org-mru-clock-in)
+(global-set-key (kbd "C-c C-x C-j") #'org-mru-clock-select-recent-task)
+
 (provide 'org-customization)
+;;; org-customization.el ends here

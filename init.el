@@ -332,11 +332,11 @@ started from a shell."
                             objc-mode actionscript-mode lisp-mode
                             emacs-lisp-mode sh-mode makefile-mode conf-mode
                             ruby-mode ess-mode)
-  "Modes used for programming")
+  "Modes used for programming.")
 
 
 (defun programming-mode-hook ()
-  "Hook common to all programming modes"
+  "Hook common to all programming modes."
   (msherry-font-lock-fontify-todo)
   (msherry-font-lock-fontify-numbers)
   (flyspell-prog-mode)
@@ -433,13 +433,13 @@ but with additional hacks for frameworks by Marc Sherry"
 (defadvice dired-mark-files-containing-regexp (before unmark-all-first
                                                       (regexp &optional marker-char)
                                                       activate)
-  "Unmark marked files in dired mode before searching for new ones"
+  "Unmark marked files in dired mode before searching for new ones."
   (dired-unmark-all-files ?\r))
 
 (defadvice dired-mark-python-with-errors (before unmark-all-first-2
                                                       (regexp &optional marker-char)
                                                       activate)
-  "Unmark marked files in dired mode before searching for new ones"
+  "Unmark marked files in dired mode before searching for new ones."
   (dired-unmark-all-files ?\r))
 
 
@@ -552,6 +552,11 @@ http://blogs.fluidinfo.com/terry/2011/11/10/emacs-buffer-mode-histogram/"
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(ack-command "ack -i ")
+ '(appt-delete-window-function (lambda nil))
+ '(appt-disp-window-function (quote msherry/appt-disp-window))
+ '(appt-display-format (quote window))
+ '(appt-display-interval 5)
+ '(appt-message-warning-time 10)
  '(auto-revert-verbose nil)
  '(custom-safe-themes
    (quote
@@ -639,7 +644,7 @@ http://blogs.fluidinfo.com/terry/2011/11/10/emacs-buffer-mode-histogram/"
  '(org-clock-report-include-clocking-task t)
  '(org-export-backends (quote (ascii html icalendar latex md odt)))
  '(org-export-with-sub-superscripts (quote {}))
- '(org-image-actual-width nil)
+ '(org-image-actual-width (quote (300)))
  '(org-mobile-agendas (quote ("c")))
  '(org-mobile-files-exclude-regexp "-cal.org$")
  '(org-mobile-force-id-on-agenda-items nil)
@@ -647,7 +652,7 @@ http://blogs.fluidinfo.com/terry/2011/11/10/emacs-buffer-mode-histogram/"
  '(org-use-sub-superscripts (quote {}))
  '(package-selected-packages
    (quote
-    (ac-geiser ack auctex cider clojure-mode clojure-mode-extra-font-locking diff-hl dtrace-script-mode elpy ess esup feature-mode flycheck-mypy flymake flymake-sass fxrd-mode geiser gitignore-mode go-mode graphviz-dot-mode httpcode jabber jedi json-mode latex-preview-pane magit markdown-mode markdown-preview-mode notmuch org-agenda-property org-jira org-plus-contrib org-pomodoro paredit projectile puppet-mode pymacs python-mode rainbow-mode s sass-mode slime solarized-theme tagedit thrift virtualenv window-numbering yaml-mode yasnippet zenburn-theme)))
+    (ac-geiser ack auctex cider clojure-mode clojure-mode-extra-font-locking diff-hl dtrace-script-mode elpy ess esup feature-mode flycheck-mypy flymake flymake-sass fxrd-mode geiser gitignore-mode go-mode graphviz-dot-mode httpcode jabber jedi json-mode latex-preview-pane magit markdown-mode markdown-preview-mode notmuch org-agenda-property org-jira org-mru-clock org-plus-contrib org-pomodoro paredit projectile puppet-mode pymacs python-mode rainbow-mode s sass-mode slime solarized-theme tagedit thrift virtualenv window-numbering yaml-mode yasnippet zenburn-theme)))
  '(tramp-syntax (quote simplified) nil (tramp)))
 
 
