@@ -21,7 +21,6 @@
             (define-key elpy-mode-map (kbd "<M-left>") nil)
             (define-key elpy-mode-map (kbd "<M-right>") nil)
             ;; (local-set-key (kbd "C-c .") 'flymake-goto-next-error)
-            (local-set-key (kbd "C-c .") 'flycheck-next-error)
             ))
 
 

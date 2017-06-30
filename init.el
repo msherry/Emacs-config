@@ -310,6 +310,9 @@ started from a shell."
 ;;; TODO: flymake-add-next-checker should let us chain existing checkers
 ;;; without needing our script at all -
 ;;; https://github.com/flycheck/flycheck/issues/185
+(add-hook 'flycheck-mode-hook
+          '(lambda ()
+            (local-set-key (kbd "C-c .") 'flycheck-next-error)))
 
 ; Fast jumps to windows
 (window-numbering-mode)

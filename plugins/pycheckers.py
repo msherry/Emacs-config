@@ -47,13 +47,10 @@ import sys
 
 # Customization #
 
-# Checkers to run be default, when no --checkers options are supplied.
-# One or more of pydo, pep8 or pyflakes, separated by commas
-# default_checkers = 'pep8, pyflakes'
+# Checkers to run by default, when no --checkers options are supplied.
 default_checkers = 'flake8,pylint,mypy,mypy3'
 
 # A list of error codes to ignore for PEP8
-# default_ignore_codes = ['E225', 'W114']
 default_ignore_codes = [
     # 'E202',          # Whitespace before ']'
     # 'E221',          # Multiple spaces before operator
@@ -510,9 +507,6 @@ def main():
     # python.
     os.environ['PATH'] = (os.path.dirname(sys.executable) + ':' +
                           os.environ['PATH'])
-
-    if len(sys.argv) < 2:
-        croak("Usage: %s [file]" % sys.argv[0])
 
     options = parse_args()
 
