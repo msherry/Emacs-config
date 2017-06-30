@@ -15,6 +15,7 @@ ac-comphist.dat
 .python-environments
 jabber-history/
 jabber-avatar-cache/
+plugins/.mypy_cache
 
 org
 bookmarks

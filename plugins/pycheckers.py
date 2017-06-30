@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/local/bin/python
 """A hacked up version of the multiple-Python checkers script from EmacsWiki.
 
  - Simplified & faster
@@ -50,7 +50,7 @@ import sys
 # Checkers to run be default, when no --checkers options are supplied.
 # One or more of pydo, pep8 or pyflakes, separated by commas
 # default_checkers = 'pep8, pyflakes'
-default_checkers = 'flake8,pylint'
+default_checkers = 'flake8,pylint,mypy'
 
 # A list of error codes to ignore for PEP8
 # default_ignore_codes = ['E225', 'W114']
@@ -118,19 +118,22 @@ class LintRunner(object):
             match = self.process_output(line)
             if match:
                 tokens = dict(self.output_template)
-                tokens.update(self.fixup_data(line, match))
-                self.out_lines.append(self.output_format % tokens)
-                errors_or_warnings += 1
+                fixed_up = self.fixup_data(line, match)
+                if fixed_up:
+                    # Return None from fixup_data to ignore this error
+                    tokens.update(fixed_up)
+                    self.out_lines.append(self.output_format % tokens)
+                    errors_or_warnings += 1
         return errors_or_warnings
 
     def run(self, filename):
-        args = [self.command]
+        args = ['/usr/bin/env', self.command]  # `env` to use the virtualenv, if found
         args.extend(self.run_flags)
         args.append(filename)
 
         try:
             process = Popen(args, stdout=PIPE, stderr=PIPE)
-        except Exception, e:
+        except Exception as e:
             print e, args
             return
 
@@ -215,7 +218,6 @@ class Flake8Runner(LintRunner):
 
     @property
     def run_flags(self):
-        print "ignore codes:", self.ignore_codes
         return (
             '--ignore=' + ','.join(self.ignore_codes),
             '--max-line-length', str(self.options.max_line_length),
@@ -341,6 +343,30 @@ class PylintRunner(LintRunner):
         )
 
 
+class MyPyRunner(LintRunner):
+
+    command = 'mypy'
+
+    output_matcher = re.compile(
+        r'(?P<filename>[^:]+):'
+        r'(?P<line_number>[^:]+):'
+        r' (?P<level>[^:]+):'
+        r' (?P<description>.+)$')
+
+    @property
+    def run_flags(self):
+        return (
+            '--py2',
+            '--ignore-missing-imports',
+        )
+
+    def fixup_data(self, _line, data):
+        data['level'] = data['level'].upper()
+        if data['level'] == 'NOTE':
+            return None
+        return data
+
+
 def croak(*msgs):
     for m in msgs:
         print >> sys.stderr, m.strip()
@@ -352,7 +378,8 @@ RUNNERS = {
     'flake8': Flake8Runner,
     'pep8': Pep8Runner,
     'pydo': PydoRunner,
-    'pylint': PylintRunner
+    'pylint': PylintRunner,
+    'mypy': MyPyRunner,
 }
 
 
@@ -446,17 +473,18 @@ def main():
 
     # Attempt to determine if the current file is part of a package that has a
     # virtualenv, and munge paths appropriately
-    # TODO: this is very pp-specific
-    # TODO: find the project root dir (check out project-directory in
-    # jedi-local.el, check ~/.virtualenvs for a project with the same name)
     full_path = os.path.abspath(source_file)
-    if '/pp/' in full_path:
-        package = re.search(r'/pp/([^/]+)', full_path).group(1)
-        virtualenv_path = os.path.expanduser(
-            '~/.virtualenvs/{}'.format(package))
+    dir_components = os.path.dirname(full_path).split('/')  # TODO: unix-specific
+    # TODO: this should be a setting
+    virtualenv_base = os.path.expanduser('~/.virtualenvs/')
+    for component in dir_components:
+        if not component:
+            continue
+        virtualenv_path = os.path.join(virtualenv_base, component)
         if os.path.exists(virtualenv_path):
             bin_path = os.path.join(virtualenv_path, 'bin')
             os.environ['PATH'] = bin_path + ':' + os.environ['PATH']
+            break
 
     checker_names = [checker.strip() for checker in checkers.split(',')]
     try:
