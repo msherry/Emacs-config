@@ -305,6 +305,7 @@ started from a shell."
 ; Let's try flycheck instead of flymake, with a custom checker for our own
 ; wrapper script
 (global-flycheck-mode 1)
+(require 'flycheck-mypy)  ; unused in favor of flycheck-pycheckers, but enabled
 (require 'flycheck-pycheckers)
 ;;; TODO: flymake-add-next-checker should let us chain existing checkers
 ;;; without needing our script at all -
@@ -563,9 +564,6 @@ http://blogs.fluidinfo.com/terry/2011/11/10/emacs-buffer-mode-histogram/"
    (quote
     (elpy-module-company elpy-module-eldoc elpy-module-pyvenv elpy-module-sane-defaults)))
  '(epa-pinentry-mode (quote loopback))
- '(flycheck-checkers
-   (quote
-    (ada-gnat asciidoctor asciidoc c/c++-clang c/c++-gcc c/c++-cppcheck cfengine chef-foodcritic coffee coffee-coffeelint coq css-csslint css-stylelint d-dmd dockerfile-hadolint elixir-dogma emacs-lisp emacs-lisp-checkdoc erlang-rebar3 erlang eruby-erubis fortran-gfortran go-gofmt go-golint go-vet go-build go-test go-errcheck go-unconvert groovy haml handlebars haskell-stack-ghc haskell-ghc haskell-hlint html-tidy javascript-eslint javascript-jshint javascript-jscs javascript-standard json-jsonlint json-python-json less less-stylelint lua-luacheck lua perl perl-perlcritic php php-phpmd php-phpcs processing protobuf-protoc pug puppet-parser puppet-lint python-flake8 python-pylint python-pycompile python-mypy r-lintr racket rpm-rpmlint markdown-mdl nix rst-sphinx rst ruby-rubocop ruby-reek ruby-rubylint ruby ruby-jruby rust-cargo rust scala scala-scalastyle scheme-chicken scss-lint scss-stylelint sass/scss-sass-lint sass scss sh-bash sh-posix-dash sh-posix-bash sh-zsh sh-shellcheck slim slim-lint sql-sqlint systemd-analyze tex-chktex tex-lacheck texinfo typescript-tslint verilog-verilator xml-xmlstarlet xml-xmllint yaml-jsyaml yaml-ruby)))
  '(flycheck-display-errors-delay 0.5)
  '(flycheck-flake8-maximum-line-length 120)
  '(gc-cons-threshold 100000000)
