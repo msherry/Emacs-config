@@ -162,6 +162,7 @@ started from a shell."
 ;; File/mode associations
 (add-to-list 'auto-mode-alist '("\\.as$" . actionscript-mode))
 (add-to-list 'auto-mode-alist '("\\.csv$" . csv-mode))
+(add-to-list 'auto-mode-alist '("\\.d$" . dtrace-script-mode))
 (if (version< emacs-version "23.2")     ; js-mode was made standard in 23.2
     (progn
       (add-to-list 'auto-mode-alist '("\\.js$" . js2-mode))
