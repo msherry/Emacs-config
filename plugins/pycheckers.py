@@ -44,6 +44,15 @@ import re
 from subprocess import Popen, PIPE
 import sys
 
+try:
+    # pylint: disable=C0412, W0611
+    from argparse import Namespace     # noqa: F401
+    from typing import (               # noqa: F401
+        Dict, List, IO, Optional, Set, Tuple, Union)
+except ImportError:
+    pass
+
+RUN_THREADED = True
 
 # Customization #
 
@@ -86,21 +95,20 @@ class LintRunner(object):
 
     output_matcher = re.compile(r'')
 
-    sane_default_ignore_codes = set()
+    sane_default_ignore_codes = set()      # type: Set[str]
 
     command = ''
 
-    run_flags = ()
-
     def __init__(self, ignore_codes=(), use_sane_defaults=True, options=None):
+        # type: (Tuple[str, ...], bool, Namespace) -> None
         self.ignore_codes = set(ignore_codes)
         if use_sane_defaults:
             self.ignore_codes |= self.sane_default_ignore_codes
         self.options = options
-        self.out_lines = []
 
     @property
     def name(self):
+        # type: () -> str
         """The linter's name, which is usually the same as the command.
 
         They may be different if there are multiple versions run with
@@ -109,50 +117,65 @@ class LintRunner(object):
         """
         return self.command
 
+    def get_run_flags(self, _filename):
+        # type: (str) -> Tuple[str, ...]
+        return ()
+
     def fixup_data(self, _line, data):
+        # type: (str, Dict[str, str]) -> Dict[str, str]
         return data
 
     def process_output(self, line):
+        # type: (str) -> Union[Dict[str, str], None]
         m = self.output_matcher.match(line)
         if m:
             return m.groupdict()
+        return None
 
-    def _process_stream(self, stream):
-        # This runs over both stdout and stderr
+    def _process_streams(self, *streams):
+        # type: (*IO) -> Tuple[int, List[str]]
+        """This runs over both stdout and stderr, counting errors/warnings."""
+        if not streams:
+            raise ValueError('No streams passed to _process_streams')
         errors_or_warnings = 0
-        for line in stream:
-            match = self.process_output(line)
-            if match:
-                tokens = dict(self.output_template)
-                # Return None from fixup_data to ignore this error
-                fixed_up = self.fixup_data(line, match)
-                if fixed_up:
-                    # Prepend the command name to the description (if present)
-                    # so we know which checker threw which error
-                    if 'description' in fixed_up:
-                        fixed_up['description'] = '%s: %s' % (
-                            self.name, fixed_up['description'])
-                    tokens.update(fixed_up)
-                    self.out_lines.append(self.output_format % tokens)
-                    errors_or_warnings += 1
-        return errors_or_warnings
+        out_lines = []
+        for stream in streams:
+            for line in stream:
+                match = self.process_output(line)
+                if match:
+                    tokens = dict(self.output_template)
+                    # Return None from fixup_data to ignore this error
+                    fixed_up = self.fixup_data(line, match)
+                    if fixed_up:
+                        # Prepend the command name to the description (if
+                        # present) so we know which checker threw which error
+                        if 'description' in fixed_up:
+                            fixed_up['description'] = '%s: %s' % (
+                                self.name, fixed_up['description'])
+                        tokens.update(fixed_up)
+                        out_lines.append(self.output_format % tokens)
+                        errors_or_warnings += 1
+        return errors_or_warnings, out_lines
 
     def run(self, filename):
+        # type: (str) -> Tuple[int, List[str]]
         # `env` to use a virtualenv, if found
         args = ['/usr/bin/env', self.command]
-        args.extend(self.run_flags)
+        args.extend(self.get_run_flags(filename))
         args.append(filename)
 
         try:
             process = Popen(args, stdout=PIPE, stderr=PIPE)
         except Exception as e:
             print e, args
-            return
+            return 1, [str(e)]
 
-        errors_or_warnings = (self._process_stream(process.stdout) +
-                              self._process_stream(process.stderr))
+        out, err = process.communicate()
+        process.wait()
+        errors_or_warnings, out_lines = self._process_streams(
+            out.splitlines(), err.splitlines())
 
-        return errors_or_warnings
+        return errors_or_warnings, out_lines
 
 
 class PyflakesRunner(LintRunner):
@@ -228,8 +251,7 @@ class Flake8Runner(LintRunner):
 
         return data
 
-    @property
-    def run_flags(self):
+    def get_run_flags(self, _filename):
         return (
             '--ignore=' + ','.join(self.ignore_codes),
             '--max-line-length', str(self.options.max_line_length),
@@ -261,8 +283,7 @@ class Pep8Runner(LintRunner):
         data['level'] = 'WARNING'
         return data
 
-    @property
-    def run_flags(self):
+    def get_run_flags(self, _filename):
         return (
             '--repeat',
             '--ignore=' + ','.join(self.ignore_codes),
@@ -317,7 +338,7 @@ class PylintRunner(LintRunner):
         r'\s*(?P<context>[^\]]*)\]'
         r'\s*(?P<description>.*)$')
 
-    sane_default_ignore_codes = set([
+    sane_default_ignore_codes = {
         "C0103",  # Naming convention
         "C0111",  # Missing Docstring
         "W0142",
@@ -334,7 +355,7 @@ class PylintRunner(LintRunner):
         "R0903",  # Too few public methods
         "R0904",  # Too many public methods
         "R0914",  # Too many local variables
-    ])
+    }
 
     @classmethod
     def fixup_data(cls, _line, data):
@@ -344,8 +365,7 @@ class PylintRunner(LintRunner):
             data['level'] = 'WARNING'
         return data
 
-    @property
-    def run_flags(self):
+    def get_run_flags(self, _filename):
         return (
             '--output-format', 'parseable',
             '--reports', 'n',
@@ -365,10 +385,28 @@ class MyPy2Runner(LintRunner):
         r' (?P<level>[^:]+):'
         r' (?P<description>.+)$')
 
-    @property
-    def run_flags(self):
+    def _get_cache_dir(self, filename):
+        # type: (str) -> str
+        """Find the appropriate .mypy_cache dir for the given branch.
+
+        Designed to be compatible with Dropbox's (internal) ci/mypy.sh script.
+        """
+        branch_top = os.path.join(
+            find_project_dir(filename), '.mypy_cache', 'branches')
+        branch = get_vcs_branch_name(filename)
+        if branch:
+            cache_dir = os.path.join(branch_top, branch)
+        else:
+            # ERROR: can't figure out current branch
+            cache_dir = os.path.join(branch_top, 'HEAD')
+        return cache_dir
+
+    def get_run_flags(self, filename):
         return (
             '--py2',
+            '--cache-dir={}'.format(self._get_cache_dir(filename)),
+            '--incremental',
+            '--quick-and-dirty',
             '--ignore-missing-imports',
             '--strict-optional',
         )
@@ -386,10 +424,13 @@ class MyPy3Runner(MyPy2Runner):
     def name(self):
         return 'mypy3'
 
-    @property
-    def run_flags(self):
+    def get_run_flags(self, filename):
         return (
+            '--cache-dir={}'.format(self._get_cache_dir(filename)),
+            '--incremental',
+            '--quick-and-dirty',
             '--ignore-missing-imports',
+            '--strict-optional',
         )
 
 
@@ -430,14 +471,15 @@ def update_options_from_file(options, config_file_path):
                     value = True
                 setattr(options, key, value)
     if hasattr(options, 'extra_ignore_codes'):
-        extra_ignore_codes = (options
-                              .extra_ignore_codes.replace(',', ' ').split())
+        extra_ignore_codes = (
+            options.extra_ignore_codes.replace(',', ' ').split())
         # Allow for extending, rather than replacing, ignore codes
         options.ignore_codes.extend(extra_ignore_codes)
     return options
 
 
 def update_options_locally(options):
+    # type: (Namespace) -> Namespace
     """
     Traverse the project directory until a config file is found or the
     filesystem root is reached. If found, use overrides from config as
@@ -451,37 +493,127 @@ def update_options_locally(options):
             if not options.merge_configs:
                 # We found a file and parsed it, now we're done
                 break
-        if os.path.dirname(dir_path) == dir_path:
+        parent = os.path.dirname(dir_path)
+        if parent == dir_path:
             break
-        dir_path = os.path.dirname(dir_path)
+        dir_path = parent
         config_file_path = os.path.join(dir_path, '.pycheckers')
 
     return options
 
 
 def run_one_checker(ignore_codes, options, source_file, checker_name):
+    # type: (Tuple[str, ...], Namespace, str, str) -> Tuple[int, List[str]]
     checker_class = RUNNERS[checker_name]
-    runner = checker_class(ignore_codes=ignore_codes, options=options)
-    errors_or_warnings = runner.run(source_file)
-    return (errors_or_warnings, runner.out_lines)
+    runner = checker_class(
+        ignore_codes=ignore_codes, options=options)
+    errors_or_warnings, out_lines = runner.run(source_file)
+    return (errors_or_warnings, out_lines)
 
 
-def update_env_with_virtualenv(source_file):
-    """Determine if the current file is part of a package that has a
-    virtualenv, and munge paths appropriately"""
+def find_vcs_root(source_file):
+    # type: (str) -> Tuple[Optional[str], Optional[str]]
+
+    def _is_vcs_root(dir_):
+        # type: (str) -> str
+        for part in ['.git', '.svn', '.hg', '.cvs', '.jedi']:
+            path = os.path.join(dir_, part)
+            if os.path.exists(path) and os.path.isdir(path):
+                return part[1:]             # return the name of the vcs system
+        return ''
+
+    cur_dir = os.path.dirname(source_file)
+    while True:
+        vcs_name = _is_vcs_root(cur_dir)
+        if vcs_name:
+            return cur_dir, vcs_name
+        parent = os.path.dirname(cur_dir)
+        if parent == cur_dir:
+            break              # Hit the FS root without finding VCS info
+        cur_dir = parent
+    return None, None
+
+
+def get_vcs_branch_name(source_file):
+    # type: (str) -> Optional[str]
+    """If under source control and the VCS supports branches, find branch name.
+    """
+    # TODO: only supports git for now
+
+    commands = {
+        'git': ['git', 'symbolic-ref', '--short', 'HEAD'],
+    }
+    _vcs_root, vcs_name = find_vcs_root(source_file)
+    if not vcs_name or vcs_name not in commands:
+        raise ValueError('Unsupported VCS: {}'.format(vcs_name))
+
+    dirname = os.path.dirname(source_file)
+    args = commands[vcs_name]
+    p = Popen(args, stdout=PIPE, stderr=PIPE, cwd=dirname)
+    out, _err = p.communicate()
+    p.wait()
+    out = out.strip()
+
+    return out if out else None
+
+
+def find_correct_virtualenv(source_file):
+    # type: (str) -> Tuple[Optional[str], Optional[str]]
+    """Return the virtualenv that corresponds to this source file, if any, plus
+    the project root.
+
+    The virtualenv name must match the name of one of the containing
+    directories.
+
+    """
     # TODO: this is very unix-specific
     full_path = os.path.abspath(source_file)
     dir_components = os.path.dirname(full_path).split('/')
     # TODO: this should be a setting
     virtualenv_base = os.path.expanduser('~/.virtualenvs/')
+    used_components = []
     for component in dir_components:
         if not component:
             continue
+        used_components.append(component)
         virtualenv_path = os.path.join(virtualenv_base, component)
         if os.path.exists(virtualenv_path):
-            bin_path = os.path.join(virtualenv_path, 'bin')
-            os.environ['PATH'] = bin_path + ':' + os.environ['PATH']
-            break
+            return virtualenv_path, os.path.join(*used_components)
+    return None, None
+
+
+def update_env_with_virtualenv(source_file):
+    # type: (str) -> None
+    """Determine if the current file is part of a package that has a
+    virtualenv, and munge paths appropriately"""
+
+    venv_path, _project_root = find_correct_virtualenv(source_file)
+    if venv_path:
+        bin_path = os.path.join(venv_path, 'bin')
+        os.environ['PATH'] = bin_path + ':' + os.environ['PATH']
+
+
+def find_project_dir(source_file):
+    # type: (str) -> str
+    """Find the root of the current project.
+
+    - Based on ~/.emacs.d/plugins/jedi-local.el, look for a VCS directory.
+    - Failing that, find a virtualenv that matches a part of the directory.
+    - Otherwise, just use the local directory.
+    """
+    # Case 1
+    vcs_root, _vcs_name = find_vcs_root(source_file)
+    if vcs_root:
+        return vcs_root
+
+    # Case 2
+    _venv_root, project_dir = find_correct_virtualenv(source_file)
+    if project_dir:
+        return project_dir
+
+    # Case 3 - couldn't find a project directory, just use the source_file's
+    # parent
+    return os.path.dirname(source_file)
 
 
 def parse_args():
@@ -505,7 +637,9 @@ def parse_args():
 
 def main():
     # transparently add a virtualenv to the path when launched with a venv'd
-    # python.
+    # python. We can sometimes count on emacs to launch us with the correct
+    # python, but we need to handle being run manually, or with emacs in a
+    # confused state.
     os.environ['PATH'] = (os.path.dirname(sys.executable) + ':' +
                           os.environ['PATH'])
 
@@ -525,17 +659,26 @@ def main():
         croak(("Unknown checker %s" % checker_name),
               ("Expected one of %s" % ', '.join(RUNNERS.keys())))
 
-    from multiprocessing import Pool
-    p = Pool(5)
+    if RUN_THREADED:
+        from multiprocessing import Pool
+        p = Pool(5)
 
-    func = partial(run_one_checker, ignore_codes, options, source_file)
+        func = partial(run_one_checker, ignore_codes, options, source_file)
 
-    outputs = p.map(func, checker_names)
-    p.close()
-    p.join()
+        outputs = p.map(func, checker_names)
+        p.close()
+        p.join()
+        counts, out_lines_list = zip(*outputs)
+        errors_or_warnings = sum(counts)
+    else:
+        errors_or_warnings = 0
+        out_lines_list = []
+        for checker_name in checker_names:
+            e_or_w, o_l = run_one_checker(
+                ignore_codes, options, source_file, checker_name)
+            errors_or_warnings += e_or_w
+            out_lines_list.append(o_l)
 
-    counts, out_lines_list = zip(*outputs)
-    errors_or_warnings = sum(counts)
     for out_lines in out_lines_list:
         for line in out_lines:
             print line

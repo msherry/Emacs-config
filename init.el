@@ -498,7 +498,7 @@ annotations"
 
 
 (defun buffer-mode-histogram ()
-  "Display a histogram of emacs buffer modes.
+  "Display a histogram of Emacs buffer modes.
 
 http://blogs.fluidinfo.com/terry/2011/11/10/emacs-buffer-mode-histogram/"
   (interactive)
@@ -573,7 +573,7 @@ http://blogs.fluidinfo.com/terry/2011/11/10/emacs-buffer-mode-histogram/"
    (quote
     (elpy-module-company elpy-module-eldoc elpy-module-pyvenv elpy-module-sane-defaults)))
  '(epa-pinentry-mode (quote loopback))
- '(flycheck-display-errors-delay 0.5)
+ '(flycheck-display-errors-delay 0.15)
  '(flycheck-flake8-maximum-line-length 120)
  '(gc-cons-threshold 100000000)
  '(git-commit-summary-max-length 79)
