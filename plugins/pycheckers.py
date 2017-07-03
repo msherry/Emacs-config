@@ -385,6 +385,13 @@ class MyPy2Runner(LintRunner):
         r' (?P<level>[^:]+):'
         r' (?P<description>.+)$')
 
+    _base_flags = (
+        '--incremental',
+        '--quick-and-dirty',
+        '--ignore-missing-imports',
+        '--strict-optional',
+    )
+
     def _get_cache_dir(self, filename):
         # type: (str) -> str
         """Find the appropriate .mypy_cache dir for the given branch.
@@ -392,7 +399,7 @@ class MyPy2Runner(LintRunner):
         Designed to be compatible with Dropbox's (internal) ci/mypy.sh script.
         """
         branch_top = os.path.join(
-            find_project_dir(filename), '.mypy_cache', 'branches')
+            find_project_root(filename), '.mypy_cache', 'branches')
         branch = get_vcs_branch_name(filename)
         if branch:
             cache_dir = os.path.join(branch_top, branch)
@@ -405,11 +412,7 @@ class MyPy2Runner(LintRunner):
         return (
             '--py2',
             '--cache-dir={}'.format(self._get_cache_dir(filename)),
-            '--incremental',
-            '--quick-and-dirty',
-            '--ignore-missing-imports',
-            '--strict-optional',
-        )
+        ) + self._base_flags
 
     def fixup_data(self, _line, data):
         data['level'] = data['level'].upper()
@@ -427,11 +430,7 @@ class MyPy3Runner(MyPy2Runner):
     def get_run_flags(self, filename):
         return (
             '--cache-dir={}'.format(self._get_cache_dir(filename)),
-            '--incremental',
-            '--quick-and-dirty',
-            '--ignore-missing-imports',
-            '--strict-optional',
-        )
+        ) + self._base_flags
 
 
 def croak(*msgs):
@@ -456,9 +455,9 @@ def update_options_from_file(options, config_file_path):
     config.read(config_file_path)
 
     for key, value in config.defaults().iteritems():
-        if value in ['False', 'false', 'F', 'f']:
+        if value.lower() in {'false', 'f'}:
             value = False
-        elif value in ['True', 'true', 'T', 't']:
+        elif value.lower() in {'true', 't'}:
             value = True
         setattr(options, key, value)
     for section_name in config.sections():
@@ -594,7 +593,7 @@ def update_env_with_virtualenv(source_file):
         os.environ['PATH'] = bin_path + ':' + os.environ['PATH']
 
 
-def find_project_dir(source_file):
+def find_project_root(source_file):
     # type: (str) -> str
     """Find the root of the current project.
 
