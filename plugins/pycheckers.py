@@ -545,7 +545,8 @@ def get_vcs_branch_name(source_file):
     }
     _vcs_root, vcs_name = find_vcs_root(source_file)
     if not vcs_name or vcs_name not in commands:
-        raise ValueError('Unsupported VCS: {}'.format(vcs_name))
+        # Unsupported VCS
+        return None
 
     dirname = os.path.dirname(source_file)
     args = commands[vcs_name]
