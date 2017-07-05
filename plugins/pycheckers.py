@@ -48,7 +48,7 @@ try:
     # pylint: disable=C0412, W0611
     from argparse import Namespace     # noqa: F401
     from typing import (               # noqa: F401
-        Dict, List, IO, Optional, Set, Tuple, Union)
+        Dict, List, IO, Optional, Set, Tuple)
 except ImportError:
     pass
 
@@ -126,14 +126,14 @@ class LintRunner(object):
         return data
 
     def process_output(self, line):
-        # type: (str) -> Union[Dict[str, str], None]
+        # type: (str) -> Optional[Dict[str, str]]
         m = self.output_matcher.match(line)
         if m:
             return m.groupdict()
         return None
 
     def _process_streams(self, *streams):
-        # type: (*IO) -> Tuple[int, List[str]]
+        # type: (*List[str]) -> Tuple[int, List[str]]
         """This runs over both stdout and stderr, counting errors/warnings."""
         if not streams:
             raise ValueError('No streams passed to _process_streams')
