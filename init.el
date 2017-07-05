@@ -40,7 +40,7 @@
                          (top . 48)
                          (width . 186)
                          (height . 87))))
-          (set-default-font "-unknown-DejaVu Sans Mono-normal-normal-normal-*-14-*-*-*-m-0-iso10646-1")))
+         (set-default-font "-unknown-DejaVu Sans Mono-normal-normal-normal-*-14-*-*-*-m-0-iso10646-1")))
   (if (fboundp #'tool-bar-mode) (tool-bar-mode -1))
 
   (set-frame-parameter (selected-frame) 'alpha '(100 100))
@@ -161,6 +161,8 @@ started from a shell."
 
 ;; File/mode associations
 (add-to-list 'auto-mode-alist '("\\.as$" . actionscript-mode))
+;; use json-mode for avsc files
+(add-to-list 'auto-mode-alist '("\\.avsc\\'" . json-mode))
 (add-to-list 'auto-mode-alist '("\\.csv$" . csv-mode))
 (add-to-list 'auto-mode-alist '("\\.d$" . dtrace-script-mode))
 (if (version< emacs-version "23.2")     ; js-mode was made standard in 23.2

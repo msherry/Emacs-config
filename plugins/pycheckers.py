@@ -454,19 +454,25 @@ def update_options_from_file(options, config_file_path):
     config = ConfigParser.SafeConfigParser()
     config.read(config_file_path)
 
+    def _is_false(value):
+        return value.lower() in {'false', 'f'}
+
+    def _is_true(value):
+        return value.lower() in {'true', 't'}
+
     for key, value in config.defaults().iteritems():
-        if value.lower() in {'false', 'f'}:
+        if _is_false(value):
             value = False
-        elif value.lower() in {'true', 't'}:
+        elif _is_true(value):
             value = True
         setattr(options, key, value)
     for section_name in config.sections():
         if (re.search(section_name, options.file) or
                 re.search(section_name, options.file.replace('_flymake', ''))):
             for key, value in config.items(section_name):
-                if value in ['False', 'false', 'F', 'f']:
+                if _is_false(value):
                     value = False
-                elif value in ['True', 'true', 'T', 't']:
+                elif _is_true(value):
                     value = True
                 setattr(options, key, value)
     if hasattr(options, 'extra_ignore_codes'):
