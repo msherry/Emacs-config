@@ -57,7 +57,8 @@ RUN_THREADED = True
 # Customization #
 
 # Checkers to run by default, when no --checkers options are supplied.
-default_checkers = 'flake8,pylint,mypy,mypy3'
+# default_checkers = 'flake8,pylint,mypy,mypy3'
+default_checkers = 'pylint,mypy,mypy3'
 
 # A list of error codes to ignore for PEP8
 default_ignore_codes = [

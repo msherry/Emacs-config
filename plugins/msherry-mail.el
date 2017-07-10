@@ -141,17 +141,17 @@ With a prefix argument, jump to the `notmuch' home screen."
 
 ;;; For display-time-mode
 (defun msherry-new-important-mail ()
-  "Return t if new important mail, else nil
+  "Return t if new important mail, else nil.
 
 https://gist.github.com/dbp/9627194"
-  ;; TODO: if the current buffer is a remote file (over TRAMP), then the shell
-  ;; command is executed on the remote host, and notmuch is likely not present,
-  ;; causing this to mistakenly return t
-  (if (string= (s-chomp
-                (shell-command-to-string "/usr/local/bin/notmuch count tag:INBOX and tag:unread"))
-               "0")
-      nil
-    t))
+  ;; Ensure we're in a local directory so Tramp doesn't try to run a remote
+  ;; `notmuch`
+  (let ((default-directory expanded-user-emacs-directory))
+    (if (string= (s-chomp
+                  (shell-command-to-string "/usr/local/bin/notmuch count tag:INBOX and tag:unread"))
+                 "0")
+        nil
+      t)))
 
 
 (defun msherry-notmuch-show-redraw-tags ()
