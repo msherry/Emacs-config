@@ -79,6 +79,9 @@ default_ignore_codes = [
     # 'E128',          # continuation line under-indented for visual indent
     'E711',            # comparison to None should be...
     'E712',            # comparison to True/False should be ...
+
+    'C0411',           # external import "..." comes before "..."
+    'C0413',           # Import "..." should be placed at the top of the module
 ]
 
 # End of customization #
@@ -123,7 +126,7 @@ class LintRunner(object):
         return ()
 
     def fixup_data(self, _line, data):
-        # type: (str, Dict[str, str]) -> Dict[str, str]
+        # type: (str, Dict[str, str]) -> Optional[Dict[str, str]]
         return data
 
     def process_output(self, line):
