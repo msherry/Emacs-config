@@ -1,47 +1,22 @@
 #!/usr/local/bin/python
 """A hacked up version of the multiple-Python checkers script from EmacsWiki.
 
- - Simplified & faster
- - Extended with pep8.py
- - Extended with pydo (http://www.lunaryorn.de/code/pydo.html)
- - pylint & pychecker removed
-
-Drop something like this in your .emacs:
-
-(when (load "flymake" t)
-  (defun flymake-pycheckers-init ()
-    (let* ((temp-file (flymake-init-create-temp-buffer-copy
-                       'flymake-create-temp-inplace))
-           (local-file (file-relative-name
-                        temp-file
-                        (file-name-directory buffer-file-name))))
-      (list "/path/to/this/file" (list local-file))))
-
-
-You may also need to set up your path up in the __main__ function at the
-bottom of the file and change the #! line above to an appropriate interpreter.
-
-==============================================================================
-
-This code is made available by Jason Kirtland <jek@discorporate.us> under the
-Creative Commons Share Alike 1.0 license:
-http://creativecommons.org/licenses/sa/1.0/
-
 Original work taken from http://www.emacswiki.org/emacs/PythonMode, author
 unknown.
 
+Further extended by Jason Kirtland <jek@discorporate.us> under the Creative
+Commons Share Alike 1.0 license:
+http://creativecommons.org/licenses/sa/1.0/
 
-==============================================================================
-
-Further modified and extended by Marc Sherry.
+Later improvements by Marc Sherry <msherry@gmail.com>
 """
 
-from argparse import ArgumentParser
+from argparse import ArgumentParser, ArgumentTypeError
 import ConfigParser
 from functools import partial
 import os
 import re
-from subprocess import Popen, PIPE
+from subprocess import call, Popen, PIPE
 import sys
 
 try:
@@ -51,8 +26,6 @@ try:
         Dict, List, IO, Optional, Set, Tuple)
 except ImportError:
     pass
-
-RUN_THREADED = True
 
 # Customization #
 
@@ -167,8 +140,30 @@ class LintRunner(object):
                         errors_or_warnings += 1
         return errors_or_warnings, out_lines
 
+    def _executable_exists(self):
+        # type: () -> bool
+        # https://stackoverflow.com/a/6569511/52550
+        args = ['/usr/bin/env', 'which', self.command]
+        try:
+            process = Popen(args, stdout=PIPE, stderr=PIPE)
+        except Exception as e:                   # pylint: disable=broad-except
+            print e
+            return False
+        exec_path, _err = process.communicate()
+
+        args = ['[', '-x', exec_path.strip(), ']']
+        retcode = call(args)
+        return retcode == 0
+
     def run(self, filename):
         # type: (str) -> Tuple[int, List[str]]
+
+        if not self._executable_exists():
+            # Return a parseable error message so the normal parsing mechanism can display it
+            return 1, [
+                'WARNING : {}:Checker not found on PATH, unable to check at {} line 1.'.format(
+                    self.command, filename)]
+
         # `env` to use a virtualenv, if found
         args = ['/usr/bin/env', self.command]
         args.extend(self.get_run_flags(filename))
@@ -176,7 +171,7 @@ class LintRunner(object):
 
         try:
             process = Popen(args, stdout=PIPE, stderr=PIPE)
-        except Exception as e:
+        except Exception as e:                   # pylint: disable=broad-except
             print e, args
             return 1, [str(e)]
 
@@ -299,35 +294,6 @@ class Pep8Runner(LintRunner):
             '--ignore=' + ','.join(self.ignore_codes),
             '--max-line-length', str(self.options.max_line_length),
         )
-
-
-class PydoRunner(LintRunner):
-    """Run pydo, producing flymake readable output.
-
-    The raw output looks like:
-      users.py:356:FIXME this will fail if None
-      users.py:470:todo:rtf memcache this possibly?
-      users.py:482:TODO This will need to trigger a history entry and
-
-    """
-
-    command = 'pydo'
-
-    output_matcher = re.compile(
-        r'(?P<filename>[^:]+):'
-        r'(?P<line_number>[^:]+):'
-        r'(?P<error_number>\w+)'
-        r'(\W*|\s*)'
-        r'(?P<description>.*)$')
-
-    @classmethod
-    def fixup_data(cls, _line, data):
-        number = data['error_number'] = data['error_number'].upper()
-        if number == 'FIXME':
-            data['level'] = 'ERROR'
-        else:
-            data['level'] = 'WARNING'
-        return data
 
 
 class PylintRunner(LintRunner):
@@ -456,7 +422,6 @@ RUNNERS = {
     'pyflakes': PyflakesRunner,
     'flake8': Flake8Runner,
     'pep8': Pep8Runner,
-    'pydo': PydoRunner,
     'pylint': PylintRunner,
     'mypy2': MyPy2Runner,
     'mypy3': MyPy3Runner,
@@ -636,6 +601,15 @@ def find_project_root(source_file):
 
 
 def parse_args():
+
+    def str2bool(v):
+        if v.lower() in ('yes', 'true', 't', 'y', '1'):
+            return True
+        elif v.lower() in ('no', 'false', 'f', 'n', '0'):
+            return False
+        else:
+            raise ArgumentTypeError('Boolean value expected.')
+
     parser = ArgumentParser()
     parser.add_argument('file', type=str, help='Filename to check')
     parser.add_argument("-c", "--checkers", dest="checkers",
@@ -651,6 +625,8 @@ def parse_args():
                         action='store_false',
                         help=('Whether to ignore config files found at a '
                               'higher directory than this one'))
+    parser.add_argument('--multi-thread', type=str2bool, default=True, action='store',
+                        help='Run checkers sequentially, rather than simultaneously')
     return parser.parse_args()
 
 
@@ -678,7 +654,7 @@ def main():
         croak(("Unknown checker %s" % checker_name),
               ("Expected one of %s" % ', '.join(RUNNERS.keys())))
 
-    if RUN_THREADED:
+    if options.multi_thread:
         from multiprocessing import Pool
         p = Pool(5)
 

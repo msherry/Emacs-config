@@ -27,8 +27,7 @@
               (const :tag "mypy 3" mypy3)
               (const :tag "PEP8" pep8)
               (const :tag "flake8" flake8)
-              (const :tag "pyflakes" pyflakes)
-              (const :tag "pydo" pydo)))
+              (const :tag "pyflakes" pyflakes)))
 
 (flycheck-def-option-var flycheck-pycheckers-ignore-codes '("C0411"
                                                             "C0413")
@@ -40,6 +39,12 @@
     python-pycheckers
   "The maximum line length allowed by the checkers."
   :type 'integer)
+
+(flycheck-def-option-var flycheck-pycheckers-multi-thread "true"
+    python-pycheckers
+  "Whether to run multiple checkers simultaneously"
+  :type '(radio (const :tag "Multi-threaded" "true")
+                 (const :tag "Single-threaded" "false")))
 
 (flycheck-define-checker python-pycheckers
   "Multiple python syntax checker.
@@ -53,6 +58,7 @@ customize things per-directory."
             "-i" (eval (mapconcat 'identity flycheck-pycheckers-ignore-codes ","))
             "-c" (eval (mapconcat #'symbol-name flycheck-pycheckers-checkers ","))
             "--max-line-length" (eval (number-to-string flycheck-pycheckers-max-line-length))
+            "--multi-thread" (eval flycheck-pycheckers-multi-thread)
             source-original)
   :error-patterns
   ((error line-start
