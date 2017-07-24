@@ -57,8 +57,8 @@ RUN_THREADED = True
 # Customization #
 
 # Checkers to run by default, when no --checkers options are supplied.
-# default_checkers = 'flake8,pylint,mypy,mypy3'
-default_checkers = 'pylint,mypy,mypy3'
+# default_checkers = 'flake8,pylint,mypy2,mypy3'
+default_checkers = 'pylint,mypy2,mypy3'
 
 # A list of error codes to ignore for PEP8
 default_ignore_codes = [
@@ -77,8 +77,8 @@ default_ignore_codes = [
 
     # 'E127',          # continuation line over-indented for visual indent
     # 'E128',          # continuation line under-indented for visual indent
-    'E711',            # comparison to None should be...
-    'E712',            # comparison to True/False should be ...
+    # 'E711',            # comparison to None should be...
+    # 'E712',            # comparison to True/False should be ...
 
     'C0411',           # external import "..." comes before "..."
     'C0413',           # Import "..." should be placed at the top of the module
@@ -92,10 +92,13 @@ class LintRunner(object):
 
     output_format = ("%(level)s %(error_type)s%(error_number)s:"
                      "%(description)s at %(filename)s line %(line_number)s.")
+    output_format_w_column = ("%(level)s %(error_type)s%(error_number)s:"
+                              "%(description)s at %(filename)s line %(line_number)s,"
+                              "%(column_number)s.")
 
     output_template = dict.fromkeys(
         ('level', 'error_type', 'error_number', 'description',
-         'filename', 'line_number'), '')
+         'filename', 'line_number', 'column_number'), '')
 
     output_matcher = re.compile(r'')
 
@@ -103,8 +106,9 @@ class LintRunner(object):
 
     command = ''
 
-    def __init__(self, ignore_codes=(), use_sane_defaults=True, options=None):
-        # type: (Tuple[str, ...], bool, Namespace) -> None
+    def __init__(self, ignore_codes=None, use_sane_defaults=True, options=None):
+        # type: (Optional[Tuple[str, ...]], bool, Namespace) -> None
+        ignore_codes = ignore_codes or ()
         self.ignore_codes = set(ignore_codes)
         if use_sane_defaults:
             self.ignore_codes |= self.sane_default_ignore_codes
@@ -157,7 +161,9 @@ class LintRunner(object):
                             fixed_up['description'] = '%s: %s' % (
                                 self.name, fixed_up['description'])
                         tokens.update(fixed_up)
-                        out_lines.append(self.output_format % tokens)
+                        template = (self.output_format_w_column if fixed_up.get('column_number')
+                                    else self.output_format)
+                        out_lines.append(template % tokens)
                         errors_or_warnings += 1
         return errors_or_warnings, out_lines
 
@@ -278,7 +284,7 @@ class Pep8Runner(LintRunner):
     output_matcher = re.compile(
         r'(?P<filename>[^:]+):'
         r'(?P<line_number>[^:]+):'
-        r'[^:]+:'
+        r'(?P<column_number>[^:]+):'
         r' (?P<error_number>\w+) '
         r'(?P<description>.+)$')
 
@@ -338,6 +344,7 @@ class PylintRunner(LintRunner):
     output_matcher = re.compile(
         r'(?P<filename>[^:]+):'
         r'(?P<line_number>\d+):'
+        r'(?P<column_number>\d+):'
         r'\s*\[(?P<error_type>[WECR])(?P<error_number>[^(,\]]+),?'
         r'\s*(?P<context>[^\]]*)\]'
         r'\s*(?P<description>.*)$')
@@ -371,7 +378,9 @@ class PylintRunner(LintRunner):
 
     def get_run_flags(self, _filename):
         return (
-            '--output-format', 'parseable',
+            # '--output-format', 'parseable',
+            # like `--output-format parseable`, but includes column
+            '--msg-template', '{path}:{line}:{column}: [{msg_id}({symbol}), {obj}] {msg}',
             '--reports', 'n',
             '--disable=' + ','.join(self.ignore_codes),
             '--dummy-variables-rgx=' + '_.*',
@@ -449,7 +458,7 @@ RUNNERS = {
     'pep8': Pep8Runner,
     'pydo': PydoRunner,
     'pylint': PylintRunner,
-    'mypy': MyPy2Runner,
+    'mypy2': MyPy2Runner,
     'mypy3': MyPy3Runner,
 }
 
@@ -633,8 +642,8 @@ def parse_args():
                         default=default_checkers,
                         help="Comma-separated list of checkers")
     parser.add_argument("-i", "--ignore_codes", dest="ignore_codes",
-                        default=default_ignore_codes, action='append',
-                        help="Error codes to ignore")
+                        default=','.join(default_ignore_codes),
+                        help="Comma-separated list of error codes to ignore")
     parser.add_argument('--max-line-length', dest='max_line_length',
                         default=80, action='store',
                         help='Maximum line length')
@@ -657,7 +666,7 @@ def main():
 
     source_file = options.file
     checkers = options.checkers
-    ignore_codes = options.ignore_codes
+    ignore_codes = tuple(options.ignore_codes.split(","))
 
     options = update_options_locally(options)
     update_env_with_virtualenv(source_file)
