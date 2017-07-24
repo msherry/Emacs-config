@@ -311,7 +311,8 @@ class PylintRunner(LintRunner):
         r'(?P<filename>[^:]+):'
         r'(?P<line_number>\d+):'
         r'(?P<column_number>\d+):'
-        r'\s*\[(?P<error_type>[WECR])(?P<error_number>[^(,\]]+),?'
+        r'\s*\[(?P<error_type>[WECR])(?P<error_number>[^(,\]]+)'
+        r'\((?P<symbol>[^)]*)\)'
         r'\s*(?P<context>[^\]]*)\]'
         r'\s*(?P<description>.*)$')
 
@@ -340,13 +341,16 @@ class PylintRunner(LintRunner):
             data['level'] = 'ERROR'
         else:
             data['level'] = 'WARNING'
+
+        if data.get('symbol'):
+            data['description'] += '  ("{}")'.format(data['symbol'])
         return data
 
     def get_run_flags(self, _filename):
         return (
             # '--output-format', 'parseable',
             # like `--output-format parseable`, but includes column
-            '--msg-template', '{path}:{line}:{column}: [{msg_id}({symbol}), {obj}] {msg}',
+            '--msg-template', '{path}:{line}:{column}: [{msg_id}({symbol})] {msg}',
             '--reports', 'n',
             '--disable=' + ','.join(self.ignore_codes),
             '--dummy-variables-rgx=' + '_.*',
