@@ -1,3 +1,4 @@
+.DS_Store
 *.elc
 *.pyc
 auto-save-list/*

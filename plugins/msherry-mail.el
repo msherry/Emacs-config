@@ -179,8 +179,8 @@ https://gist.github.com/dbp/9627194"
 
 (defun msherry-highlight-myself (&rest args)
   "Note - this doesn't use font-lock-mode, so it's not updated on the fly"
-  (dolist (regex (list "\\<\\(marc\\( sherry\\)?\\)\\>"
-                       "\\<\\(msherry\\)\\>"))
+  (dolist (regex (list "\\<marc\\( sherry\\)?\\>"
+                       "\\<msherry\\>"))
     (unhighlight-regexp regex)          ; Unhighlight to force a full redraw
     (highlight-regexp regex 'font-lock-constant-face)))
 (advice-add 'notmuch-show-insert-msg :after #'msherry-highlight-myself)
