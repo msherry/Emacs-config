@@ -11,6 +11,7 @@ swank/
 url/
 elpa/archives/*
 elpa/jedi-0.1.2/env/
+elpa/*readme.txt
 eshell/history
 ac-comphist.dat
 .python-environments
