@@ -96,7 +96,8 @@ started from a shell."
 ;; (require 'doxymacs)
 (require 'erlang-start)
 (require 'flymake-point) ; shows errors in the minibuffer when highlighted
-(require 'flymake-mypy)
+(require 'flycheck-mypy)
+(require 'flycheck-pycheckers)
 (require 'highlight-beyond-fill-column)
 (require 'jabber-keymap) ; This loads inconsistently on its own
 (require 'magit)
@@ -308,14 +309,14 @@ started from a shell."
 ; Let's try flycheck instead of flymake, with a custom checker for our own
 ; wrapper script
 (global-flycheck-mode 1)
-(require 'flycheck-mypy)  ; unused in favor of flycheck-pycheckers, but enabled
-(require 'flycheck-pycheckers)
 ;;; TODO: flymake-add-next-checker should let us chain existing checkers
 ;;; without needing our script at all -
 ;;; https://github.com/flycheck/flycheck/issues/185
-(add-hook 'flycheck-mode-hook
-          '(lambda ()
-            (local-set-key (kbd "C-c .") 'flycheck-next-error)))
+(with-eval-after-load 'flycheck
+  (add-hook 'flycheck-mode-hook
+            '(lambda ()
+              (local-set-key (kbd "C-c .") 'flycheck-next-error)
+              (flycheck-pycheckers-setup))))
 
 ; Fast jumps to windows
 (window-numbering-mode)
@@ -564,8 +565,6 @@ http://blogs.fluidinfo.com/terry/2011/11/10/emacs-buffer-mode-histogram/"
  '(custom-safe-themes
    (quote
     ("8aebf25556399b58091e533e455dd50a6a9cba958cc4ebb0aab175863c25b9a4" default)))
- '(desktop-restore-frames nil)
- '(desktop-save-mode t)
  '(dired-bind-jump nil)
  '(display-time-default-load-average nil)
  '(display-time-format "")
