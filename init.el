@@ -1,8 +1,15 @@
+;;; init.el -- msherry's init.el
+
+;;; Commentary:
+
 ;; Much of this is organized similar to:
 ;; http://bitbucket.org/brodie/dotfiles/src/tip/.emacs
 
+;;; Code:
+
 ;; Do these early so if there's an error in config we don't pollute ~/ with
 ;; junk files
+(defvar save-place-file)                ; C-h i g (Elisp) Warning Tips
 (setq save-place-file "~/.emacs.d/emacs-places"
       backup-directory-alist '(("." . "~/.emacs.d/backups")))
 
@@ -40,7 +47,7 @@
                          (top . 48)
                          (width . 186)
                          (height . 87))))
-         (set-default-font "-unknown-DejaVu Sans Mono-normal-normal-normal-*-14-*-*-*-m-0-iso10646-1")))
+         (set-frame-font "-unknown-DejaVu Sans Mono-normal-normal-normal-*-14-*-*-*-m-0-iso10646-1")))
   (if (fboundp #'tool-bar-mode) (tool-bar-mode -1))
 
   (set-frame-parameter (selected-frame) 'alpha '(100 100))
@@ -56,7 +63,7 @@
 ;;; Set the PATH, even if not started from the shell
 ;;; https://stackoverflow.com/questions/8606954/path-and-exec-path-set-but-emacs-does-not-find-executable
 (defun set-exec-path-from-shell-PATH ()
-  "Set up Emacs' `exec-path' and PATH environment variable to match that used by the user's shell.
+  "Set up `exec-path' and PATH environment variable to match the user's shell.
 
 This is particularly useful under Mac OSX, where GUI apps are not
 started from a shell."
@@ -69,8 +76,7 @@ started from a shell."
 ;; Set up environment
 (set-language-environment "UTF-8")
 
-;; TODO: user-emacs-directory depends on emacs >=23
-(setq expanded-user-emacs-directory (expand-file-name user-emacs-directory))
+(defvar expanded-user-emacs-directory (expand-file-name user-emacs-directory))
 
 ;; Configure ELPA (package loader)
 (require 'package)
@@ -387,6 +393,7 @@ started from a shell."
 ;; here
 (require 'custom-utils)
 (defun turn-off-auto-save-mode-if-tramp ()
+  "Disable `auto-save-mode' if the file is remote."
   (when (not (file-is-local-and-writable-p))
     (auto-save-mode nil)))
 
@@ -404,8 +411,9 @@ started from a shell."
                                (scroll-up 5))))
 
 (defun bh-choose-header-mode ()
-  "Choose the correct c style (Objective-C, C++, C) when opening a .h file, based
-on the presence of a similarly-named .m/.cpp file.
+  "Choose the correct C style (Objective-C, C++, C) when opening a .h file.
+
+  Based on the presence of a similarly-named .m/.cpp file.
 
 Based on
 http://bretthutley.com/programming/emacs/opening-a-cobjective-cc-header-file-in-emacs/,
@@ -673,3 +681,7 @@ http://blogs.fluidinfo.com/terry/2011/11/10/emacs-buffer-mode-histogram/"
 ;;     (add-hook 'c-mode-common-hook 'my-c-mode-common-hook)))
 
 (byte-recompile-directory expanded-user-emacs-directory)
+
+(provide 'init)
+
+;;; init.el ends here
