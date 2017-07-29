@@ -565,6 +565,8 @@ http://blogs.fluidinfo.com/terry/2011/11/10/emacs-buffer-mode-histogram/"
  '(custom-safe-themes
    (quote
     ("8aebf25556399b58091e533e455dd50a6a9cba958cc4ebb0aab175863c25b9a4" default)))
+ '(desktop-restore-frames nil)
+ '(desktop-save-mode t)
  '(dired-bind-jump nil)
  '(display-time-default-load-average nil)
  '(display-time-format "")
@@ -581,7 +583,6 @@ http://blogs.fluidinfo.com/terry/2011/11/10/emacs-buffer-mode-histogram/"
  '(epa-pinentry-mode (quote loopback))
  '(flycheck-display-errors-delay 0.15)
  '(flycheck-flake8-maximum-line-length 120)
- '(flycheck-pycheckers-max-line-length 100)
  '(gc-cons-threshold 100000000)
  '(git-commit-summary-max-length 79)
  '(global-eldoc-mode nil)
@@ -647,8 +648,7 @@ http://blogs.fluidinfo.com/terry/2011/11/10/emacs-buffer-mode-histogram/"
      (python . t)
      (ruby . t)
      (js . t)
-     (shell . t)
-     (sql . t))))
+     (shell . t))))
  '(org-clock-out-remove-zero-time-clocks t)
  '(org-clock-report-include-clocking-task t)
  '(org-export-backends (quote (ascii html icalendar latex md odt)))
@@ -661,7 +661,7 @@ http://blogs.fluidinfo.com/terry/2011/11/10/emacs-buffer-mode-histogram/"
  '(org-use-sub-superscripts (quote {}))
  '(package-selected-packages
    (quote
-    (ac-geiser ack auctex cider clojure-mode clojure-mode-extra-font-locking diff-hl dtrace-script-mode elpy ess esup feature-mode flycheck flycheck-mypy flycheck-package flycheck-pycheckers flymake flymake-sass fxrd-mode geiser gitignore-mode go-mode graphviz-dot-mode httpcode jabber jedi json-mode latex-preview-pane magit markdown-mode markdown-preview-mode notmuch org-agenda-property org-jira org-mru-clock org-plus-contrib org-pomodoro package-lint paredit puppet-mode pymacs python-mode rainbow-mode s sass-mode slime solarized-theme suggest tagedit thrift virtualenv window-numbering yaml-mode yasnippet zenburn-theme)))
+    (ac-geiser ack auctex cider clojure-mode clojure-mode-extra-font-locking diff-hl dtrace-script-mode elpy ess esup feature-mode flycheck-clojure flycheck-mypy flymake flymake-sass fxrd-mode geiser gitignore-mode go-mode graphviz-dot-mode httpcode jabber jedi json-mode latex-preview-pane magit markdown-mode markdown-preview-mode notmuch org-agenda-property org-jira org-mru-clock org-plus-contrib org-pomodoro paredit projectile puppet-mode pymacs python-mode rainbow-mode s sass-mode slime solarized-theme suggest tagedit thrift virtualenv window-numbering yaml-mode yasnippet zenburn-theme)))
  '(python-shell-interpreter "ipython")
  '(tramp-syntax (quote simplified) nil (tramp)))
 
