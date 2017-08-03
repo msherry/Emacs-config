@@ -639,6 +639,7 @@ http://blogs.fluidinfo.com/terry/2011/11/10/emacs-buffer-mode-histogram/"
      (todo . " %i %-12:c%l")
      (tags . " %i %-12:c")
      (search . " %i %-12:c"))))
+ '(org-agenda-skip-deadline-prewarning-if-scheduled (quote pre-scheduled))
  '(org-agenda-span (quote day))
  '(org-agenda-start-on-weekday nil)
  '(org-agenda-sticky t)
