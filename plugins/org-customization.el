@@ -1,8 +1,10 @@
 ;;; Setup and customizations for org-mode
 
+(require 'org)
 (require 'org-agenda-property)          ; Show properties like :LOCATION: in agenda
 (require 'org-notmuch)                  ; Save links to emails
 (require 'org-id)                       ; global identifiers for org entries
+(require 'org-super-agenda)
 
 ;;; Commentary:
 
@@ -157,6 +159,36 @@
         ("N" "Notes" tags "NOTE"
          ((org-agenda-overriding-header "Notes")
           (org-tags-match-list-sublevels t)))))
+
+;;; org-super-agenda (https://github.com/alphapapa/org-super-agenda) is pretty
+;;; cool
+(setq org-super-agenda-groups
+      ;; nil)
+      '((:log t)  ; Automatically named "Log"
+        (:name "Schedule"
+         :time-grid t)
+        (:name "Today"
+         :scheduled today)
+        (:habit t)
+        (:name "Due today"
+         :deadline today)
+        (:name "Overdue"
+         :deadline past)
+        (:name "Due soon"
+         :deadline future)
+        (:name "Unimportant"
+         :todo ("SOMEDAY" "MAYBE" "CHECK" "TO_READ" "TO_WATCH")
+         :order 100)
+        (:name "Waiting..."
+         :todo "WAITING"
+         :order 98)
+        (:name "Scheduled earlier"
+         :scheduled past)
+        (:name "Every day"
+         :tag "EVERYDAY"
+         :order 1)))
+
+(org-super-agenda-mode 1)
 
 (setq org-capture-templates
       '(("t" "TODO" entry (file "~/.emacs.d/org/refile.org")
