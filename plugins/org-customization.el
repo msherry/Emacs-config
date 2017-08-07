@@ -148,12 +148,17 @@
                 ((org-agenda-overriding-header "Every day")
                  (org-agenda-skip-function
                   ;; Skip the top-level headline itself
-                  '(org-agenda-skip-entry-if 'regexp "Everyday"))))
-          ;; All items that are not EVERYDAY items (which have their own section)
+                  '(org-agenda-skip-entry-if 'regexp "\\*Everyday.*:Everyday:"))))
+          ;; All unscheduled TODO items that are not EVERYDAY items
           (todo ""
                 ((org-agenda-overriding-header "Unscheduled TODOs")
                  (org-agenda-skip-function
                   '(org-agenda-skip-entry-if 'deadline 'scheduled))))
+          (tags "TOREAD"
+                ((org-agenda-overriding-header "To read")
+                 (org-agenda-skip-function
+                  ;; Skip the top-level headline itself
+                  '(org-agenda-skip-entry-if 'regexp "\\* To read.*:TOREAD:"))))
           (tags "REFILE"
                 ((org-agenda-overriding-header "To refile")))))
         ("N" "Notes" tags "NOTE"
