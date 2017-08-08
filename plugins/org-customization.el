@@ -150,10 +150,10 @@
                          (:name "Today"
                           :scheduled today)
                          (:habit t)
-                         (:name "Due today"
-                          :deadline today)
                          (:name "Overdue"
                           :deadline past)
+                         (:name "Due today"
+                          :deadline today)
                          (:name "Due soon"
                           :deadline future)))))
           (tags "EVERYDAY"
@@ -187,10 +187,10 @@
       ;;   (:name "Today"
       ;;    :scheduled today)
       ;;   (:habit t)
-      ;;   (:name "Due today"
-      ;;    :deadline today)
       ;;   (:name "Overdue"
       ;;    :deadline past)
+      ;;   (:name "Due today"
+      ;;    :deadline today)
       ;;   (:name "Due soon"
       ;;    :deadline future)
       ;;   (:name "Unimportant"
