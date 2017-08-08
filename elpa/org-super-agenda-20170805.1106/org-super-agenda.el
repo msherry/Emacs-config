@@ -2,9 +2,9 @@
 
 ;; Author: Adam Porter <adam@alphapapa.net>
 ;; Url: http://github.com/alphapapa/org-super-agenda
-;; Package-Version: 20170801.156
+;; Package-Version: 20170805.1106
 ;; Version: 0.1-pre
-;; Package-Requires: ((emacs "25.1") (s "1.10.0") (dash "2.13") (org "9.0"))
+;; Package-Requires: ((emacs "25.1") (s "1.10.0") (dash "2.13") (org "9.0") (ht "2.2"))
 ;; Keywords: hypermedia, outlines, Org, agenda
 
 ;;; Commentary:
@@ -18,12 +18,12 @@
 ;; agenda: items are no longer shown based on deadline/scheduled
 ;; timestamps, but are shown no-matter-what.
 
-;; So this package overrides the `org-agenda-finalize-entries'
-;; function, which runs just before items are inserted into agenda
-;; views.  It runs them through a set of filters that separate them
-;; into groups.  Then the groups are inserted into the agenda buffer,
-;; and any remaining items are inserted at the end.  Empty groups are
-;; not displayed.
+;; So this package filters the results from
+;; `org-agenda-finalize-entries', which runs just before items are
+;; inserted into agenda views.  It runs them through a set of filters
+;; that separate them into groups.  Then the groups are inserted into
+;; the agenda buffer, and any remaining items are inserted at the end.
+;; Empty groups are not displayed.
 
 ;; The end result is your standard daily/weekly agenda, but arranged
 ;; into groups defined by you.  You might put items with certain tags
@@ -94,6 +94,7 @@
 (require 'cl-lib)
 (require 'dash)
 (require 's)
+(require 'ht)
 
 ;; I think this is the right way to do this...
 (eval-when-compile
@@ -107,11 +108,6 @@ Populated automatically by `org-super-agenda--defgroup'.")
 
 (defvar org-super-agenda-group-transformers nil
   "List of agenda group transformers.")
-
-(defvar org-super-agenda-function-overrides
-  '((org-agenda-finalize-entries . org-super-agenda--finalize-entries))
-  "List of alists mapping agenda functions to overriding
-  functions.")
 
 (defgroup org-super-agenda nil
   "Settings for `org-super-agenda'."
@@ -216,14 +212,14 @@ marker."
 With prefix argument ARG, turn on if positive, otherwise off."
   :global t
   (let ((advice-function (if org-super-agenda-mode
-                             (lambda (to fun)
+                             (lambda (to fn)
                                ;; Enable mode
-                               (advice-add to :override fun))
-                           (lambda (from fun)
+                               (advice-add to :filter-return fn))
+                           (lambda (from fn)
                              ;; Disable mode
-                             (advice-remove from fun)))))
-    (cl-loop for (target . override) in org-super-agenda-function-overrides
-             do (funcall advice-function target override))
+                             (advice-remove from fn)))))
+    (funcall advice-function #'org-agenda-finalize-entries
+             #'org-super-agenda--filter-finalize-entries)
     ;; Display message
     (if org-super-agenda-mode
         (message "org-super-agenda-mode enabled.")
@@ -319,22 +315,14 @@ future).  Argument may also be given like `before DATE' or `after
 DATE', where DATE is a date string that
 `org-time-string-to-absolute' can process."
   :section-name (pcase (car args)
-                  ('t  ;; Check for any deadline info
-                   "Deadline items")
-                  ((pred not)  ;; Has no deadline info
-                   "Items without deadlines")
-                  ('past  ;; Deadline before today
-                   "Past due")
-                  ('today  ;; Deadline for today
-                   "Due today")
-                  ('future  ;; Deadline in the future
-                   "Due soon")
-                  ('before  ;; Before date given
-                   (concat "Due before " (second args)))
-                  ('on  ;; On date given
-                   (concat "Due on " (second args)))
-                  ('after  ;; After date given
-                   (concat "Due after " (second args))))
+                  ('t "Deadline items")
+                  ((pred not) "Items without deadlines")
+                  ('past "Past due")
+                  ('today "Due today")
+                  ('future "Due soon")
+                  ('before (concat "Due before " (second args)))
+                  ('on (concat "Due on " (second args)))
+                  ('after (concat "Due after " (second args))))
   :let* ((today (pcase (car args)  ; Perhaps premature optimization
                   ((or 'past 'today 'future 'before 'on 'after)
                    (org-today))))
@@ -342,24 +330,16 @@ DATE', where DATE is a date string that
                         ((or 'before 'on 'after)
                          (org-time-string-to-absolute (second args))))))
   :test (org-super-agenda--when-with-marker-buffer (org-super-agenda--get-marker item)
-          (when-let ((time (org-entry-get (point) "DEADLINE")))
+          (when-let ((entry-time (org-entry-get (point) "DEADLINE")))
             (pcase (car args)
-              ('t  ;; Check for any deadline info
-               t)
-              ((pred not)  ;; Has no deadline info
-               (not time))
-              ('past  ;; Deadline before today
-               (< (org-time-string-to-absolute time) today))
-              ('today  ;; Deadline for today
-               (= today (org-time-string-to-absolute time)))
-              ('future  ;; Deadline in the future
-               (< today (org-time-string-to-absolute time)))
-              ('before  ;; Before date given
-               (< (org-time-string-to-absolute time) target-date))
-              ('on  ;; On date given
-               (= (org-time-string-to-absolute time) target-date))
-              ('after  ;; After date given
-               (> (org-time-string-to-absolute time) target-date))))))
+              ('t t)  ; Has any deadline info
+              ((pred not) (not entry-time))  ; Has no deadline info
+              (comparison
+               (let ((entry-time (org-time-string-to-absolute entry-time))
+                     (compare-date (pcase comparison
+                                     ((or 'past 'today 'future) today)
+                                     ((or 'before 'on 'after) target-date))))
+                 (org-super-agenda--compare-dates comparison entry-time compare-date)))))))
 
 (org-super-agenda--defgroup scheduled
   "Group items that are scheduled.
@@ -371,22 +351,14 @@ future).  Argument may also be given like `before DATE' or `after
 DATE', where DATE is a date string that
 `org-time-string-to-absolute' can process."
   :section-name (pcase (car args)
-                  ('t  ;; Check for any deadline info
-                   "scheduled items")
-                  ((pred not)  ;; Has no deadline info
-                   "Unscheduled items ")
-                  ('past  ;; Deadline before today
-                   "Past scheduled")
-                  ('today  ;; Deadline for today
-                   "Scheduled today")
-                  ('future  ;; Deadline in the future
-                   "Scheduled soon")
-                  ('before  ;; Before date given
-                   (concat "Scheduled before " (second args)))
-                  ('on  ;; On date given
-                   (concat "Scheduled on " (second args)))
-                  ('after  ;; After date given
-                   (concat "Scheduled after " (second args))))
+                  ('t "Scheduled items")
+                  ((pred not) "Unscheduled items ")
+                  ('past "Past scheduled")
+                  ('today "Scheduled today")
+                  ('future "Scheduled soon")
+                  ('before (concat "Scheduled before " (second args)))
+                  ('on (concat "Scheduled on " (second args)))
+                  ('after (concat "Scheduled after " (second args))))
   :let* ((today (pcase (car args)  ; Perhaps premature optimization
                   ((or 'past 'today 'future 'before 'on 'after)
                    (org-today))))
@@ -394,24 +366,45 @@ DATE', where DATE is a date string that
                         ((or 'before 'on 'after)
                          (org-time-string-to-absolute (second args))))))
   :test (org-super-agenda--when-with-marker-buffer (org-super-agenda--get-marker item)
-          (when-let ((time (org-entry-get (point) "SCHEDULED")))
+          (when-let ((entry-time (org-entry-get (point) "SCHEDULED")))
             (pcase (car args)
-              ('t  ;; Check for any scheduled info
-               t)
-              ((pred not)  ;; Has no scheduled info
-               (not time))
-              ('past  ;; Scheduled before today
-               (< (org-time-string-to-absolute time) today))
-              ('today  ;; Scheduled for today
-               (= today (org-time-string-to-absolute time)))
-              ('future  ;; Scheduled in the future
-               (< today (org-time-string-to-absolute time)))
-              ('before  ;; Before date given
-               (< (org-time-string-to-absolute time) target-date))
-              ('on  ;; On date given
-               (= (org-time-string-to-absolute time) target-date))
-              ('after  ;; After date given
-               (> (org-time-string-to-absolute time) target-date))))))
+              ('t t)  ; Has any scheduled info
+              ((pred not) (not entry-time))  ; Has no scheduled info
+              (comparison
+               (let ((entry-time (org-time-string-to-absolute entry-time))
+                     (compare-date (pcase comparison
+                                     ((or 'past 'today 'future) today)
+                                     ((or 'before 'on 'after) target-date))))
+                 (org-super-agenda--compare-dates comparison entry-time compare-date)))))))
+
+(defun org-super-agenda--compare-dates (comparison date-a date-b)
+  "Compare DATE-A and DATE-B according to COMPARISON.
+COMPARISON should be a symbol, one of: `past' or `before',
+`today' or `on', `future' or `after'."
+  (pcase comparison
+    ((or 'past 'before) (< date-a date-b))
+    ((or 'today 'on) (= date-a date-b))
+    ((or 'future 'after) (> date-a date-b))))
+
+;;;;; Effort
+
+(cl-defmacro org-super-agenda--defeffort-group (name docstring &key section-name comparator)
+  (declare (indent defun))
+  `(org-super-agenda--defgroup ,(intern (concat "effort" (symbol-name name)))
+     ,(concat docstring "\nArgument is a time-duration string, like \"5\" or \"0:05\" for 5 minutes.")
+     :section-name (concat "Effort " ,(symbol-name name) " "
+                           (s-join " or " args) " items")
+     :let* ((effort-minutes (org-duration-string-to-minutes (car args))))
+     :test (when-let ((item-effort (org-find-text-property-in-string 'effort item)))
+             (,comparator (org-duration-string-to-minutes item-effort) effort-minutes))))
+
+(org-super-agenda--defeffort-group <
+  "Group items that are less than (or equal to) the given effort."
+  :comparator <=)
+
+(org-super-agenda--defeffort-group >
+  "Group items that are higher than (or equal to) the given effort."
+  :comparator >=)
 
 ;;;;; Misc
 
@@ -435,12 +428,12 @@ to-do keywords."
           (pcase (car args)
             ('todo ;; Match if entry has child to-dos
              (org-super-agenda--map-children
-              :form (org-entry-is-todo-p)
-              :any t))
+               :form (org-entry-is-todo-p)
+               :any t))
             ((pred stringp)  ;; Match child to-do keywords
              (org-super-agenda--map-children
-              :form (cl-member (org-get-todo-state) args :test #'string=)
-              :any t))
+               :form (cl-member (org-get-todo-state) args :test #'string=)
+               :any t))
             ('t  ;; Match if it has any children
              (org-goto-first-child))
             ((pred not)  ;; Match if it has no children
@@ -630,6 +623,8 @@ The string should be the priority cookie letter, e.g. \"A\".")
 ;; like the regular groups do essentially the same thing.  But this
 ;; already works, so I'm going to go ahead and release it.
 
+;; FIXME: Do I need to nreverse the items in each group?
+
 (defun org-super-agenda--auto-group-items (all-items &rest ignore)
   "Divide ALL-ITEMS into groups based on their AGENDA-GROUP property."
   (cl-loop with groups = (ht-create)
@@ -732,7 +727,6 @@ see."
 (setq org-super-agenda-group-types (plist-put org-super-agenda-group-types
                                               :not 'org-super-agenda--group-dispatch-not))
 
-;; TODO: Add example for :discard
 (defun org-super-agenda--group-dispatch-discard (items group)
   "Discard items that match GROUP.
 Any groups processed after this will not see these items."
@@ -776,49 +770,14 @@ actually the ORDER for the groups."
 (setq org-super-agenda-group-transformers (plist-put org-super-agenda-group-transformers
                                                      :order-multi 'org-super-agenda--transform-group-order))
 
-;;;; Finalize function
+;;;; Finalize filter
 
-(defun org-super-agenda--finalize-entries (list &optional type)
-  "Sort, limit and concatenate the LIST of agenda items.
-The optional argument TYPE tells the agenda type."
-  ;; This function is a copy of `org-agenda-finalize-entries', with
-  ;; the only change being that it groups items with
-  ;; `org-super-agenda--group-items' before it finally returns them.
-  (let ((max-effort (cond ((listp org-agenda-max-effort)
-			   (cdr (assoc type org-agenda-max-effort)))
-			  (t org-agenda-max-effort)))
-	(max-todo (cond ((listp org-agenda-max-todos)
-			 (cdr (assoc type org-agenda-max-todos)))
-			(t org-agenda-max-todos)))
-	(max-tags (cond ((listp org-agenda-max-tags)
-			 (cdr (assoc type org-agenda-max-tags)))
-			(t org-agenda-max-tags)))
-	(max-entries (cond ((listp org-agenda-max-entries)
-			    (cdr (assoc type org-agenda-max-entries)))
-			   (t org-agenda-max-entries))))
-    (when org-agenda-before-sorting-filter-function
-      (setq list
-	    (delq nil
-		  (mapcar
-		   org-agenda-before-sorting-filter-function list))))
-    (setq list (mapcar 'org-agenda-highlight-todo list)
-	  list (mapcar 'identity (sort list 'org-entries-lessp)))
-    (when max-effort
-      (setq list (org-agenda-limit-entries
-		  list 'effort-minutes max-effort
-		  (lambda (e) (or e (if org-sort-agenda-noeffort-is-high
-					32767 -1))))))
-    (when max-todo
-      (setq list (org-agenda-limit-entries list 'todo-state max-todo)))
-    (when max-tags
-      (setq list (org-agenda-limit-entries list 'tags max-tags)))
-    (when max-entries
-      (setq list (org-agenda-limit-entries list 'org-hd-marker max-entries)))
-
-    ;; Filter with super-groups
-    (setq list (org-super-agenda--group-items list))
-
-    (mapconcat 'identity list "\n")))
+(defun org-super-agenda--filter-finalize-entries (string)
+  "Filter the return of `org-agenda-finalize-entries' through `org-super-agenda--finalize-entries'."
+  (mapconcat 'identity
+             (org-super-agenda--group-items
+              (split-string string "\n" t))
+             "\n"))
 
 ;;;; Footer
 

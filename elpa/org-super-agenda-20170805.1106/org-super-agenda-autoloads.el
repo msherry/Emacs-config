@@ -1,10 +1,7 @@
 ;;; org-super-agenda-autoloads.el --- automatically extracted autoloads
 ;;
 ;;; Code:
-
-(add-to-list 'load-path (directory-file-name
-                         (or (file-name-directory #$) (car load-path))))
-
+(add-to-list 'load-path (directory-file-name (or (file-name-directory #$) (car load-path))))
 
 ;;;### (autoloads nil "org-super-agenda" "org-super-agenda.el" (0
 ;;;;;;  0 0 0))
@@ -34,6 +31,5 @@ With prefix argument ARG, turn on if positive, otherwise off.
 ;; version-control: never
 ;; no-byte-compile: t
 ;; no-update-autoloads: t
-;; coding: utf-8
 ;; End:
 ;;; org-super-agenda-autoloads.el ends here
