@@ -143,7 +143,19 @@
                              (800 1000 1200 1400 1600 1800 2000)))
 (setq org-agenda-custom-commands
       '(("c" "Agenda and all unscheduled/everyday TODO's / unfiled"
-         ((agenda "")
+         ((agenda "" ((org-super-agenda-groups
+                       '((:log t)  ; Automatically named "Log"
+                         (:name "Schedule"
+                          :time-grid t)
+                         (:name "Today"
+                          :scheduled today)
+                         (:habit t)
+                         (:name "Due today"
+                          :deadline today)
+                         (:name "Overdue"
+                          :deadline past)
+                         (:name "Due soon"
+                          :deadline future)))))
           (tags "EVERYDAY"
                 ((org-agenda-overriding-header "Every day")
                  (org-agenda-skip-function
@@ -168,30 +180,30 @@
 ;;; org-super-agenda (https://github.com/alphapapa/org-super-agenda) is pretty
 ;;; cool
 (setq org-super-agenda-groups
-      ;; nil)
-      '((:log t)  ; Automatically named "Log"
-        (:name "Schedule"
-         :time-grid t)
-        (:name "Today"
-         :scheduled today)
-        (:habit t)
-        (:name "Due today"
-         :deadline today)
-        (:name "Overdue"
-         :deadline past)
-        (:name "Due soon"
-         :deadline future)
-        (:name "Unimportant"
-         :todo ("SOMEDAY" "MAYBE" "CHECK" "TO_READ" "TO_WATCH")
-         :order 100)
-        (:name "Waiting..."
-         :todo "WAITING"
-         :order 98)
-        (:name "Scheduled earlier"
-         :scheduled past)
-        (:name "Every day"
-         :tag "EVERYDAY"
-         :order 1)))
+      nil)
+      ;; '((:log t)  ; Automatically named "Log"
+      ;;   (:name "Schedule"
+      ;;    :time-grid t)
+      ;;   (:name "Today"
+      ;;    :scheduled today)
+      ;;   (:habit t)
+      ;;   (:name "Due today"
+      ;;    :deadline today)
+      ;;   (:name "Overdue"
+      ;;    :deadline past)
+      ;;   (:name "Due soon"
+      ;;    :deadline future)
+      ;;   (:name "Unimportant"
+      ;;    :todo ("SOMEDAY" "MAYBE" "CHECK" "TO_READ" "TO_WATCH")
+      ;;    :order 100)
+      ;;   (:name "Waiting..."
+      ;;    :todo "WAITING"
+      ;;    :order 98)
+      ;;   (:name "Scheduled earlier"
+      ;;    :scheduled past)
+      ;;   (:name "Every day"
+      ;;    :tag "EVERYDAY"
+      ;;    :order 1)))
 
 (org-super-agenda-mode 1)
 
