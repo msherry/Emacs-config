@@ -9626,7 +9626,7 @@ Optional argument REGEXP selects variables to clone."
       (`(,name . ,value)		;ignore unbound variables
        (when (and (not (memq name org-unique-local-variables))
 		  (or (null regexp) (string-match-p regexp (symbol-name name))))
-	 (set (make-local-variable name) value))))))
+	 (ignore-errors (set (make-local-variable name) value)))))))
 
 ;;;###autoload
 (defun org-run-like-in-org-mode (cmd)
@@ -11986,7 +11986,9 @@ prefix argument (`C-u C-u C-u C-c C-w')."
 	  (if (and arg (not (equal arg 3)))
 	      (progn
 		(pop-to-buffer-same-window nbuf)
-		(goto-char pos)
+		(goto-char (cond (pos)
+				 ((org-notes-order-reversed-p) (point-min))
+				 (t (point-max))))
 		(org-show-context 'org-goto))
 	    (if regionp
 		(progn

@@ -3,8 +3,8 @@
 ;; Copyright (C) 2017
 
 ;; Author: Wilfred Hughes <me@wilfred.me.uk>
-;; Version: 0.4
-;; Package-Version: 20170804.1358
+;; Version: 0.5
+;; Package-Version: 20170806.1414
 ;; Keywords: convenience
 ;; Package-Requires: ((emacs "24.4") (loop "1.3") (dash "2.13.0") (s "1.11.0") (f "0.18.2"))
 ;; URL: https://github.com/Wilfred/suggest.el
@@ -556,7 +556,7 @@ nil otherwise."
     ;; See if (func COMMON-CONSTANT value1 value2...) gives us a value.
     (when (zerop iteration)
       (dolist (extra-arg (list nil t 0 1 -1 2))
-        (dolist (position '(before after))
+        (dolist (position '(after before))
           (let ((args (if (eq position 'before)
                           (cons extra-arg input-values)
                         (-snoc input-values extra-arg)))
@@ -583,8 +583,10 @@ than their values."
     (setq this-iteration
           (-map (-lambda ((values . literals))
                   (list :funcs nil :values values :literals literals))
-                (-zip-pair (suggest--permutations input-values)
-                           (suggest--permutations input-literals))))
+                ;; Only consider unique permutations.
+                (-distinct
+                 (-zip-pair (suggest--permutations input-values)
+                            (suggest--permutations input-literals)))))
     (catch 'done
       (dotimes (iteration suggest--search-depth)
         (catch 'done-iteration
