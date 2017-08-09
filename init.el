@@ -671,7 +671,7 @@ http://blogs.fluidinfo.com/terry/2011/11/10/emacs-buffer-mode-histogram/"
  '(org-use-sub-superscripts (quote {}))
  '(package-selected-packages
    (quote
-    (ac-geiser ack auctex cider clojure-mode clojure-mode-extra-font-locking diff-hl dtrace-script-mode elpy ess esup feature-mode flycheck-clojure flycheck-mypy flycheck-pycheckers flymake flymake-sass fxrd-mode geiser gitignore-mode go-mode graphviz-dot-mode httpcode jabber jedi json-mode latex-preview-pane magit markdown-mode markdown-preview-mode notmuch org-agenda-property org-jira org-mru-clock org-plus-contrib org-pomodoro org-super-agenda paredit projectile puppet-mode pymacs python-mode rainbow-mode s sass-mode slime solarized-theme suggest tagedit thrift virtualenv window-numbering yaml-mode yasnippet zenburn-theme)))
+    (ac-geiser ack auctex cider clojure-mode clojure-mode-extra-font-locking diff-hl dtrace-script-mode elpy ess esup feature-mode flycheck-clojure flycheck-mypy flycheck-package flycheck-pycheckers flymake flymake-sass fxrd-mode geiser gitignore-mode go-mode graphviz-dot-mode httpcode jabber jedi json-mode latex-preview-pane magit markdown-mode markdown-preview-mode notmuch org-agenda-property org-jira org-mru-clock org-plus-contrib org-pomodoro org-super-agenda package-lint paredit projectile puppet-mode pymacs python-mode rainbow-mode s sass-mode slime solarized-theme suggest tagedit thrift virtualenv window-numbering yaml-mode yasnippet zenburn-theme)))
  '(python-shell-interpreter "ipython")
  '(tramp-syntax (quote simplified) nil (tramp)))
 
