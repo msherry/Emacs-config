@@ -1,7 +1,10 @@
 ;;; magit-autoloads.el --- automatically extracted autoloads
 ;;
 ;;; Code:
-(add-to-list 'load-path (directory-file-name (or (file-name-directory #$) (car load-path))))
+
+(add-to-list 'load-path (directory-file-name
+                         (or (file-name-directory #$) (car load-path))))
+
 
 ;;;### (autoloads nil "git-rebase" "git-rebase.el" (0 0 0 0))
 ;;; Generated autoloads from git-rebase.el
@@ -693,7 +696,7 @@ Amend the last commit, without editing the message.
 
 With a prefix argument keep the committer date, otherwise change
 it.  The option `magit-commit-extend-override-date' can be used
-to inverse the meaning of the prefix argument.
+to inverse the meaning of the prefix argument.  
 \(git commit
 --amend --no-edit)
 
@@ -2163,5 +2166,6 @@ Create a new BRANCH and check it out in a new worktree at PATH.
 ;; version-control: never
 ;; no-byte-compile: t
 ;; no-update-autoloads: t
+;; coding: utf-8
 ;; End:
 ;;; magit-autoloads.el ends here
