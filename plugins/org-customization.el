@@ -159,7 +159,7 @@
                 ((org-agenda-overriding-header "Every day")
                  (org-agenda-skip-function
                   ;; Skip the top-level headline itself
-                  '(org-agenda-skip-entry-if 'regexp "\\*Everyday.*:Everyday:"))))
+                  '(org-agenda-skip-entry-if 'regexp "\\* .*:Everyday:"))))
           ;; All unscheduled TODO items that are not EVERYDAY items
           (todo ""
                 ((org-agenda-overriding-header "Unscheduled TODOs")
