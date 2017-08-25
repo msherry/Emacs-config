@@ -149,7 +149,6 @@
                           :time-grid t)
                          (:name "Today"
                           :scheduled today)
-                         (:habit t)
                          (:name "Overdue"
                           :deadline past)
                          (:name "Due today"
