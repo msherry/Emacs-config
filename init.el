@@ -576,7 +576,7 @@ http://blogs.fluidinfo.com/terry/2011/11/10/emacs-buffer-mode-histogram/"
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(ack-command "ack -i ")
+ '(ack-command "ag ")
  '(appt-delete-window-function (lambda nil))
  '(appt-disp-window-function (quote msherry/appt-disp-window))
  '(appt-display-format (quote window))
