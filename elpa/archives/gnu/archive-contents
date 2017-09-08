@@ -943,8 +943,10 @@
 	       ((:keywords "soap" "web-services" "comm" "hypermedia")
 		(:url . "http://elpa.gnu.org/packages/soap-client.html"))])
  (sokoban .
-	  [(1 4 5)
-	   nil "Implementation of Sokoban for Emacs." tar
+	  [(1 4 6)
+	   ((emacs
+	     (23 1)))
+	   "Implementation of Sokoban for Emacs." tar
 	   ((:keywords "games")
 	    (:url . "http://elpa.gnu.org/packages/sokoban.html"))])
  (sotlisp .
