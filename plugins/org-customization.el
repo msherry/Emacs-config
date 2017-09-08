@@ -73,21 +73,24 @@
          nil nil))))
 
 (defun org-show-current-heading-tidily ()
+  "Show current entry, keeping other entries closed."
   ;; https://stackoverflow.com/a/28031539/52550
   (interactive)
-  "Show current entry, keeping other entries closed."
-  (if (save-excursion (end-of-line) (outline-invisible-p))
-      (progn (org-show-entry) (show-children))
+  (if (save-excursion
+        (end-of-line)
+        (outline-invisible-p))
+      (progn
+        (org-show-entry)
+        (outline-show-children))
     (outline-back-to-heading)
-    (unless (and (bolp) (org-on-heading-p))
+    (unless (and (bolp) (org-at-heading-p))
       (org-up-heading-safe)
-      (hide-subtree)
+      (outline-hide-subtree)
       (error "Boundary reached"))
     (org-overview)
     (org-reveal t)
     (org-show-entry)
-    (show-children)))
-
+    (outline-show-children)))
 
 ;;; Auto-save all org-mode buffers while agenda open -
 ;;; http://emacs.stackexchange.com/a/483/7169
@@ -110,18 +113,10 @@
 (global-set-key (kbd "C-c l") 'org-store-link)
 
 
-;;; Persist clock history across emacs runs -
-;;; http://orgmode.org/manual/Clocking-work-time.html
-(setq org-clock-persist t)
-(setq org-agenda-start-on-weekday 0)
-(setq org-log-done t)
 ;; http://doc.norang.ca/org-mode.html
 ; Targets include this file and any file contributing to the agenda - up to 9 levels deep
 (setq org-refile-targets (quote ((nil :maxlevel . 9)
                                  (org-agenda-files :maxlevel . 9))))
-
-; Use full outline paths for refile targets - we file directly with IDO
-(setq org-refile-use-outline-path t)
 
 ; Targets complete directly with IDO
 (setq org-outline-path-complete-in-steps nil)
@@ -135,12 +130,7 @@
 ; Use the current window when visiting files and buffers with ido
 (setq ido-default-file-method 'selected-window)
 (setq ido-default-buffer-method 'selected-window)
-; Use the current window for indirect buffer display
-(setq org-indirect-buffer-display 'current-window)
 
-(setq org-agenda-time-grid '((daily today today)
-                             #("----------------" 0 16 (org-heading t))
-                             (800 1000 1200 1400 1600 1800 2000)))
 (setq org-agenda-custom-commands
       '(("c" "Agenda and all unscheduled/everyday TODO's / unfiled"
          ((agenda "" ((org-super-agenda-groups
@@ -206,18 +196,6 @@
 
 (org-super-agenda-mode 1)
 
-(setq org-capture-templates
-      '(("t" "TODO" entry (file "~/.emacs.d/org/refile.org")
-         "* TODO %?\n%U\n%a\n" :clock-in t :clock-resume t)
-        ("w" "work TODO" entry (file+headline "~/.emacs.d/org/work.org" "Tasks")
-         "** TODO %?\n%a\n" :clock-in t :clock-resume t)
-        ("p" "personal TODO" entry (file+headline "~/.emacs.d/org/personal.org" "Tasks")
-         "** TODO %?\n%a\n" :clock-in t :clock-resume t)
-        ("n" "note" entry (file "~/.emacs.d/org/refile.org")
-         "* %? :NOTE:\n%U\n%a\n" :clock-in t :clock-resume t)
-        ("m" "Meeting" entry (file "~/.emacs.d/org/refile.org")
-         "* %? :MEETING:\n%U" :clock-in t :clock-resume t)))
-
 ;;; Agenda file setup -- skip if we can't find the agenda directory
 (if (file-accessible-directory-p "~/.emacs.d/org")
     (progn
@@ -230,12 +208,13 @@
 ;;; Auto-reload generated images in org-mode when re-executing a babel code block
 ;;; http://emacs.stackexchange.com/a/9813/7169
 (defun shk-fix-inline-images ()
+  "Force redisplay of inline images, if present."
   (when org-inline-image-overlays
     (org-redisplay-inline-images)))
 (add-hook 'org-babel-after-execute-hook 'shk-fix-inline-images)
 
 (defun msherry-org-agenda-get-property (property)
-  "Get a property for the current headline."
+  "Get the value of a property, named via PROPERTY, for the current headline."
   (org-agenda-check-no-diary)
   (org-entry-get (org-get-at-bol 'org-marker) property 'selective))
 
@@ -265,10 +244,7 @@ http://stackoverflow.com/a/17067170/52550"
                 (end (point-at-eol)))
             (when (msherry-current-agenda-unconfirmed)
               (add-text-properties begin end '(face hi-pink)))))))))
-
 (add-hook 'org-agenda-finalize-hook #'color-agenda-events)
-
-(org-clock-persistence-insinuate)
 
 ;;; MobileOrg - https://mobileorg.github.io/
 ; These need to be set before org-mobile loads

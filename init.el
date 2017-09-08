@@ -656,6 +656,11 @@ http://blogs.fluidinfo.com/terry/2011/11/10/emacs-buffer-mode-histogram/"
  '(org-agenda-span (quote day))
  '(org-agenda-start-on-weekday nil)
  '(org-agenda-sticky t)
+ '(org-agenda-time-grid
+   (quote
+    ((daily today)
+     (800 1000 1200 1400 1600 1800 2000)
+     "......" "----------------")))
  '(org-agenda-timegrid-use-ampm t)
  '(org-babel-clojure-backend (quote cider))
  '(org-babel-load-languages
@@ -672,14 +677,46 @@ http://blogs.fluidinfo.com/terry/2011/11/10/emacs-buffer-mode-histogram/"
      (js . t)
      (shell . t)
      (sql . t))))
+ '(org-capture-templates
+   (quote
+    (("t" "TODO" entry
+          (file "~/.emacs.d/org/refile.org")
+          "* TODO %?
+%U
+%a
+" :clock-in t :clock-resume t)
+     ("w" "work TODO" entry
+          (file+headline "~/.emacs.d/org/work.org" "Tasks")
+          "** TODO %?
+%a
+" :clock-in t :clock-resume t)
+     ("p" "personal TODO" entry
+          (file+headline "~/.emacs.d/org/personal.org" "Tasks")
+          "** TODO %?
+%a
+" :clock-in t :clock-resume t)
+     ("n" "note" entry
+          (file "~/.emacs.d/org/refile.org")
+          "* %? :NOTE:
+%U
+%a
+" :clock-in t :clock-resume t)
+     ("m" "Meeting" entry
+          (file "~/.emacs.d/org/refile.org")
+          "* %? :MEETING:
+%U" :clock-in t :clock-resume t))))
  '(org-clock-out-remove-zero-time-clocks t)
+ '(org-clock-persist nil)
  '(org-clock-report-include-clocking-task t)
  '(org-export-backends (quote (ascii html icalendar latex md odt)))
  '(org-export-with-sub-superscripts (quote {}))
  '(org-image-actual-width (quote (300)))
+ '(org-indirect-buffer-display (quote current-window))
+ '(org-log-done (quote time))
  '(org-mobile-agendas (quote ("c")))
  '(org-mobile-files-exclude-regexp "-cal.org$")
  '(org-mobile-force-id-on-agenda-items nil)
+ '(org-refile-use-outline-path t)
  '(org-src-tab-acts-natively t)
  '(org-use-sub-superscripts (quote {}))
  '(package-selected-packages
