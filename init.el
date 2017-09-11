@@ -734,6 +734,12 @@ http://blogs.fluidinfo.com/terry/2011/11/10/emacs-buffer-mode-histogram/"
 
 (byte-recompile-directory expanded-user-emacs-directory)
 
+;; Mitigate Bug#28350 (security) in Emacs 25.2 and
+;; earlier. http://www.openwall.com/lists/oss-security/2017/09/11/1
+(eval-after-load "enriched"
+  '(defun enriched-decode-display-prop (start end &optional param)
+    (list start end)))
+
 (provide 'init)
 
 ;;; init.el ends here
