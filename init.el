@@ -645,6 +645,7 @@ http://blogs.fluidinfo.com/terry/2011/11/10/emacs-buffer-mode-histogram/"
  '(ns-alternate-modifier (quote super))
  '(ns-command-modifier (quote meta))
  '(org-agenda-clockreport-parameter-plist (quote (:link t :maxlevel 3)))
+ '(org-agenda-persistent-filter t)
  '(org-agenda-prefix-format
    (quote
     ((agenda . " %i %-12:c%?-12t% s")
@@ -708,6 +709,7 @@ http://blogs.fluidinfo.com/terry/2011/11/10/emacs-buffer-mode-histogram/"
  '(org-clock-out-remove-zero-time-clocks t)
  '(org-clock-persist nil)
  '(org-clock-report-include-clocking-task t)
+ '(org-enforce-todo-dependencies t)
  '(org-export-backends (quote (ascii html icalendar latex md odt)))
  '(org-export-with-sub-superscripts (quote {}))
  '(org-image-actual-width (quote (300)))
