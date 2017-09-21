@@ -18,7 +18,6 @@
 
 ;; Plugins - add plugins dir, vendors dir, and all dirs under vendor
 ;; excluding . and ..
-(add-to-list 'load-path "/usr/local/share/emacs/site-lisp/mu/mu4e")
 (add-to-list 'load-path "~/.emacs.d/plugins")
 (add-to-list 'load-path "~/.emacs.d/plugins/vendor")
 (add-to-list 'load-path "~/.emacs.d/plugins/language-specific")
