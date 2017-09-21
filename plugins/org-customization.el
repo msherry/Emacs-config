@@ -137,12 +137,12 @@
                        '((:log t)  ; Automatically named "Log"
                          (:name "Schedule"
                           :time-grid t)
-                         (:name "Today"
-                          :scheduled today)
                          (:name "Overdue"
                           :deadline past)
                          (:name "Due today"
                           :deadline today)
+                         (:name "Today"
+                          :scheduled today)
                          (:name "Due soon"
                           :deadline future)))))
           (tags "EVERYDAY"
