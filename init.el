@@ -204,8 +204,9 @@ started from a shell."
                                             ; only seems needed in a terminal
                                             ; on Linux
 (blink-cursor-mode 1)
-
 (show-paren-mode t)
+(ido-ubiquitous-mode 1)
+
 ; Display
 (setq transient-mark-mode t            ; on by default in 23.x
       column-number-mode t
@@ -607,6 +608,7 @@ http://blogs.fluidinfo.com/terry/2011/11/10/emacs-buffer-mode-histogram/"
  '(gc-cons-threshold 100000000)
  '(git-commit-summary-max-length 79)
  '(global-eldoc-mode nil)
+ '(ido-cr+-function-whitelist (quote (org-refile)))
  '(jabber-account-list
    (quote
     (("msherry@gmail.com"
@@ -645,6 +647,45 @@ http://blogs.fluidinfo.com/terry/2011/11/10/emacs-buffer-mode-histogram/"
  '(ns-alternate-modifier (quote super))
  '(ns-command-modifier (quote meta))
  '(org-agenda-clockreport-parameter-plist (quote (:link t :maxlevel 3)))
+ '(org-agenda-custom-commands
+   (quote
+    (("c" "Agenda and all unscheduled/everyday TODO's / unfiled"
+          ((agenda ""
+                   ((org-super-agenda-groups
+                     (quote
+                      ((:log t)
+                       (:name "Schedule" :time-grid t)
+                       (:name "Overdue" :deadline past)
+                       (:name "Due today" :deadline today)
+                       (:name "Today" :scheduled today)
+                       (:name "Due soon" :deadline future))))))
+           (tags "EVERYDAY"
+                 ((org-agenda-overriding-header "Every day")
+                  (org-agenda-skip-function
+                   (quote
+                    (org-agenda-skip-entry-if
+                     (quote regexp)
+                     "\\* .*:Everyday:")))))
+           (todo ""
+                 ((org-agenda-overriding-header "Unscheduled TODOs")
+                  (org-agenda-skip-function
+                   (quote
+                    (org-agenda-skip-entry-if
+                     (quote deadline)
+                     (quote scheduled))))))
+           (tags "TOREAD"
+                 ((org-agenda-overriding-header "To read")
+                  (org-agenda-skip-function
+                   (quote
+                    (org-agenda-skip-entry-if
+                     (quote regexp)
+                     "\\* To read.*:TOREAD:")))))
+           (tags "REFILE"
+                 ((org-agenda-overriding-header "To refile"))))
+          nil)
+     ("N" "Notes" tags "NOTE"
+          ((org-agenda-overriding-header "Notes")
+           (org-tags-match-list-sublevels t))))))
  '(org-agenda-persistent-filter t)
  '(org-agenda-prefix-format
    (quote
@@ -723,7 +764,7 @@ http://blogs.fluidinfo.com/terry/2011/11/10/emacs-buffer-mode-histogram/"
  '(org-use-sub-superscripts (quote {}))
  '(package-selected-packages
    (quote
-    (ac-geiser ack auctex cider clojure-mode clojure-mode-extra-font-locking diff-hl dtrace-script-mode elpy ess esup feature-mode flycheck-clojure flycheck-mypy flycheck-package flycheck-pycheckers flymake flymake-php flymake-sass fxrd-mode geiser gitignore-mode go-mode graphviz-dot-mode httpcode jabber jedi json-mode latex-preview-pane magit markdown-mode markdown-preview-mode notmuch org-agenda-property org-jira org-mru-clock org-plus-contrib org-pomodoro org-super-agenda package-lint paredit php-mode projectile puppet-mode pymacs python-mode rainbow-mode s sass-mode slime solarized-theme suggest tagedit thrift virtualenv window-numbering yaml-mode yasnippet zenburn-theme)))
+    (ido-completing-read+ ac-geiser ack auctex cider clojure-mode clojure-mode-extra-font-locking diff-hl dtrace-script-mode elpy ess esup feature-mode flycheck-clojure flycheck-mypy flycheck-package flycheck-pycheckers flymake flymake-php flymake-sass fxrd-mode geiser gitignore-mode go-mode graphviz-dot-mode httpcode jabber jedi json-mode latex-preview-pane magit markdown-mode markdown-preview-mode notmuch org-agenda-property org-jira org-mru-clock org-plus-contrib org-pomodoro org-super-agenda package-lint paredit php-mode projectile puppet-mode pymacs python-mode rainbow-mode s sass-mode slime solarized-theme suggest tagedit thrift virtualenv window-numbering yaml-mode yasnippet zenburn-theme)))
  '(python-shell-interpreter "ipython")
  '(tramp-syntax (quote simplified) nil (tramp)))
 

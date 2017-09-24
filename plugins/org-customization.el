@@ -125,46 +125,13 @@
 (setq org-refile-allow-creating-parent-nodes (quote confirm))
 
 ; Use IDO for both buffer and file completion and ido-everywhere to t
+; this is obsolete in org 9.0+, use ido-ubiquitous-mode instead
 (setq org-completion-use-ido t)
 (setq ido-max-directory-size 100000)
 ; Use the current window when visiting files and buffers with ido
 (setq ido-default-file-method 'selected-window)
 (setq ido-default-buffer-method 'selected-window)
 
-(setq org-agenda-custom-commands
-      '(("c" "Agenda and all unscheduled/everyday TODO's / unfiled"
-         ((agenda "" ((org-super-agenda-groups
-                       '((:log t)  ; Automatically named "Log"
-                         (:name "Schedule"
-                          :time-grid t)
-                         (:name "Overdue"
-                          :deadline past)
-                         (:name "Due today"
-                          :deadline today)
-                         (:name "Today"
-                          :scheduled today)
-                         (:name "Due soon"
-                          :deadline future)))))
-          (tags "EVERYDAY"
-                ((org-agenda-overriding-header "Every day")
-                 (org-agenda-skip-function
-                  ;; Skip the top-level headline itself
-                  '(org-agenda-skip-entry-if 'regexp "\\* .*:Everyday:"))))
-          ;; All unscheduled TODO items that are not EVERYDAY items
-          (todo ""
-                ((org-agenda-overriding-header "Unscheduled TODOs")
-                 (org-agenda-skip-function
-                  '(org-agenda-skip-entry-if 'deadline 'scheduled))))
-          (tags "TOREAD"
-                ((org-agenda-overriding-header "To read")
-                 (org-agenda-skip-function
-                  ;; Skip the top-level headline itself
-                  '(org-agenda-skip-entry-if 'regexp "\\* To read.*:TOREAD:"))))
-          (tags "REFILE"
-                ((org-agenda-overriding-header "To refile")))))
-        ("N" "Notes" tags "NOTE"
-         ((org-agenda-overriding-header "Notes")
-          (org-tags-match-list-sublevels t)))))
 
 ;;; org-super-agenda (https://github.com/alphapapa/org-super-agenda) is pretty
 ;;; cool

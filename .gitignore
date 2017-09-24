@@ -19,6 +19,7 @@ ac-comphist.dat
 jabber-history/
 jabber-avatar-cache/
 plugins/.mypy_cache
+ido.last
 
 org
 bookmarks
