@@ -608,7 +608,7 @@ http://blogs.fluidinfo.com/terry/2011/11/10/emacs-buffer-mode-histogram/"
  '(gc-cons-threshold 100000000)
  '(git-commit-summary-max-length 79)
  '(global-eldoc-mode nil)
- '(ido-cr+-function-whitelist (quote (org-refile)))
+ '(ido-cr+-function-whitelist (quote (org-agenda-refile org-refile)))
  '(jabber-account-list
    (quote
     (("msherry@gmail.com"
@@ -722,30 +722,30 @@ http://blogs.fluidinfo.com/terry/2011/11/10/emacs-buffer-mode-histogram/"
  '(org-capture-templates
    (quote
     (("t" "TODO" entry
-      (file "~/.emacs.d/org/refile.org")
-      "* TODO %?
+          (file "~/.emacs.d/org/refile.org")
+          "* TODO %?
 %U
 %(and )
 " :clock-in t :clock-resume t)
      ("w" "work TODO" entry
-      (file+headline "~/.emacs.d/org/work.org" "Tasks")
-      "** TODO %?
+          (file+headline "~/.emacs.d/org/work.org" "Tasks")
+          "** TODO %?
 %a
 " :clock-in t :clock-resume t)
      ("p" "personal TODO" entry
-      (file+headline "~/.emacs.d/org/personal.org" "Tasks")
-      "** TODO %?
+          (file+headline "~/.emacs.d/org/personal.org" "Tasks")
+          "** TODO %?
 %a
 " :clock-in t :clock-resume t)
      ("n" "note" entry
-      (file "~/.emacs.d/org/refile.org")
-      "* %? :NOTE:
+          (file "~/.emacs.d/org/refile.org")
+          "* %? :NOTE:
 %U
 %a
 " :clock-in t :clock-resume t)
      ("m" "Meeting" entry
-      (file "~/.emacs.d/org/refile.org")
-      "* %? :MEETING:
+          (file "~/.emacs.d/org/refile.org")
+          "* %? :MEETING:
 %U" :clock-in t :clock-resume t))))
  '(org-clock-out-remove-zero-time-clocks t)
  '(org-clock-persist nil)

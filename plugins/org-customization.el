@@ -124,8 +124,8 @@
 ; Allow refile to create parent tasks with confirmation
 (setq org-refile-allow-creating-parent-nodes (quote confirm))
 
-; Use IDO for both buffer and file completion and ido-everywhere to t
-; this is obsolete in org 9.0+, use ido-ubiquitous-mode instead
+; Use IDO for both buffer and file completion.  this is obsolete in org 9.0+,
+; use ido-ubiquitous-mode instead and set ido-everywhere to t
 (setq org-completion-use-ido t)
 (setq ido-max-directory-size 100000)
 ; Use the current window when visiting files and buffers with ido
