@@ -46,7 +46,7 @@
 		     ((:url . "https://github.com/Malabarba/aggressive-indent-mode")
 		      (:keywords "indent" "lisp" "maint" "tools"))])
  (ahungry-theme .
-		[(1 5 0)
+		[(1 6 0)
 		 ((emacs
 		   (24)))
 		 "Ahungry color theme for Emacs.  Make sure to (load-theme 'ahungry)." tar
@@ -89,7 +89,7 @@
 	      ((:url . "http://user42.tuxfamily.org/aumix-mode/index.html")
 	       (:keywords "multimedia" "mixer" "aumix"))])
  (auto-correct .
-	       [(1 1)
+	       [(1 1 1)
 		nil "Remembers and automatically fixes past corrections" single
 		((:url . "http://elpa.gnu.org/packages/auto-correct.html")
 		 (:keywords "editing"))])
@@ -129,7 +129,7 @@
 	     ((:url . "http://elpa.gnu.org/packages/caps-lock.html")
 	      (:keywords))])
  (captain .
-	  [(1 0 2)
+	  [(1 0 3)
 	   nil "CAPiTalization is Automatic IN emacs" single
 	   ((:url . "http://elpa.gnu.org/packages/captain.html")
 	    (:keywords "editing"))])

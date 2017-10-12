@@ -600,6 +600,7 @@ http://blogs.fluidinfo.com/terry/2011/11/10/emacs-buffer-mode-histogram/"
    (quote
     (".bzr" "CVS" ".git" ".hg" ".svn" ".tox" "build" "dist" ".cask" ".mypy_cache")))
  '(epa-pinentry-mode (quote loopback))
+ '(flycheck-checker-error-threshold nil)
  '(flycheck-display-errors-delay 0.15)
  '(flycheck-flake8-maximum-line-length 120)
  '(flycheck-global-modes (quote (not org-mode org-agenda-mode)))
@@ -624,6 +625,7 @@ http://blogs.fluidinfo.com/terry/2011/11/10/emacs-buffer-mode-histogram/"
  '(magit-log-arguments (quote ("--graph" "--color" "--decorate" "-n256")))
  '(magit-push-always-verify nil)
  '(magit-tag-arguments (quote ("--annotate")))
+ '(mm-inline-large-images (quote resize))
  '(mm-text-html-renderer (quote shr))
  '(notmuch-after-tag-hook
    (quote
