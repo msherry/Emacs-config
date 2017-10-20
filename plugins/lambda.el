@@ -35,7 +35,9 @@ font-lock-mode"
 (mapc #'(lambda (hook)
           (progn
             (add-hook hook 'sm-lambda-mode-hook)))
-      '(emacs-lisp-mode-hook lisp-interactive-mode-hook lisp-mode-hook slime-repl-mode-hook scheme-mode-hook python-mode-hook diff-mode-hook))
+      '(emacs-lisp-mode-hook lisp-interactive-mode-hook lisp-mode-hook
+        slime-repl-mode-hook scheme-mode-hook python-mode-hook diff-mode-hook
+        tickscript-mode-hook))
 
 (provide 'lambda)
 
