@@ -771,7 +771,9 @@ http://blogs.fluidinfo.com/terry/2011/11/10/emacs-buffer-mode-histogram/"
  '(python-shell-interpreter "ipython")
  '(safe-local-variable-values
    (quote
-    ((tickscript-series-type . "stream")
+    ((tickscript-kapacitor-url . http://localhost:9092)
+     (tickscript-kapacitor-url . http://localhost:5092)
+     (tickscript-series-type . "stream")
      (tickscript-series-dbrp . "desktop_client.default")
      (tickscript-series-type . "batch")
      (tickscript-series-name . "medians"))))
