@@ -182,6 +182,7 @@ started from a shell."
 (add-to-list 'auto-mode-alist '("\\.org$" . org-mode))
 (add-to-list 'auto-mode-alist '("\\.php$" . php-mode))
 (add-to-list 'auto-mode-alist '("\\.R$" . r-mode))
+(add-to-list 'auto-mode-alist '("BUILD" . python-mode))
 
 
 ;; Indentation settings
@@ -341,7 +342,7 @@ started from a shell."
 (defvar programming-modes '(python-mode js-mode js2-mode java-mode c-mode
                             objc-mode actionscript-mode lisp-mode
                             emacs-lisp-mode sh-mode makefile-mode conf-mode
-                            ruby-mode ess-mode)
+                            ruby-mode ess-mode tickscript-mode)
   "Modes used for programming.")
 
 
@@ -771,12 +772,15 @@ http://blogs.fluidinfo.com/terry/2011/11/10/emacs-buffer-mode-histogram/"
  '(python-shell-interpreter "ipython")
  '(safe-local-variable-values
    (quote
-    ((tickscript-kapacitor-url . http://localhost:9092)
+    ((tickscript-series-name . "medians_dev")
+     (tickscript-series-dbrp . "apogee.autogen")
+     (tickscript-kapacitor-url . http://localhost:9092)
      (tickscript-kapacitor-url . http://localhost:5092)
      (tickscript-series-type . "stream")
      (tickscript-series-dbrp . "desktop_client.default")
      (tickscript-series-type . "batch")
      (tickscript-series-name . "medians"))))
+ '(tickscript-add-extra-graph-options t)
  '(tramp-syntax (quote simplified) nil (tramp)))
 
 
