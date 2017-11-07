@@ -724,33 +724,33 @@ http://blogs.fluidinfo.com/terry/2011/11/10/emacs-buffer-mode-histogram/"
      (shell . t)
      (sql . t))))
  '(org-capture-templates
-    (quote
-     (("t" "TODO" entry
-           (file "~/.emacs.d/org/refile.org")
-           "* TODO %?
- %U
- %a
- " :clock-in t :clock-resume t)
-      ("w" "work TODO" entry
-           (file+headline "~/.emacs.d/org/work.org" "Tasks")
-           "** TODO %?
- %a
- " :clock-in t :clock-resume t)
-      ("p" "personal TODO" entry
-           (file+headline "~/.emacs.d/org/personal.org" "Tasks")
-           "** TODO %?
- %a
- " :clock-in t :clock-resume t)
-      ("n" "note" entry
-           (file "~/.emacs.d/org/refile.org")
-           "* %? :NOTE:
- %U
- %a
- " :clock-in t :clock-resume t)
-      ("m" "Meeting" entry
-           (file "~/.emacs.d/org/refile.org")
-           "* %? :MEETING:
- %U" :clock-in t :clock-resume t))))
+   (quote
+    (("t" "TODO" entry
+          (file "~/.emacs.d/org/refile.org")
+          "* TODO %?
+%U
+%a
+" :clock-in t :clock-resume t)
+     ("w" "work TODO" entry
+          (file+headline "~/.emacs.d/org/work.org" "Tasks")
+          "** TODO %?
+%a
+" :clock-in t :clock-resume t)
+     ("p" "personal TODO" entry
+          (file+headline "~/.emacs.d/org/personal.org" "Tasks")
+          "** TODO %?
+%a
+" :clock-in t :clock-resume t)
+     ("n" "note" entry
+          (file "~/.emacs.d/org/refile.org")
+          "* %? :NOTE:
+%U
+%a
+" :clock-in t :clock-resume t)
+     ("m" "Meeting" entry
+          (file "~/.emacs.d/org/refile.org")
+          "* %? :MEETING:
+%U" :clock-in t :clock-resume t))))
  '(org-clock-out-remove-zero-time-clocks t)
  '(org-clock-persist nil)
  '(org-clock-report-include-clocking-task t)
@@ -768,7 +768,7 @@ http://blogs.fluidinfo.com/terry/2011/11/10/emacs-buffer-mode-histogram/"
  '(org-use-sub-superscripts (quote {}))
  '(package-selected-packages
    (quote
-    (ac-geiser ack auctex cider clojure-mode clojure-mode-extra-font-locking diff-hl dtrace-script-mode el2markdown elpy ess esup feature-mode flycheck-clojure flycheck-mypy flycheck-package flycheck-pycheckers flymake flymake-php flymake-sass fxrd-mode geiser gitignore-mode go-mode graphviz-dot-mode httpcode ido-completing-read+ jabber jedi json-mode latex-preview-pane magit markdown-mode markdown-preview-mode notmuch org-agenda-property org-jira org-mru-clock org-plus-contrib org-pomodoro org-super-agenda package-lint paredit php-mode projectile puppet-mode pymacs python-mode rainbow-mode s sass-mode slime solarized-theme suggest tagedit thrift virtualenv window-numbering yaml-mode yasnippet zenburn-theme)))
+    (ac-geiser ack auctex cider clojure-mode clojure-mode-extra-font-locking diff-hl dtrace-script-mode el2markdown elpy ess esup feature-mode flycheck-clojure flycheck-mypy flycheck-package flycheck-pycheckers flymake flymake-php flymake-sass fxrd-mode geiser gitignore-mode go-mode graphviz-dot-mode httpcode ido-completing-read+ jabber jedi json-mode latex-preview-pane magit markdown-mode markdown-preview-mode notmuch org-agenda-property org-jira org-mru-clock org-plus-contrib org-pomodoro org-super-agenda package-lint paredit php-mode projectile puppet-mode pymacs python-mode rainbow-mode s sass-mode slime solarized-theme suggest tagedit thrift tickscript-mode virtualenv window-numbering yaml-mode yasnippet zenburn-theme)))
  '(python-shell-interpreter "ipython")
  '(safe-local-variable-values
    (quote
