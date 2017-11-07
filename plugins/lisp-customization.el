@@ -20,8 +20,8 @@
           #'(lambda ()
             (eldoc-mode nil)
             (paredit-mode)
-            (local-set-key (kbd "M-<up>") 'slime-repl-backward-input)
-            (local-set-key (kbd "M-<down>") 'slime-repl-forward-input)))
+            (local-set-key (kbd "s-<up>") 'slime-repl-backward-input)
+            (local-set-key (kbd "s-<down>") 'slime-repl-forward-input)))
 
 ;; CLdoc
 ;; (dolist (hook '(lisp-mode-hook
@@ -40,8 +40,8 @@
   (paredit-mode)
   (local-set-key (kbd "C-.") #'find-function-at-point))
 
-(defvar lisp-editing-modes '(emacs-lisp-mode scheme-mode clojure-mode
-                             geiser-repl-mode cider-repl-mode))
+(defvar lisp-editing-modes '(lisp-mode emacs-lisp-mode scheme-mode
+                             clojure-mode geiser-repl-mode cider-repl-mode))
 
 (mapc #'(lambda (x)
           (let ((mode-hook (intern (concat (symbol-name x) "-hook"))))
