@@ -4,7 +4,7 @@
 
 ;; Author: Bozhidar Batsov <bozhidar@batsov.com>
 ;; URL: http://github.com/bbatsov/zenburn-emacs
-;; Package-Version: 20171010.543
+;; Package-Version: 20171109.926
 ;; Version: 2.5
 
 ;; This program is free software; you can redistribute it and/or modify
@@ -250,6 +250,7 @@ Also bind `class' to ((class color) (min-colors 89))."
    `(font-latex-italic-face ((t (:foreground ,zenburn-cyan :slant italic))))
    `(font-latex-string-face ((t (:inherit ,font-lock-string-face))))
    `(font-latex-math-face ((t (:foreground ,zenburn-orange))))
+   `(font-latex-script-char-face ((t (:foreground ,zenburn-orange))))
 ;;;;; agda-mode
    `(agda2-highlight-keyword-face ((t (:foreground ,zenburn-yellow :weight bold))))
    `(agda2-highlight-string-face ((t (:foreground ,zenburn-red))))
@@ -641,8 +642,8 @@ Also bind `class' to ((class color) (min-colors 89))."
    `(guide-key/key-face ((t (:foreground ,zenburn-green))))
    `(guide-key/prefix-command-face ((t (:foreground ,zenburn-green+1))))
 ;;;;; hackernews
-   '(hackernews-comment-count-face ((t (:inherit link-visited :underline nil))))
-   '(hackernews-link-face          ((t (:inherit link         :underline nil))))
+   '(hackernews-comment-count ((t (:inherit link-visited :underline nil))))
+   '(hackernews-link          ((t (:inherit link         :underline nil))))
 ;;;;; helm
    `(helm-header
      ((t (:foreground ,zenburn-green
@@ -905,6 +906,9 @@ Also bind `class' to ((class color) (min-colors 89))."
    `(magit-signature-good      ((t (:foreground ,zenburn-green))))
    `(magit-signature-bad       ((t (:foreground ,zenburn-red))))
    `(magit-signature-untrusted ((t (:foreground ,zenburn-yellow))))
+   `(magit-signature-expired   ((t (:foreground ,zenburn-orange))))
+   `(magit-signature-revoked   ((t (:foreground ,zenburn-magenta))))
+   '(magit-signature-error     ((t (:inherit    magit-signature-bad))))
    `(magit-cherry-unmatched    ((t (:foreground ,zenburn-cyan))))
    `(magit-cherry-equivalent   ((t (:foreground ,zenburn-magenta))))
    `(magit-reflog-commit       ((t (:foreground ,zenburn-green))))

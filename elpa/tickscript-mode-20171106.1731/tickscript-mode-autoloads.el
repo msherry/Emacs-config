@@ -23,6 +23,10 @@ Major mode for editing TICKscript files
 
 ;;;***
 
+;;;### (autoloads nil nil ("tickscript-mode-pkg.el") (0 0 0 0))
+
+;;;***
+
 ;; Local Variables:
 ;; version-control: never
 ;; no-byte-compile: t
