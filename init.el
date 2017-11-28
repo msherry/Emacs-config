@@ -654,42 +654,42 @@ http://blogs.fluidinfo.com/terry/2011/11/10/emacs-buffer-mode-histogram/"
  '(org-agenda-custom-commands
    (quote
     (("c" "Agenda and all unscheduled/everyday TODO's / unfiled"
-      ((agenda ""
-        ((org-super-agenda-groups
-          (quote
-           ((:log t)
-            (:name "Schedule" :time-grid t)
-            (:name "Overdue" :deadline past)
-            (:name "Due today" :deadline today)
-            (:name "Today" :scheduled today)
-            (:name "Due soon" :deadline future))))))
-       (tags "EVERYDAY"
-        ((org-agenda-overriding-header "Every day")
-         (org-agenda-skip-function
-          (quote
-           (org-agenda-skip-entry-if
-            (quote regexp)
-            "\\* .*:Everyday:")))))
-       (todo ""
-        ((org-agenda-overriding-header "Unscheduled TODOs")
-         (org-agenda-skip-function
-          (quote
-           (org-agenda-skip-entry-if
-            (quote deadline)
-            (quote scheduled))))))
-       (tags "TOREAD"
-        ((org-agenda-overriding-header "To read")
-         (org-agenda-skip-function
-          (quote
-           (org-agenda-skip-entry-if
-            (quote regexp)
-            "\\* To read.*:TOREAD:")))))
-       (tags "REFILE"
-        ((org-agenda-overriding-header "To refile"))))
-      nil)
+          ((agenda ""
+                   ((org-super-agenda-groups
+                     (quote
+                      ((:log t)
+                       (:name "Schedule" :time-grid t)
+                       (:name "Overdue" :deadline past)
+                       (:name "Due today" :deadline today)
+                       (:name "Today" :scheduled today)
+                       (:name "Due soon" :deadline future))))))
+           (tags "EVERYDAY"
+                 ((org-agenda-overriding-header "Every day")
+                  (org-agenda-skip-function
+                   (quote
+                    (org-agenda-skip-entry-if
+                     (quote regexp)
+                     "\\* .*:Everyday:")))))
+           (todo ""
+                 ((org-agenda-overriding-header "Unscheduled TODOs")
+                  (org-agenda-skip-function
+                   (quote
+                    (org-agenda-skip-entry-if
+                     (quote deadline)
+                     (quote scheduled))))))
+           (tags "TOREAD"
+                 ((org-agenda-overriding-header "To read")
+                  (org-agenda-skip-function
+                   (quote
+                    (org-agenda-skip-entry-if
+                     (quote regexp)
+                     "\\* To read.*:TOREAD:")))))
+           (tags "REFILE"
+                 ((org-agenda-overriding-header "To refile"))))
+          nil)
      ("N" "Notes" tags "NOTE"
-      ((org-agenda-overriding-header "Notes")
-       (org-tags-match-list-sublevels t))))))
+          ((org-agenda-overriding-header "Notes")
+           (org-tags-match-list-sublevels t))))))
  '(org-agenda-persistent-filter t)
  '(org-agenda-prefix-format
    (quote
@@ -726,30 +726,30 @@ http://blogs.fluidinfo.com/terry/2011/11/10/emacs-buffer-mode-histogram/"
  '(org-capture-templates
    (quote
     (("t" "TODO" entry
-      (file "~/.emacs.d/org/refile.org")
-      "* TODO %?
+          (file "~/.emacs.d/org/refile.org")
+          "* TODO %?
  %U
  %a
  " :clock-in t :clock-resume t)
      ("w" "work TODO" entry
-      (file+headline "~/.emacs.d/org/work.org" "Tasks")
-      "** TODO %?
+          (file+headline "~/.emacs.d/org/work.org" "Tasks")
+          "** TODO %?
  %a
  " :clock-in t :clock-resume t)
      ("p" "personal TODO" entry
-      (file+headline "~/.emacs.d/org/personal.org" "Tasks")
-      "** TODO %?
+          (file+headline "~/.emacs.d/org/personal.org" "Tasks")
+          "** TODO %?
  %a
  " :clock-in t :clock-resume t)
      ("n" "note" entry
-      (file "~/.emacs.d/org/refile.org")
-      "* %? :NOTE:
+          (file "~/.emacs.d/org/refile.org")
+          "* %? :NOTE:
  %U
  %a
  " :clock-in t :clock-resume t)
      ("m" "Meeting" entry
-      (file "~/.emacs.d/org/refile.org")
-      "* %? :MEETING:
+          (file "~/.emacs.d/org/refile.org")
+          "* %? :MEETING:
  %U" :clock-in t :clock-resume t))))
  '(org-clock-out-remove-zero-time-clocks t)
  '(org-clock-persist nil)
