@@ -689,7 +689,8 @@ http://blogs.fluidinfo.com/terry/2011/11/10/emacs-buffer-mode-histogram/"
           nil)
      ("N" "Notes" tags "NOTE"
           ((org-agenda-overriding-header "Notes")
-           (org-tags-match-list-sublevels t))))))
+           (org-tags-match-list-sublevels t)))
+     ("o" "Completed tasks older than 60 days (http://gnuru.org/article/1639/org-mode-find-all-done-items-older-than-2-months)" tags "CLOSED<\"<-60d>\"" nil))))
  '(org-agenda-persistent-filter t)
  '(org-agenda-prefix-format
    (quote
@@ -699,6 +700,7 @@ http://blogs.fluidinfo.com/terry/2011/11/10/emacs-buffer-mode-histogram/"
      (tags . " %i %-12:c")
      (search . " %i %-12:c"))))
  '(org-agenda-skip-deadline-prewarning-if-scheduled (quote pre-scheduled))
+ '(org-agenda-skip-scheduled-if-deadline-is-shown t)
  '(org-agenda-span (quote day))
  '(org-agenda-start-on-weekday nil)
  '(org-agenda-sticky t)
@@ -797,6 +799,10 @@ http://blogs.fluidinfo.com/terry/2011/11/10/emacs-buffer-mode-histogram/"
 (eval-after-load "enriched"
   '(defun enriched-decode-display-prop (start end &optional param)
     (list start end)))
+
+
+;;; Snippet for auto-scping a file on save
+; (add-hook 'after-save-hook (lambda () (shell-command (format "scp %s apogee-influxdb:kapacitor-tools/" (buffer-name)))))
 
 (provide 'init)
 
