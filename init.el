@@ -323,7 +323,8 @@ started from a shell."
   (add-hook 'flycheck-mode-hook
             '(lambda ()
               (local-set-key (kbd "C-c .") 'flycheck-next-error)
-              (flycheck-pycheckers-setup))))
+              (flycheck-pycheckers-setup)
+              (flycheck-rust-setup))))
 
 ; Fast jumps to windows
 (window-numbering-mode)
@@ -607,6 +608,8 @@ http://blogs.fluidinfo.com/terry/2011/11/10/emacs-buffer-mode-histogram/"
  '(flycheck-global-modes (quote (not org-mode org-agenda-mode)))
  '(flycheck-highlighting-mode (quote lines))
  '(flycheck-pycheckers-checkers (quote (pylint pep8 mypy2 mypy3)))
+ '(flycheck-pycheckers-enable-codes (quote ("W0613")))
+ '(flycheck-pycheckers-enabled-codes (quote ("W0613")))
  '(flycheck-pycheckers-max-line-length 100)
  '(gc-cons-threshold 100000000)
  '(git-commit-summary-max-length 79)
