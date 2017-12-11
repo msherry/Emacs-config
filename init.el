@@ -609,7 +609,6 @@ http://blogs.fluidinfo.com/terry/2011/11/10/emacs-buffer-mode-histogram/"
  '(flycheck-highlighting-mode (quote lines))
  '(flycheck-pycheckers-checkers (quote (pylint pep8 mypy2 mypy3)))
  '(flycheck-pycheckers-enable-codes (quote ("W0613")))
- '(flycheck-pycheckers-enabled-codes (quote ("W0613")))
  '(flycheck-pycheckers-max-line-length 100)
  '(gc-cons-threshold 100000000)
  '(git-commit-summary-max-length 79)
@@ -693,7 +692,8 @@ http://blogs.fluidinfo.com/terry/2011/11/10/emacs-buffer-mode-histogram/"
      ("N" "Notes" tags "NOTE"
           ((org-agenda-overriding-header "Notes")
            (org-tags-match-list-sublevels t)))
-     ("o" "Completed tasks older than 60 days (http://gnuru.org/article/1639/org-mode-find-all-done-items-older-than-2-months)" tags "CLOSED<\"<-60d>\"" nil))))
+     ("o" "Completed tasks older than 60 days (http://gnuru.org/article/1639/org-mode-find-all-done-items-older-than-2-months)" tags "CLOSED<\"<-60d>\"" nil)
+     ("w" "Tasks completed within the past week" tags "CLOSED>=\"<-7d>\"" nil))))
  '(org-agenda-persistent-filter t)
  '(org-agenda-prefix-format
    (quote
@@ -777,7 +777,9 @@ http://blogs.fluidinfo.com/terry/2011/11/10/emacs-buffer-mode-histogram/"
  '(python-shell-interpreter "ipython")
  '(safe-local-variable-values
    (quote
-    ((tickscript-series-name . "medians_dev")
+    ((tickscript-kapacitor-version . "1.3")
+     (tickscript-kapacitor-version . "1.4")
+     (tickscript-series-name . "medians_dev")
      (tickscript-series-dbrp . "apogee.autogen")
      (tickscript-kapacitor-url . http://localhost:9092)
      (tickscript-kapacitor-url . http://localhost:5092)
