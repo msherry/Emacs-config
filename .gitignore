@@ -28,3 +28,4 @@ cider-history
 history
 .org-id-locations
 .emacs.desktop*
+*.plstore
