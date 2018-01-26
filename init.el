@@ -340,10 +340,9 @@ started from a shell."
 
 
 ;; Mode hooks
-(defvar programming-modes '(python-mode js-mode js2-mode java-mode c-mode
-                            objc-mode actionscript-mode lisp-mode
-                            emacs-lisp-mode sh-mode makefile-mode conf-mode
-                            ruby-mode ess-mode tickscript-mode)
+(defvar programming-modes '(actionscript-mode c-mode conf-mode emacs-lisp-mode ess-mode
+                            java-mode js-mode js2-mode lisp-mode makefile-mode objc-mode
+                            python-mode ruby-mode rust-mode sh-mode tickscript-mode)
   "Modes used for programming.")
 
 
@@ -604,6 +603,7 @@ http://blogs.fluidinfo.com/terry/2011/11/10/emacs-buffer-mode-histogram/"
  '(elpy-project-ignored-directories
    (quote
     (".bzr" "CVS" ".git" ".hg" ".svn" ".tox" "build" "dist" ".cask" ".mypy_cache")))
+ '(elpy-rpc-timeout 5)
  '(epa-pinentry-mode (quote loopback))
  '(flycheck-checker-error-threshold nil)
  '(flycheck-display-errors-delay 0.15)
@@ -613,6 +613,7 @@ http://blogs.fluidinfo.com/terry/2011/11/10/emacs-buffer-mode-histogram/"
  '(flycheck-pycheckers-checkers (quote (pylint pep8 mypy2 mypy3)))
  '(flycheck-pycheckers-enable-codes (quote ("W0613")))
  '(flycheck-pycheckers-max-line-length 100)
+ '(flycheck-rust-check-tests nil)
  '(gc-cons-threshold 100000000)
  '(git-commit-summary-max-length 79)
  '(global-eldoc-mode nil)
@@ -780,6 +781,7 @@ http://blogs.fluidinfo.com/terry/2011/11/10/emacs-buffer-mode-histogram/"
    (quote
     (ac-geiser ack auctex cargo cider clojure-mode clojure-mode-extra-font-locking diff-hl dtrace-script-mode el2markdown elpy ess esup feature-mode flycheck-clojure flycheck-mypy flycheck-package flycheck-pycheckers flycheck-rust flymake flymake-php flymake-sass fxrd-mode geiser gitignore-mode go-mode graphviz-dot-mode httpcode ido-completing-read+ jabber jedi json-mode latex-preview-pane magit markdown-mode markdown-preview-mode notmuch oauth2 org-agenda-property org-jira org-mru-clock org-plus-contrib org-pomodoro org-super-agenda package-lint paredit php-mode pinentry projectile protobuf-mode puppet-mode pymacs python-mode racer rainbow-mode rust-mode s sass-mode slime solarized-theme suggest tagedit thrift tickscript-mode virtualenv window-numbering yaml-mode yasnippet zenburn-theme)))
  '(python-shell-interpreter "ipython")
+ '(racer-rust-src-path nil)
  '(safe-local-variable-values
    (quote
     ((tickscript-kapacitor-version . "1.3")
