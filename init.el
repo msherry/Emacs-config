@@ -59,19 +59,6 @@
 (set-register ?f '(file . "~/Desktop/fraud/fraud_scripts.py"))
 (set-register ?g '(file . "~/code/pinboard/schemas/goldpick_commons/ttypes.py"))
 
-;;; Set the PATH, even if not started from the shell
-;;; https://stackoverflow.com/questions/8606954/path-and-exec-path-set-but-emacs-does-not-find-executable
-(defun set-exec-path-from-shell-PATH ()
-  "Set up `exec-path' and PATH environment variable to match the user's shell.
-
-This is particularly useful under Mac OSX, where GUI apps are not
-started from a shell."
-  (interactive)
-  (let ((path-from-shell (replace-regexp-in-string "[ \t\n]*$" "" (shell-command-to-string "$SHELL --login -i -c 'echo $PATH'"))))
-    (setenv "PATH" path-from-shell)
-    (setq exec-path (split-string path-from-shell path-separator))))
-(set-exec-path-from-shell-PATH)
-
 ;; Set up environment
 (set-language-environment "UTF-8")
 
@@ -603,8 +590,9 @@ http://blogs.fluidinfo.com/terry/2011/11/10/emacs-buffer-mode-histogram/"
  '(elpy-project-ignored-directories
    (quote
     (".bzr" "CVS" ".git" ".hg" ".svn" ".tox" "build" "dist" ".cask" ".mypy_cache")))
- '(elpy-rpc-timeout 5)
+ '(elpy-rpc-timeout 10)
  '(epa-pinentry-mode (quote loopback))
+ '(exec-path-from-shell-variables (quote ("PATH" "MANPATH" "CARGO_HOME" "RUST_SRC_PATH")))
  '(flycheck-checker-error-threshold nil)
  '(flycheck-display-errors-delay 0.15)
  '(flycheck-flake8-maximum-line-length 120)
@@ -779,7 +767,7 @@ http://blogs.fluidinfo.com/terry/2011/11/10/emacs-buffer-mode-histogram/"
  '(org-use-sub-superscripts (quote {}))
  '(package-selected-packages
    (quote
-    (ac-geiser ack auctex cargo cider clojure-mode clojure-mode-extra-font-locking diff-hl dtrace-script-mode el2markdown elpy ess esup feature-mode flycheck-clojure flycheck-mypy flycheck-package flycheck-pycheckers flycheck-rust flymake flymake-php flymake-sass fxrd-mode geiser gitignore-mode go-mode graphviz-dot-mode httpcode ido-completing-read+ jabber jedi json-mode latex-preview-pane magit markdown-mode markdown-preview-mode notmuch oauth2 org-agenda-property org-jira org-mru-clock org-plus-contrib org-pomodoro org-super-agenda package-lint paredit php-mode pinentry projectile protobuf-mode puppet-mode pymacs python-mode racer rainbow-mode rust-mode s sass-mode slime solarized-theme suggest tagedit thrift tickscript-mode virtualenv window-numbering yaml-mode yasnippet zenburn-theme)))
+    (ac-geiser ack auctex cargo cider clojure-mode clojure-mode-extra-font-locking diff-hl dtrace-script-mode el2markdown elpy ess esup exec-path-from-shell feature-mode flycheck-clojure flycheck-mypy flycheck-package flycheck-pycheckers flycheck-rust flymake flymake-php flymake-sass fxrd-mode geiser gitignore-mode go-mode graphviz-dot-mode httpcode ido-completing-read+ jabber jedi json-mode latex-preview-pane magit markdown-mode markdown-preview-mode notmuch oauth2 org-agenda-property org-jira org-mru-clock org-plus-contrib org-pomodoro org-super-agenda package-lint paredit php-mode pinentry projectile protobuf-mode puppet-mode pymacs python-mode racer rainbow-mode rust-mode s sass-mode slime solarized-theme suggest tagedit thrift tickscript-mode virtualenv window-numbering yaml-mode yasnippet zenburn-theme)))
  '(python-shell-interpreter "ipython")
  '(racer-rust-src-path nil)
  '(safe-local-variable-values
@@ -815,6 +803,11 @@ http://blogs.fluidinfo.com/terry/2011/11/10/emacs-buffer-mode-histogram/"
 
 ;;; Snippet for auto-scping a file on save
 ; (add-hook 'after-save-hook (lambda () (shell-command (format "scp %s apogee-influxdb:kapacitor-tools/" (buffer-name)))) nil t)
+
+;;; Set the PATH, even if not started from the shell.  Formerly did this
+;;; ourselves, replaced with exec-path-from-shell. Must be done after the call
+;;; to `custom-set-variables' has set things for us.
+(exec-path-from-shell-initialize)
 
 (provide 'init)
 
