@@ -311,7 +311,22 @@
             '(lambda ()
               (local-set-key (kbd "C-c .") 'flycheck-next-error)
               (flycheck-pycheckers-setup)
-              (flycheck-rust-setup))))
+              (flycheck-rust-setup))
+            )
+  ;; https://github.com/flycheck/flycheck/issues/1397
+  (defun flycheck-fill-and-expand-error-file-names (errors directory)
+  "Fill and expand file names in ERRORS relative to DIRECTORY.
+
+Expand all file names of ERRORS against DIRECTORY.  If the file
+name of an error is nil fill in the result of function
+`buffer-file-name' in the current buffer.
+
+Return ERRORS, modified in-place."
+  (seq-do (lambda (err)
+            (setf (flycheck-error-filename err)
+                  (buffer-file-name)))
+          errors)
+  errors))
 
 ; Fast jumps to windows
 (window-numbering-mode)
@@ -744,12 +759,11 @@ http://blogs.fluidinfo.com/terry/2011/11/10/emacs-buffer-mode-histogram/"
           (file "~/.emacs.d/org/refile.org")
           "* %? :NOTE:
  %U
- %a
- " :clock-in t :clock-resume t)
+ %a" :clock-in t :clock-resume t)
      ("m" "Meeting" entry
-          (file "~/.emacs.d/org/refile.org")
-          "* %? :MEETING:
- %U" :clock-in t :clock-resume t))))
+          (file+olp "~/.emacs.d/org/work.org" "Meetings")
+          "* %? :MEETINGS:
+ " :clock-in t :clock-resume t))))
  '(org-clock-out-remove-zero-time-clocks t)
  '(org-clock-persist nil)
  '(org-clock-report-include-clocking-task t)
@@ -770,6 +784,7 @@ http://blogs.fluidinfo.com/terry/2011/11/10/emacs-buffer-mode-histogram/"
     (ac-geiser ack auctex cargo cider clojure-mode clojure-mode-extra-font-locking diff-hl dtrace-script-mode el2markdown elpy ess esup exec-path-from-shell feature-mode flycheck-clojure flycheck-mypy flycheck-package flycheck-pycheckers flycheck-rust flymake flymake-php flymake-sass fxrd-mode geiser gitignore-mode go-mode graphviz-dot-mode httpcode ido-completing-read+ jabber jedi json-mode latex-preview-pane magit markdown-mode markdown-preview-mode notmuch oauth2 org-agenda-property org-jira org-mru-clock org-plus-contrib org-pomodoro org-super-agenda package-lint paredit php-mode pinentry projectile protobuf-mode puppet-mode pymacs python-mode racer rainbow-mode rust-mode s sass-mode slime solarized-theme suggest tagedit thrift tickscript-mode virtualenv window-numbering yaml-mode yasnippet zenburn-theme)))
  '(python-shell-interpreter "ipython")
  '(racer-rust-src-path nil)
+ '(rust-format-on-save t)
  '(safe-local-variable-values
    (quote
     ((tickscript-kapacitor-version . "1.3")
