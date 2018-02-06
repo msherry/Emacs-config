@@ -685,6 +685,8 @@ http://blogs.fluidinfo.com/terry/2011/11/10/emacs-buffer-mode-histogram/"
        (org-tags-match-list-sublevels t)))
      ("o" "Completed tasks older than 60 days (http://gnuru.org/article/1639/org-mode-find-all-done-items-older-than-2-months)" tags "CLOSED<\"<-60d>\"" nil)
      ("w" "Tasks completed within the past week" tags "CLOSED>=\"<-7d>\"" nil)))
+ '(org-agenda-files
+   '("/Users/msherry/.emacs.d/org/personal.org" "/Users/msherry/.emacs.d/org/dropbox-cal.org" "/Users/msherry/.emacs.d/org/flagged.org" "/Users/msherry/.emacs.d/org/personal-cal.org" "/Users/msherry/.emacs.d/org/refile.org" "/Users/msherry/.emacs.d/org/work.org"))
  '(org-agenda-persistent-filter t)
  '(org-agenda-prefix-format
    '((agenda . " %i %-12:c%?-12t% s")
@@ -758,16 +760,14 @@ http://blogs.fluidinfo.com/terry/2011/11/10/emacs-buffer-mode-histogram/"
    '(org-bbdb org-bibtex org-docview org-gnus org-habit org-info org-irc org-mhe org-mouse org-rmail org-w3m org-notmuch))
  '(org-refile-use-outline-path t)
  '(org-src-tab-acts-natively t)
- '(org-use-sub-superscripts (quote {}))
+ '(org-use-sub-superscripts '{})
  '(package-selected-packages
-   (quote
-    (ac-geiser ack auctex cargo cider clojure-mode clojure-mode-extra-font-locking diff-hl dtrace-script-mode el2markdown elpy ess esup exec-path-from-shell feature-mode flycheck-clojure flycheck-mypy flycheck-package flycheck-pycheckers flycheck-rust flymake flymake-php flymake-sass fxrd-mode geiser gitignore-mode go-mode graphviz-dot-mode httpcode ido-completing-read+ jabber jedi json-mode latex-preview-pane magit markdown-mode markdown-preview-mode notmuch oauth2 org-agenda-property org-jira org-mru-clock org-plus-contrib org-pomodoro org-super-agenda package-lint paredit php-mode pinentry projectile protobuf-mode puppet-mode pymacs python-mode racer rainbow-mode rust-mode s sass-mode slime solarized-theme suggest tagedit thrift tickscript-mode virtualenv window-numbering yaml-mode yasnippet zenburn-theme)))
+   '(ac-geiser ack auctex cargo cider clojure-mode clojure-mode-extra-font-locking diff-hl dtrace-script-mode el2markdown elpy ess esup exec-path-from-shell feature-mode flycheck-clojure flycheck-mypy flycheck-package flycheck-pycheckers flycheck-rust flymake flymake-php flymake-sass fxrd-mode geiser gitignore-mode go-mode graphviz-dot-mode httpcode ido-completing-read+ jabber jedi json-mode latex-preview-pane magit markdown-mode markdown-preview-mode notmuch oauth2 org-agenda-property org-jira org-mru-clock org-plus-contrib org-pomodoro org-super-agenda package-lint paredit php-mode pinentry projectile protobuf-mode puppet-mode pymacs python-mode racer rainbow-mode rust-mode s sass-mode slime solarized-theme suggest tagedit thrift tickscript-mode virtualenv window-numbering yaml-mode yasnippet yasnippet-snippets zenburn-theme))
  '(python-shell-interpreter "ipython")
  '(racer-rust-src-path nil)
  '(rust-format-on-save t)
  '(safe-local-variable-values
-   (quote
-    ((tickscript-kapacitor-version . "1.3")
+   '((tickscript-kapacitor-version . "1.3")
      (tickscript-kapacitor-version . "1.4")
      (tickscript-series-name . "medians_dev")
      (tickscript-series-dbrp . "apogee.autogen")
