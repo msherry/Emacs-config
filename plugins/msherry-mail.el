@@ -1,4 +1,7 @@
 ;;; Mail sending
+
+;;; Code:
+
 (require 'smtpmail)
 
 (setq message-send-mail-function 'smtpmail-send-it
@@ -33,7 +36,7 @@ With a prefix argument, jump to the `notmuch' home screen."
 ;;; Tagging keybindings
 
 (defun msherry--toggle-tag-search-or-show (tag-name)
-  "Toggle the `tag-name' flag in notmuch search or show modes"
+  "Toggle the TAG-NAME flag in notmuch search or show modes."
   (let* (; are we in search or show mode?
          (current-mode (cond ((derived-mode-p 'notmuch-search-mode) 'search)
                              ((derived-mode-p 'notmuch-show-mode) 'show)))
@@ -56,14 +59,11 @@ With a prefix argument, jump to the `notmuch' home screen."
     (funcall tag-fn tag-changes)))
 
 (defun msherry-toggle-unread ()
-    (interactive)
-    (msherry--toggle-tag-search-or-show "unread"))
+  (msherry--toggle-tag-search-or-show "unread"))
 (defun msherry-toggle-flagged ()
-    (interactive)
-    (msherry--toggle-tag-search-or-show "flagged"))
+  (msherry--toggle-tag-search-or-show "flagged"))
 (defun msherry-toggle-muted ()
-    (interactive)
-    (msherry--toggle-tag-search-or-show "muted"))
+  (msherry--toggle-tag-search-or-show "muted"))
 
 ;; Open links in emails
 (define-key notmuch-show-mode-map (kbd  "C-c C-o")
@@ -162,7 +162,6 @@ https://gist.github.com/dbp/9627194"
 
 ;; Fix up broken functions
 (defun msherry-notmuch-redisplay-search-with-highlight (&rest args)
-  (interactive)
   (notmuch-refresh-this-buffer)
   (notmuch-hl-line-mode))
 (advice-add 'notmuch-search-archive-thread
@@ -199,3 +198,5 @@ https://gist.github.com/dbp/9627194"
 
 
 (provide 'msherry-mail)
+
+;;; msherry-mail.el ends here
