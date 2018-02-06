@@ -584,148 +584,127 @@ http://blogs.fluidinfo.com/terry/2011/11/10/emacs-buffer-mode-histogram/"
  ;; If there is more than one, they won't work right.
  '(ack-command "ag ")
  '(appt-delete-window-function (lambda nil))
- '(appt-disp-window-function (quote msherry/appt-disp-window))
- '(appt-display-format (quote window))
+ '(appt-disp-window-function 'msherry/appt-disp-window)
+ '(appt-display-format 'window)
  '(appt-display-interval 5)
  '(appt-message-warning-time 10)
  '(auto-revert-verbose nil)
  '(custom-safe-themes
-   (quote
-    ("8aebf25556399b58091e533e455dd50a6a9cba958cc4ebb0aab175863c25b9a4" default)))
+   '("8aebf25556399b58091e533e455dd50a6a9cba958cc4ebb0aab175863c25b9a4" default))
  '(dired-bind-jump nil)
  '(display-time-default-load-average nil)
  '(display-time-format "")
- '(display-time-mail-face (quote hi-blue))
- '(display-time-mail-function (quote msherry-new-important-mail))
+ '(display-time-mail-face 'hi-blue)
+ '(display-time-mail-function 'msherry-new-important-mail)
  '(display-time-mode t)
  '(elpy-eldoc-show-current-function nil)
  '(elpy-modules
-   (quote
-    (elpy-module-company elpy-module-eldoc elpy-module-pyvenv elpy-module-sane-defaults)))
+   '(elpy-module-company elpy-module-eldoc elpy-module-pyvenv elpy-module-sane-defaults))
  '(elpy-project-ignored-directories
-   (quote
-    (".bzr" "CVS" ".git" ".hg" ".svn" ".tox" "build" "dist" ".cask" ".mypy_cache")))
+   '(".bzr" "CVS" ".git" ".hg" ".svn" ".tox" "build" "dist" ".cask" ".mypy_cache"))
  '(elpy-rpc-timeout 10)
- '(epa-pinentry-mode (quote loopback))
- '(exec-path-from-shell-variables (quote ("PATH" "MANPATH" "CARGO_HOME" "RUST_SRC_PATH")))
+ '(epa-pinentry-mode 'loopback)
+ '(exec-path-from-shell-variables '("PATH" "MANPATH" "CARGO_HOME" "RUST_SRC_PATH"))
  '(flycheck-checker-error-threshold nil)
  '(flycheck-display-errors-delay 0.15)
  '(flycheck-flake8-maximum-line-length 120)
- '(flycheck-global-modes (quote (not org-mode org-agenda-mode)))
- '(flycheck-highlighting-mode (quote lines))
- '(flycheck-pycheckers-checkers (quote (pylint pep8 mypy2 mypy3)))
- '(flycheck-pycheckers-enable-codes (quote ("W0613")))
+ '(flycheck-global-modes '(not org-mode org-agenda-mode))
+ '(flycheck-highlighting-mode 'lines)
+ '(flycheck-pycheckers-checkers '(pylint pep8 mypy2 mypy3))
+ '(flycheck-pycheckers-enable-codes '("W0613"))
  '(flycheck-pycheckers-max-line-length 100)
- '(flycheck-rust-check-tests nil)
+ '(flycheck-rust-check-tests t)
  '(gc-cons-threshold 100000000)
  '(git-commit-summary-max-length 79)
  '(global-eldoc-mode nil)
- '(ido-cr+-function-whitelist (quote (org-agenda-refile org-refile)))
+ '(ido-cr+-function-whitelist '(org-agenda-refile org-refile))
  '(jabber-account-list
-   (quote
-    (("msherry@gmail.com"
+   '(("msherry@gmail.com"
       (:network-server . "talk.google.com")
       (:port . 5223)
-      (:connection-type . ssl)))))
+      (:connection-type . ssl))))
  '(jabber-alert-message-hooks
-   (quote
-    (jabber-message-wave jabber-message-echo jabber-message-scroll)))
+   '(jabber-message-wave jabber-message-echo jabber-message-scroll))
  '(jabber-alert-message-wave "/System/Library/Sounds/Bottle.aiff")
  '(jabber-auto-reconnect t)
- '(magit-log-arguments (quote ("--graph" "--color" "--decorate" "-n256")))
+ '(magit-log-arguments '("--graph" "--color" "--decorate" "-n256"))
  '(magit-push-always-verify nil)
- '(magit-tag-arguments (quote ("--annotate")))
- '(mm-inline-large-images (quote resize))
- '(mm-text-html-renderer (quote shr))
+ '(magit-tag-arguments '("--annotate"))
+ '(mm-inline-large-images 'resize)
+ '(mm-text-html-renderer 'shr)
  '(notmuch-after-tag-hook
-   (quote
-    ((lambda
+   '((lambda
          (&rest rest)
        (shell-command
         (concat "touch "
-                (shell-quote-argument msherry-email-update-file-path)))))))
- '(notmuch-archive-tags (quote ("-INBOX")))
+                (shell-quote-argument msherry-email-update-file-path))))))
+ '(notmuch-archive-tags '("-INBOX"))
  '(notmuch-crypto-process-mime t)
  '(notmuch-saved-searches
-   (quote
-    ((:name "inbox" :query "tag:INBOX" :key "i")
+   '((:name "inbox" :query "tag:INBOX" :key "i")
      (:name "unread" :query "tag:unread AND tag:INBOX" :key "u")
      (:name "Ideas" :query "tag:Ideas AND tag:unread" :key "I")
      (:name "flagged" :query "tag:flagged" :key "f")
      (:name "Flawless" :query "tag:Flawless AND tag:unread")
      (:name "sent" :query "tag:sent" :key "t")
      (:name "drafts" :query "tag:draft" :key "d")
-     (:name "all mail" :query "*" :key "a"))))
+     (:name "all mail" :query "*" :key "a")))
  '(notmuch-search-oldest-first nil)
- '(ns-alternate-modifier (quote super))
- '(ns-command-modifier (quote meta))
- '(org-agenda-clockreport-parameter-plist (quote (:link t :maxlevel 3)))
+ '(ns-alternate-modifier 'super)
+ '(ns-command-modifier 'meta)
+ '(org-agenda-clockreport-parameter-plist '(:link t :maxlevel 3))
  '(org-agenda-custom-commands
-   (quote
-    (("c" "Agenda and all unscheduled/everyday TODO's / unfiled"
-          ((agenda ""
-                   ((org-super-agenda-groups
-                     (quote
-                      ((:log t)
-                       (:name "Schedule" :time-grid t)
-                       (:name "Priority" :priority "A")
-                       (:name "Overdue" :deadline past)
-                       (:name "Due today" :deadline today)
-                       (:name "Today" :scheduled today)
-                       (:name "Due soon" :deadline future)
-                       (:name "No deadline" :tag "WORK"))))))
-           (tags "EVERYDAY"
-                 ((org-agenda-overriding-header "Every day")
-                  (org-agenda-skip-function
-                   (quote
-                    (org-agenda-skip-entry-if
-                     (quote regexp)
-                     "\\* .*:Everyday:")))))
-           (todo ""
-                 ((org-agenda-overriding-header "Unscheduled TODOs")
-                  (org-agenda-skip-function
-                   (quote
-                    (org-agenda-skip-entry-if
-                     (quote deadline)
-                     (quote scheduled))))))
-           (tags "TOREAD"
-                 ((org-agenda-overriding-header "To read")
-                  (org-agenda-skip-function
-                   (quote
-                    (org-agenda-skip-entry-if
-                     (quote regexp)
-                     "\\* To read.*:TOREAD:")))))
-           (tags "REFILE"
-                 ((org-agenda-overriding-header "To refile"))))
-          nil)
+   '(("c" "Agenda and all unscheduled/everyday TODO's / unfiled"
+      ((agenda ""
+               ((org-super-agenda-groups
+                 '((:log t)
+                   (:name "Schedule" :time-grid t)
+                   (:name "Priority" :priority "A")
+                   (:name "Overdue" :deadline past)
+                   (:name "Due today" :deadline today)
+                   (:name "Today" :scheduled today)
+                   (:name "Due soon" :deadline future)
+                   (:name "No deadline" :tag "WORK")))))
+       (tags "EVERYDAY"
+             ((org-agenda-overriding-header "Every day")
+              (org-agenda-skip-function
+               '(org-agenda-skip-entry-if 'regexp "\\* .*:Everyday:"))))
+       (todo ""
+             ((org-agenda-overriding-header "Unscheduled TODOs")
+              (org-agenda-skip-function
+               '(org-agenda-skip-entry-if 'deadline 'scheduled))))
+       (tags "TOREAD"
+             ((org-agenda-overriding-header "To read")
+              (org-agenda-skip-function
+               '(org-agenda-skip-entry-if 'regexp "\\* To read.*:TOREAD:"))))
+       (tags "REFILE"
+             ((org-agenda-overriding-header "To refile"))))
+      nil)
      ("N" "Notes" tags "NOTE"
-          ((org-agenda-overriding-header "Notes")
-           (org-tags-match-list-sublevels t)))
+      ((org-agenda-overriding-header "Notes")
+       (org-tags-match-list-sublevels t)))
      ("o" "Completed tasks older than 60 days (http://gnuru.org/article/1639/org-mode-find-all-done-items-older-than-2-months)" tags "CLOSED<\"<-60d>\"" nil)
-     ("w" "Tasks completed within the past week" tags "CLOSED>=\"<-7d>\"" nil))))
+     ("w" "Tasks completed within the past week" tags "CLOSED>=\"<-7d>\"" nil)))
  '(org-agenda-persistent-filter t)
  '(org-agenda-prefix-format
-   (quote
-    ((agenda . " %i %-12:c%?-12t% s")
+   '((agenda . " %i %-12:c%?-12t% s")
      (timeline . "  % s")
      (todo . " %i %-12:c%l")
      (tags . " %i %-12:c")
-     (search . " %i %-12:c"))))
- '(org-agenda-skip-deadline-prewarning-if-scheduled (quote pre-scheduled))
+     (search . " %i %-12:c")))
+ '(org-agenda-skip-deadline-prewarning-if-scheduled 'pre-scheduled)
  '(org-agenda-skip-scheduled-if-deadline-is-shown t)
- '(org-agenda-span (quote day))
+ '(org-agenda-span 'day)
  '(org-agenda-start-on-weekday nil)
  '(org-agenda-sticky t)
  '(org-agenda-time-grid
-   (quote
-    ((daily today)
+   '((daily today)
      (800 1000 1200 1400 1600 1800 2000)
-     "......" "----------------")))
+     "......" "----------------"))
  '(org-agenda-timegrid-use-ampm t)
- '(org-babel-clojure-backend (quote cider))
+ '(org-babel-clojure-backend 'cider)
  '(org-babel-load-languages
-   (quote
-    ((C . t)
+   '((C . t)
      (awk . t)
      (clojure . t)
      (dot . t)
@@ -736,44 +715,43 @@ http://blogs.fluidinfo.com/terry/2011/11/10/emacs-buffer-mode-histogram/"
      (ruby . t)
      (js . t)
      (shell . t)
-     (sql . t))))
+     (sql . t)))
  '(org-capture-templates
-   (quote
-    (("t" "TODO" entry
-          (file "~/.emacs.d/org/refile.org")
-          "* TODO %?
+   '(("t" "TODO" entry
+      (file "~/.emacs.d/org/refile.org")
+      "* TODO %?
  %U
  %a
  " :clock-in t :clock-resume t)
      ("w" "work TODO" entry
-          (file+headline "~/.emacs.d/org/work.org" "Tasks")
-          "** TODO %?
+      (file+headline "~/.emacs.d/org/work.org" "Tasks")
+      "** TODO %?
  %a
  " :clock-in t :clock-resume t)
      ("p" "personal TODO" entry
-          (file+headline "~/.emacs.d/org/personal.org" "Tasks")
-          "** TODO %?
+      (file+headline "~/.emacs.d/org/personal.org" "Tasks")
+      "** TODO %?
  %a
  " :clock-in t :clock-resume t)
      ("n" "note" entry
-          (file "~/.emacs.d/org/refile.org")
-          "* %? :NOTE:
+      (file "~/.emacs.d/org/refile.org")
+      "* %? :NOTE:
  %U
  %a" :clock-in t :clock-resume t)
      ("m" "Meeting" entry
-          (file+olp "~/.emacs.d/org/work.org" "Meetings")
-          "* %? :MEETINGS:
- " :clock-in t :clock-resume t))))
+      (file+olp "~/.emacs.d/org/work.org" "Meetings")
+      "* %? :MEETINGS:
+ " :clock-in t :clock-resume t)))
  '(org-clock-out-remove-zero-time-clocks t)
  '(org-clock-persist nil)
  '(org-clock-report-include-clocking-task t)
  '(org-enforce-todo-dependencies t)
- '(org-export-backends (quote (ascii html icalendar latex md odt)))
- '(org-export-with-sub-superscripts (quote {}))
- '(org-image-actual-width (quote (300)))
- '(org-indirect-buffer-display (quote current-window))
- '(org-log-done (quote time))
- '(org-mobile-agendas (quote ("c")))
+ '(org-export-backends '(ascii html icalendar latex md odt))
+ '(org-export-with-sub-superscripts '{})
+ '(org-image-actual-width '(300))
+ '(org-indirect-buffer-display 'current-window)
+ '(org-log-done 'time)
+ '(org-mobile-agendas '("c"))
  '(org-mobile-files-exclude-regexp "-cal.org$")
  '(org-mobile-force-id-on-agenda-items nil)
  '(org-refile-use-outline-path t)
@@ -796,9 +774,9 @@ http://blogs.fluidinfo.com/terry/2011/11/10/emacs-buffer-mode-histogram/"
      (tickscript-series-type . "stream")
      (tickscript-series-dbrp . "desktop_client.default")
      (tickscript-series-type . "batch")
-     (tickscript-series-name . "medians"))))
+     (tickscript-series-name . "medians")))
  '(tickscript-add-extra-graph-options t)
- '(tramp-syntax (quote simplified) nil (tramp)))
+ '(tramp-syntax 'simplified nil (tramp)))
 
 
 ;; (eval-after-load 'cc-mode
