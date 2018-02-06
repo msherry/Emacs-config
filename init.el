@@ -754,6 +754,8 @@ http://blogs.fluidinfo.com/terry/2011/11/10/emacs-buffer-mode-histogram/"
  '(org-mobile-agendas '("c"))
  '(org-mobile-files-exclude-regexp "-cal.org$")
  '(org-mobile-force-id-on-agenda-items nil)
+ '(org-modules
+   '(org-bbdb org-bibtex org-docview org-gnus org-habit org-info org-irc org-mhe org-mouse org-rmail org-w3m org-notmuch))
  '(org-refile-use-outline-path t)
  '(org-src-tab-acts-natively t)
  '(org-use-sub-superscripts (quote {}))

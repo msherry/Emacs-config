@@ -2,7 +2,6 @@
 
 (require 'org)
 (require 'org-agenda-property)          ; Show properties like :LOCATION: in agenda
-(require 'org-notmuch)                  ; Save links to emails
 (require 'org-id)                       ; global identifiers for org entries
 (require 'org-super-agenda)
 
