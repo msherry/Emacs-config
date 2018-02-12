@@ -59,10 +59,18 @@ With a prefix argument, jump to the `notmuch' home screen."
     (funcall tag-fn tag-changes)))
 
 (defun msherry-toggle-unread ()
+  ;; Must be interactive
+  (interactive)
   (msherry--toggle-tag-search-or-show "unread"))
+
 (defun msherry-toggle-flagged ()
+  ;; Must be interactive
+  (interactive)
   (msherry--toggle-tag-search-or-show "flagged"))
+
 (defun msherry-toggle-muted ()
+  ;; Must be interactive
+  (interactive)
   (msherry--toggle-tag-search-or-show "muted"))
 
 ;; Open links in emails
@@ -162,6 +170,8 @@ https://gist.github.com/dbp/9627194"
 
 ;; Fix up broken functions
 (defun msherry-notmuch-redisplay-search-with-highlight (&rest args)
+  ;; Must be interactive
+  (interactive)
   (notmuch-refresh-this-buffer)
   (notmuch-hl-line-mode))
 (advice-add 'notmuch-search-archive-thread
