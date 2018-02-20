@@ -47,5 +47,9 @@
              (subrp (symbol-function 'play-sound-internal)))
   (require 'play-sound))
 
+;;; Set source directory for emacs
+;;; https://stackoverflow.com/a/11595671/52550
+(setq find-function-C-source-directory "~/Library/Caches/Homebrew/emacs--git/src")
+
 
 (provide 'msherry-macos)
