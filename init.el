@@ -363,7 +363,9 @@ Return ERRORS, modified in-place."
   (c-set-offset 'arglist-cont-nonempty '++)
   (c-set-offset 'arglist-cont '++)
   (c-set-offset 'arglist-close '++)
-  (setq show-trailing-whitespace t))
+  (setq show-trailing-whitespace t)
+  ;; Completion that doesn't compete with OSX's program switching
+  (local-set-key (kbd "s-<tab>") 'complete-symbol))
 
 
 ;; Colors in files where it makes sense
