@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: #[feature(option)]
+# key: feature
+# --
+#![feature(${1:option})]

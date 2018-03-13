@@ -389,6 +389,15 @@ Return ERRORS, modified in-place."
 (add-hook 'rust-mode-hook 'cargo-minor-mode)
 (add-hook 'rust-mode-hook 'racer-mode)
 
+(eval-after-load "cargo"
+  ;; Until https://github.com/kwrooijen/cargo.el/pull/54 lands, make cargo mode
+  ;; help more useful
+  '(progn
+    (define-minor-mode cargo-minor-mode
+     "Cargo minor mode. Used to hold keybindings for cargo-mode.
+\\{cargo-minor-mode-map}"
+     nil " cargo" cargo-minor-mode-map)))
+
 ;; Know what's useless? A lot of flyspell keybindings
 (eval-after-load "flyspell"
   '(progn
