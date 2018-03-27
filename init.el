@@ -170,7 +170,6 @@
 (add-to-list 'auto-mode-alist '("\\.org$" . org-mode))
 (add-to-list 'auto-mode-alist '("\\.php$" . php-mode))
 (add-to-list 'auto-mode-alist '("\\.R$" . r-mode))
-(add-to-list 'auto-mode-alist '("BUILD" . python-mode))
 
 
 ;; Indentation settings
