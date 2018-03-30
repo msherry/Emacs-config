@@ -22,6 +22,8 @@
 (defvar msherry-email-update-file-path "/tmp/offlineimap_sync_required"
   "Touch this file to force the external offlineimap-runner.sh to resync.")
 
+(defvar msherry-notmuch-new-mail-search-str "tag:unread AND tag:INBOX AND -tag:muted")
+
 (defun msherry-notmuch-unread (arg)
   "Jump immediately to unread emails in notmuch.
 
@@ -29,7 +31,7 @@ With a prefix argument, jump to the `notmuch' home screen."
   (interactive "P")
   ;; TODO: use the saved 'u' search here
   (if arg (notmuch)
-    (notmuch-search "tag:unread AND tag:INBOX" (default-value 'notmuch-search-oldest-first))))
+    (notmuch-search msherry-notmuch-new-mail-search-str (default-value 'notmuch-search-oldest-first))))
 
 (global-set-key (kbd "C-c m") #'msherry-notmuch-unread)
 
@@ -156,7 +158,8 @@ https://gist.github.com/dbp/9627194"
   ;; `notmuch`
   (let ((default-directory expanded-user-emacs-directory))
     (if (string= (s-chomp
-                  (shell-command-to-string "/usr/local/bin/notmuch count tag:INBOX and tag:unread"))
+                  (shell-command-to-string (format "/usr/local/bin/notmuch count %s"
+                                                   msherry-notmuch-new-mail-search-str)))
                  "0")
         nil
       t)))
