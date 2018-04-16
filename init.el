@@ -667,29 +667,29 @@ http://blogs.fluidinfo.com/terry/2011/11/10/emacs-buffer-mode-histogram/"
  '(org-agenda-custom-commands
    '(("c" "Agenda and all unscheduled/everyday TODO's / unfiled"
       ((agenda ""
-               ((org-super-agenda-groups
-                 '((:log t)
-                   (:name "Schedule" :time-grid t)
-                   (:name "Priority" :priority "A")
-                   (:name "Overdue" :deadline past)
-                   (:name "Due today" :deadline today)
-                   (:name "Today" :scheduled today)
-                   (:name "Due soon" :deadline future)
-                   (:name "No deadline" :tag "WORK")))))
+        ((org-super-agenda-groups
+          '((:log t)
+            (:name "Schedule" :time-grid t)
+            (:name "Priority" :priority "A")
+            (:name "Overdue" :deadline past)
+            (:name "Due today" :deadline today)
+            (:name "Today" :scheduled today)
+            (:name "Due soon" :deadline future)
+            (:name "No deadline" :tag "WORK")))))
        (tags "EVERYDAY"
-             ((org-agenda-overriding-header "Every day")
-              (org-agenda-skip-function
-               '(org-agenda-skip-entry-if 'regexp "\\* .*:Everyday:"))))
+        ((org-agenda-overriding-header "Every day")
+         (org-agenda-skip-function
+          '(org-agenda-skip-entry-if 'regexp "\\* .*:Everyday:"))))
        (todo ""
-             ((org-agenda-overriding-header "Unscheduled TODOs")
-              (org-agenda-skip-function
-               '(org-agenda-skip-entry-if 'deadline 'scheduled))))
+        ((org-agenda-overriding-header "Unscheduled TODOs")
+         (org-agenda-skip-function
+          '(org-agenda-skip-entry-if 'deadline 'scheduled))))
        (tags "TOREAD"
-             ((org-agenda-overriding-header "To read")
-              (org-agenda-skip-function
-               '(org-agenda-skip-entry-if 'regexp "\\* To read.*:TOREAD:"))))
+        ((org-agenda-overriding-header "To read")
+         (org-agenda-skip-function
+          '(org-agenda-skip-entry-if 'regexp "\\* To read.*:TOREAD:"))))
        (tags "REFILE"
-             ((org-agenda-overriding-header "To refile"))))
+        ((org-agenda-overriding-header "To refile"))))
       nil)
      ("N" "Notes" tags "NOTE"
       ((org-agenda-overriding-header "Notes")
@@ -814,6 +814,22 @@ http://blogs.fluidinfo.com/terry/2011/11/10/emacs-buffer-mode-histogram/"
 ;;; ourselves, replaced with exec-path-from-shell. Must be done after the call
 ;;; to `custom-set-variables' has set things for us.
 (exec-path-from-shell-initialize)
+
+;;; Misc
+(defun mirth ()
+  "Browse code.pp for the current file/line."
+  (interactive)
+  (let* ((path (buffer-file-name))
+         (repo-root (s-chomp (shell-command-to-string "git rev-parse --show-toplevel")))
+         (repo-name (s-chomp (shell-command-to-string (format "basename %s" repo-root))))
+         (url-root (cond ((string= repo-name "client") "desktop-client")
+                         (t repo-name)))
+         (relative-path (file-relative-name path repo-root)))
+    (let ((url (format "https://code.pp.dropbox.com/view/%s/%s#L%s"
+                       url-root relative-path (number-to-string (line-number-at-pos)))))
+      (browse-url url))))
+
+(global-set-key (kbd "C-c C-'") #'mirth)
 
 (provide 'init)
 

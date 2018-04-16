@@ -148,6 +148,26 @@ With a prefix argument, jump to the `notmuch' home screen."
   (let ((macro (assoc key notmuch-show-tag-macro-alist)))
     (apply 'notmuch-show-tag-message (cdr macro))))
 
+(defvar msherry-mail-alert-ts 0
+  "Last timestamp of shown mail alerts.")
+
+(defvar msherry-mail-alert-interval-minutes 60
+  "How many minutes to wait before displaying the new mail alert.")
+
+(defun msherry-mail-elapsed-minutes ()
+  "How much time has elapsed since we were last eligible to show the new mail alert."
+  (/ (- (float-time) msherry-mail-alert-ts)
+     60))
+
+(defun msherry-mail-refresh-alert-ts (&rest args)
+  "Update the timestamp of the new mail alert."
+  (setq msherry-mail-alert-ts (float-time)))
+
+(defun msherry-mail-alert-ok ()
+  "Return t if enough time has elapsed since last alerting on new mail, nil otherwise."
+  (let ((res (> (msherry-mail-elapsed-minutes)
+                msherry-mail-alert-interval-minutes)))
+    res))
 
 ;;; For display-time-mode
 (defun msherry-new-important-mail ()
@@ -157,16 +177,17 @@ https://gist.github.com/dbp/9627194"
   ;; Ensure we're in a local directory so Tramp doesn't try to run a remote
   ;; `notmuch`
   (let ((default-directory expanded-user-emacs-directory))
-    (if (string= (s-chomp
-                  (shell-command-to-string (format "/usr/local/bin/notmuch count %s"
-                                                   msherry-notmuch-new-mail-search-str)))
-                 "0")
-        nil
-      t)))
+    (when (msherry-mail-alert-ok)
+      (if (string= (s-chomp
+                    (shell-command-to-string (format "/usr/local/bin/notmuch count %s"
+                                                     msherry-notmuch-new-mail-search-str)))
+                   "0")
+          nil
+          t))))
 
 
 (defun msherry-notmuch-show-redraw-tags ()
-  "Redraw all tags in the current message based on their current state"
+  "Redraw all tags in the current message based on their current state."
   (notmuch-show-update-tags '())
   (notmuch-show-update-tags (notmuch-show-get-tags))
   )
@@ -183,14 +204,16 @@ https://gist.github.com/dbp/9627194"
 ;;; Update mail flag more often
 (advice-add 'notmuch-refresh-this-buffer :after #'display-time-update)
 
-
 (add-hook 'notmuch-after-tag-hook
           #'(lambda (&rest rest)
               (shell-command (concat "touch " (shell-quote-argument msherry-email-update-file-path)))))
 
+;;; Update the alert timestamp when closing notmuch buffers
+(advice-add #'notmuch-bury-or-kill-this-buffer :after #'msherry-mail-refresh-alert-ts)
+
 
 (defun msherry-highlight-myself (&rest args)
-  "Note - this doesn't use font-lock-mode, so it's not updated on the fly"
+  "Note - this doesn't use font-lock-mode, so it's not updated on the fly."
   (dolist (regex (list "\\<marc\\( sherry\\)?\\>"
                        "\\<msherry\\>"))
     (unhighlight-regexp regex)          ; Unhighlight to force a full redraw
