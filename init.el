@@ -751,7 +751,8 @@ http://blogs.fluidinfo.com/terry/2011/11/10/emacs-buffer-mode-histogram/"
       (file "~/.emacs.d/org/refile.org")
       "* %? :NOTE:
  %U
- %a" :clock-in t :clock-resume t)
+ %a
+ " :clock-in t :clock-resume t)
      ("m" "Meeting" entry
       (file+olp "~/.emacs.d/org/work.org" "Meetings")
       "* %? :MEETINGS:
