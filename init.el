@@ -680,7 +680,7 @@ http://blogs.fluidinfo.com/terry/2011/11/10/emacs-buffer-mode-histogram/"
        (tags "EVERYDAY"
              ((org-agenda-overriding-header "Every day")
               (org-agenda-skip-function
-               '(org-agenda-skip-entry-if 'regexp "\\* .*:Everyday:"))))
+               '(org-agenda-skip-entry-if 'regexp "\\^* .*:EVERYDAY\\|^\\*\\*\\*"))))
        (todo ""
              ((org-agenda-overriding-header "Unscheduled TODOs")
               (org-agenda-skip-function
