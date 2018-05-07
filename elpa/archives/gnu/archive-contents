@@ -70,7 +70,7 @@
 	     ((:url . "http://elpa.gnu.org/packages/arbitools.html")
 	      (:keywords))])
  (ascii-art-to-unicode .
-		       [(1 11)
+		       [(1 12)
 			nil "a small artist adjunct" single
 			((:url . "http://www.gnuvola.org/software/aa2u/")
 			 (:keywords "ascii" "unicode" "box-drawing"))])
@@ -490,7 +490,7 @@
 		 ((:keywords "gnome" "c" "coding style")
 		  (:url . "http://elpa.gnu.org/packages/gnome-c-style.html"))])
  (gnorb .
-	[(1 4 2)
+	[(1 5 3)
 	 ((cl-lib
 	   (0 5)))
 	 "Glue code between Gnus, Org, and BBDB" tar
@@ -751,9 +751,9 @@
 	 ((:keywords "extensions" "lisp")
 	  (:url . "https://github.com/Malabarba/names"))])
  (nhexl-mode .
-	     [(0 5)
+	     [(0 9)
 	      ((emacs
-		(24))
+		(24 4))
 	       (cl-lib
 		(0 5)))
 	      "Minor mode to edit files via hex-dump format" single
@@ -796,7 +796,7 @@
 	     ((:url . "https://github.com/michael-heerdegen/on-screen.el")
 	      (:keywords "convenience"))])
  (org .
-      [(9 1 10)
+      [(9 1 13)
        nil "Outline-based notes management and organizer" tar
        ((:keywords "outlines" "hypermedia" "calendar" "wp")
 	(:url . "http://elpa.gnu.org/packages/org.html"))])
@@ -811,6 +811,13 @@
 	    "Extensible Dependencies 'N' Actions" tar
 	    ((:keywords "convenience" "text" "org")
 	     (:url . "https://savannah.nongnu.org/projects/org-edna-el/"))])
+ (orgalist .
+	   [(1 6)
+	    ((emacs
+	      (24 4)))
+	    "Manage Org-like lists in non-Org buffers" single
+	    ((:url . "http://elpa.gnu.org/packages/orgalist.html")
+	     (:keywords "convenience"))])
  (osc .
       [(0 1)
        nil "Open Sound Control protocol library" single
