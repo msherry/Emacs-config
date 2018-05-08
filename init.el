@@ -622,7 +622,7 @@ http://blogs.fluidinfo.com/terry/2011/11/10/emacs-buffer-mode-histogram/"
  '(flycheck-flake8-maximum-line-length 120)
  '(flycheck-global-modes '(not org-mode org-agenda-mode))
  '(flycheck-highlighting-mode 'lines)
- '(flycheck-pycheckers-checkers '(pylint pep8 mypy2 mypy3))
+ '(flycheck-pycheckers-checkers '(pylint pep8 mypy2 mypy3 bandit))
  '(flycheck-pycheckers-enable-codes '("W0613"))
  '(flycheck-pycheckers-max-line-length 100)
  '(flycheck-rust-check-tests t)
