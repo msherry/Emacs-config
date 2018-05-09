@@ -385,8 +385,8 @@ as the default task."
 
 
 ;;; org-mru-clock stuff
-(global-set-key (kbd "C-c C-x i") #'org-mru-clock-in)
-(global-set-key (kbd "C-c C-x C-j") #'org-mru-clock-select-recent-task)
+;; (global-set-key (kbd "C-c C-x i") #'org-mru-clock-in)
+;; (global-set-key (kbd "C-c C-x C-j") #'org-mru-clock-select-recent-task)
 
 (provide 'org-customization)
 ;;; org-customization.el ends here
