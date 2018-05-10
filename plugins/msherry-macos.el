@@ -3,7 +3,7 @@
 ;; Default on mac - "-apple-Monaco-medium-normal-normal-*-12-*-*-*-m-0-iso10646-1"
 
 ;; Try this font for a while. Either syntax is acceptable here
-(set-default-font
+(set-frame-font
  "Inconsolata-14"
  ;"-apple-Inconsolata-medium-normal-normal-*-14-*-*-*-m-0-iso10646-1")
  )
