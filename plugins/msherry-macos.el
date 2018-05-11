@@ -6,7 +6,7 @@
 (set-frame-font
  "Inconsolata-14"
  ;"-apple-Inconsolata-medium-normal-normal-*-14-*-*-*-m-0-iso10646-1")
- )
+ nil t)
 
 ;; While emacs23 handles greek poorly on the mac, use a different font. See
 ;; last http ref in plugins/lambda.el. "fontset-startup" (or fontsets at all,
