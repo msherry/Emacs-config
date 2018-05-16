@@ -169,7 +169,9 @@
 (add-to-list 'auto-mode-alist '("\\.md$" . markdown-mode))
 (add-to-list 'auto-mode-alist '("\\.org$" . org-mode))
 (add-to-list 'auto-mode-alist '("\\.php$" . php-mode))
+(add-to-list 'auto-mode-alist '("\\.pyst$" . python-mode))
 (add-to-list 'auto-mode-alist '("\\.R$" . r-mode))
+(add-to-list 'auto-mode-alist '("\\.bzl$" . bazel-mode))
 (add-to-list 'auto-mode-alist '("BUILD$" . bazel-mode))
 
 
