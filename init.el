@@ -769,6 +769,8 @@ http://blogs.fluidinfo.com/terry/2011/11/10/emacs-buffer-mode-histogram/"
  '(org-indirect-buffer-display 'current-window)
  '(org-log-done 'time)
  '(org-mobile-agendas '("c"))
+ '(org-mobile-files
+   '(org-agenda-files org-agenda-text-search-extra-files "/Users/msherry/.emacs.d/org/loads.org"))
  '(org-mobile-files-exclude-regexp "-cal.org$")
  '(org-mobile-force-id-on-agenda-items nil)
  '(org-modules
