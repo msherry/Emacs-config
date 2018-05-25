@@ -154,25 +154,20 @@
 (add-hook 'LaTeX-mode-hook 'LaTeX-preview-setup)
 
 ;; File/mode associations
+(add-to-list 'auto-mode-alist '("BUILD$" . bazel-mode))
+(add-to-list 'auto-mode-alist '("\\.R$" . r-mode))
 (add-to-list 'auto-mode-alist '("\\.as$" . actionscript-mode))
-;; use json-mode for avsc files
 (add-to-list 'auto-mode-alist '("\\.avsc\\'" . json-mode))
+(add-to-list 'auto-mode-alist '("\\.bzl$" . bazel-mode))
 (add-to-list 'auto-mode-alist '("\\.csv$" . csv-mode))
 (add-to-list 'auto-mode-alist '("\\.d$" . dtrace-script-mode))
-(if (version< emacs-version "23.2")     ; js-mode was made standard in 23.2
-    (progn
-      (add-to-list 'auto-mode-alist '("\\.js$" . js2-mode))
-      (add-to-list 'auto-mode-alist '("\\.pac$" . js2-mode)))
-    (progn
-      (add-to-list 'auto-mode-alist '("\\.js$" . js-mode))
-      (add-to-list 'auto-mode-alist '("\\.pac$" . js-mode))))
 (add-to-list 'auto-mode-alist '("\\.md$" . markdown-mode))
 (add-to-list 'auto-mode-alist '("\\.org$" . org-mode))
 (add-to-list 'auto-mode-alist '("\\.php$" . php-mode))
 (add-to-list 'auto-mode-alist '("\\.pyst$" . python-mode))
-(add-to-list 'auto-mode-alist '("\\.R$" . r-mode))
-(add-to-list 'auto-mode-alist '("\\.bzl$" . bazel-mode))
-(add-to-list 'auto-mode-alist '("BUILD$" . bazel-mode))
+(add-to-list 'auto-mode-alist '("\\.js$" . js2-mode))
+(add-to-list 'auto-mode-alist '("\\.pac$" . js2-mode))
+(add-to-list 'auto-mode-alist '("\\.tsx$" . js2-mode))
 
 
 ;; Indentation settings
@@ -769,8 +764,6 @@ http://blogs.fluidinfo.com/terry/2011/11/10/emacs-buffer-mode-histogram/"
  '(org-indirect-buffer-display 'current-window)
  '(org-log-done 'time)
  '(org-mobile-agendas '("c"))
- '(org-mobile-files
-   '(org-agenda-files org-agenda-text-search-extra-files "/Users/msherry/.emacs.d/org/loads.org"))
  '(org-mobile-files-exclude-regexp "-cal.org$")
  '(org-mobile-force-id-on-agenda-items nil)
  '(org-modules
@@ -779,7 +772,7 @@ http://blogs.fluidinfo.com/terry/2011/11/10/emacs-buffer-mode-histogram/"
  '(org-src-tab-acts-natively t)
  '(org-use-sub-superscripts '{})
  '(package-selected-packages
-   '(ac-geiser ack auctex bazel-mode cargo cider clojure-mode clojure-mode-extra-font-locking diff-hl dtrace-script-mode el2markdown elpy ess esup exec-path-from-shell feature-mode flycheck-clojure flycheck-mypy flycheck-package flycheck-pycheckers flycheck-rust flymake flymake-php flymake-sass fxrd-mode geiser gitignore-mode go-mode graphviz-dot-mode httpcode ido-completing-read+ jabber jedi json-mode latex-preview-pane magit markdown-mode markdown-preview-mode notmuch oauth2 org-agenda-property org-jira org-mru-clock org-plus-contrib org-pomodoro org-super-agenda package-lint paredit php-mode pinentry projectile protobuf-mode puppet-mode pymacs python-mode racer rainbow-mode rust-mode s sass-mode slime solarized-theme suggest tagedit thrift tickscript-mode virtualenv window-numbering yaml-mode yasnippet yasnippet-snippets zenburn-theme))
+   '(ac-geiser ack auctex bazel-mode blacken cargo cider clojure-mode clojure-mode-extra-font-locking diff-hl dtrace-script-mode el2markdown elpy ess esup exec-path-from-shell feature-mode flycheck-clojure flycheck-mypy flycheck-package flycheck-pycheckers flycheck-rust flymake flymake-php flymake-sass fxrd-mode geiser gitignore-mode go-mode graphviz-dot-mode httpcode ido-completing-read+ jabber jedi js2-mode json-mode latex-preview-pane magit markdown-mode markdown-preview-mode notmuch oauth2 org-agenda-property org-jira org-mru-clock org-plus-contrib org-pomodoro org-super-agenda package-lint paredit php-mode pinentry projectile protobuf-mode puppet-mode pymacs python-mode racer rainbow-mode rust-mode s sass-mode slime solarized-theme suggest tagedit thrift tickscript-mode virtualenv window-numbering yaml-mode yasnippet yasnippet-snippets zenburn-theme))
  '(python-shell-interpreter "ipython")
  '(racer-rust-src-path nil)
  '(rust-format-on-save t)
