@@ -665,29 +665,29 @@ http://blogs.fluidinfo.com/terry/2011/11/10/emacs-buffer-mode-histogram/"
  '(org-agenda-custom-commands
    '(("c" "Agenda and all unscheduled/everyday TODO's / unfiled"
       ((agenda ""
-        ((org-super-agenda-groups
-          '((:log t)
-            (:name "Schedule" :time-grid t)
-            (:name "Priority" :priority "A")
-            (:name "Overdue" :deadline past)
-            (:name "Due today" :deadline today)
-            (:name "Today" :scheduled today)
-            (:name "Due soon" :deadline future)
-            (:name "No deadline" :tag "WORK")))))
+               ((org-super-agenda-groups
+                 '((:log t)
+                   (:name "Schedule" :time-grid t)
+                   (:name "Priority" :priority "A")
+                   (:name "Overdue" :deadline past)
+                   (:name "Due today" :deadline today)
+                   (:name "Today" :scheduled today)
+                   (:name "Due soon" :deadline future)
+                   (:name "No deadline" :tag "WORK")))))
        (tags "EVERYDAY"
-        ((org-agenda-overriding-header "Every day")
-         (org-agenda-skip-function
-          '(org-agenda-skip-entry-if 'regexp "\\^* .*:EVERYDAY\\|^\\*\\*\\*"))))
+             ((org-agenda-overriding-header "Every day")
+              (org-agenda-skip-function
+               '(org-agenda-skip-entry-if 'regexp "\\^* .*:EVERYDAY\\|^\\*\\*\\*"))))
        (todo ""
-        ((org-agenda-overriding-header "Unscheduled TODOs")
-         (org-agenda-skip-function
-          '(org-agenda-skip-entry-if 'deadline 'scheduled))))
+             ((org-agenda-overriding-header "Unscheduled TODOs")
+              (org-agenda-skip-function
+               '(org-agenda-skip-entry-if 'deadline 'scheduled))))
        (tags "TOREAD"
-        ((org-agenda-overriding-header "To read")
-         (org-agenda-skip-function
-          '(org-agenda-skip-entry-if 'regexp "\\* To read.*:TOREAD:"))))
+             ((org-agenda-overriding-header "To read")
+              (org-agenda-skip-function
+               '(org-agenda-skip-entry-if 'regexp "\\* To read.*:TOREAD:"))))
        (tags "REFILE"
-        ((org-agenda-overriding-header "To refile"))))
+             ((org-agenda-overriding-header "To refile"))))
       nil)
      ("N" "Notes" tags "NOTE"
       ((org-agenda-overriding-header "Notes")
@@ -772,7 +772,7 @@ http://blogs.fluidinfo.com/terry/2011/11/10/emacs-buffer-mode-histogram/"
  '(org-src-tab-acts-natively t)
  '(org-use-sub-superscripts '{})
  '(package-selected-packages
-   '(ac-geiser ack auctex bazel-mode blacken cargo cider clojure-mode clojure-mode-extra-font-locking diff-hl dtrace-script-mode el2markdown elpy ess esup exec-path-from-shell feature-mode flycheck-clojure flycheck-mypy flycheck-package flycheck-pycheckers flycheck-rust flymake flymake-php flymake-sass fxrd-mode geiser gitignore-mode go-mode graphviz-dot-mode httpcode ido-completing-read+ jabber jedi js2-mode json-mode latex-preview-pane magit markdown-mode markdown-preview-mode notmuch oauth2 org-agenda-property org-jira org-mru-clock org-plus-contrib org-pomodoro org-super-agenda package-lint paredit php-mode pinentry projectile protobuf-mode puppet-mode pymacs python-mode racer rainbow-mode rust-mode s sass-mode slime solarized-theme suggest tagedit thrift tickscript-mode virtualenv window-numbering yaml-mode yasnippet yasnippet-snippets))
+   '(ac-geiser ack auctex bazel-mode blacken cargo cider clojure-mode clojure-mode-extra-font-locking diff-hl dtrace-script-mode el2markdown elpy ess esup exec-path-from-shell feature-mode flycheck-clojure flycheck-mypy flycheck-package flycheck-pycheckers flycheck-rust flymake flymake-php flymake-sass fxrd-mode geiser gitignore-mode go-mode graphviz-dot-mode httpcode ido-completing-read+ jabber jedi json-mode latex-preview-pane markdown-preview-mode notmuch oauth2 org-agenda-property org-jira org-mru-clock org-pomodoro package-lint paredit php-mode pinentry projectile protobuf-mode puppet-mode pymacs python-mode racer rainbow-mode rust-mode s sass-mode slime solarized-theme suggest tagedit thrift tickscript-mode virtualenv window-numbering yaml-mode yasnippet-snippets))
  '(python-shell-interpreter "ipython")
  '(racer-rust-src-path nil)
  '(rust-format-on-save t)
