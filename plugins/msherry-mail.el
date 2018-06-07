@@ -22,7 +22,9 @@
 (defvar msherry-email-update-file-path "/tmp/offlineimap_sync_required"
   "Touch this file to force the external offlineimap-runner.sh to resync.")
 
-(defvar msherry-notmuch-new-mail-search-str "tag:unread AND tag:INBOX AND -tag:muted")
+(defvar msherry-notmuch-new-mail-search-str
+  "tag:unread AND tag:INBOX AND -tag:muted AND -tag:differential.other"
+  "The default search string used to determine if new mail is present.")
 
 (defun msherry-notmuch-unread (arg)
   "Jump immediately to unread emails in notmuch.
