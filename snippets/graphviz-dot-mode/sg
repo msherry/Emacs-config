@@ -1,0 +1,11 @@
+# -*- coding: utf-8 -*-
+# name: subgraph
+# contributor: Marc Sherry <msherry@gmail.com>
+# --
+subgraph cluster_$1 {
+         label="$2"
+         style="filled"
+         node [style=filled,color=white]
+
+         $0
+}
