@@ -23,8 +23,12 @@
   "Touch this file to force the external offlineimap-runner.sh to resync.")
 
 (defvar msherry-notmuch-new-mail-search-str
-  "tag:unread AND tag:INBOX AND -tag:muted AND -tag:differential.other"
-  "The default search string used to determine if new mail is present.")
+  "tag:unread AND (tag:INBOX OR ((tag:flagged OR tag:thread_flagged) and tag:differential.other))"
+  "The default search string used to determine if new mail is present.
+
+Unread mail, and either in the Inbox (not filtered/muted by
+gmail), or a member of a flagged (starred thread) AND tagged with
+'differential.other'.")
 
 (defun msherry-notmuch-unread (arg)
   "Jump immediately to unread emails in notmuch.
@@ -68,6 +72,7 @@ With a prefix argument, jump to the `notmuch' home screen."
   (msherry--toggle-tag-search-or-show "unread"))
 
 (defun msherry-toggle-flagged ()
+
   ;; Must be interactive
   (interactive)
   (msherry--toggle-tag-search-or-show "flagged"))
@@ -92,7 +97,7 @@ With a prefix argument, jump to the `notmuch' home screen."
       (lambda (&optional beg end)
         "Remove thread from inbox"
         (interactive (notmuch-search-interactive-region))
-        (notmuch-search-tag (list "-INBOX") beg end)
+        (notmuch-search-tag (list "-INBOX" "-differential.other") beg end)
         (notmuch-refresh-this-buffer)))
 
 ; Mute mail in search mode
@@ -116,7 +121,7 @@ With a prefix argument, jump to the `notmuch' home screen."
   (lambda ()
     "Remove all shown messages in thread from inbox, return to search mode"
     (interactive)
-    (notmuch-show-tag-all (list "-INBOX"))
+    (notmuch-show-tag-all (list "-INBOX" "-differential.other"))
     (notmuch-bury-or-kill-this-buffer)
     (notmuch-refresh-this-buffer)
     (notmuch-search-last-thread)))
