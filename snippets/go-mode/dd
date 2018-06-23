@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: debug fmt.Printf
+# key: dd
+# --
+fmt.Printf("$1: %+v\n", ${1:variable}) // output for debug

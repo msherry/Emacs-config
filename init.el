@@ -311,19 +311,20 @@
               (flycheck-rust-setup))
             )
   ;; https://github.com/flycheck/flycheck/issues/1397
-  (defun flycheck-fill-and-expand-error-file-names (errors directory)
-  "Fill and expand file names in ERRORS relative to DIRECTORY.
+;;   (defun flycheck-fill-and-expand-error-file-names (errors directory)
+;;   "Fill and expand file names in ERRORS relative to DIRECTORY.
 
-Expand all file names of ERRORS against DIRECTORY.  If the file
-name of an error is nil fill in the result of function
-`buffer-file-name' in the current buffer.
+;; Expand all file names of ERRORS against DIRECTORY.  If the file
+;; name of an error is nil fill in the result of function
+;; `buffer-file-name' in the current buffer.
 
-Return ERRORS, modified in-place."
-  (seq-do (lambda (err)
-            (setf (flycheck-error-filename err)
-                  (buffer-file-name)))
-          errors)
-  errors))
+;; Return ERRORS, modified in-place."
+;;   (seq-do (lambda (err)
+;;             (setf (flycheck-error-filename err)
+;;                   (buffer-file-name)))
+;;           errors)
+;;   errors)
+  )
 
 ; Fast jumps to windows
 (window-numbering-mode)
