@@ -191,6 +191,7 @@
 (blink-cursor-mode 1)
 (show-paren-mode t)
 (ido-ubiquitous-mode 1)
+(projectile-global-mode)
 
 ; Display
 (setq transient-mark-mode t            ; on by default in 23.x
@@ -612,7 +613,7 @@ http://blogs.fluidinfo.com/terry/2011/11/10/emacs-buffer-mode-histogram/"
  '(elpy-project-ignored-directories
    '(".bzr" "CVS" ".git" ".hg" ".svn" ".tox" "build" "dist" ".cask" ".mypy_cache"))
  '(elpy-rpc-timeout 10)
- '(epa-pinentry-mode 'loopback)
+ '(epg-pinentry-mode 'loopback)
  '(exec-path-from-shell-variables '("PATH" "MANPATH" "CARGO_HOME" "RUST_SRC_PATH" "GOPATH"))
  '(flycheck-checker-error-threshold nil)
  '(flycheck-display-errors-delay 0.15)
@@ -695,7 +696,7 @@ http://blogs.fluidinfo.com/terry/2011/11/10/emacs-buffer-mode-histogram/"
      ("o" "Completed tasks older than 60 days (http://gnuru.org/article/1639/org-mode-find-all-done-items-older-than-2-months)" tags "CLOSED<\"<-60d>\"" nil)
      ("w" "Tasks completed within the past week" tags "CLOSED>=\"<-7d>\"" nil)))
  '(org-agenda-files
-   '("/Users/msherry/.emacs.d/org/personal.org" "/Users/msherry/.emacs.d/org/dropbox-cal.org" "/Users/msherry/.emacs.d/org/flagged.org" "/Users/msherry/.emacs.d/org/personal-cal.org" "/Users/msherry/.emacs.d/org/refile.org" "/Users/msherry/.emacs.d/org/work.org"))
+   '("/Users/msherry/.emacs.d/org/personal.org" "/Users/msherry/.emacs.d/org/dropbox-cal.org" "/Users/msherry/.emacs.d/org/flagged.org" "/Users/msherry/.emacs.d/org/personal-cal.org" "/Users/msherry/.emacs.d/org/refile.org" "/Users/msherry/.emacs.d/org/work.org" "/Users/msherry/.emacs.d/org/llc.org"))
  '(org-agenda-persistent-filter t)
  '(org-agenda-prefix-format
    '((agenda . " %i %-12:c%?-12t% s")
@@ -777,7 +778,8 @@ http://blogs.fluidinfo.com/terry/2011/11/10/emacs-buffer-mode-histogram/"
  '(racer-rust-src-path nil)
  '(rust-format-on-save t)
  '(safe-local-variable-values
-   '((tickscript-kapacitor-version . "1.3")
+   '((flycheck-checker . go-lint)
+     (tickscript-kapacitor-version . "1.3")
      (tickscript-kapacitor-version . "1.4")
      (tickscript-series-name . "medians_dev")
      (tickscript-series-dbrp . "apogee.autogen")

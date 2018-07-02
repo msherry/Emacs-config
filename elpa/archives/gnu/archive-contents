@@ -457,6 +457,11 @@
 	   "Color unbalanced parentheses and parentheses inconsistent with indentation" single
 	   ((:url . "http://elpa.gnu.org/packages/flylisp.html")
 	    (:keywords))])
+ (frame-tabs .
+	     [(1 1)
+	      nil "show buffer tabs in side window" single
+	      ((:url . "http://elpa.gnu.org/packages/frame-tabs.html")
+	       (:keywords "frames" "tabs"))])
  (fsm .
       [(0 2 1)
        ((emacs
@@ -606,6 +611,13 @@
 	     "Major mode for editing JSON files" single
 	     ((:url . "http://elpa.gnu.org/packages/json-mode.html")
 	      (:keywords "data"))])
+ (jsonrpc .
+	  [(1 0 0)
+	   ((emacs
+	     (26 1)))
+	   "JSON-RPC library" single
+	   ((:url . "http://elpa.gnu.org/packages/jsonrpc.html")
+	    (:keywords "processes" "languages" "extensions"))])
  (jumpc .
 	[(3 0)
 	 nil "jump to previous insertion points" single

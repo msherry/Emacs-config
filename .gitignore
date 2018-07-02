@@ -29,3 +29,4 @@ history
 .org-id-locations
 .emacs.desktop*
 *.plstore*
+projectile-bookmarks.eld
