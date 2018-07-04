@@ -745,6 +745,11 @@ http://blogs.fluidinfo.com/terry/2011/11/10/emacs-buffer-mode-histogram/"
       "** TODO %?
  %a
  " :clock-in t :clock-resume t)
+     ("l" "LLC TODO" entry
+      (file+headline "~/.emacs.d/org/llc.org" "Tasks")
+      "** TODO %?
+ %a
+ " :clock-in t :clock-resume t)
      ("n" "note" entry
       (file "~/.emacs.d/org/refile.org")
       "* %? :NOTE:
