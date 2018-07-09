@@ -30,3 +30,4 @@ history
 .emacs.desktop*
 *.plstore*
 projectile-bookmarks.eld
+projectile.cache
