@@ -2,12 +2,11 @@
 
 ;;; Use python-mode, instead of the crappy built-in python.el on the mac
 (autoload 'python-mode "python-mode" "Python Mode." t)
-(autoload 'jedi-setup-venv "jedi-local" nil t)
-(autoload 'jedi:setup "jedi" nil t)
-
 (add-to-list 'auto-mode-alist '("\\.py$" . python-mode))
 (add-to-list 'interpreter-mode-alist '("python" . python-mode))
 
+(autoload 'jedi-setup-venv "jedi-local" nil t)
+(autoload 'jedi:setup "jedi" nil t)
 
 (add-hook 'python-mode-hook
           '(lambda ()

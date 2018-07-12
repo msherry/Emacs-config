@@ -191,7 +191,6 @@
 (blink-cursor-mode 1)
 (show-paren-mode t)
 (ido-ubiquitous-mode 1)
-(projectile-global-mode)
 
 ; Display
 (setq transient-mark-mode t            ; on by default in 23.x
@@ -612,6 +611,7 @@ http://blogs.fluidinfo.com/terry/2011/11/10/emacs-buffer-mode-histogram/"
    '(elpy-module-company elpy-module-eldoc elpy-module-pyvenv elpy-module-sane-defaults))
  '(elpy-project-ignored-directories
    '(".bzr" "CVS" ".git" ".hg" ".svn" ".tox" "build" "dist" ".cask" ".mypy_cache"))
+ '(elpy-rpc-python-command "python2")
  '(elpy-rpc-timeout 10)
  '(epg-pinentry-mode 'loopback)
  '(exec-path-from-shell-variables '("PATH" "MANPATH" "CARGO_HOME" "RUST_SRC_PATH" "GOPATH"))
@@ -640,6 +640,7 @@ http://blogs.fluidinfo.com/terry/2011/11/10/emacs-buffer-mode-histogram/"
  '(magit-log-arguments '("--graph" "--color" "--decorate" "-n256"))
  '(magit-push-always-verify nil)
  '(magit-tag-arguments '("--annotate"))
+ '(magit-todos-mode t nil (magit-todos))
  '(mm-inline-large-images 'resize)
  '(mm-text-html-renderer 'shr)
  '(notmuch-after-tag-hook
@@ -666,34 +667,34 @@ http://blogs.fluidinfo.com/terry/2011/11/10/emacs-buffer-mode-histogram/"
  '(org-agenda-custom-commands
    '(("c" "Agenda and all unscheduled/everyday TODO's / unfiled"
       ((agenda ""
-        ((org-super-agenda-groups
-          '((:log t)
-            (:name "Schedule" :time-grid t)
-            (:name "Priority" :priority "A")
-            (:name "Overdue" :deadline past)
-            (:name "Due today" :deadline today)
-            (:name "Today" :scheduled today)
-            (:name "Due soon" :deadline future)
-            (:name "No deadline" :tag "WORK")))))
+               ((org-super-agenda-groups
+                 '((:log t)
+                   (:name "Schedule" :time-grid t)
+                   (:name "Priority" :priority "A")
+                   (:name "Overdue" :deadline past)
+                   (:name "Due today" :deadline today)
+                   (:name "Today" :scheduled today)
+                   (:name "Due soon" :deadline future)
+                   (:name "No deadline" :tag "WORK")))))
        (tags "EVERYDAY"
-        ((org-agenda-overriding-header "Every day")
-         (org-agenda-skip-function
-          '(org-agenda-skip-entry-if 'regexp "\\^* .*:EVERYDAY\\|^\\*\\*\\*"))))
+             ((org-agenda-overriding-header "Every day")
+              (org-agenda-skip-function
+               '(org-agenda-skip-entry-if 'regexp "\\^* .*:EVERYDAY\\|^\\*\\*\\*"))))
        (todo ""
-        ((org-agenda-overriding-header "Unscheduled TODOs")
-         (org-agenda-skip-function
-          '(org-agenda-skip-entry-if 'deadline 'scheduled))))
+             ((org-agenda-overriding-header "Unscheduled TODOs")
+              (org-agenda-skip-function
+               '(org-agenda-skip-entry-if 'deadline 'scheduled))))
        (tags "TOREAD"
-        ((org-agenda-overriding-header "To read")
-         (org-agenda-skip-function
-          '(org-agenda-skip-entry-if 'regexp "\\* To read.*:TOREAD:"))))
+             ((org-agenda-overriding-header "To read")
+              (org-agenda-skip-function
+               '(org-agenda-skip-entry-if 'regexp "\\* To read.*:TOREAD:"))))
        (tags "REFILE"
-        ((org-agenda-overriding-header "To refile"))))
+             ((org-agenda-overriding-header "To refile"))))
       nil)
      ("N" "Notes" tags "NOTE"
       ((org-agenda-overriding-header "Notes")
        (org-tags-match-list-sublevels t)))
-     ("o" "Completed tasks older than 60 days (http://gnuru.org/article/1639/org-mode-find-all-done-items-older-than-2-months)" tags "CLOSED<\"<-60d>\"" nil)
+     ("o" "Completed tasks older than 6 months (http://gnuru.org/article/1639/org-mode-find-all-done-items-older-than-2-months)" tags "CLOSED<\"<-6m>\"" nil)
      ("w" "Tasks completed within the past week" tags "CLOSED>=\"<-7d>\"" nil)))
  '(org-agenda-files
    '("/Users/msherry/.emacs.d/org/personal.org" "/Users/msherry/.emacs.d/org/dropbox-cal.org" "/Users/msherry/.emacs.d/org/flagged.org" "/Users/msherry/.emacs.d/org/personal-cal.org" "/Users/msherry/.emacs.d/org/refile.org" "/Users/msherry/.emacs.d/org/work.org" "/Users/msherry/.emacs.d/org/llc.org"))
@@ -778,10 +779,11 @@ http://blogs.fluidinfo.com/terry/2011/11/10/emacs-buffer-mode-histogram/"
  '(org-src-tab-acts-natively t)
  '(org-use-sub-superscripts '{})
  '(package-selected-packages
-   '(ac-geiser ack auctex bazel-mode blacken cargo cider clojure-mode clojure-mode-extra-font-locking diff-hl dtrace-script-mode el2markdown elpy ess esup exec-path-from-shell feature-mode flx-ido flycheck-clojure flycheck-package flycheck-pycheckers flycheck-rust flymake flymake-php flymake-sass fxrd-mode geiser gitignore-mode go-mode graphviz-dot-mode httpcode ido-completing-read+ jabber jedi json-mode latex-preview-pane magit markdown-preview-mode notmuch oauth2 org-agenda-property org-jira org-mru-clock org-plus-contrib org-pomodoro org-super-agenda package-lint paredit php-mode pinentry projectile protobuf-mode puppet-mode pymacs python-mode racer rainbow-mode rust-mode s sass-mode slime solarized-theme suggest tagedit thrift tickscript-mode virtualenv window-numbering yaml-mode yasnippet-snippets))
+   '(ac-geiser ack auctex bazel-mode blacken cargo cider clojure-mode clojure-mode-extra-font-locking diff-hl dtrace-script-mode el2markdown elpy ess esup exec-path-from-shell feature-mode flx-ido flycheck-clojure flycheck-package flycheck-pycheckers flycheck-rust flymake flymake-php flymake-sass fxrd-mode geiser gitignore-mode go-mode graphviz-dot-mode httpcode ido-completing-read+ jabber jedi json-mode latex-preview-pane magit magit-todos markdown-preview-mode notmuch oauth2 org-agenda-property org-jira org-mru-clock org-plus-contrib org-pomodoro org-super-agenda package-lint paredit php-mode pinentry projectile protobuf-mode puppet-mode pymacs python-mode racer rainbow-mode rust-mode s sass-mode slime solarized-theme suggest tagedit thrift tickscript-mode virtualenv window-numbering yaml-mode yasnippet-snippets))
  '(projectile-enable-caching t)
  '(projectile-globally-ignored-modes
    '("erc-mode" "help-mode" "completion-list-mode" "Buffer-menu-mode" "gnus-.*-mode" "occur-mode" "graphviz-dot-mode"))
+ '(projectile-mode t nil (projectile))
  '(python-shell-interpreter "ipython")
  '(racer-rust-src-path nil)
  '(rust-format-on-save t)
