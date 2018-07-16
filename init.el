@@ -385,15 +385,38 @@
 
 (add-hook 'rust-mode-hook 'cargo-minor-mode)
 (add-hook 'rust-mode-hook 'racer-mode)
-
-(eval-after-load "cargo"
-  ;; Until https://github.com/kwrooijen/cargo.el/pull/54 lands, make cargo mode
-  ;; help more useful
-  '(progn
-    (define-minor-mode cargo-minor-mode
-     "Cargo minor mode. Used to hold keybindings for cargo-mode.
-\\{cargo-minor-mode-map}"
-     nil " cargo" cargo-minor-mode-map)))
+;;; At some point, rustfmt stopped respecting .rustfmt.toml files. I can't
+;;; track down where, so hack it up with a hardcoded path for now.
+(add-hook 'rust-mode-hook
+          '(lambda ()
+            (setq rust--format-args '("--config-path" "/Users/msherry/src/client/rust/nucleus/.rustfmt.toml"))
+            (defun rust--format-call (buf)
+              "Format BUF using rustfmt."
+              (with-current-buffer (get-buffer-create "*rustfmt*")
+                (erase-buffer)
+                (insert-buffer-substring buf)
+                (let* ((tmpf (make-temp-file "rustfmt"))
+                       (ret (apply #'call-process-region (point-min) (point-max) rust-rustfmt-bin
+                                   t `(t ,tmpf) nil rust--format-args)))
+                  (unwind-protect
+                       (cond
+                         ((zerop ret)
+                          (if (not (string= (buffer-string)
+                                            (with-current-buffer buf (buffer-string))))
+                              (copy-to-buffer buf (point-min) (point-max)))
+                          (kill-buffer))
+                         ((= ret 3)
+                          (if (not (string= (buffer-string)
+                                            (with-current-buffer buf (buffer-string))))
+                              (copy-to-buffer buf (point-min) (point-max)))
+                          (erase-buffer)
+                          (insert-file-contents tmpf)
+                          (error "Rustfmt could not format some lines, see *rustfmt* buffer for details"))
+                         (t
+                          (erase-buffer)
+                          (insert-file-contents tmpf)
+                          (error "Rustfmt failed, see *rustfmt* buffer for details"))))
+                  (delete-file tmpf))))))
 
 ;; Know what's useless? A lot of flyspell keybindings
 (eval-after-load "flyspell"
@@ -787,7 +810,9 @@ http://blogs.fluidinfo.com/terry/2011/11/10/emacs-buffer-mode-histogram/"
  '(racer-rust-src-path nil)
  '(rust-format-on-save t)
  '(safe-local-variable-values
-   '((flycheck-checker . go-lint)
+   '((rust--format-args quote
+      ("--config-path" "/Users/msherry/src/client/rust/nucleus/.rustfmt.toml"))
+     (flycheck-checker . go-lint)
      (tickscript-kapacitor-version . "1.3")
      (tickscript-kapacitor-version . "1.4")
      (tickscript-series-name . "medians_dev")
