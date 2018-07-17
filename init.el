@@ -606,6 +606,8 @@ http://blogs.fluidinfo.com/terry/2011/11/10/emacs-buffer-mode-histogram/"
  '(font-lock-constant-face ((t nil)))
  '(font-lock-variable-name-face ((t nil)))
  '(org-agenda-current-time ((t (:inherit org-time-grid :foreground "SpringGreen3"))))
+ '(org-habit-ready-face ((t (:background "green4" :foreground "#859900"))))
+ '(org-habit-ready-future-face ((t (:background "green4"))))
  '(region ((((class color) (min-colors 24)) (:background "#00ffff"))))
  '(warning ((t (:background "#a4caff")))))
 
@@ -789,6 +791,7 @@ http://blogs.fluidinfo.com/terry/2011/11/10/emacs-buffer-mode-histogram/"
  '(org-enforce-todo-dependencies t)
  '(org-export-backends '(ascii html icalendar latex md odt))
  '(org-export-with-sub-superscripts '{})
+ '(org-habit-show-habits-only-for-today nil)
  '(org-image-actual-width '(300))
  '(org-indirect-buffer-display 'current-window)
  '(org-log-done 'time)
