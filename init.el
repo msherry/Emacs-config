@@ -87,7 +87,6 @@
 (require 'comint)        ; better key handling in shell mode
 ;; (require 'doxymacs)
 (require 'erlang-start)
-(require 'flymake-point) ; shows errors in the minibuffer when highlighted
 (require 'flycheck-pycheckers)
 (require 'highlight-beyond-fill-column)
 (require 'jabber-keymap) ; This loads inconsistently on its own
@@ -108,7 +107,6 @@
 (require 'custom-faces)
 (when (locate-library "disaster")
   (require 'disaster))
-;; (require 'flymake-stuff)
 (require 'lambda)
 (require 'lisp-customization)
 (require 'load-edict)
@@ -382,6 +380,11 @@
             (flyspell-mode t)
             ;(longlines-mode t)
             ))
+
+(add-hook 'python-mode-hook
+          '(lambda ()
+            ;; C-c C-p is now used by projectile, unbind it from elpy-flymake-previous-error
+            (define-key elpy-mode-map (kbd "C-c C-p") nil)))
 
 (add-hook 'rust-mode-hook 'cargo-minor-mode)
 (add-hook 'rust-mode-hook 'racer-mode)
@@ -804,7 +807,7 @@ http://blogs.fluidinfo.com/terry/2011/11/10/emacs-buffer-mode-histogram/"
  '(org-src-tab-acts-natively t)
  '(org-use-sub-superscripts '{})
  '(package-selected-packages
-   '(ac-geiser ack auctex bazel-mode blacken cargo cider clojure-mode clojure-mode-extra-font-locking diff-hl dtrace-script-mode el2markdown elpy ess esup exec-path-from-shell feature-mode flx-ido flycheck-clojure flycheck-package flycheck-pycheckers flycheck-rust flymake flymake-php flymake-sass fxrd-mode geiser gitignore-mode go-mode graphviz-dot-mode httpcode ido-completing-read+ jabber jedi json-mode latex-preview-pane magit markdown-preview-mode notmuch oauth2 org-agenda-property org-jira org-mru-clock org-plus-contrib org-pomodoro org-super-agenda package-lint paredit php-mode pinentry projectile protobuf-mode puppet-mode pymacs python-mode racer rainbow-mode rust-mode s sass-mode slime solarized-theme suggest tagedit thrift tickscript-mode virtualenv window-numbering yaml-mode yasnippet-snippets))
+   '(ac-geiser ack auctex bazel-mode blacken cargo cider clojure-mode clojure-mode-extra-font-locking diff-hl dtrace-script-mode el2markdown elpy ess esup exec-path-from-shell feature-mode flx-ido flycheck-clojure flycheck-package flycheck-pycheckers flycheck-rust fxrd-mode geiser gitignore-mode go-mode graphviz-dot-mode httpcode ido-completing-read+ jabber jedi json-mode latex-preview-pane magit markdown-preview-mode notmuch oauth2 org-agenda-property org-jira org-mru-clock org-plus-contrib org-pomodoro org-super-agenda package-lint paredit php-mode pinentry projectile protobuf-mode puppet-mode pymacs python-mode racer rainbow-mode rust-mode s sass-mode slime solarized-theme suggest tagedit thrift tickscript-mode virtualenv window-numbering yaml-mode yasnippet-snippets))
  '(projectile-enable-caching t)
  '(projectile-globally-ignored-modes
    '("erc-mode" "help-mode" "completion-list-mode" "Buffer-menu-mode" "gnus-.*-mode" "occur-mode" "graphviz-dot-mode"))
