@@ -110,6 +110,7 @@
 (require 'lambda)
 (require 'lisp-customization)
 (require 'load-edict)
+(require 'msherry-c)
 (require 'msherry-go)
 (require 'msherry-mail)
 (require 'msherry-python)
@@ -383,8 +384,10 @@
 
 (add-hook 'python-mode-hook
           '(lambda ()
-            ;; C-c C-p is now used by projectile, unbind it from elpy-flymake-previous-error
-            (define-key elpy-mode-map (kbd "C-c C-p") nil)))
+            ;; C-c C-p is now used by projectile, unbind it from
+            ;; elpy-flymake-previous-error, but only if elpy is in use
+            (when (boundp 'elpy-mode-map)
+              (define-key elpy-mode-map (kbd "C-c C-p") nil))))
 
 (add-hook 'rust-mode-hook 'cargo-minor-mode)
 (add-hook 'rust-mode-hook 'racer-mode)
@@ -451,36 +454,6 @@
                                (interactive)
                                (scroll-up 5))))
 
-(defun bh-choose-header-mode ()
-  "Choose the correct C style (Objective-C, C++, C) when opening a .h file.
-
-  Based on the presence of a similarly-named .m/.cpp file.
-
-Based on
-http://bretthutley.com/programming/emacs/opening-a-cobjective-cc-header-file-in-emacs/,
-but with additional hacks for frameworks by Marc Sherry"
-  (interactive)
-  (let ((fn (buffer-file-name)))
-    (if (string-equal (substring fn -2) ".h")
-        (progn
-          ;; OK, we got a .h file, if a .m file exists we'll assume it's an
-          ;; objective c file. Otherwise, we'll look for a .cpp file.
-          (let ((dot-m-file (concat (substring fn 0 -1) "m"))
-                (dot-cpp-file (concat (substring fn 0 -1) "cpp")))
-            (if (file-exists-p dot-m-file)
-                (objc-mode)
-                (if (file-exists-p dot-cpp-file)
-                    (c++-mode))
-                ;; Could be C, or could be Objective-C with no matching .m file
-                ;; (e.g., framework headers). Check for the #import directive,
-                ;; which is mostly Objective-C (and Microsoft-specific C++).
-                (progn
-                  (if (with-temp-buffer
-                        (insert-file-contents fn)
-                        (goto-char (point-min))
-                        (re-search-forward "^#import\\|@\"\\|@protocol" nil t))
-                      (objc-mode)))))))))
-(add-hook 'find-file-hook 'bh-choose-header-mode)
 
 ;; Modify functions that aren't quite right
 (defadvice dired-mark-files-containing-regexp (before unmark-all-first
