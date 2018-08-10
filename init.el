@@ -382,7 +382,7 @@
             ;(longlines-mode t)
             ))
 
-(add-hook 'python-mode-hook
+(add-hook 'elpy-mode-hook
           '(lambda ()
             ;; C-c C-p is now used by projectile, unbind it from
             ;; elpy-flymake-previous-error, but only if elpy is in use
