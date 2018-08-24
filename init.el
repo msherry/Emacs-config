@@ -389,6 +389,9 @@
             (when (boundp 'elpy-mode-map)
               (define-key elpy-mode-map (kbd "C-c C-p") nil))))
 
+;;; I can't keep up with every projectile release changing the way it's activated
+(define-key projectile-mode-map (kbd "C-c C-p") 'projectile-command-map)
+
 (add-hook 'rust-mode-hook 'cargo-minor-mode)
 (add-hook 'rust-mode-hook 'racer-mode)
 ;;; At some point, rustfmt stopped respecting .rustfmt.toml files. I can't
