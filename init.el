@@ -702,7 +702,7 @@ http://blogs.fluidinfo.com/terry/2011/11/10/emacs-buffer-mode-histogram/"
      ("o" "Completed tasks older than 6 months (http://gnuru.org/article/1639/org-mode-find-all-done-items-older-than-2-months)" tags "CLOSED<\"<-6m>\"" nil)
      ("w" "Tasks completed within the past week" tags "CLOSED>=\"<-7d>\"" nil)))
  '(org-agenda-files
-   '("/Users/msherry/.emacs.d/org/personal.org" "/Users/msherry/.emacs.d/org/dropbox-cal.org" "/Users/msherry/.emacs.d/org/flagged.org" "/Users/msherry/.emacs.d/org/personal-cal.org" "/Users/msherry/.emacs.d/org/refile.org" "/Users/msherry/.emacs.d/org/work.org" "/Users/msherry/.emacs.d/org/llc.org"))
+   '("/Users/msherry/.emacs.d/org/personal.org" "/Users/msherry/.emacs.d/org/flagged.org" "/Users/msherry/.emacs.d/org/personal-cal.org" "/Users/msherry/.emacs.d/org/refile.org" "/Users/msherry/.emacs.d/org/work.org" "/Users/msherry/.emacs.d/org/llc.org"))
  '(org-agenda-persistent-filter t)
  '(org-agenda-prefix-format
    '((agenda . " %i %-12:c%?-12t% s")
