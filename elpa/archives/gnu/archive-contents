@@ -384,7 +384,7 @@
 	 ((emacs
 	   (26 1))
 	  (jsonrpc
-	   (1 0 0)))
+	   (1 0 6)))
 	 "Client for Language Server Protocol (LSP) servers" tar
 	 ((:keywords "convenience" "languages")
 	  (:url . "https://github.com/joaotavora/eglot"))])
@@ -433,7 +433,7 @@
 		  ((:keywords "convenience")
 		   (:url . "https://github.com/ergoemacs/ergoemacs-mode"))])
  (excorporate .
-	      [(0 8 0)
+	      [(0 8 1)
 	       ((emacs
 		 (24 1))
 		(fsm
@@ -443,7 +443,7 @@
 		(url-http-ntlm
 		 (2 0 3))
 		(nadvice
-		 (0 2)))
+		 (0 3)))
 	       "Exchange integration" tar
 	       ((:keywords "calendar")
 		(:url . "http://elpa.gnu.org/packages/excorporate.html"))])
@@ -520,7 +520,7 @@
 		 ((:keywords "gnome" "c" "coding style")
 		  (:url . "http://elpa.gnu.org/packages/gnome-c-style.html"))])
  (gnorb .
-	[(1 5 5)
+	[(1 5 7)
 	 ((cl-lib
 	   (0 5)))
 	 "Glue code between Gnus, Org, and BBDB" tar
@@ -772,7 +772,7 @@
 	 ((:url . "http://elpa.gnu.org/packages/myers.html")
 	  (:keywords "list" "containers"))])
  (nadvice .
-	  [(0 2)
+	  [(0 3)
 	   nil "Forward compatibility for Emacs-24.4's nadvice" single
 	   ((:url . "http://elpa.gnu.org/packages/nadvice.html")
 	    (:keywords))])
@@ -788,7 +788,9 @@
 	 ((emacs
 	   (24 1))
 	  (cl-lib
-	   (0 5)))
+	   (0 5))
+	  (nadvice
+	   (0 3)))
 	 "Namespaces for emacs-lisp. Avoid name clobbering without hiding symbols." tar
 	 ((:keywords "extensions" "lisp")
 	  (:url . "https://github.com/Malabarba/names"))])
@@ -854,7 +856,7 @@
 	    ((:keywords "convenience" "text" "org")
 	     (:url . "https://savannah.nongnu.org/projects/org-edna-el/"))])
  (orgalist .
-	   [(1 8)
+	   [(1 9)
 	    ((emacs
 	      (24 4)))
 	    "Manage Org-like lists in non-Org buffers" single
