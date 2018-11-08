@@ -597,8 +597,15 @@ http://blogs.fluidinfo.com/terry/2011/11/10/emacs-buffer-mode-histogram/"
 (exec-path-from-shell-initialize)
 
 ;;; Misc
+(defvar mirth-base-url "https://github.com/msherry/%s/blob/master/%s#L%s")
+;;; Any string value should be safe enough -- don't prompt for confirmation.
+(put 'mirth-base-url 'safe-local-variable 'stringp)
+
 (defun mirth ()
-  "Browse code.pp for the current file/line."
+  "Browse a code repository for the current file/line.
+
+Uses `mirth-base-url' as the URL to interpolate into, which
+should be set via a dir-local variable."
   (interactive)
   (let* ((path (buffer-file-name))
          (repo-root (s-chomp (shell-command-to-string "git rev-parse --show-toplevel")))
@@ -606,7 +613,7 @@ http://blogs.fluidinfo.com/terry/2011/11/10/emacs-buffer-mode-histogram/"
          (url-root (cond ((string= repo-name "client") "desktop-client")
                          (t repo-name)))
          (relative-path (file-relative-name path repo-root)))
-    (let ((url (format "https://code.pp.dropbox.com/view/%s/%s#L%s"
+    (let ((url (format mirth-base-url
                        url-root relative-path (number-to-string (line-number-at-pos)))))
       (browse-url url))))
 
