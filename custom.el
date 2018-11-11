@@ -199,7 +199,10 @@
      ("m" "Meeting" entry
       (file+olp "~/.emacs.d/org/work.org" "Meetings")
       "* %? :MEETINGS:
- " :clock-in t :clock-resume t)))
+ " :clock-in t :clock-resume t)
+     ("b" "Purchase" entry
+      (file+olp "~/.emacs.d/org/personal.org" "Purchases")
+      "")))
  '(org-clock-out-remove-zero-time-clocks t)
  '(org-clock-persist nil)
  '(org-clock-report-include-clocking-task t)
