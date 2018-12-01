@@ -283,8 +283,8 @@ http://stackoverflow.com/a/17067170/52550"
 ;;; interrupted tasks)
 
 (setq bh/keep-clock-running nil)
-(defvar bh/default-task-id "9AEC31DC-3C08-43C2-98CA-342A257F8CB4")
-(defvar bh/mail-task-id "9F3295E9-28A8-4BCE-ACEF-D0F91FD68B80")
+(defvar bh/default-task-id "FD7773C6-7F61-4B1F-B2D0-B82D64153E2C")
+(defvar bh/mail-task-id "F169512E-FDD6-4429-A290-9B566A40301D")
 
 
 (defun msherry/get-email-task-name ()
@@ -383,10 +383,80 @@ as the default task."
 (advice-add 'msherry-notmuch-unread :before #'msherry/clock-in-email-task)
 (advice-add 'notmuch-bury-or-kill-this-buffer :after #'msherry/clock-out-of-email)
 
+;;; Flyspell-mode clobbers this
+(define-key org-mode-map (kbd "s-<tab>") #'pcomplete)
 
 ;;; org-mru-clock stuff
 ;; (global-set-key (kbd "C-c C-x i") #'org-mru-clock-in)
 ;; (global-set-key (kbd "C-c C-x C-j") #'org-mru-clock-select-recent-task)
+
+
+;;; From https://orgmode.org/worg/org-tutorials/org-meeting-tasks.html
+(defcustom org-mactions-numbered-action-format "TODO Action #%d "
+  "Default structure of the headling of a new action.
+    %d will become the number of the action."
+  :group 'org-edit-structure
+  :type 'string)
+
+(defcustom org-mactions-change-id-on-copy t
+  "Non-nil means make new IDs in copied actions.
+If an action copied with the command `org-mactions-collect-todos-in-subtree'
+contains an ID, that ID will be replaced with a new one."
+  :group 'org-edit-structure
+  :type 'string)
+
+(defun org-mactions-new-numbered-action (&optional inline)
+  "Insert a new numbered action, using `org-mactions-numbered-action-format'.
+    With prefix argument, insert an inline task."
+  (interactive "P")
+  (let* ((num (let ((re "\\`#\\([0-9]+\\)\\'"))
+                (1+ (apply 'max 0
+                           (mapcar
+                            (lambda (e)
+                              (if (string-match re (car e))
+                                  (string-to-number (match-string 1 (car e)))
+                                0))
+                            (org-get-buffer-tags))))))
+         (tag (concat "#" (number-to-string num))))
+    (if inline
+        (org-inlinetask-insert-task)
+      (org-insert-heading 'force))
+    (unless (eql (char-before) ?\ ) (insert " "))
+    (insert (format org-mactions-numbered-action-format num))
+    (org-toggle-tag tag 'on)
+    (if (= (point-max) (point-at-bol))
+        (save-excursion (goto-char (point-at-eol)) (insert "\n")))
+    (unless (eql (char-before) ?\ ) (insert " "))))
+
+(defun org-mactions-collect-todos-in-subtree ()
+  "Collect all TODO items in the current subtree into a flat list."
+  (interactive)
+  (let ((buf (get-buffer-create "Org TODO Collect"))
+        (cnt 0) beg end string s)
+    (with-current-buffer buf (erase-buffer) (org-mode))
+    (org-map-entries
+     (lambda ()
+       (setq beg (point) end (org-end-of-subtree t t) cnt (1+ cnt)
+             string (buffer-substring beg end)
+             s 0)
+       (when org-mactions-change-id-on-copy
+         (while (string-match "^\\([ \t]*:ID:\\)[ \t\n]+\\([^ \t\n]+\\)[ \t]*$"
+                              string s)
+           (setq s (match-end 1)
+                 string (replace-match (concat "\\1 "
+                                               (save-match-data (org-id-new)))
+                                       t nil string))))
+       (with-current-buffer buf (org-paste-subtree 1 string)
+                            (goto-char (point-max))))
+     (format "TODO={%s}" (regexp-opt org-not-done-keywords))
+     'tree)
+    (if (= cnt 0)
+        (message "No TODO items in subtree")
+      (message "%d TODO entries copied to kill ring" cnt)
+      (prog1 (with-current-buffer buf
+               (kill-new (buffer-string)))
+        (kill-buffer buf)))))
+
 
 (provide 'org-customization)
 ;;; org-customization.el ends here

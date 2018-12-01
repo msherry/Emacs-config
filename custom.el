@@ -106,37 +106,36 @@
  '(org-agenda-custom-commands
    '(("c" "Agenda and all unscheduled/everyday TODO's / unfiled"
       ((agenda ""
-        ((org-super-agenda-groups
-          '((:log t)
-            (:name "Schedule" :time-grid t)
-            (:name "Priority" :priority "A")
-            (:name "Overdue" :deadline past)
-            (:name "Due today" :deadline today)
-            (:name "Today" :scheduled today)
-            (:name "Due soon" :deadline future)
-            (:name "No deadline" :tag "WORK")))))
+               ((org-super-agenda-groups
+                 '((:log t)
+                   (:name "Schedule" :time-grid t)
+                   (:name "Priority" :priority "A")
+                   (:name "Overdue" :deadline past)
+                   (:name "Due today" :deadline today)
+                   (:name "Today" :scheduled today)
+                   (:name "Due soon" :deadline future)
+                   (:name "No deadline" :tag "WORK")))))
        (tags "EVERYDAY"
-        ((org-agenda-overriding-header "Every day")
-         (org-agenda-skip-function
-          '(org-agenda-skip-entry-if 'regexp "\\^* .*:EVERYDAY\\|^\\*\\*\\*"))))
+             ((org-agenda-overriding-header "Every day")
+              (org-agenda-skip-function
+               '(org-agenda-skip-entry-if 'regexp "\\^* .*:EVERYDAY\\|^\\*\\*\\*"))))
        (todo ""
-        ((org-agenda-overriding-header "Unscheduled TODOs")
-         (org-agenda-skip-function
-          '(org-agenda-skip-entry-if 'deadline 'scheduled))))
+             ((org-agenda-overriding-header "Unscheduled TODOs")
+              (org-agenda-skip-function
+               '(org-agenda-skip-entry-if 'deadline 'scheduled))))
        (tags "TOREAD"
-        ((org-agenda-overriding-header "To read")
-         (org-agenda-skip-function
-          '(org-agenda-skip-entry-if 'regexp "\\* To read.*:TOREAD:"))))
+             ((org-agenda-overriding-header "To read")
+              (org-agenda-skip-function
+               '(org-agenda-skip-entry-if 'regexp "\\* To read.*:TOREAD:"))))
        (tags "REFILE"
-        ((org-agenda-overriding-header "To refile"))))
+             ((org-agenda-overriding-header "To refile"))))
       nil)
      ("N" "Notes" tags "NOTE"
       ((org-agenda-overriding-header "Notes")
        (org-tags-match-list-sublevels t)))
      ("o" "Completed tasks older than 6 months (http://gnuru.org/article/1639/org-mode-find-all-done-items-older-than-2-months)" tags "CLOSED<\"<-6m>\"" nil)
      ("w" "Tasks completed within the past week" tags "CLOSED>=\"<-7d>\"" nil)))
- '(org-agenda-files
-   '("/Users/msherry/.emacs.d/org/personal.org" "/Users/msherry/.emacs.d/org/flagged.org" "/Users/msherry/.emacs.d/org/personal-cal.org" "/Users/msherry/.emacs.d/org/refile.org" "/Users/msherry/.emacs.d/org/work.org" "/Users/msherry/.emacs.d/org/llc.org"))
+ '(org-agenda-files '("~/.emacs.d/org/"))
  '(org-agenda-persistent-filter t)
  '(org-agenda-prefix-format
    '((agenda . " %i %-12:c%?-12t% s")
@@ -169,13 +168,7 @@
      (shell . t)
      (sql . t)))
  '(org-capture-templates
-   '(("t" "TODO" entry
-      (file "~/.emacs.d/org/refile.org")
-      "* TODO %?
- %U
- %a
- " :clock-in t :clock-resume t)
-     ("w" "work TODO" entry
+   '(("w" "work TODO" entry
       (file+headline "~/.emacs.d/org/work.org" "Tasks")
       "** TODO %?
  %a
@@ -195,14 +188,25 @@
       "* %? :NOTE:
  %U
  %a
- " :clock-in t :clock-resume t)
+ ")
      ("m" "Meeting" entry
       (file+olp "~/.emacs.d/org/work.org" "Meetings")
       "* %? :MEETINGS:
  " :clock-in t :clock-resume t)
      ("b" "Purchase" entry
       (file+olp "~/.emacs.d/org/personal.org" "Purchases")
-      "")))
+      "")
+     ("t" "(Work) task" entry
+      (file+olp "~/.emacs.d/org/work.org" "Tasks")
+      "** TODO %?
+DEADLINE: %t SCHEDULED: %t
+JIRA task
+
+Phab link
+
+Train
+
+%a" :empty-lines-after 1 :clock-in t :clock-resume t)))
  '(org-clock-out-remove-zero-time-clocks t)
  '(org-clock-persist nil)
  '(org-clock-report-include-clocking-task t)
@@ -221,6 +225,7 @@
  '(org-refile-use-outline-path t)
  '(org-src-tab-acts-natively t)
  '(org-table-copy-increment nil)
+ '(org-todo-keyword-faces '(("BLOCKED" . "#586e75")))
  '(org-use-sub-superscripts '{})
  '(package-selected-packages
    '(ac-geiser ack auctex bazel-mode blacken cargo cider clojure-mode clojure-mode-extra-font-locking diff-hl dtrace-script-mode el2markdown elpy ess esup exec-path-from-shell feature-mode flx-ido flycheck-clojure flycheck-package flycheck-pycheckers flycheck-rust fxrd-mode geiser gitignore-mode go-mode graphviz-dot-mode httpcode ido-completing-read+ jabber jedi json-mode latex-preview-pane magit markdown-preview-mode notmuch oauth2 org-agenda-property org-jira org-mru-clock org-plus-contrib org-pomodoro org-super-agenda package-lint paredit php-mode pinentry projectile protobuf-mode puppet-mode pymacs python-mode racer rainbow-mode rmsbolt rust-mode s sass-mode slime solarized-theme suggest tagedit thrift tickscript-mode virtualenv window-numbering yaml-mode yasnippet-snippets))

@@ -619,6 +619,18 @@ should be set via a dir-local variable."
 
 (global-set-key (kbd "C-c C-'") #'mirth)
 
+(defvar msherry-odin "omg")
+
+(defun open-this-file-on-odin ()
+  "Open the current file (via TRAMP) on an ODIN whose name is given by `msherry-odin'."
+  (interactive)
+  (let* ((path (buffer-file-name))
+         (repo-root (vc-find-root path ".git"))
+         (repo-name (file-relative-name repo-root (file-name-directory (directory-file-name repo-root))))
+         (relative-path (file-relative-name path repo-root))
+         (odin-path (format "/%s.odin.aff:/opt/code/frontend/%s%s" msherry-odin repo-name relative-path)))
+    (find-file odin-path)))
+
 (provide 'init)
 
 ;;; init.el ends here

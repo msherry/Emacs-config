@@ -186,7 +186,7 @@ https://gist.github.com/dbp/9627194"
   (let ((default-directory expanded-user-emacs-directory))
     (when (msherry-mail-alert-ok)
       (if (string= (s-chomp
-                    (shell-command-to-string (format "/usr/local/bin/notmuch count %s"
+                    (shell-command-to-string (format "/usr/local/bin/notmuch count \"%s\""
                                                      msherry-notmuch-new-mail-search-str)))
                    "0")
           nil
