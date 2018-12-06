@@ -210,6 +210,13 @@ Train
  '(org-clock-out-remove-zero-time-clocks t)
  '(org-clock-persist nil)
  '(org-clock-report-include-clocking-task t)
+ '(org-confirm-babel-evaluate
+   '(lambda
+     (lang body)
+     (message lang)
+     (not
+      (member lang
+       '("dot")))))
  '(org-enforce-todo-dependencies t)
  '(org-export-backends '(ascii html icalendar latex md odt))
  '(org-export-with-sub-superscripts '{})
@@ -223,6 +230,20 @@ Train
  '(org-modules
    '(org-bbdb org-bibtex org-docview org-gnus org-habit org-info org-irc org-mhe org-mouse org-rmail org-w3m org-notmuch))
  '(org-refile-use-outline-path t)
+ '(org-src-lang-modes
+   '(("ocaml" . tuareg)
+     ("elisp" . emacs-lisp)
+     ("ditaa" . artist)
+     ("asymptote" . asy)
+     ("sqlite" . sql)
+     ("calc" . fundamental)
+     ("C" . c)
+     ("cpp" . c++)
+     ("C++" . c++)
+     ("screen" . shell-script)
+     ("shell" . sh)
+     ("bash" . sh)
+     ("dot" . graphviz-dot)))
  '(org-src-tab-acts-natively t)
  '(org-table-copy-increment nil)
  '(org-todo-keyword-faces '(("BLOCKED" . "#586e75")))
