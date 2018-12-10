@@ -597,7 +597,8 @@ http://blogs.fluidinfo.com/terry/2011/11/10/emacs-buffer-mode-histogram/"
 (exec-path-from-shell-initialize)
 
 ;;; Misc
-(defvar mirth-base-url "https://github.com/msherry/%s/blob/master/%s#L%s")
+(defvar mirth-base-url "https://github.com/msherry/%s/blob/master/%s#L%s"
+  "The base URL to use for linking to code snippets using `mirth'.")
 ;;; Any string value should be safe enough -- don't prompt for confirmation.
 (put 'mirth-base-url 'safe-local-variable 'stringp)
 
@@ -630,6 +631,38 @@ should be set via a dir-local variable."
          (relative-path (file-relative-name path repo-root))
          (odin-path (format "/%s.odin.aff:/opt/code/frontend/%s%s" msherry-odin repo-name relative-path)))
     (find-file odin-path)))
+
+;;; Walk down directory hierarchies when processing dir-locals.el so they can
+;;; nest. From https://emacs.stackexchange.com/a/5537/7169
+(defun file-name-directory-nesting-helper (name previous-name accumulator)
+  (if (string= name previous-name)
+      accumulator                       ; stop when names stop changing (at the top)
+      (file-name-directory-nesting-helper
+       (directory-file-name (file-name-directory name))
+       name
+       (cons name accumulator))))
+
+(defun file-name-directory-nesting (name)
+  (file-name-directory-nesting-helper (expand-file-name name) "" ()))
+
+(defun hack-dir-local-variables-chained-advice (orig)
+  "Apply dir-local settings from the whole directory hierarchy, from the top down."
+  (let ((original-buffer-file-name (buffer-file-name))
+        (nesting (file-name-directory-nesting (or (buffer-file-name)
+                                                  default-directory))))
+    (unwind-protect
+        (dolist (name nesting)
+          ;; make it look like we're in a directory higher up in the
+          ;; hierarchy; note that the file we're "visiting" does not
+          ;; have to exist
+          (setq buffer-file-name (expand-file-name "ignored" name))
+          (funcall orig))
+      ;; cleanup
+      (setq buffer-file-name original-buffer-file-name))))
+
+(advice-add 'hack-dir-local-variables :around
+            #'hack-dir-local-variables-chained-advice)
+
 
 (provide 'init)
 
