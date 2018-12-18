@@ -596,6 +596,10 @@ http://blogs.fluidinfo.com/terry/2011/11/10/emacs-buffer-mode-histogram/"
 ;;; to `custom-set-variables' has set things for us.
 (exec-path-from-shell-initialize)
 
+;;; This has to be done after we set our projectile-mode-hook, so we do it here
+;;; rather than in custom-set-variables
+(projectile-mode t)
+
 ;;; Misc
 (defvar mirth-base-url "https://github.com/msherry/%s/blob/master/%s#L%s"
   "The base URL to use for linking to code snippets using `mirth'.")

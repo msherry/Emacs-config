@@ -176,30 +176,30 @@
       (file+headline "~/.emacs.d/org/work.org" "Tasks")
       "** TODO %?
  %a
- " :clock-in t :clock-resume t)
+ " :empty-lines-after 1 :clock-in t :clock-resume t)
      ("p" "personal TODO" entry
       (file+headline "~/.emacs.d/org/personal.org" "Tasks")
       "** TODO %?
  %a
- " :clock-in t :clock-resume t)
+ " :empty-lines-after 1 :clock-in t :clock-resume t)
      ("l" "LLC TODO" entry
       (file+headline "~/.emacs.d/org/llc.org" "Tasks")
       "** TODO %?
  %a
- " :clock-in t :clock-resume t)
+ " :empty-lines-after 1 :clock-in t :clock-resume t)
      ("n" "note" entry
       (file "~/.emacs.d/org/refile.org")
       "* %? :NOTE:
  %U
  %a
- ")
+ " :empty-lines-after 1)
      ("m" "Meeting" entry
       (file+olp "~/.emacs.d/org/work.org" "Meetings")
       "* %? :MEETINGS:
- " :clock-in t :clock-resume t)
+ " :empty-lines-after 1 :clock-in t :clock-resume t)
      ("b" "Purchase" entry
       (file+olp "~/.emacs.d/org/personal.org" "Purchases")
-      "")
+      "" :empty-lines-after 1)
      ("t" "(Work) task" entry
       (file+olp "~/.emacs.d/org/work.org" "Tasks")
       "** TODO %?
@@ -257,7 +257,6 @@ Train
  '(projectile-enable-caching t)
  '(projectile-globally-ignored-modes
    '("erc-mode" "help-mode" "completion-list-mode" "Buffer-menu-mode" "gnus-.*-mode" "occur-mode" "graphviz-dot-mode"))
- '(projectile-mode t nil (projectile))
  '(python-shell-interpreter "ipython")
  '(racer-rust-src-path nil)
  '(rust-format-on-save t)
