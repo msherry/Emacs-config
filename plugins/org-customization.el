@@ -457,6 +457,165 @@ contains an ID, that ID will be replaced with a new one."
                (kill-new (buffer-string)))
         (kill-buffer buf)))))
 
+(defun export-filter-local-to-mirth (backend)
+  "Convert local file links to shareable links before exporting org files when `BACKEND' is supported."
+  (when (memq backend '(html md))
+    (save-window-excursion
+      (beginning-of-buffer)
+      (while (re-search-forward "\\[\\[\\(file:~/src/all-the-things.*?\\)\\]\\[" nil t)
+        (replace-match
+         (save-excursion
+           (save-match-data
+             (msherry/org-open-at-point-no-buffer-shenanigans t)
+             (mirth-find-url)))
+           nil nil nil 1)
+        )
+      )))
+
+(add-hook 'org-export-before-parsing-hook #'export-filter-local-to-mirth)
+
+;; (add-to-list 'org-export-filter-paragraph-functions 'export-filter-local-to-mirth)
+
+(defun msherry/org-open-at-point-no-buffer-shenanigans (&optional arg reference-buffer)
+  "Exactly like org-open-at-point except that (buffer-file-name)
+works as I expect it to when calling this programmatically."
+  (interactive "P")
+  ;; On a code block, open block's results.
+  (unless (call-interactively 'org-babel-open-src-block-result)
+    (org-load-modules-maybe)
+    (setq org-window-config-before-follow-link (current-window-configuration))
+    (org-remove-occur-highlights nil nil t)
+    (unless (run-hook-with-args-until-success 'org-open-at-point-functions)
+      (let* ((context
+	      ;; Only consider supported types, even if they are not
+	      ;; the closest one.
+	      (org-element-lineage
+	       (org-element-context)
+	       '(clock footnote-definition footnote-reference headline
+		       inlinetask link timestamp)
+	       t))
+	     (type (org-element-type context))
+	     (value (org-element-property :value context)))
+	(cond
+	 ;; On a headline or an inlinetask, but not on a timestamp,
+	 ;; a link, a footnote reference.
+	 ((memq type '(headline inlinetask))
+	  (org-match-line org-complex-heading-regexp)
+	  (if (and (match-beginning 5)
+		   (>= (point) (match-beginning 5))
+		   (< (point) (match-end 5)))
+	      ;; On tags.
+	      (org-tags-view arg (substring (match-string 5) 0 -1))
+	    ;; Not on tags.
+	    (pcase (org-offer-links-in-entry (current-buffer) (point) arg)
+	      (`(nil . ,_)
+	       (require 'org-attach)
+	       (org-attach-reveal 'if-exists))
+	      (`(,links . ,links-end)
+	       (dolist (link (if (stringp links) (list links) links))
+		 (search-forward link nil links-end)
+		 (goto-char (match-beginning 0))
+		 (org-open-at-point))))))
+	 ;; On a footnote reference or at definition's label.
+	 ((or (eq type 'footnote-reference)
+	      (and (eq type 'footnote-definition)
+		   (save-excursion
+		     ;; Do not validate action when point is on the
+		     ;; spaces right after the footnote label, in
+		     ;; order to be on par with behavior on links.
+		     (skip-chars-forward " \t")
+		     (let ((begin
+			    (org-element-property :contents-begin context)))
+		       (if begin (< (point) begin)
+			 (= (org-element-property :post-affiliated context)
+			    (line-beginning-position)))))))
+	  (org-footnote-action))
+	 ;; No valid context.  Ignore catch-all types like `headline'.
+	 ;; If point is on something looking like a link or
+	 ;; a time-stamp, try opening it.  It may be useful in
+	 ;; comments, example blocks...
+	 ((memq type '(footnote-definition headline inlinetask nil))
+	  (call-interactively #'org-open-at-point-global))
+	 ;; On a clock line, make sure point is on the timestamp
+	 ;; before opening it.
+	 ((and (eq type 'clock)
+	       value
+	       (>= (point) (org-element-property :begin value))
+	       (<= (point) (org-element-property :end value)))
+	  (org-follow-timestamp-link))
+	 ;; Do nothing on white spaces after an object.
+	 ((>= (point)
+	      (save-excursion
+		(goto-char (org-element-property :end context))
+		(skip-chars-backward " \t")
+		(point)))
+	  (user-error "No link found"))
+	 ((eq type 'timestamp) (org-follow-timestamp-link))
+	 ((eq type 'link)
+	  (let ((type (org-element-property :type context))
+		(path (org-link-unescape (org-element-property :path context))))
+	    ;; Switch back to REFERENCE-BUFFER needed when called in
+	    ;; a temporary buffer through `org-open-link-from-string'.
+	    (cond
+	      ((equal type "file")
+	       (if (string-match "[*?{]" (file-name-nondirectory path))
+		   (dired path)
+		 ;; Look into `org-link-parameters' in order to find
+		 ;; a DEDICATED-FUNCTION to open file.  The function
+		 ;; will be applied on raw link instead of parsed
+		 ;; link due to the limitation in `org-add-link-type'
+		 ;; ("open" function called with a single argument).
+		 ;; If no such function is found, fallback to
+		 ;; `org-open-file'.
+		 (let* ((option (org-element-property :search-option context))
+			(app (org-element-property :application context))
+			(dedicated-function
+			 (org-link-get-parameter
+			  (if app (concat type "+" app) type)
+			  :follow)))
+		   (if dedicated-function
+		       (funcall dedicated-function
+				(concat path
+					(and option (concat "::" option))))
+		     (apply #'org-open-file
+			    path
+			    (cond (arg)
+				  ((equal app "emacs") 'emacs)
+				  ((equal app "sys") 'system))
+			    (cond ((not option) nil)
+				  ((string-match-p "\\`[0-9]+\\'" option)
+				   (list (string-to-number option)))
+				  (t (list nil
+					   (org-link-unescape option)))))))))
+	      ((functionp (org-link-get-parameter type :follow))
+	       (funcall (org-link-get-parameter type :follow) path))
+	      ((member type '("coderef" "custom-id" "fuzzy" "radio"))
+	       (unless (run-hook-with-args-until-success
+			'org-open-link-functions path)
+		 (if (not arg) (org-mark-ring-push)
+		   (switch-to-buffer-other-window
+		    (org-get-buffer-for-internal-link (current-buffer))))
+		 (let ((destination
+			(org-with-wide-buffer
+			 (if (equal type "radio")
+			     (org-search-radio-target
+			      (org-element-property :path context))
+			   (org-link-search
+			    (if (member type '("custom-id" "coderef"))
+				(org-element-property :raw-link context)
+			      path)
+			    ;; Prevent fuzzy links from matching
+			    ;; themselves.
+			    (and (equal type "fuzzy")
+				 (+ 2 (org-element-property :begin context)))))
+			 (point))))
+		   (unless (and (<= (point-min) destination)
+				(>= (point-max) destination))
+		     (widen))
+		   (goto-char destination))))
+	      (t (browse-url-at-point)))))
+	 (t (user-error "No link found")))))
+    (run-hook-with-args 'org-follow-link-hook)))
 
 (provide 'org-customization)
 ;;; org-customization.el ends here

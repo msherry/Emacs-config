@@ -56,6 +56,7 @@
   (add-to-list 'default-frame-alist '(alpha 100 100)))
 
 ;; I edit these files a lot, so put them in registers
+(set-register ?a '(file . "~/src/all-the-things"))
 (set-register ?z '(file . "~/.emacs.d/init.el"))
 (set-register ?p '(file . "~/.emacs.d/pass.org.gpg"))
 (set-register ?t '(file . "~/TODO.org"))
@@ -606,21 +607,28 @@ http://blogs.fluidinfo.com/terry/2011/11/10/emacs-buffer-mode-histogram/"
 ;;; Any string value should be safe enough -- don't prompt for confirmation.
 (put 'mirth-base-url 'safe-local-variable 'stringp)
 
+(defun mirth-find-url ()
+  "Find and return the URL for the current file/line.
+
+Uses `mirth-base-url' as the URL to interpolate into, which
+should be set via a dir-local variable."
+  (let* ((path (buffer-file-name))
+         (repo-root (vc-find-root path ".git"))
+         (repo-name (file-relative-name repo-root (file-name-directory (directory-file-name repo-root))))
+         (url-root (cond ((string= repo-name "client") "desktop-client")
+                         (t repo-name)))
+         (relative-path (file-relative-name path repo-root))
+         (url (format mirth-base-url
+                       url-root relative-path (number-to-string (line-number-at-pos)))))
+    url))
+
 (defun mirth ()
   "Browse a code repository for the current file/line.
 
 Uses `mirth-base-url' as the URL to interpolate into, which
 should be set via a dir-local variable."
   (interactive)
-  (let* ((path (buffer-file-name))
-         (repo-root (s-chomp (shell-command-to-string "git rev-parse --show-toplevel")))
-         (repo-name (s-chomp (shell-command-to-string (format "basename %s" repo-root))))
-         (url-root (cond ((string= repo-name "client") "desktop-client")
-                         (t repo-name)))
-         (relative-path (file-relative-name path repo-root)))
-    (let ((url (format mirth-base-url
-                       url-root relative-path (number-to-string (line-number-at-pos)))))
-      (browse-url url))))
+  (browse-url (mirth-find-url)))
 
 (global-set-key (kbd "C-c C-'") #'mirth)
 
@@ -666,7 +674,6 @@ should be set via a dir-local variable."
 
 (advice-add 'hack-dir-local-variables :around
             #'hack-dir-local-variables-chained-advice)
-
 
 (provide 'init)
 
