@@ -79,6 +79,7 @@
  '(jabber-auto-reconnect t)
  '(magit-log-arguments '("--graph" "--color" "--decorate" "-n256"))
  '(magit-push-always-verify nil)
+ '(magit-section-visibility-indicator nil)
  '(magit-tag-arguments '("--annotate"))
  '(mm-inline-large-images 'resize)
  '(mm-text-html-renderer 'shr)
