@@ -140,7 +140,7 @@
       ((tags "-{.*}"
              ((org-agenda-overriding-header "Untagged TODOs"))))
       nil)))
- '(org-agenda-files '("~/.emacs.d/org/"))
+ '(org-agenda-files '("~/.emacs.d/org/" "~/.org-jira/"))
  '(org-agenda-persistent-filter t)
  '(org-agenda-prefix-format
    '((agenda . " %i %-12:c%?-12t% s")
@@ -263,7 +263,10 @@ Train
  '(racer-rust-src-path nil)
  '(rust-format-on-save t)
  '(safe-local-variable-values
-   '((rust--format-args quote
+   '((eval org-jira-mode t)
+     (jiralib-url . "https://jira.team.affirm.com")
+     (jedi:environment-root . "/Users/marcsherry/src/all-the-things/deployable/monolith/src/.venv")
+     (rust--format-args quote
       ("--config-path" "/Users/msherry/src/client/rust/nucleus/.rustfmt.toml"))
      (flycheck-checker . go-lint)
      (tickscript-kapacitor-version . "1.3")
