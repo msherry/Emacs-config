@@ -6,9 +6,6 @@
 ;; http://bitbucket.org/brodie/dotfiles/src/tip/.emacs
 
 ;;; Code:
-(setq custom-file (concat user-emacs-directory "custom.el"))
-(when (file-exists-p custom-file)
-  (load custom-file))
 
 ;; Do these early so if there's an error in config we don't pollute ~/ with
 ;; junk files
@@ -573,6 +570,10 @@ http://blogs.fluidinfo.com/terry/2011/11/10/emacs-buffer-mode-histogram/"
            (insert (current-kill 0)))))
 (global-set-key (kbd "C-c C-e") 'eval-and-replace)
 
+;;; Use an external custom file
+(setq custom-file (concat user-emacs-directory "custom.el"))
+(when (file-exists-p custom-file)
+  (load custom-file))
 
 ;; (eval-after-load 'cc-mode
 ;;   '(progn
