@@ -257,6 +257,10 @@
 (global-set-key (kbd "M-/") #'hippie-expand) ; better than dabbrev
 (global-set-key (kbd "C-M-z") #'ack)
 
+;; Unbindings
+;;; Mac keyboards make C-z too easy to hit, suspending emacs
+(global-unset-key (kbd "C-z"))
+
 ;; From http://doc.norang.ca/org-mode.html
 (global-set-key (kbd "<f9> I") 'bh/punch-in)
 (global-set-key (kbd "<f9> O") 'bh/punch-out)
@@ -675,6 +679,35 @@ should be set via a dir-local variable."
 
 (advice-add 'hack-dir-local-variables :around
             #'hack-dir-local-variables-chained-advice)
+
+
+(defun isort-buffer ()
+  "Apply isort to the current (Python) buffer, with sane defaults."
+  (interactive)
+  (let ((command))
+    (setq command
+          (mapconcat 'identity
+                     `("isort"
+                       "--combine-as"
+                       "--dont-skip __init__.py" ; why would you skip this?
+                       "--line-width 100"
+                       "--multi-line 3"
+                       "--project affirm"
+                       "--thirdparty typing" ; treat this as third-party since we use Python 2.7
+                       "--trailing-comma"
+                       "--use-parentheses"
+                       ,(let ((venv_root
+                                (or (bound-and-true-p jedi:environment-root)
+                                    (bound-and-true-p python-shell-virtualenv-root)
+                                    (getenv "VIRTUAL_ENV"))))
+                          (when venv_root
+                            (format "--virtual-env %s" venv_root)))
+                       "%s")
+                     " "))
+    (shell-command (format
+                    command
+                    (buffer-file-name)))))
+
 
 (provide 'init)
 
