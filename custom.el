@@ -53,6 +53,7 @@
    '(".bzr" "CVS" ".git" ".hg" ".svn" ".tox" "build" "dist" ".cask" ".mypy_cache"))
  '(elpy-rpc-python-command "python2")
  '(elpy-rpc-timeout 10)
+ '(elpy-test-runner 'elpy-test-nose-runner)
  '(epg-pinentry-mode 'loopback)
  '(exec-path-from-shell-variables '("PATH" "MANPATH" "CARGO_HOME" "RUST_SRC_PATH" "GOPATH"))
  '(flycheck-checker-error-threshold nil)
@@ -137,7 +138,9 @@
      ("o" "Completed tasks older than 6 months (http://gnuru.org/article/1639/org-mode-find-all-done-items-older-than-2-months)" tags "CLOSED<\"<-6m>\"" nil)
      ("w" "Tasks completed within the past week" tags "CLOSED>=\"<-7d>\"" nil)
      ("u" "All untagged TODOs"
-      ((tags "-{.*}"
+      ((tags
+        #("-{.*}" 1 5
+          (regexp t))
         ((org-agenda-overriding-header "Untagged TODOs"))))
       nil)))
  '(org-agenda-files '("~/.emacs.d/org/" "~/.org-jira/"))
@@ -177,7 +180,7 @@
       (file+headline "~/.emacs.d/org/work.org" "Tasks")
       "** TODO %?
  %a
- " :empty-lines-after 1 :clock-in t :clock-resume t)
+ " :empty-lines-after 1 :clock-resume t)
      ("p" "personal TODO" entry
       (file+headline "~/.emacs.d/org/personal.org" "Tasks")
       "** TODO %?
