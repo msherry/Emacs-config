@@ -708,6 +708,11 @@ should be set via a dir-local variable."
                     command
                     (buffer-file-name)))))
 
+(defun activate-monolith-venv ()
+  "Activate the monolith's venv"
+  (interactive)
+  (pyvenv-activate "/Users/marcsherry/src/all-the-things/deployable/monolith/src/.venv"))
+
 
 (provide 'init)
 

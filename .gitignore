@@ -20,6 +20,7 @@ jabber-history/
 jabber-avatar-cache/
 plugins/.mypy_cache
 ido.last
+request/
 
 org
 bookmarks

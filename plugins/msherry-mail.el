@@ -28,7 +28,22 @@
 
 Unread mail, and either in the Inbox (not filtered/muted by
 gmail), or a member of a flagged (starred thread) AND tagged with
-'differential.other'.")
+'differential.other'.
+
+
+Phab emails:
+ - first one should show up in inbox
+ - subsequent ones should show up if
+   - i am an author, reviewer, or subscriber
+     - but NOT if i am an actor
+
+
+Gmail must be set up to:
+- Mark uninteresting phabricator emails (not reviewer()/subscriber()) as read/removed from inbox
+  - from:phabricator@affirm.com -\"reviewer(@marc.sherry)\" -\"subscriber(@marc.sherry)\" -\"author(@marc.sherry)\"
+
+Offlineimap must:
+- Run the post-new hook to tag flagged threads with thread_flagged")
 
 (defun msherry-notmuch-unread (arg)
   "Jump immediately to unread emails in notmuch.
@@ -158,7 +173,7 @@ With a prefix argument, jump to the `notmuch' home screen."
 (defvar msherry-mail-alert-ts 0
   "Last timestamp of shown mail alerts.")
 
-(defvar msherry-mail-alert-interval-minutes 60
+(defvar msherry-mail-alert-interval-minutes 10
   "How many minutes to wait before displaying the new mail alert.")
 
 (defun msherry-mail-elapsed-minutes ()
@@ -172,9 +187,8 @@ With a prefix argument, jump to the `notmuch' home screen."
 
 (defun msherry-mail-alert-ok ()
   "Return t if enough time has elapsed since last alerting on new mail, nil otherwise."
-  (let ((res (> (msherry-mail-elapsed-minutes)
-                msherry-mail-alert-interval-minutes)))
-    res))
+  (> (msherry-mail-elapsed-minutes)
+     msherry-mail-alert-interval-minutes))
 
 ;;; For display-time-mode
 (defun msherry-new-important-mail ()
@@ -183,7 +197,7 @@ With a prefix argument, jump to the `notmuch' home screen."
 https://gist.github.com/dbp/9627194"
   ;; Ensure we're in a local directory so Tramp doesn't try to run a remote
   ;; `notmuch`
-  (let ((default-directory expanded-user-emacs-directory))
+  (let ((default-directory (expand-file-name user-emacs-directory)))
     (when (msherry-mail-alert-ok)
       (if (string= (s-chomp
                     (shell-command-to-string (format "/usr/local/bin/notmuch count \"%s\""
@@ -199,6 +213,10 @@ https://gist.github.com/dbp/9627194"
   (notmuch-show-update-tags (notmuch-show-get-tags))
   )
 
+(defun msherry-touch-email-update-file ()
+  "Touch the email update file to communicate activity to external processes."
+  (shell-command (concat "touch " (shell-quote-argument msherry-email-update-file-path))))
+
 ;; Fix up broken functions
 (defun msherry-notmuch-redisplay-search-with-highlight (&rest args)
   ;; Must be interactive
@@ -213,7 +231,7 @@ https://gist.github.com/dbp/9627194"
 
 (add-hook 'notmuch-after-tag-hook
           #'(lambda (&rest rest)
-              (shell-command (concat "touch " (shell-quote-argument msherry-email-update-file-path)))))
+              (msherry-touch-email-update-file)))
 
 ;;; Update the alert timestamp when closing notmuch buffers
 (advice-add #'notmuch-bury-or-kill-this-buffer :after #'msherry-mail-refresh-alert-ts)

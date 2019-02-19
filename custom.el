@@ -68,6 +68,8 @@
  '(gc-cons-threshold 100000000)
  '(git-commit-summary-max-length 79)
  '(global-eldoc-mode nil)
+ '(ido-cr+-function-blacklist
+   '(read-file-name-internal read-buffer todo-add-category gnus-emacs-completing-read gnus-iswitchb-completing-read grep-read-files magit-builtin-completing-read ess-completing-read Info-read-node-name tmm-prompt org-tags-completion-function copy-region-as-kill))
  '(ido-cr+-function-whitelist '(org-agenda-refile org-refile))
  '(jabber-account-list
    '(("msherry@gmail.com"
@@ -100,7 +102,8 @@
      (:name "Flawless" :query "tag:Flawless AND tag:unread")
      (:name "sent" :query "tag:sent" :key "t")
      (:name "drafts" :query "tag:draft" :key "d")
-     (:name "all mail" :query "*" :key "a")))
+     (:name "all mail" :query "*" :key "a")
+     (:name "Identity triage" :query "tag:unread AND tag:identity_triage")))
  '(notmuch-search-oldest-first nil)
  '(ns-alternate-modifier 'super)
  '(ns-command-modifier 'meta)
@@ -108,29 +111,29 @@
  '(org-agenda-custom-commands
    '(("c" "Agenda and all unscheduled/everyday TODO's / unfiled"
       ((agenda ""
-        ((org-super-agenda-groups
-          '((:log t)
-            (:name "Schedule" :time-grid t)
-            (:name "Priority" :priority "A")
-            (:name "Overdue" :deadline past)
-            (:name "Due today" :deadline today)
-            (:name "Today" :scheduled today)
-            (:name "Due soon" :deadline future)
-            (:name "No deadline" :tag "WORK")))))
+               ((org-super-agenda-groups
+                 '((:log t)
+                   (:name "Schedule" :time-grid t)
+                   (:name "Priority" :priority "A")
+                   (:name "Overdue" :deadline past)
+                   (:name "Due today" :deadline today)
+                   (:name "Today" :scheduled today)
+                   (:name "Due soon" :deadline future)
+                   (:name "No deadline" :tag "WORK")))))
        (tags "EVERYDAY"
-        ((org-agenda-overriding-header "Every day")
-         (org-agenda-skip-function
-          '(org-agenda-skip-entry-if 'regexp "\\^* .*:EVERYDAY\\|^\\*\\*\\*"))))
+             ((org-agenda-overriding-header "Every day")
+              (org-agenda-skip-function
+               '(org-agenda-skip-entry-if 'regexp "\\^* .*:EVERYDAY\\|^\\*\\*\\*"))))
        (todo ""
-        ((org-agenda-overriding-header "Unscheduled TODOs")
-         (org-agenda-skip-function
-          '(org-agenda-skip-entry-if 'deadline 'scheduled))))
+             ((org-agenda-overriding-header "Unscheduled TODOs")
+              (org-agenda-skip-function
+               '(org-agenda-skip-entry-if 'deadline 'scheduled))))
        (tags "TOREAD"
-        ((org-agenda-overriding-header "To read")
-         (org-agenda-skip-function
-          '(org-agenda-skip-entry-if 'regexp "\\* To read.*:TOREAD:"))))
+             ((org-agenda-overriding-header "To read")
+              (org-agenda-skip-function
+               '(org-agenda-skip-entry-if 'regexp "\\* To read.*:TOREAD:"))))
        (tags "REFILE"
-        ((org-agenda-overriding-header "To refile"))))
+             ((org-agenda-overriding-header "To refile"))))
       nil)
      ("N" "Notes" tags "NOTE"
       ((org-agenda-overriding-header "Notes")
