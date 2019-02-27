@@ -637,17 +637,19 @@ should be set via a dir-local variable."
 
 (global-set-key (kbd "C-c C-'") #'mirth)
 
-(defvar msherry-odin "omg")
+(defvar msherry-odin "msherry")
 
 (defun open-this-file-on-odin ()
   "Open the current file (via TRAMP) on an ODIN whose name is given by `msherry-odin'."
   (interactive)
   (let* ((path (buffer-file-name))
+         (pos (point))
          (repo-root (vc-find-root path ".git"))
          (repo-name (file-relative-name repo-root (file-name-directory (directory-file-name repo-root))))
          (relative-path (file-relative-name path repo-root))
          (odin-path (format "/%s.odin.aff:/opt/code/frontend/%s%s" msherry-odin repo-name relative-path)))
-    (find-file odin-path)))
+    (find-file odin-path)
+    (goto-char pos)))
 
 ;;; Walk down directory hierarchies when processing dir-locals.el so they can
 ;;; nest. From https://emacs.stackexchange.com/a/5537/7169

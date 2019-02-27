@@ -173,7 +173,7 @@ With a prefix argument, jump to the `notmuch' home screen."
 (defvar msherry-mail-alert-ts 0
   "Last timestamp of shown mail alerts.")
 
-(defvar msherry-mail-alert-interval-minutes 10
+(defvar msherry-mail-alert-interval-minutes 0
   "How many minutes to wait before displaying the new mail alert.")
 
 (defun msherry-mail-elapsed-minutes ()
