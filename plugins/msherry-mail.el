@@ -210,8 +210,7 @@ https://gist.github.com/dbp/9627194"
 (defun msherry-notmuch-show-redraw-tags ()
   "Redraw all tags in the current message based on their current state."
   (notmuch-show-update-tags '())
-  (notmuch-show-update-tags (notmuch-show-get-tags))
-  )
+  (notmuch-show-update-tags (notmuch-show-get-tags)))
 
 (defun msherry-touch-email-update-file ()
   "Touch the email update file to communicate activity to external processes."
