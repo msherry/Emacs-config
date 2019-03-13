@@ -69,7 +69,7 @@
  '(git-commit-summary-max-length 79)
  '(global-eldoc-mode nil)
  '(ido-cr+-function-blacklist
-   '(read-file-name-internal read-buffer todo-add-category gnus-emacs-completing-read gnus-iswitchb-completing-read grep-read-files magit-builtin-completing-read ess-completing-read Info-read-node-name tmm-prompt org-tags-completion-function copy-region-as-kill))
+   '(read-file-name-internal read-buffer todo-add-category gnus-emacs-completing-read gnus-iswitchb-completing-read grep-read-files magit-builtin-completing-read ess-completing-read Info-read-node-name tmm-prompt org-tags-completion-function ffap-read-file-or-url ffap-read-file-or-url-internal copy-region-as-kill))
  '(ido-cr+-function-whitelist '(org-agenda-refile org-refile))
  '(jabber-account-list
    '(("msherry@gmail.com"
