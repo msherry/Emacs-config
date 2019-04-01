@@ -686,26 +686,25 @@ should be set via a dir-local variable."
 (defun isort-buffer ()
   "Apply isort to the current (Python) buffer, with sane defaults."
   (interactive)
-  (let ((command))
-    (setq command
-          (mapconcat 'identity
-                     `("isort"
-                       "--combine-as"
-                       "--dont-skip __init__.py" ; why would you skip this?
-                       "--line-width 100"
-                       "--multi-line 3"
-                       "--project affirm"
-                       "--thirdparty typing" ; treat this as third-party since we use Python 2.7
-                       "--trailing-comma"
-                       "--use-parentheses"
-                       ,(let ((venv_root
-                                (or (bound-and-true-p jedi:environment-root)
-                                    (bound-and-true-p python-shell-virtualenv-root)
-                                    (getenv "VIRTUAL_ENV"))))
-                          (when venv_root
-                            (format "--virtual-env %s" venv_root)))
-                       "%s")
-                     " "))
+  (let ((command
+         (mapconcat 'identity
+                    `("isort"
+                      "--combine-as"
+                      "--dont-skip __init__.py" ; why would you skip this?
+                      "--line-width 100"
+                      "--multi-line 3"
+                      "--project affirm"
+                      "--thirdparty typing" ; treat this as third-party since we use Python 2.7
+                      "--trailing-comma"
+                      "--use-parentheses"
+                      ,(let ((venv_root
+                              (or (bound-and-true-p jedi:environment-root)
+                                  (bound-and-true-p python-shell-virtualenv-root)
+                                  (getenv "VIRTUAL_ENV"))))
+                         (when venv_root
+                           (format "--virtual-env %s" venv_root)))
+                      "%s")
+                    " ")))
     (shell-command (format
                     command
                     (buffer-file-name)))))
