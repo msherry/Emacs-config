@@ -26,6 +26,9 @@
   "tag:unread AND (tag:INBOX OR ((tag:flagged OR tag:thread_flagged) and tag:differential.other))"
   "The default search string used to determine if new mail is present.
 
+
+TODO: it looks like we can remove interesting phab emails from the INBOX and leave them unread.
+
 Unread mail, and either in the Inbox (not filtered/muted by
 gmail), or a member of a flagged (starred thread) AND tagged with
 'differential.other'.

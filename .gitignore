@@ -21,6 +21,7 @@ jabber-avatar-cache/
 plugins/.mypy_cache
 ido.last
 request/
+transient/
 
 org
 bookmarks
