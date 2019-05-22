@@ -191,6 +191,7 @@
 (blink-cursor-mode 1)
 (show-paren-mode t)
 (ido-ubiquitous-mode 1)
+(global-emojify-mode)
 
 ; Display
 (setq transient-mark-mode t            ; on by default in 23.x
