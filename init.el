@@ -192,6 +192,7 @@
 (show-paren-mode t)
 (ido-ubiquitous-mode 1)
 (global-emojify-mode)
+(which-key-mode)
 
 ; Display
 (setq transient-mark-mode t            ; on by default in 23.x
