@@ -696,6 +696,7 @@ should be set via a dir-local variable."
                       "--line-width 100"
                       "--multi-line 3"
                       "--project affirm"
+                      "--project tests"
                       "--thirdparty typing" ; treat this as third-party since we use Python 2.7
                       "--trailing-comma"
                       "--use-parentheses"
