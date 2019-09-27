@@ -23,7 +23,12 @@
   "Touch this file to force the external offlineimap-runner.sh to resync.")
 
 (defvar msherry-notmuch-new-mail-search-str
-  "tag:unread AND (tag:INBOX OR ((tag:flagged OR tag:thread_flagged) and tag:differential.other))"
+  (concat
+   "tag:unread AND (tag:INBOX "
+                    "OR ((tag:flagged OR tag:thread_flagged) "
+                         "AND tag:differential.other)"
+                    "OR (tag:identity_triage))" ; only include this when on triage
+                    )
   "The default search string used to determine if new mail is present.
 
 
@@ -111,11 +116,16 @@ With a prefix argument, jump to the `notmuch' home screen."
 
 ; Archive mail
 (define-key notmuch-search-mode-map "y"
-  ;;; TODO: replace this with call to notmuch-show-archive-thread-then-next
+  ;;; TODO: replace this with call to notmuch-show-archive-thread-then-next?
       (lambda (&optional beg end)
         "Remove thread from inbox"
         (interactive (notmuch-search-interactive-region))
         (notmuch-search-tag (list "-INBOX" "-differential.other") beg end)
+        ;; TODO: inbox search might include tags other than "INBOX" --
+        ;; e.g. "identity_triage" when on triage. Update these to be unread,
+        ;; but only if they were brought into the inbox search this way -- we
+        ;; don't want to mark regular inbox messages unread when archiving.
+        (notmuch-tag "tag:identity_triage" (list "-unread"))
         (notmuch-refresh-this-buffer)))
 
 ; Mute mail in search mode

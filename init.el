@@ -639,7 +639,7 @@ should be set via a dir-local variable."
 
 (global-set-key (kbd "C-c C-'") #'mirth)
 
-(defvar msherry-odin "msherry")
+(defvar msherry-odin "barcelona")
 
 (defun open-this-file-on-odin ()
   "Open the current file (via TRAMP) on an ODIN whose name is given by `msherry-odin'."
@@ -697,7 +697,7 @@ should be set via a dir-local variable."
                       "--multi-line 3"
                       "--project affirm"
                       "--project tests"
-                      "--thirdparty typing" ; treat this as third-party since we use Python 2.7
+                      ;; "--thirdparty typing" ; treat this as third-party since we use Python 2.7
                       "--trailing-comma"
                       "--use-parentheses"
                       ,(let ((venv_root
@@ -716,6 +716,11 @@ should be set via a dir-local variable."
   "Activate the monolith's venv"
   (interactive)
   (pyvenv-activate "/Users/marcsherry/src/all-the-things/deployable/monolith/src/.venv"))
+
+
+;;; Enable fuzzy completion for projectile-mode (among others, probably). Found
+;;; at https://github.com/bbatsov/projectile/issues/564#issuecomment-65890252
+(flx-ido-mode)
 
 
 (provide 'init)
