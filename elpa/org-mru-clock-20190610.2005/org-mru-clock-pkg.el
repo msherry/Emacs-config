@@ -1,0 +1,2 @@
+;;; -*- no-byte-compile: t -*-
+(define-package "org-mru-clock" "20190610.2005" "clock in/out of tasks with completion and persistent history" '((emacs "24.3")) :commit "1547191254f6fc58b62864d0224356e72bd7d933" :keywords '("convenience" "calendar") :authors '(("Kevin Brubeck Unhammer" . "unhammer@fsfe.org")) :maintainer '("Kevin Brubeck Unhammer" . "unhammer@fsfe.org") :url "https://github.com/unhammer/org-mru-clock")

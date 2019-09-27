@@ -1,0 +1,2 @@
+;;; -*- no-byte-compile: t -*-
+(define-package "flycheck-clojure" "20190611.2351" "Flycheck: Clojure support" '((cider "0.22.0") (flycheck "32snapshot") (let-alist "1.0.1") (emacs "25")) :commit "4c5d0c723bd564d632a4b93046679ed19d0e49d9" :authors '(("Peter Fraenkel" . "pnf@podsnap.com") ("Sebastian Wiesner" . "swiesner@lunaryorn.com")) :maintainer '("Peter Fraenkel" . "pnf@podsnap.com") :url "https://github.com/clojure-emacs/squiggly-clojure")
