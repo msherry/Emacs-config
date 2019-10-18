@@ -125,6 +125,8 @@ With a prefix argument, jump to the `notmuch' home screen."
         ;; e.g. "identity_triage" when on triage. Update these to be unread,
         ;; but only if they were brought into the inbox search this way -- we
         ;; don't want to mark regular inbox messages unread when archiving.
+
+        ;; TODO: this untags all messages in the buffer, not just the current thread. Fix it.
         (notmuch-tag "tag:identity_triage" (list "-unread"))
         (notmuch-refresh-this-buffer)))
 
