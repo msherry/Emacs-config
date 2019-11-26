@@ -27,7 +27,7 @@
    "tag:unread AND (tag:INBOX "
                     "OR ((tag:flagged OR tag:thread_flagged) "
                          "AND tag:differential.other)"
-                    "OR (tag:identity_triage))" ; only include this when on triage
+                    ;; "OR (tag:identity_triage))" ; only include this when on triage
                     )
   "The default search string used to determine if new mail is present.
 

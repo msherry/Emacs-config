@@ -54,6 +54,7 @@
 
 ;; I edit these files a lot, so put them in registers
 (set-register ?a '(file . "~/src/all-the-things"))
+(set-register ?r '(file . "~/src/risk-ops"))
 (set-register ?z '(file . "~/.emacs.d/init.el"))
 (set-register ?p '(file . "~/.emacs.d/pass.org.gpg"))
 (set-register ?t '(file . "~/TODO.org"))
@@ -639,7 +640,21 @@ should be set via a dir-local variable."
 
 (global-set-key (kbd "C-c C-'") #'mirth)
 
-(defvar msherry-odin "barcelona")
+(defvar msherry-odin "alsace")
+(defvar msherry-raven "raven-periwinkle")
+
+
+(defun open-this-file-on-raven ()
+  "Open the current file (via TRAMP) on raven whose name is given by `msherry-raven'."
+  (interactive)
+  (let* ((path (buffer-file-name))
+         (pos (point))
+         (repo-root (vc-find-root path ".git"))
+         (repo-name (file-relative-name repo-root (file-name-directory (directory-file-name repo-root))))
+         (relative-path (file-relative-name path repo-root))
+         (raven-path (format "/%s:%s%s" msherry-raven repo-name relative-path)))
+    (find-file raven-path)
+    (goto-char pos)))
 
 (defun open-this-file-on-odin ()
   "Open the current file (via TRAMP) on an ODIN whose name is given by `msherry-odin'."
@@ -717,10 +732,16 @@ should be set via a dir-local variable."
   (interactive)
   (pyvenv-activate "/Users/marcsherry/src/all-the-things/deployable/monolith/src/.venv"))
 
+(defun activate-riskops-venv ()
+  "Activate the riskops venv"
+  (interactive)
+  (pyvenv-activate "/Users/marcsherry/src/risk-ops/riskops/.venv"))
 
 ;;; Enable fuzzy completion for projectile-mode (among others, probably). Found
 ;;; at https://github.com/bbatsov/projectile/issues/564#issuecomment-65890252
 (flx-ido-mode)
+
+(setq ghub-use-workaround-for-emacs-bug 'force)
 
 
 (provide 'init)

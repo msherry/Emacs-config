@@ -1,0 +1,7 @@
+# -*- coding: utf-8 -*-
+# name: tp
+# --
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from typing import $0
