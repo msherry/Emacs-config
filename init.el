@@ -253,6 +253,8 @@
 (global-set-key (kbd "M-g") #'goto-line)
 (global-set-key (kbd "C-c e") #'ediff-buffers)
 (global-set-key [insertchar] nil)       ; Right next to delete!!
+(when window-system
+  (global-set-key (kbd "M-`") nil)) ; disable text mode menubar key if not in text mode
 ; scroll without moving point
 (global-set-key (kbd "M-n") (lambda() (interactive) (scroll-up 1)))
 (global-set-key (kbd "M-p") (lambda() (interactive) (scroll-down 1)))
@@ -610,33 +612,43 @@ http://blogs.fluidinfo.com/terry/2011/11/10/emacs-buffer-mode-histogram/"
 (projectile-mode t)
 
 ;;; Misc
-(defvar mirth-base-url "https://github.com/msherry/%s/blob/master/%s#L%s"
+(defvar mirth-base-url "https://github.com/msherry/%s/blob/%s/%s#L%s"
   "The base URL to use for linking to code snippets using `mirth'.")
 ;;; Any string value should be safe enough -- don't prompt for confirmation.
 (put 'mirth-base-url 'safe-local-variable 'stringp)
 
-(defun mirth-find-url ()
+(defun mirth-find-url (pinned)
   "Find and return the URL for the current file/line.
 
 Uses `mirth-base-url' as the URL to interpolate into, which
-should be set via a dir-local variable."
+should be set via a dir-local variable.  If PINNED is non-nil,
+return a URL pinned to the current revision, rather than the
+default branch (usually master)."
   (let* ((path (buffer-file-name))
          (repo-root (vc-find-root path ".git"))
-         (repo-name (file-relative-name repo-root (file-name-directory (directory-file-name repo-root))))
-         (url-root (cond ((string= repo-name "client") "desktop-client")
-                         (t repo-name)))
-         (relative-path (file-relative-name path repo-root))
+         (repo-name (substring          ; remove trailing slash
+                     (file-relative-name repo-root
+                                         (file-name-directory (directory-file-name repo-root)))
+                     0 -1))
+         (repo-name-remote (cond ((string= repo-name "client") "desktop-client")
+                                 ((string= repo-name ".emacs.d") "Emacs-config")
+                                 (t repo-name)))
+         (filename (file-relative-name path repo-root))
+         (branch (if (not pinned) "master" (replace-regexp-in-string "\n\\'" "" (shell-command-to-string "git rev-parse --short HEAD"))))
          (url (format mirth-base-url
-                       url-root relative-path (number-to-string (line-number-at-pos)))))
+                      repo-name-remote
+                      branch
+                      filename
+                      (number-to-string (line-number-at-pos)))))
     url))
 
-(defun mirth ()
+(defun mirth (&optional arg)
   "Browse a code repository for the current file/line.
 
 Uses `mirth-base-url' as the URL to interpolate into, which
 should be set via a dir-local variable."
-  (interactive)
-  (browse-url (mirth-find-url)))
+  (interactive "P")
+  (browse-url (mirth-find-url arg)))
 
 (global-set-key (kbd "C-c C-'") #'mirth)
 
