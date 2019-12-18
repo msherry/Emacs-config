@@ -23,16 +23,34 @@
 ;;
 
 ;;; Code:
-(defvar mirth-base-url "https://github.com/msherry/%s/blob/%s/%s#L%s"
-  "The base URL to use for linking to code snippets using `mirth'.
 
-Strings to be inserted are:
-1. repo name
-2. branch name
-3. file name
-4. line number")
+(require 'cl-lib)
+(require 's)
+
+
+(defvar mirth-base-url "https://github.com/${organization}/${repo}/blob/${branch}/${file}#L${lineno}"
+  "The base URL to use for linking to code snippets using `mirth'.")
 ;;; Any string value should be safe enough -- don't prompt for confirmation.
 (put 'mirth-base-url 'safe-local-variable 'stringp)
+
+
+(defun mirth--shell-command (command)
+  "Chomp the final newline from shell output from COMMAND."
+  ;; TODO: this must exist somewhere already
+  (replace-regexp-in-string "\n\\'" "" (shell-command-to-string command)))
+
+
+(defun mirth--get-remote ()
+  "Return the remote organization and repo names."
+  ;; TODO: only works with git and github for now
+  (let* ((url (mirth--shell-command "git config --get remote.origin.url"))
+         organization repo)
+    (unless (string-match "git@github.com:\\([^/]+\\)/\\([^.]+\\).git" url)
+      (error "Not backed by a github repo"))
+    (setq organization (match-string 1 url)
+          repo (match-string 2 url))
+    (values organization repo)))
+
 
 (defun mirth-find-url (pinned)
   "Find and return the URL for the current file/line.
@@ -44,22 +62,19 @@ default branch (usually master)."
 
   ;; TODO: replace with https://emacs.stackexchange.com/a/7378/7169
   (let* ((filepath (buffer-file-name))
-         (repo-root (vc-find-root filepath ".git"))
-         (repo-name (substring          ; remove trailing slash
-                     (file-relative-name repo-root
-                                         (file-name-directory (directory-file-name repo-root)))
-                     0 -1))
-         (repo-name-remote (cond ((string= repo-name "client") "desktop-client")
-                                 ((string= repo-name ".emacs.d") "Emacs-config")
-                                 (t repo-name)))
-         (filename (file-relative-name filepath repo-root))
-         (branch (if (not pinned) "master" (replace-regexp-in-string "\n\\'" "" (shell-command-to-string "git rev-parse --short HEAD"))))
-         (url (format mirth-base-url
-                      repo-name-remote
-                      branch
-                      filename
-                      (number-to-string (line-number-at-pos)))))
-    url))
+         (repo-root (vc-root-dir))
+         (file (file-relative-name filepath repo-root))
+         (branch (if (not pinned) "master" (mirth--shell-command "git rev-parse --short HEAD")))
+         (lineno (number-to-string (line-number-at-pos))))
+    (cl-multiple-value-bind (organization repo) (mirth--get-remote)
+      ;; s-lex-format is incompatible with lexical binding, see
+      ;; https://github.com/magnars/s.el/issues/57
+      (s-format mirth-base-url 'aget
+                `(("organization" . ,organization)
+                  ("repo" . ,repo)
+                  ("branch" . ,branch)
+                  ("file" . ,file)
+                  ("lineno" . ,lineno))))))
 
 (defun mirth (&optional arg)
   "Browse a code repository for the current file/line.
