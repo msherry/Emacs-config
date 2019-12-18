@@ -626,7 +626,7 @@ http://blogs.fluidinfo.com/terry/2011/11/10/emacs-buffer-mode-histogram/"
   (interactive)
   (let* ((path (buffer-file-name))
          (pos (point))
-         (repo-root (vc-find-root path ".git"))
+         (repo-root (vc-root-dir))
          (repo-name (file-relative-name repo-root (file-name-directory (directory-file-name repo-root))))
          (relative-path (file-relative-name path repo-root))
          (raven-path (format "/%s:%s%s" msherry-raven repo-name relative-path)))

@@ -46,41 +46,37 @@
   (let* ((url (mirth--shell-command "git config --get remote.origin.url"))
          organization repo)
     (unless (string-match "git@github.com:\\([^/]+\\)/\\([^.]+\\).git" url)
-      (error "Not backed by a github repo"))
+      (error "ERROR: Not backed by a github repo"))
     (setq organization (match-string 1 url)
-          repo (match-string 2 url))
+          repo         (match-string 2 url))
     (values organization repo)))
 
 
 (defun mirth-find-url (pinned)
   "Find and return the URL for the current file/line.
 
-Uses `mirth-base-url' as the URL to interpolate into, which
-should be set via a dir-local variable.  If PINNED is non-nil,
-return a URL pinned to the current revision, rather than the
-default branch (usually master)."
-
-  ;; TODO: replace with https://emacs.stackexchange.com/a/7378/7169
-  (let* ((filepath (buffer-file-name))
-         (repo-root (vc-root-dir))
-         (file (file-relative-name filepath repo-root))
+Uses `mirth-base-url' as the URL to interpolate into.  If PINNED
+is non-nil, return a URL pinned to the current revision, rather
+than the default branch (usually master)."
+  (let* ((repo-root (vc-root-dir))
+         (file (file-relative-name (buffer-file-name) repo-root))
          (branch (if (not pinned) "master" (mirth--shell-command "git rev-parse --short HEAD")))
          (lineno (number-to-string (line-number-at-pos))))
     (cl-multiple-value-bind (organization repo) (mirth--get-remote)
       ;; s-lex-format is incompatible with lexical binding, see
       ;; https://github.com/magnars/s.el/issues/57
       (s-format mirth-base-url 'aget
-                `(("organization" . ,organization)
-                  ("repo" . ,repo)
-                  ("branch" . ,branch)
-                  ("file" . ,file)
-                  ("lineno" . ,lineno))))))
+                `((organization . ,organization)
+                  (repo . ,repo)
+                  (branch . ,branch)
+                  (file . ,file)
+                  (lineno . ,lineno))))))
 
 (defun mirth (&optional arg)
   "Browse a code repository for the current file/line.
 
-Uses `mirth-base-url' as the URL to interpolate into, which
-should be set via a dir-local variable."
+With a prefix arg, browse at the current revision, rather than
+master."
   (interactive "P")
   (browse-url (mirth-find-url arg)))
 
