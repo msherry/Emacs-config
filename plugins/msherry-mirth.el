@@ -52,6 +52,16 @@
     (values organization repo)))
 
 
+(defun mirth--get-branch (&optional pinned)
+  "Return a revision for the current branch.
+
+If PINNED is non-nil, returns a short revision SHA.  Otherwise,
+return \"master\"."
+  (if (not pinned)
+      "master"
+    (mirth--shell-command "git rev-parse --short HEAD")))
+
+
 (defun mirth-find-url (pinned)
   "Find and return the URL for the current file/line.
 
@@ -60,7 +70,7 @@ is non-nil, return a URL pinned to the current revision, rather
 than the default branch (usually master)."
   (let* ((repo-root (vc-root-dir))
          (file (file-relative-name (buffer-file-name) repo-root))
-         (branch (if (not pinned) "master" (mirth--shell-command "git rev-parse --short HEAD")))
+         (branch (mirth--get-branch pinned))
          (lineno (number-to-string (line-number-at-pos))))
     (cl-multiple-value-bind (organization repo) (mirth--get-remote)
       ;; s-lex-format is incompatible with lexical binding, see
