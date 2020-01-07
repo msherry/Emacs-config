@@ -193,6 +193,11 @@
       "** TODO %?
  %a
  " :empty-lines-after 1 :clock-in t :clock-resume t)
+     ("h" "HOA TODO" entry
+      (file+headline "~/.emacs.d/org/hoa.org" "Tasks")
+      "** TODO %?
+ %a
+ " :empty-lines-after 1 :clock-in t :clock-resume t)
      ("n" "note" entry
       (file "~/.emacs.d/org/refile.org")
       "* %? :NOTE:
