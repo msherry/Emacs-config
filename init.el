@@ -163,6 +163,7 @@
 (add-to-list 'auto-mode-alist '("\\.csv$" . csv-mode))
 (add-to-list 'auto-mode-alist '("\\.d$" . dtrace-script-mode))
 (add-to-list 'auto-mode-alist '("\\.md$" . markdown-mode))
+(add-to-list 'auto-mode-alist '("\\.ml$" . tuareg-mode))
 (add-to-list 'auto-mode-alist '("\\.org$" . org-mode))
 (add-to-list 'auto-mode-alist '("\\.php$" . php-mode))
 (add-to-list 'auto-mode-alist '("\\.pyst$" . python-mode))
@@ -724,3 +725,6 @@ http://blogs.fluidinfo.com/terry/2011/11/10/emacs-buffer-mode-histogram/"
 (provide 'init)
 
 ;;; init.el ends here
+;; ## added by OPAM user-setup for emacs / base ## 56ab50dc8996d2bb95e7856a6eddb17b ## you can edit, but keep this line
+(require 'opam-user-setup "~/.emacs.d/opam-user-setup.el")
+;; ## end of OPAM user-setup addition for emacs / base ## keep this line
