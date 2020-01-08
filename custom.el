@@ -118,7 +118,14 @@
                    (:name "Due today" :deadline today)
                    (:name "Today" :scheduled today)
                    (:name "Due soon" :deadline future)
-                   (:name "No deadline" :tag "WORK")))))
+                   (:name "No deadline" :tag "WORK")))
+                (org-agenda-sorting-strategy
+                 ;; Nearly default, with the addition of todo-state-down --
+                 ;; https://emacs.stackexchange.com/a/16568/7169
+                 '((agenda habit-down todo-state-down time-up priority-down category-keep)
+                   (todo priority-down category-keep)
+                   (tags priority-down category-keep)
+                   (search category-keep)))))
        (tags "EVERYDAY"
              ((org-agenda-overriding-header "Every day")
               (org-agenda-skip-function
