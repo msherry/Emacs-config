@@ -152,7 +152,7 @@
           (regexp t))
         ((org-agenda-overriding-header "Untagged TODOs"))))
       nil)))
- '(org-agenda-files '("~/.emacs.d/org/" "~/.org-jira/"))
+ '(org-agenda-files '("/Users/msherry/.emacs.d/org/"))
  '(org-agenda-persistent-filter t)
  '(org-agenda-prefix-format
    '((agenda . " %i %-12:c%?-12t% s")
@@ -277,7 +277,7 @@ Train
  '(projectile-enable-caching t)
  '(projectile-globally-ignored-modes
    '("erc-mode" "help-mode" "completion-list-mode" "Buffer-menu-mode" "gnus-.*-mode" "occur-mode" "graphviz-dot-mode"))
- '(python-shell-interpreter "ipython")
+ '(python-shell-interpreter "python")
  '(racer-rust-src-path nil)
  '(rust-format-on-save t)
  '(safe-local-variable-values
@@ -298,6 +298,7 @@ Train
      (tickscript-series-type . "batch")
      (tickscript-series-name . "medians")))
  '(tickscript-add-extra-graph-options t)
+ '(tramp-default-method "ssh")
  '(tramp-syntax 'simplified nil (tramp)))
 
 (provide 'custom)
