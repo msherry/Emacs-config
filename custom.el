@@ -120,7 +120,7 @@
                    (:name "Due soon" :deadline future)
                    (:name "No deadline" :tag "WORK")))
                 (org-agenda-sorting-strategy
-                 '((agenda habit-down priority-down todo-state-down time-up category-keep)
+                 '((agenda habit-down todo-state-down time-up priority-down category-keep)
                    (todo priority-down category-keep)
                    (tags priority-down category-keep)
                    (search category-keep)))))
@@ -150,7 +150,7 @@
           (regexp t))
         ((org-agenda-overriding-header "Untagged TODOs"))))
       nil)))
- '(org-agenda-files '("/Users/msherry/.emacs.d/org/"))
+ '(org-agenda-files '("~/.emacs.d/org"))
  '(org-agenda-persistent-filter t)
  '(org-agenda-prefix-format
    '((agenda . " %i %-12:c%?-12t% s")
