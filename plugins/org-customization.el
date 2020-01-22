@@ -215,50 +215,50 @@ http://stackoverflow.com/a/17067170/52550"
 ;;; MobileOrg - https://mobileorg.github.io/
 ; These need to be set before org-mobile loads
 (setq org-directory "~/.emacs.d/org")
-;; (setq org-mobile-inbox-for-pull "~/.emacs.d/org/flagged.org")
-;; (setq org-mobile-directory "~/Dropbox/Apps/MobileOrg")
+(setq org-mobile-inbox-for-pull "~/.emacs.d/org/flagged.org")
+(setq org-mobile-directory "~/Dropbox/Apps/MobileOrg")
 
-;; (require 'org-mobile)
-;; (org-mobile-pull)
+(require 'org-mobile)
+(org-mobile-pull)
 
-;; ;; Auto-push to MobileOrg on file saves, w/delay
-;; ;; https://github.com/matburt/mobileorg-android/wiki/FAQ
-;; (defvar org-mobile-push-timer nil
-;;   "Timer that `org-mobile-push-timer' uses to reschedule itself, or nil.")
+;; Auto-push to MobileOrg on file saves, w/delay
+;; https://github.com/matburt/mobileorg-android/wiki/FAQ
+(defvar org-mobile-push-timer nil
+  "Timer that `org-mobile-push-timer' uses to reschedule itself, or nil.")
 
-;; (defun org-mobile-push-with-delay (secs)
-;;   (when org-mobile-push-timer
-;;     (cancel-timer org-mobile-push-timer))
-;;   (setq org-mobile-push-timer
-;;         (run-with-idle-timer
-;;          (* 1 secs) nil 'org-mobile-push)))
+(defun org-mobile-push-with-delay (secs)
+  (when org-mobile-push-timer
+    (cancel-timer org-mobile-push-timer))
+  (setq org-mobile-push-timer
+        (run-with-idle-timer
+         (* 1 secs) nil 'org-mobile-push)))
 
-;; (add-hook 'after-save-hook
-;;           #'(lambda ()
-;;               (when (eq major-mode 'org-mode)
-;;                 (dolist (file (org-mobile-files-alist))
-;;                   (if (string= (file-truename (expand-file-name (car file)))
-;;                                (file-truename (buffer-file-name)))
-;;                       (org-mobile-push-with-delay 30))))))
+(add-hook 'after-save-hook
+          #'(lambda ()
+              (when (eq major-mode 'org-mode)
+                (dolist (file (org-mobile-files-alist))
+                  (if (string= (file-truename (expand-file-name (car file)))
+                               (file-truename (buffer-file-name)))
+                      (org-mobile-push-with-delay 30))))))
 
-;; ;; Auto-pull changes on Dropbox change notifications
-;; (defun install-monitor (file secs)
-;;   (run-with-timer
-;;    0 secs
-;;    (lambda (f p)
-;;      (unless (< p (float-time (time-since (elt (file-attributes f) 5))))
-;;        (org-mobile-pull)))
-;;    file secs))
+;; Auto-pull changes on Dropbox change notifications
+(defun install-monitor (file secs)
+  (run-with-timer
+   0 secs
+   (lambda (f p)
+     (unless (< p (float-time (time-since (elt (file-attributes f) 5))))
+       (org-mobile-pull)))
+   file secs))
 
-;; (install-monitor (file-truename
-;;                   (concat
-;;                    (file-name-as-directory org-mobile-directory)
-;;                    org-mobile-capture-file))
-;;                  60)
+(install-monitor (file-truename
+                  (concat
+                   (file-name-as-directory org-mobile-directory)
+                   org-mobile-capture-file))
+                 60)
 
-;; ;; Do a pull every 5 minutes to circumvent problems with timestamping
-;; ;; (ie. dropbox bugs)
-;; (run-with-timer 0 (* 5 60) 'org-mobile-pull)
+;; Do a pull every 5 minutes to circumvent problems with timestamping
+;; (ie. dropbox bugs)
+(run-with-timer 0 (* 5 60) 'org-mobile-pull)
 
 
 ;;; Org-contrib stuff
