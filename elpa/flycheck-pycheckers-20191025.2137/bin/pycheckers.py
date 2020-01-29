@@ -1184,7 +1184,7 @@ def main():
                "Expected one of %s" % ', '.join(RUNNERS.keys())),
               filename=options.file)
 
-    if False and options.multi_thread:
+    if options.multi_thread:
         from multiprocessing import Pool, cpu_count
         p = Pool(cpu_count() + 1)
 
