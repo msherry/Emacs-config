@@ -466,7 +466,7 @@
 ;; Mouse wheel scrolling in xterm
 (unless window-system
   (xterm-mouse-mode 1)
-  (mouse-wheel-mode 1)
+  ;(mouse-wheel-mode 1) ;; https://github.com/eschulte/emacs24-starter-kit/issues/32
   (global-set-key [mouse-4] '(lambda ()
                                (interactive)
                                (scroll-down 5)))
@@ -618,7 +618,7 @@ http://blogs.fluidinfo.com/terry/2011/11/10/emacs-buffer-mode-histogram/"
 
 ;;; Misc
 
-(defvar msherry-odin "alsace")
+(defvar msherry-odin "puntacana2")
 (defvar msherry-raven "raven-periwinkle")
 
 
@@ -643,7 +643,7 @@ http://blogs.fluidinfo.com/terry/2011/11/10/emacs-buffer-mode-histogram/"
          (repo-name (file-relative-name repo-root (file-name-directory (directory-file-name repo-root))))
          (relative-path (file-relative-name path repo-root))
          (odin-path (format "/%s.odin.aff:/opt/code/frontend/%s%s" msherry-odin repo-name relative-path)))
-    (find-file odin-path)
+    (find-file-other-window odin-path)
     (goto-char pos)))
 
 ;;; Walk down directory hierarchies when processing dir-locals.el so they can

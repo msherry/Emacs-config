@@ -231,7 +231,7 @@ http://stackoverflow.com/a/17067170/52550"
     (cancel-timer org-mobile-push-timer))
   (setq org-mobile-push-timer
         (run-with-idle-timer
-         (* 1 secs) nil 'org-mobile-push)))
+         (* 1 secs) nil #'(lambda () (unless (buffer-modified-p) (org-mobile-push))))))
 
 (add-hook 'after-save-hook
           #'(lambda ()
