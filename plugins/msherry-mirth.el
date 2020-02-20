@@ -55,19 +55,25 @@
 (defun mirth--get-branch (&optional pinned)
   "Return a revision for the current branch.
 
-If PINNED is non-nil, returns a short revision SHA.  Otherwise,
-return \"master\"."
+If PINNED is non-nil, returns a short revision SHA.  With two
+prefix args (numeric value 16), return the SHA of the current
+head of master, even if that is not the checked-out revision.
+Otherwise, return \"master\"."
   (if (not pinned)
       "master"
-    (mirth--shell-command "git rev-parse --short HEAD")))
+    (let ((refname (if (= 16 (prefix-numeric-value pinned))
+                       "master"
+                     "HEAD")))
+      (mirth--shell-command (format "git rev-parse --short %s" refname)))))
 
 
 (defun mirth-find-url (pinned)
   "Find and return the URL for the current file/line.
 
 Uses `mirth-base-url' as the URL to interpolate into.  If PINNED
-is non-nil, return a URL pinned to the current revision, rather
-than the default branch (usually master)."
+is non-nil, return a URL pinned to a specific SHA (current master
+or current branch, depending on the number of prefix args),
+rather than the default branch (usually master)."
   (let* ((repo-root (vc-root-dir))
          (file (file-relative-name (buffer-file-name) repo-root))
          (branch (mirth--get-branch pinned))
