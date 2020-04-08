@@ -127,7 +127,7 @@
        (tags "EVERYDAY"
              ((org-agenda-overriding-header "Every day")
               (org-agenda-skip-function
-               '(org-agenda-skip-entry-if 'regexp "\\^* .*:EVERYDAY\\|^\\*\\*\\*"))))
+               '(org-agenda-skip-entry-if 'regexp "\\^* .*:EVERYDAY\\|^\\*\\*\\*\\*"))))
        (todo ""
              ((org-agenda-overriding-header "Unscheduled TODOs")
               (org-agenda-skip-function
@@ -145,10 +145,8 @@
      ("o" "Completed tasks older than 6 months (http://gnuru.org/article/1639/org-mode-find-all-done-items-older-than-2-months)" tags "CLOSED<\"<-6m>\"" nil)
      ("w" "Tasks completed within the past week" tags "CLOSED>=\"<-7d>\"" nil)
      ("u" "All untagged TODOs"
-      ((tags
-        #("-{.*}" 1 5
-          (regexp t))
-        ((org-agenda-overriding-header "Untagged TODOs"))))
+      ((tags "-{.*}"
+             ((org-agenda-overriding-header "Untagged TODOs"))))
       nil)))
  '(org-agenda-files '("~/.emacs.d/org"))
  '(org-agenda-persistent-filter t)
