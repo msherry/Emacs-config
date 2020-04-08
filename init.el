@@ -284,6 +284,8 @@
 (define-key paredit-mode-map (kbd "s-<left>") #'paredit-forward-barf-sexp)
 ;; C-j is useful in scratch buffers, and I don't use the paredit version
 (define-key paredit-mode-map (kbd "C-j") nil)
+;; Make kill-ring-save work like normal in magit modes
+(define-key magit-mode-map (kbd "M-w") nil)
 
 ; Util functions for dired
 (eval-after-load "dired"
@@ -463,6 +465,13 @@
 
 (add-hook 'find-file-hook 'turn-off-auto-save-mode-if-tramp)
 
+;; Don't check tramp files for VC mode - from
+;; http://emacs.1067599.n8.nabble.com/mention-how-to-eliminate-Checking-vc-registered-completely-td467410.html
+(setq vc-ignore-dir-regexp
+      (format "\\(%s\\)\\|\\(%s\\)"
+              vc-ignore-dir-regexp
+              tramp-file-name-regexp))
+
 ;; Mouse wheel scrolling in xterm
 (unless window-system
   (xterm-mouse-mode 1)
@@ -618,7 +627,7 @@ http://blogs.fluidinfo.com/terry/2011/11/10/emacs-buffer-mode-histogram/"
 
 ;;; Misc
 
-(defvar msherry-odin "puntacana2")
+(defvar msherry-odin "vegas")
 (defvar msherry-raven "raven-periwinkle")
 
 
