@@ -266,7 +266,7 @@ Train
      ("dot" . graphviz-dot)))
  '(org-src-tab-acts-natively t)
  '(org-table-copy-increment nil)
- '(org-todo-keyword-faces '(("BLOCKED" . "#586e75")))
+ '(org-todo-keyword-faces '(("BLOCKED" . "#586e75") ("IN_QUEUE" . "#586e75")))
  '(org-use-sub-superscripts '{})
  '(package-selected-packages
    '(ac-geiser ack auctex bazel-mode blacken cargo cider clojure-mode clojure-mode-extra-font-locking diff-hl dockerfile-mode dtrace-script-mode el2markdown elpy emojify ess esup exec-path-from-shell feature-mode flx-ido flycheck-clojure flycheck-ocaml flycheck-package flycheck-pycheckers flycheck-rust fxrd-mode geiser gitignore-mode go-mode graphviz-dot-mode groovy-mode helm-projectile httpcode ido-completing-read+ jabber jedi json-mode kotlin-mode latex-preview-pane magit magithub markdown-preview-mode notmuch oauth2 org-agenda-property org-jira org-mru-clock org-plus-contrib org-pomodoro org-super-agenda ox-gfm package-lint paredit php-mode pinentry projectile protobuf-mode puppet-mode pymacs python-mode racer rainbow-mode rmsbolt rust-mode s sass-mode slime solarized-theme suggest swift-mode tagedit thrift tickscript-mode tuareg virtualenv which-key window-numbering yaml-mode yasnippet-snippets))
