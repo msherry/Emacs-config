@@ -630,30 +630,27 @@ http://blogs.fluidinfo.com/terry/2011/11/10/emacs-buffer-mode-histogram/"
 (defvar msherry-odin "vegas")
 (defvar msherry-raven "raven-periwinkle")
 
-
-(defun open-this-file-on-raven ()
-  "Open the current file (via TRAMP) on raven whose name is given by `msherry-raven'."
-  (interactive)
+(defun msherry/open-this-file-other-host (host pathspec)
+  "Open the current file (via TRAMP) on the given HOST, using PATHSPEC to construct a remote path."
   (let* ((path (buffer-file-name))
          (pos (point))
          (repo-root (vc-root-dir))
          (repo-name (file-relative-name repo-root (file-name-directory (directory-file-name repo-root))))
          (relative-path (file-relative-name path repo-root))
-         (raven-path (format "/%s:%s%s" msherry-raven repo-name relative-path)))
-    (find-file raven-path)
+         (remote-path (format pathspec host repo-name relative-path)))
+    (find-file-other-window remote-path)
     (goto-char pos)))
+
+
+(defun open-this-file-on-raven ()
+  "Open the current file (via TRAMP) on raven whose name is given by `msherry-raven'."
+  (interactive)
+  (msherry/open-this-file-other-host msherry-raven "/%s:%s%s"))
 
 (defun open-this-file-on-odin ()
   "Open the current file (via TRAMP) on an ODIN whose name is given by `msherry-odin'."
   (interactive)
-  (let* ((path (buffer-file-name))
-         (pos (point))
-         (repo-root (vc-find-root path ".git"))
-         (repo-name (file-relative-name repo-root (file-name-directory (directory-file-name repo-root))))
-         (relative-path (file-relative-name path repo-root))
-         (odin-path (format "/%s.odin.aff:/opt/code/frontend/%s%s" msherry-odin repo-name relative-path)))
-    (find-file-other-window odin-path)
-    (goto-char pos)))
+  (msherry/open-this-file-other-host msherry-odin "/%s.odin.aff:/opt/code/frontend/%s%s"))
 
 ;;; Walk down directory hierarchies when processing dir-locals.el so they can
 ;;; nest. From https://emacs.stackexchange.com/a/5537/7169
@@ -718,6 +715,11 @@ http://blogs.fluidinfo.com/terry/2011/11/10/emacs-buffer-mode-histogram/"
   "Activate the monolith's venv"
   (interactive)
   (pyvenv-activate "/Users/marcsherry/src/all-the-things/deployable/monolith/src/.venv"))
+
+(defun activate-fraud-venv ()
+  "Activate fraud's venv"
+  (interactive)
+  (pyvenv-activate "/Users/marcsherry/src/all-the-things/deployable/fraud/src/.venv"))
 
 (defun activate-riskops-venv ()
   "Activate the riskops venv"
