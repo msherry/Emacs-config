@@ -1,4 +1,4 @@
-(define-package "flycheck-pycheckers" "20200206.2158" "multiple syntax checker for Python, using Flycheck"
+(define-package "flycheck-pycheckers" "20200428.40" "multiple syntax checker for Python, using Flycheck"
   '((flycheck "0.18"))
   :keywords
   '("convenience" "tools" "languages")
