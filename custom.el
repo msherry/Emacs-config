@@ -144,7 +144,7 @@
        (org-tags-match-list-sublevels t)))
      ("o" "Completed tasks older than 6 months (http://gnuru.org/article/1639/org-mode-find-all-done-items-older-than-2-months)" tags "CLOSED<\"<-6m>\"" nil)
      ("w" "Tasks completed within the past week" tags "CLOSED>=\"<-7d>\"" nil)
-     ("u" "All open work TODOs" tags-todo "WORK+ALLTAGS={\\(:FRAUDENG:$\\)\\|\\(:WORK:$\\)}"
+     ("u" "All open \"work\" TODOs (to refile)" tags-todo "WORK+ALLTAGS={\\(:FRAUDENG:$\\)\\|\\(:WORK:$\\)}"
       ((org-agenda-overriding-header "Untagged open work TODOs"))
       nil)
      ("U" "All untagged work TODOs (open/closed)" tags "WORK+ALLTAGS={\\(:FRAUDENG:$\\)\\|\\(:WORK:$\\)}"
