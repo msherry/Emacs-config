@@ -37,6 +37,7 @@
  '(appt-display-format 'window)
  '(appt-display-interval 5)
  '(appt-message-warning-time 10)
+ '(arduino-executable "/Applications/Arduino.app/Contents/MacOS/Arduino")
  '(auto-revert-verbose nil)
  '(custom-safe-themes
    '("8aebf25556399b58091e533e455dd50a6a9cba958cc4ebb0aab175863c25b9a4" default))
@@ -46,6 +47,7 @@
  '(display-time-mail-face 'hi-blue)
  '(display-time-mail-function 'msherry-new-important-mail)
  '(display-time-mode t)
+ '(ede-arduino-appdir "/Applications/Arduino.app/Contents/Java")
  '(elpy-eldoc-show-current-function nil)
  '(elpy-modules
    '(elpy-module-company elpy-module-eldoc elpy-module-pyvenv elpy-module-sane-defaults))
@@ -270,7 +272,7 @@ Train
  '(org-todo-keyword-faces '(("BLOCKED" . "#586e75") ("IN_QUEUE" . "#586e75")))
  '(org-use-sub-superscripts '{})
  '(package-selected-packages
-   '(ac-geiser ack auctex bazel-mode blacken cargo cider clojure-mode clojure-mode-extra-font-locking common-lisp-snippets diff-hl dockerfile-mode dtrace-script-mode el2markdown elpy emojify ess esup exec-path-from-shell feature-mode flx-ido flycheck-clojure flycheck-ocaml flycheck-package flycheck-pycheckers flycheck-rust fxrd-mode geiser gitignore-mode go-mode graphviz-dot-mode groovy-mode helm-projectile httpcode ido-completing-read+ jabber jedi json-mode kotlin-mode latex-preview-pane magit magithub markdown-preview-mode notmuch oauth2 org-agenda-property org-jira org-mru-clock org-plus-contrib org-pomodoro org-super-agenda ox-gfm package-lint paredit php-mode pinentry projectile protobuf-mode puppet-mode pymacs python-mode racer rainbow-mode rmsbolt rust-mode s sass-mode slime solarized-theme suggest swift-mode tagedit thrift tickscript-mode tuareg virtualenv which-key window-numbering yaml-mode yasnippet-snippets))
+   '(ac-geiser ack arduino-mode auctex bazel-mode blacken cargo cider clojure-mode clojure-mode-extra-font-locking common-lisp-snippets diff-hl dockerfile-mode dtrace-script-mode el2markdown elpy emojify ess esup exec-path-from-shell feature-mode flx-ido flycheck-clojure flycheck-ocaml flycheck-package flycheck-pycheckers flycheck-rust fxrd-mode geiser gitignore-mode go-mode graphviz-dot-mode groovy-mode helm-projectile httpcode ido-completing-read+ jabber jedi json-mode kotlin-mode latex-preview-pane magit magithub markdown-preview-mode notmuch oauth2 org-agenda-property org-jira org-mru-clock org-plus-contrib org-pomodoro org-super-agenda ox-gfm package-lint paredit php-mode pinentry projectile protobuf-mode puppet-mode pymacs python-mode racer rainbow-mode rmsbolt rust-mode s sass-mode slime solarized-theme suggest swift-mode tagedit thrift tickscript-mode tuareg virtualenv which-key window-numbering yaml-mode yasnippet-snippets))
  '(projectile-enable-caching t)
  '(projectile-globally-ignored-modes
    '("erc-mode" "help-mode" "completion-list-mode" "Buffer-menu-mode" "gnus-.*-mode" "occur-mode" "graphviz-dot-mode"))
