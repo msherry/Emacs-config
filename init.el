@@ -726,6 +726,13 @@ http://blogs.fluidinfo.com/terry/2011/11/10/emacs-buffer-mode-histogram/"
   (interactive)
   (pyvenv-activate "/Users/marcsherry/src/risk-ops/riskops/.venv"))
 
+
+(defun urldecode-region (start end)
+  (interactive "r")
+  (if (use-region-p)
+      (url-unhex-string (buffer-substring start end))))
+
+
 ;;; Enable fuzzy completion for projectile-mode (among others, probably). Found
 ;;; at https://github.com/bbatsov/projectile/issues/564#issuecomment-65890252
 (flx-ido-mode)

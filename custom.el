@@ -159,6 +159,7 @@
      (todo . " %i %-12:c%l")
      (tags . " %i %-12:c")
      (search . " %i %-12:c")))
+ '(org-agenda-restore-windows-after-quit t)
  '(org-agenda-skip-deadline-prewarning-if-scheduled 'pre-scheduled)
  '(org-agenda-skip-scheduled-if-deadline-is-shown t)
  '(org-agenda-span 'day)
