@@ -22,7 +22,7 @@ from csv import DictReader
 from distutils.version import LooseVersion
 from functools import partial
 import shlex
-from subprocess import PIPE, Popen, call
+from subprocess import PIPE, Popen
 
 # TODO: Ignore the type of conditional imports until
 # https://github.com/python/mypy/issues/1107 is fixed
@@ -39,7 +39,7 @@ try:
     # pylint: disable=unused-import, ungrouped-imports
     from argparse import Namespace
     from typing import (
-        Any, Dict, List, IO, Iterable, Optional, Set, Tuple, Union)
+        Any, Dict, List, Iterable, Optional, Set, Tuple, Union)
 except ImportError:
     pass
 
@@ -58,6 +58,30 @@ class FatalException(Exception):
     def __str__(self):
         return 'ERROR :pycheckers:{msg} at {filename} line 1.'.format(
             msg=self.msg, filename=self.filename)
+
+
+class _Path(object):
+    """Base class for various types of paths (root-relative, absolute, filename-only, etc.)"""
+
+    def __init__(self, p):
+        # type: (str) -> None
+        self.path = p
+
+    def __str__(self):
+        # type: () -> str
+        return self.path
+
+    def __repr__(self):
+        # type: () -> str
+        return '{}("{}")'.format(self.__class__.__name__, self.path)
+
+
+class RootRelativePath(_Path):
+    pass
+
+
+class AbsPath(_Path):
+    pass
 
 
 def is_true(v):
@@ -237,26 +261,25 @@ class LintRunner(object):
         # type: (str, str) -> str
         """Find the root directory of the current project.
 
-        1. Walk up the directory tree looking for a VCS directory.
-        2. Failing that, find a virtualenv that matches a part of the
-               directory, and choose that as the root.
+        1. Find a virtualenv that matches a part of the directory, and choose that.
+        2. Failing that, walk up the directory tree looking for a VCS directory.
         3. Otherwise, just use the local directory.
         """
         # Case 1
-        vcs_root, _vcs_name = find_vcs_root(source_file)
-        if vcs_root:
-            return vcs_root
-
-        # Case 2
         project_dir, _venv_path = guess_virtualenv(source_file, venv_root)
         if project_dir:
             return project_dir
+
+        # Case 2
+        vcs_root, _vcs_name = find_vcs_root(source_file)
+        if vcs_root:
+            return vcs_root
 
         # Case 3
         return os.path.dirname(source_file)
 
     def find_file_in_project_root(self, filename):
-        # type: (str) -> Optional[str]
+        # type: (str) -> Optional[AbsPath]
         """Check if `filename` (generally a config file) exists in project
         root, and return the full path if so. Otherwise, return None.
         """
@@ -297,20 +320,25 @@ class LintRunner(object):
         E.g. if there is a company-provided script to run mypy, allow users to
         use that instead of the mypy executable directly.
         """
-        parts = None
-        command_line_option_name = '{}_command'.format(self.name)
-        if hasattr(self.options, command_line_option_name):
-            parts = shlex.split(getattr(self.options, command_line_option_name))
+        user_command_line_option = self._user_command_line_option()
+        if user_command_line_option:
+            parts = shlex.split(user_command_line_option)  # type: Optional[List[str]]
+        else:
+            parts = None
 
         if not parts:
             return parts
 
         substitutions = {
             '%f': filepath,
+            '%r': self.find_project_root(filepath),
         }
         def map_substitution(part):
             # type: (str) -> str
-            return substitutions.get(part, part)
+            for sub, replacement in substitutions.items():
+                if sub in part:
+                    part = part.replace(sub, replacement)
+            return part
 
         return [map_substitution(part) for part in parts]
 
@@ -390,10 +418,22 @@ class LintRunner(object):
                         errors_or_warnings += 1
         return errors_or_warnings, out_lines
 
+    def _user_command_line_option(self):
+        # type: () -> str
+        command_line_option_name = '{}_command'.format(self.name)
+        command_line_option = getattr(self.options, command_line_option_name, "")
+
+        return command_line_option
+
     def _executable_exists(self):
         # type: () -> bool
+        user_cmd_line = self._user_command_line_option()
+        if user_cmd_line:
+            return True
+
         # https://stackoverflow.com/a/6569511/52550
         args = ['/usr/bin/env', 'which', self.command]
+
         try:
             process = Popen(args, stdout=PIPE, stderr=PIPE)
         except Exception as e:                   # pylint: disable=broad-except
@@ -401,9 +441,7 @@ class LintRunner(object):
             return False
         exec_path, _err = process.communicate()
 
-        args = ['[', '-x', exec_path.strip(), ']']
-        retcode = call(args)
-        return retcode == 0
+        return bool(exec_path) and process.returncode == 0
 
     def run(self, filepath):
         # type: (str) -> Tuple[int, List[str]]
@@ -438,6 +476,7 @@ class LintRunner(object):
             print(e)
             return 1, [str(e)]
         try:
+            self.debug('{} command: {}'.format(self.name, ' '.join(args)))
             process = Popen(
                 args, stdout=PIPE, stderr=PIPE, universal_newlines=True,
                 env=dict(os.environ, **self.get_env_vars()))
@@ -726,14 +765,14 @@ class MyPy2Runner(LintRunner):
     # A few of our properties vary if we're in daemon mode:
 
     @property
-    def command(self):
+    def command(self):          # type: ignore
         # type: () -> str
         if self.options.mypy_use_daemon:
             return 'dmypy'
         return 'mypy'
 
     @property
-    def runs_from_project_root(self):
+    def runs_from_project_root(self):  # type: ignore
         # type: () -> bool
         # In daemon mode we run a single command at project
         # root that checks everything.
@@ -763,11 +802,10 @@ class MyPy2Runner(LintRunner):
         under a subdir corresponding to the branch name.
         """
         branch_top = os.path.join(project_root, '.mypy_cache', 'branches')
-        # It doesn't make sense to get a branch name unless we actually found a
-        # VCS root (i.e. a virtualenv match isn't enough)
-        branch = ''                       # type: Optional[str]
-        if find_vcs_name(project_root):
-            branch = get_vcs_branch_name(project_root)
+        branch = ''  # type: Optional[str]
+        vcs_root = find_vcs_root(project_root)[0]
+        if vcs_root:
+            branch = get_vcs_branch_name(vcs_root)
         if branch:
             cache_dir = os.path.join(branch_top, branch)
         else:
@@ -843,8 +881,23 @@ class MyPy2Runner(LintRunner):
         # those out. Since we may be using the --shadow-file option, check for
         # the original filename, not the flycheck-munged one
         original_filename = os.path.basename(filepath).replace('flycheck_', '')
-        if original_filename not in data['filename']:
+        original_filepath = RootRelativePath(os.path.join(os.path.dirname(filepath), original_filename))
+        if str(original_filename) not in data['filename']:
             return {}
+
+        # That wasn't enough, though -- we've just filtered by the basename, so even if
+        # we're trying to check affirm-users/affirm/users/controllers/user.py, we'll get
+        # errors for affirm-users/affirm/users/models/user.py.
+
+        # We may have a partial (root-relative) path in `data`, and potentially an
+        # absolute path in `filepath`. Or some other mixture. Longer-term, we need to have
+        # better typing around all these paths so we know what we're dealing with. For
+        # now, we can ensure that data['filename'] is a substring of filepath (or
+        # vice-versa, just in case?)
+
+        if str(original_filepath) not in data['filename'] and data['filename'] not in str(original_filepath):
+            return {}
+
         data['filename'] = os.path.basename(original_filename)
 
         data['level'] = data['level'].upper()
@@ -966,7 +1019,7 @@ def update_options_locally(options):
                 # Special case config files to contain the full path - assume
                 # the specified path is absolute, or relative to the current
                 # .pycheckers file
-                if 'config_file' in key:
+                if 'config_file' in key or 'rcfile' in key:
                     if not os.path.isabs(value):
                         value = os.path.join(os.path.dirname(config_file_path), value)
                 # Allow for extending, rather than replacing, ignore codes
@@ -1179,8 +1232,8 @@ def main():
     checker_names = [checker.strip() for checker in checkers.split(',')]
     try:
         [RUNNERS[checker_name] for checker_name in checker_names]
-    except KeyError:
-        croak(("Unknown checker {}".format(checker_name),  # pylint: disable=used-before-assignment
+    except KeyError as e:
+        croak(("Unknown checker: {}".format(e),  # pylint: disable=used-before-assignment
                "Expected one of %s" % ', '.join(RUNNERS.keys())),
               filename=options.file)
 

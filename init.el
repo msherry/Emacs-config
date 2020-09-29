@@ -627,7 +627,7 @@ http://blogs.fluidinfo.com/terry/2011/11/10/emacs-buffer-mode-histogram/"
 
 ;;; Misc
 
-(defvar msherry-odin "vegas")
+(defvar msherry-odin "joaqui")
 (defvar msherry-raven "raven-periwinkle")
 
 (defun msherry/open-this-file-other-host (host pathspec)
@@ -709,7 +709,7 @@ http://blogs.fluidinfo.com/terry/2011/11/10/emacs-buffer-mode-histogram/"
                     " ")))
     (shell-command (format
                     command
-                    (buffer-file-name)))))
+                    (shell-quote-argument (buffer-file-name))))))
 
 (defun activate-monolith-venv ()
   "Activate the monolith's venv"

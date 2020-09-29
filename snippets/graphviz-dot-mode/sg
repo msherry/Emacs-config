@@ -3,9 +3,9 @@
 # contributor: Marc Sherry <msherry@gmail.com>
 # --
 subgraph "cluster_$1" {
-         label="$2"
+         label="$1"
          style="filled"
-         node [style=filled,color=white]
+         node [style=filled,fillcolor=white]
 
          $0
 }
