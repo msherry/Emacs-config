@@ -30,8 +30,11 @@
 
 (defvar mirth-base-url "https://github.com/${organization}/${repo}/blob/${branch}/${file}#L${lineno}"
   "The base URL to use for linking to code snippets using `mirth'.")
+(defvar mirth-base-url-multiline "https://github.com/${organization}/${repo}/blob/${branch}/${file}#L${lineno1}-L${lineno2}"
+  "The base URL to use for linking to code snippets using `mirth', for multi-line snippets")
 ;;; Any string value should be safe enough -- don't prompt for confirmation.
 (put 'mirth-base-url 'safe-local-variable 'stringp)
+(put 'mirth-base-url-multiline 'safe-local-variable 'stringp)
 
 
 (defun mirth--shell-command (command)
@@ -67,34 +70,51 @@ Otherwise, return \"master\"."
       (mirth--shell-command (format "git rev-parse --short %s" refname)))))
 
 
-(defun mirth-find-url (pinned)
+(defun mirth-find-url (pinned beg end)
   "Find and return the URL for the current file/line.
 
-Uses `mirth-base-url' as the URL to interpolate into.  If PINNED
-is non-nil, return a URL pinned to a specific SHA (current master
-or current branch, depending on the number of prefix args),
-rather than the default branch (usually master)."
+Uses `mirth-base-url'/`mirth-base-url-multiline' as the URL to
+interpolate into.  If PINNED is non-nil, return a URL pinned to a
+specific SHA (current master or current branch, depending on the
+number of prefix args), rather than the default branch (usually
+master).
+
+If the region is active, BEG and END represent points in the
+lines to be linked.  Otherwise, they are ignored."
   (let* ((repo-root (vc-root-dir))
          (file (file-relative-name (buffer-file-name) repo-root))
          (branch (mirth--get-branch pinned))
-         (lineno (number-to-string (line-number-at-pos))))
+         (lineno (number-to-string (line-number-at-pos)))
+         (lineno1 (number-to-string (line-number-at-pos beg)))
+         (lineno2 (number-to-string (line-number-at-pos end))))
     (cl-multiple-value-bind (organization repo) (mirth--get-remote)
       ;; s-lex-format is incompatible with lexical binding, see
       ;; https://github.com/magnars/s.el/issues/57
-      (s-format mirth-base-url 'aget
+      (if (region-active-p)
+          ;; TODO: this duplication is ugly, but it saves us from having to
+          ;; know that Github urls are formatted line #L1-L22 in this
+          ;; function. Can we clean it up?
+          (s-format mirth-base-url-multiline 'aget
                 `((organization . ,organization)
                   (repo . ,repo)
                   (branch . ,branch)
                   (file . ,file)
-                  (lineno . ,lineno))))))
+                  (lineno1 . ,lineno1)
+                  (lineno2 . ,lineno2)))
+        (s-format mirth-base-url 'aget
+                  `((organization . ,organization)
+                    (repo . ,repo)
+                    (branch . ,branch)
+                    (file . ,file)
+                    (lineno . ,lineno)))))))
 
-(defun mirth (&optional arg)
+(defun mirth (&optional arg beg end)
   "Browse a code repository for the current file/line.
 
 With a prefix arg, browse at the current revision, rather than
 master."
-  (interactive "P")
-  (browse-url (mirth-find-url arg)))
+  (interactive "P\nr")
+  (browse-url (mirth-find-url arg beg end)))
 
 
 
