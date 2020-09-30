@@ -691,7 +691,7 @@ http://blogs.fluidinfo.com/terry/2011/11/10/emacs-buffer-mode-histogram/"
          (mapconcat 'identity
                     `("isort"
                       "--combine-as"
-                      "--dont-skip __init__.py" ; why would you skip this?
+                      ;; "--dont-skip __init__.py" ; why would you skip this?
                       "--line-width 100"
                       "--multi-line 3"
                       "--project affirm"
@@ -739,6 +739,8 @@ http://blogs.fluidinfo.com/terry/2011/11/10/emacs-buffer-mode-histogram/"
 
 (setq ghub-use-workaround-for-emacs-bug 'force)
 
+;; https://emacs.stackexchange.com/a/32882/7169
+(pinentry-start)
 
 (provide 'init)
 
