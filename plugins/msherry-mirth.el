@@ -70,7 +70,7 @@ Otherwise, return \"master\"."
       (mirth--shell-command (format "git rev-parse --short %s" refname)))))
 
 
-(defun mirth-find-url (pinned beg end)
+(defun mirth-find-url (pinned)
   "Find and return the URL for the current file/line.
 
 Uses `mirth-base-url'/`mirth-base-url-multiline' as the URL to
@@ -79,14 +79,11 @@ specific SHA (current master or current branch, depending on the
 number of prefix args), rather than the default branch (usually
 master).
 
-If the region is active, BEG and END represent points in the
-lines to be linked.  Otherwise, they are ignored."
+If the region is active, highlight every line in the region."
   (let* ((repo-root (vc-root-dir))
          (file (file-relative-name (buffer-file-name) repo-root))
          (branch (mirth--get-branch pinned))
-         (lineno (number-to-string (line-number-at-pos)))
-         (lineno1 (number-to-string (line-number-at-pos beg)))
-         (lineno2 (number-to-string (line-number-at-pos end))))
+         (lineno (number-to-string (line-number-at-pos))))
     (cl-multiple-value-bind (organization repo) (mirth--get-remote)
       ;; s-lex-format is incompatible with lexical binding, see
       ;; https://github.com/magnars/s.el/issues/57
@@ -99,8 +96,8 @@ lines to be linked.  Otherwise, they are ignored."
                   (repo . ,repo)
                   (branch . ,branch)
                   (file . ,file)
-                  (lineno1 . ,lineno1)
-                  (lineno2 . ,lineno2)))
+                  (lineno1 . ,(number-to-string (line-number-at-pos (region-beginning))))
+                  (lineno2 . ,(number-to-string (line-number-at-pos (region-end))))))
         (s-format mirth-base-url 'aget
                   `((organization . ,organization)
                     (repo . ,repo)
@@ -108,13 +105,13 @@ lines to be linked.  Otherwise, they are ignored."
                     (file . ,file)
                     (lineno . ,lineno)))))))
 
-(defun mirth (&optional arg beg end)
+(defun mirth (&optional arg)
   "Browse a code repository for the current file/line.
 
 With a prefix arg, browse at the current revision, rather than
 master."
-  (interactive "P\nr")
-  (browse-url (mirth-find-url arg beg end)))
+  (interactive "P")
+  (browse-url (mirth-find-url arg)))
 
 
 
