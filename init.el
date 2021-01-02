@@ -742,9 +742,17 @@ http://blogs.fluidinfo.com/terry/2011/11/10/emacs-buffer-mode-histogram/"
 ;; https://emacs.stackexchange.com/a/32882/7169
 (pinentry-start)
 
-(provide 'init)
-
-;;; init.el ends here
+; Ocaml stuff
 ;; ## added by OPAM user-setup for emacs / base ## 56ab50dc8996d2bb95e7856a6eddb17b ## you can edit, but keep this line
 (require 'opam-user-setup "~/.emacs.d/opam-user-setup.el")
 ;; ## end of OPAM user-setup addition for emacs / base ## keep this line
+
+(require 'ocamlformat)
+
+(add-hook 'tuareg-mode-hook (lambda ()
+  (define-key tuareg-mode-map (kbd "C-M-<tab>") #'ocamlformat)
+  (add-hook 'before-save-hook #'ocamlformat-before-save)))
+
+(provide 'init)
+
+;;; init.el ends here

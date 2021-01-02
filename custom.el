@@ -38,6 +38,7 @@
  '(appt-display-interval 5)
  '(appt-message-warning-time 10)
  '(arduino-executable "/Applications/Arduino.app/Contents/MacOS/Arduino")
+ '(auth-sources '("~/.authinfo.gpg" "~/.authinfo" "~/.netrc"))
  '(auto-revert-verbose nil)
  '(custom-safe-themes
    '("8aebf25556399b58091e533e455dd50a6a9cba958cc4ebb0aab175863c25b9a4" default))
@@ -108,6 +109,7 @@
  '(notmuch-search-oldest-first nil)
  '(ns-alternate-modifier 'super)
  '(ns-command-modifier 'meta)
+ '(ocamlformat-enable 'enable-outside-detected-project)
  '(org-agenda-clockreport-parameter-plist '(:link t :maxlevel 3))
  '(org-agenda-custom-commands
    '(("c" "Agenda and all unscheduled/everyday TODO's / unfiled"
