@@ -297,9 +297,7 @@ Train
      (tickscript-series-dbrp . "desktop_client.default")
      (tickscript-series-type . "batch")
      (tickscript-series-name . "medians")))
- '(tickscript-add-extra-graph-options t)
- '(tramp-default-method "ssh")
- '(tramp-syntax 'simplified nil (tramp)))
+ '(tickscript-add-extra-graph-options t))
 
 (provide 'custom)
 ;;; custom.el ends here
