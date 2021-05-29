@@ -648,7 +648,7 @@ http://blogs.fluidinfo.com/terry/2011/11/10/emacs-buffer-mode-histogram/"
 (defun open-this-file-on-raven ()
   "Open the current file (via TRAMP) on raven whose name is given by `msherry-raven'."
   (interactive)
-  (msherry/open-this-file-other-host msherry-raven "/%s:%s%s"))
+  (msherry/open-this-file-other-host msherry-raven "/ssh:%s:%s%s"))
 
 (defun open-this-file-on-odin ()
   "Open the current file (via TRAMP) on an ODIN whose name is given by `msherry-odin'."
@@ -719,6 +719,11 @@ http://blogs.fluidinfo.com/terry/2011/11/10/emacs-buffer-mode-histogram/"
   (interactive)
   (pyvenv-activate "/Users/marcsherry/src/all-the-things/deployable/monolith/src/.venv"))
 
+(defun activate-monolith-venv3 ()
+  "Activate the monolith's venv"
+  (interactive)
+  (pyvenv-activate "/Users/marcsherry/src/all-the-things/deployable/monolith/src/.venv3"))
+
 (defun activate-fraud-venv ()
   "Activate fraud's venv"
   (interactive)
@@ -744,17 +749,6 @@ http://blogs.fluidinfo.com/terry/2011/11/10/emacs-buffer-mode-histogram/"
 
 ;; https://emacs.stackexchange.com/a/32882/7169
 (pinentry-start)
-
-; Ocaml stuff
-;; ## added by OPAM user-setup for emacs / base ## 56ab50dc8996d2bb95e7856a6eddb17b ## you can edit, but keep this line
-(require 'opam-user-setup "~/.emacs.d/opam-user-setup.el")
-;; ## end of OPAM user-setup addition for emacs / base ## keep this line
-
-(require 'ocamlformat)
-
-(add-hook 'tuareg-mode-hook (lambda ()
-  (define-key tuareg-mode-map (kbd "C-M-<tab>") #'ocamlformat)
-  (add-hook 'before-save-hook #'ocamlformat-before-save)))
 
 (provide 'init)
 

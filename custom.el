@@ -40,6 +40,7 @@
  '(arduino-executable "/Applications/Arduino.app/Contents/MacOS/Arduino")
  '(auth-sources '("~/.authinfo.gpg" "~/.authinfo" "~/.netrc"))
  '(auto-revert-verbose nil)
+ '(csv-separators '("	" ","))
  '(custom-safe-themes
    '("8aebf25556399b58091e533e455dd50a6a9cba958cc4ebb0aab175863c25b9a4" default))
  '(dired-bind-jump nil)
@@ -300,8 +301,7 @@ Train
      (tickscript-series-type . "batch")
      (tickscript-series-name . "medians")))
  '(tickscript-add-extra-graph-options t)
- '(tramp-default-method "ssh")
- '(tramp-syntax 'simplified nil (tramp)))
+ '(tramp-default-method "ssh"))
 
 (provide 'custom)
 ;;; custom.el ends here
