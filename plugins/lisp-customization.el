@@ -23,6 +23,15 @@
             (local-set-key (kbd "s-<up>") 'slime-repl-backward-input)
             (local-set-key (kbd "s-<down>") 'slime-repl-forward-input)))
 
+(add-hook 'geiser-repl-mode-hook
+          #'(lambda ()
+            (paredit-mode)
+            (local-set-key (kbd "s-<up>") 'comint-previous-input)
+            (local-set-key (kbd "s-<down>") 'comint-next-input)
+            ;; Unset the default comint fns
+            (local-set-key (kbd "<up>") nil)
+            (local-set-key (kbd "<down>") nil)))
+
 ;; CLdoc
 ;; (dolist (hook '(lisp-mode-hook
 ;;                 slime-repl-mode-hook))
