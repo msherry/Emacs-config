@@ -32,6 +32,7 @@
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(ack-command "ag --ignore tests ")
+ '(ack-defaults-function 'ack-legacy-defaults)
  '(appt-delete-window-function (lambda nil))
  '(appt-disp-window-function 'msherry/appt-disp-window)
  '(appt-display-format 'window)
