@@ -389,6 +389,15 @@
 		       (:authors
 			("Ingo Lohmar" . "i.lohmar@gmail.com"))
 		       (:keywords "abbrev" "convenience" "matching"))])
+ (consult .
+	  [(0 8)
+	   ((emacs
+	     (26 1)))
+	   "Consulting completing-read" tar
+	   ((:url . "https://github.com/minad/consult")
+	    (:maintainer "Daniel Mendler" . "mail@daniel-mendler.de")
+	    (:authors
+	     ("Daniel Mendler and Consult contributors")))])
  (context-coloring .
 		   [(8 1 0)
 		    ((emacs
@@ -514,6 +523,16 @@
 	     ("Phil Sainty" . "psainty@orcon.net.nz"))
 	    (:maintainer "Phil Sainty" . "psainty@orcon.net.nz")
 	    (:url . "https://savannah.nongnu.org/projects/delight"))])
+ (devdocs .
+	  [(0 1)
+	   ((emacs
+	     (27 1)))
+	   "Emacs viewer for DevDocs" tar
+	   ((:url . "https://github.com/astoff/devdocs")
+	    (:maintainer "Augusto Stoffel" . "arstoffel@gmail.com")
+	    (:authors
+	     ("Augusto Stoffel" . "arstoffel@gmail.com"))
+	    (:keywords "help"))])
  (dict-tree .
 	    [(0 16)
 	     ((trie
@@ -673,7 +692,7 @@
 	      (:maintainer "Markus Triska" . "triska@metalevel.at")
 	      (:url . "https://www.metalevel.at/ediprolog/"))])
  (eev .
-      [(20210512)
+      [(20210529)
        ((emacs
 	 (24 4)))
        "Support for e-scripts (eepitch blocks, elisp hyperlinks, etc)" tar
@@ -1099,9 +1118,9 @@
 	   ("Oleh Krehel" . "ohwoeowho@gmail.com"))
 	  (:keywords "bindings"))])
  (hyperbole .
-	    [(7 1 3)
+	    [(7 1 4 -1)
 	     ((emacs
-	       (24 4)))
+	       (27 1)))
 	     "GNU Hyperbole: The Everyday Hypertextual Information Manager" tar
 	     ((:url . "http://www.gnu.org/software/hyperbole")
 	      (:maintainer "Bob Weiner <rsw@gnu.org>, Mats Lidell" . "matsl@gnu.org")
@@ -1374,6 +1393,15 @@
 	 ("Nicolas Petton" . "nicolas@petton.fr"))
 	(:keywords "extensions" "lisp")
 	(:url . "https://elpa.gnu.org/packages/map.html"))])
+ (marginalia .
+	     [(0 6)
+	      ((emacs
+		(26 1)))
+	      "Enrich existing commands with completion annotations" tar
+	      ((:url . "https://github.com/minad/marginalia")
+	       (:maintainer "Omar Antolín Camarena <omar@matem.unam.mx>, Daniel Mendler" . "mail@daniel-mendler.de")
+	       (:authors
+		("Omar Antolín Camarena <omar@matem.unam.mx>, Daniel Mendler" . "mail@daniel-mendler.de")))])
  (markchars .
 	    [(0 2 2)
 	     nil "Mark chars fitting certain characteristics" single
@@ -1784,7 +1812,7 @@
 	   ("Mario Lang" . "mlang@delysid.org"))
 	  (:maintainer "Mario Lang" . "mlang@delysid.org"))])
  (posframe .
-	   [(1 0 2)
+	   [(1 0 3)
 	    ((emacs
 	      (26)))
 	    "Pop a posframe (just a frame) at point" tar
@@ -2400,7 +2428,7 @@
 	  ("Oleh Krehel" . "ohwoeowho@gmail.com"))
 	 (:keywords "convenience"))])
  (tramp .
-	[(2 5 0 4)
+	[(2 5 0 5)
 	 ((emacs
 	   (25 1)))
 	 "Transparent Remote Access, Multiple Protocol" tar
