@@ -44,7 +44,7 @@
  '(csv-separators '("	" ","))
  '(custom-safe-themes
    '("8aebf25556399b58091e533e455dd50a6a9cba958cc4ebb0aab175863c25b9a4" default))
- '(dired-bind-jump nil)
+ '(dired-bind-jump nil t)
  '(display-time-default-load-average nil)
  '(display-time-format "")
  '(display-time-mail-face 'hi-blue)
@@ -278,7 +278,7 @@ Train
  '(org-todo-keyword-faces '(("BLOCKED" . "#586e75") ("IN_QUEUE" . "#586e75")))
  '(org-use-sub-superscripts '{})
  '(package-selected-packages
-   '(ac-geiser ack arduino-mode auctex bazel-mode blacken cargo cider clojure-mode clojure-mode-extra-font-locking common-lisp-snippets diff-hl dockerfile-mode dtrace-script-mode el2markdown elpy emojify ess esup exec-path-from-shell feature-mode find-find-in-project flx-ido flycheck-clojure flycheck-ocaml flycheck-package flycheck-pycheckers flycheck-rust fxrd-mode geiser gitignore-mode go-mode graphviz-dot-mode groovy-mode helm-projectile httpcode ido-completing-read+ ivy jabber jedi json-mode julia-mode kotlin-mode latex-preview-pane magit magithub markdown-preview-mode notmuch oauth2 org-agenda-property org-jira org-mru-clock org-plus-contrib org-pomodoro org-super-agenda ox-gfm package-lint paredit php-mode pinentry projectile protobuf-mode puppet-mode pymacs python-mode racer rainbow-mode rmsbolt rust-mode s sass-mode slime solarized-theme suggest swift-mode tagedit thrift tickscript-mode tuareg virtualenv which-key window-numbering yaml-mode yasnippet-snippets))
+   '(ac-geiser ack arduino-mode auctex bazel-mode blacken cargo cider clojure-mode clojure-mode-extra-font-locking common-lisp-snippets diff-hl dockerfile-mode dtrace-script-mode el2markdown elpy emojify ess esup exec-path-from-shell feature-mode find-find-in-project flx-ido flycheck-clojure flycheck-ocaml flycheck-package flycheck-pycheckers flycheck-rust fxrd-mode geiser gitignore-mode go-mode graphviz-dot-mode groovy-mode helm-projectile httpcode ido-completing-read+ ivy jabber jedi json-mode julia-mode kotlin-mode latex-preview-pane magit magithub markdown-preview-mode notmuch oauth2 org-agenda-property org-jira org-mru-clock org-plus-contrib org-pomodoro org-super-agenda ox-gfm package-lint paredit php-mode pinentry projectile protobuf-mode puppet-mode pymacs python-mode racer rainbow-mode realgud-ipdb rmsbolt rust-mode s sass-mode slime solarized-theme suggest swift-mode tagedit thrift tickscript-mode tuareg virtualenv which-key window-numbering yaml-mode yasnippet-snippets))
  '(projectile-completion-system 'ivy)
  '(projectile-enable-caching t)
  '(projectile-globally-ignored-modes
