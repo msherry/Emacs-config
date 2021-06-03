@@ -348,6 +348,9 @@
 ; Fast jumps to windows
 (window-numbering-mode)
 
+;; Enable elpy for python
+(elpy-enable)
+
 ; Create two windows initially if we have the room. Check both current width
 ; and width from default-frame-alist (if present), since the frame may not have
 ; been resized yet

@@ -151,10 +151,10 @@
        (org-tags-match-list-sublevels t)))
      ("o" "Completed tasks older than 6 months (http://gnuru.org/article/1639/org-mode-find-all-done-items-older-than-2-months)" tags "CLOSED<\"<-6m>\"" nil)
      ("w" "Tasks completed within the past week" tags "CLOSED>=\"<-7d>\"" nil)
-     ("u" "All open \"work\" TODOs (to refile)" tags-todo "WORK+ALLTAGS={\\(:FRAUDENG:$\\)\\|\\(:WORK:$\\)}"
+     ("u" "All open \"work\" TODOs (to refile)" tags-todo "WORK+ALLTAGS={\\(:FRAUDENG::$\\)\\|\\(:WORK::$\\)}"
       ((org-agenda-overriding-header "Untagged open work TODOs"))
       nil)
-     ("U" "All untagged work TODOs (open/closed)" tags "WORK+ALLTAGS={\\(:FRAUDENG:$\\)\\|\\(:WORK:$\\)}"
+     ("U" "All untagged work TODOs (open/closed)" tags "WORK+ALLTAGS={\\(:FRAUDENG::$\\)\\|\\(:WORK::$\\)}"
       ((org-agenda-overriding-header "Untagged work TODOs (open/closed)")))))
  '(org-agenda-files '("~/.emacs.d/org"))
  '(org-agenda-persistent-filter t)
@@ -278,7 +278,7 @@ Train
  '(org-todo-keyword-faces '(("BLOCKED" . "#586e75") ("IN_QUEUE" . "#586e75")))
  '(org-use-sub-superscripts '{})
  '(package-selected-packages
-   '(ac-geiser ack arduino-mode auctex bazel-mode blacken cargo cider clojure-mode clojure-mode-extra-font-locking common-lisp-snippets diff-hl dockerfile-mode dtrace-script-mode el2markdown elpy emojify ess esup exec-path-from-shell feature-mode find-find-in-project flx-ido flycheck-clojure flycheck-ocaml flycheck-package flycheck-pycheckers flycheck-rust fxrd-mode geiser gitignore-mode go-mode graphviz-dot-mode groovy-mode helm-projectile httpcode ido-completing-read+ ivy jabber jedi json-mode julia-mode kotlin-mode latex-preview-pane magit magithub markdown-preview-mode notmuch oauth2 org-agenda-property org-jira org-mru-clock org-plus-contrib org-pomodoro org-super-agenda ox-gfm package-lint paredit php-mode pinentry projectile protobuf-mode puppet-mode pymacs python-mode racer rainbow-mode realgud-ipdb rmsbolt rust-mode s sass-mode slime solarized-theme suggest swift-mode tagedit thrift tickscript-mode tuareg virtualenv which-key window-numbering yaml-mode yasnippet-snippets))
+   '(ac-geiser ack arduino-mode auctex bazel-mode blacken cargo cider clojure-mode clojure-mode-extra-font-locking common-lisp-snippets diff-hl dockerfile-mode dtrace-script-mode el2markdown elpy emojify ess esup exec-path-from-shell feature-mode find-find-in-project flx flx-ido flycheck-clojure flycheck-ocaml flycheck-package flycheck-pycheckers flycheck-rust fxrd-mode geiser gitignore-mode go-mode graphviz-dot-mode groovy-mode helm-projectile httpcode ido-completing-read+ ivy jabber jedi json-mode julia-mode kotlin-mode latex-preview-pane magit magithub markdown-preview-mode notmuch oauth2 org-agenda-property org-jira org-mru-clock org-plus-contrib org-pomodoro org-super-agenda ox-gfm package-lint paredit php-mode pinentry projectile protobuf-mode puppet-mode pymacs python-mode racer rainbow-mode realgud-ipdb rmsbolt rust-mode s sass-mode slime solarized-theme suggest swift-mode tagedit thrift tickscript-mode tuareg virtualenv which-key window-numbering yaml-mode yasnippet-snippets))
  '(projectile-completion-system 'ivy)
  '(projectile-enable-caching t)
  '(projectile-globally-ignored-modes
