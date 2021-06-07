@@ -297,10 +297,15 @@
 ; IBuffer is better than list-buffers
 (global-set-key (kbd "C-x C-b") #'ibuffer)
 
-; Better buffer switching
-(iswitchb-mode t)
+; Use Ivy mode for completion (moving off of iswitchb)
+(ivy-mode t)
 ; Don't prompt when creating scratch buffers
 (setq iswitchb-prompt-newbuffer nil)
+;; Ivy fuzzy matching everywhere (not just on space)
+;; https://oremacs.com/2016/01/06/ivy-flx/
+(setq ivy-re-builders-alist
+      '((ivy-switch-buffer . ivy--regex-plus)
+        (t . ivy--regex-fuzzy)))
 
 ;; ; Trailing newlines are annoying in snippets
 ;; (setq-default mode-require-final-newline nil)
