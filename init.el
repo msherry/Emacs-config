@@ -661,7 +661,7 @@ http://blogs.fluidinfo.com/terry/2011/11/10/emacs-buffer-mode-histogram/"
 (defun open-this-file-on-odin ()
   "Open the current file (via TRAMP) on an ODIN whose name is given by `msherry-odin'."
   (interactive)
-  (msherry/open-this-file-other-host msherry-odin "/%s.odin.aff:/opt/code/frontend/%s%s"))
+  (msherry/open-this-file-other-host msherry-odin "/ssh:%s.odin.aff:/opt/code/frontend/%s%s"))
 
 ;;; Walk down directory hierarchies when processing dir-locals.el so they can
 ;;; nest. From https://emacs.stackexchange.com/a/5537/7169
