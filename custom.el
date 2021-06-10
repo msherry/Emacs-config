@@ -77,6 +77,7 @@
  '(ido-cr+-allow-list '(org-agenda-refile org-refile))
  '(ido-cr+-disable-list
    '(read-file-name-internal read-buffer todo-add-category gnus-emacs-completing-read gnus-iswitchb-completing-read grep-read-files magit-builtin-completing-read ess-completing-read Info-read-node-name tmm-prompt org-tags-completion-function ffap-read-file-or-url ffap-read-file-or-url-internal copy-region-as-kill))
+ '(ivy-use-selectable-prompt t)
  '(jabber-account-list
    '(("msherry@gmail.com"
       (:network-server . "talk.google.com")
