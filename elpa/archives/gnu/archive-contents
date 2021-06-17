@@ -768,7 +768,7 @@
 		     (:keywords "languages" "lisp")
 		     (:url . "https://elpa.gnu.org/packages/elisp-benchmarks.html"))])
  (emms .
-       [(7 2)
+       [(7 4)
 	((cl-lib
 	  (0 5))
 	 (nadvice
@@ -1812,7 +1812,7 @@
 	   ("Mario Lang" . "mlang@delysid.org"))
 	  (:maintainer "Mario Lang" . "mlang@delysid.org"))])
  (posframe .
-	   [(1 0 3)
+	   [(1 0 4)
 	    ((emacs
 	      (26)))
 	    "Pop a posframe (just a frame) at point" tar
@@ -1847,7 +1847,7 @@
 	       ("Scott Andrew Borton" . "scott@pp.htv.fi"))
 	      (:maintainer "John Darrington" . "john@darrington.wattle.id.au"))])
  (pyim .
-       [(3 7 9)
+       [(3 8 1)
 	((emacs
 	  (24 4))
 	 (async
@@ -2455,7 +2455,7 @@
 		("David Gonzalez Gandara" . "dggandara@member.fsf.org"))
 	       (:maintainer "David Gonzalez Gandara" . "dggandara@member.fsf.org"))])
  (transient .
-	    [(0 3 4)
+	    [(0 3 5)
 	     ((emacs
 	       (25 1)))
 	     "Transient commands" tar
