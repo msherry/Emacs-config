@@ -63,6 +63,9 @@
  '(eshell-prompt-function
    '(lambda nil
      (concat
+      (if venv-current-name
+          (concat "(" venv-current-name ") ")
+          "")
       (user-login-name)
       "@"
       (system-name)
