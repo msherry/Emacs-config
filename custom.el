@@ -60,6 +60,21 @@
  '(elpy-rpc-timeout 10)
  '(elpy-test-runner 'elpy-test-nose-runner)
  '(epg-pinentry-mode 'loopback)
+ '(eshell-prompt-function
+   '(lambda nil
+     (concat
+      (user-login-name)
+      "@"
+      (system-name)
+      ":"
+      (abbreviate-file-name
+       (eshell/pwd))
+      (msherry/git-branch)
+      (if
+       (=
+        (user-uid)
+        0)
+       " # " " $ "))))
  '(exec-path-from-shell-variables '("PATH" "MANPATH" "CARGO_HOME" "RUST_SRC_PATH" "GOPATH"))
  '(flycheck-checker-error-threshold nil)
  '(flycheck-display-errors-delay 0.15)

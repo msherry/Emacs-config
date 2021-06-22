@@ -642,6 +642,14 @@ http://blogs.fluidinfo.com/terry/2011/11/10/emacs-buffer-mode-histogram/"
 (defvar msherry-odin "joaqui")
 (defvar msherry-raven "raven-periwinkle")
 
+(defun msherry/git-branch ()
+  "Return the current git branch name."
+  ;; https://emacs.stackexchange.com/a/21432/7169
+  (s-chomp (with-output-to-string
+               (with-current-buffer standard-output
+                 (process-file shell-file-name nil '(t nil) nil shell-command-switch
+                               "git branch 2> /dev/null | sed -e '/^[^*]/d' -e 's/* \\(.*\\)/\\(\\1\\)/'")))))
+
 (defun msherry/open-this-file-other-host (host pathspec)
   "Open the current file (via TRAMP) on the given HOST, using PATHSPEC to construct a remote path."
   (let* ((path (buffer-file-name))
