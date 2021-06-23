@@ -29,9 +29,14 @@
 
 
 (defvar mirth-base-url "https://github.com/${organization}/${repo}/blob/${branch}/${file}#L${lineno}"
-  "The base URL to use for linking to code snippets using `mirth'.")
+  "The base URL to use for linking to code snippets using `mirth'.
+
+Assumes a Github remote.")
+
 (defvar mirth-base-url-multiline "https://github.com/${organization}/${repo}/blob/${branch}/${file}#L${lineno1}-L${lineno2}"
-  "The base URL to use for linking to code snippets using `mirth', for multi-line snippets")
+  "Base URL to use for linking code snippets using `mirth', multi-line version.
+
+Assumes a Github remote.")
 ;;; Any string value should be safe enough -- don't prompt for confirmation.
 (put 'mirth-base-url 'safe-local-variable 'stringp)
 (put 'mirth-base-url-multiline 'safe-local-variable 'stringp)
@@ -52,7 +57,7 @@
       (error "ERROR: Not backed by a github repo"))
     (setq organization (match-string 1 url)
           repo         (match-string 2 url))
-    (values organization repo)))
+    (cl-values organization repo)))
 
 
 (defun mirth--get-branch (&optional pinned)
