@@ -228,7 +228,6 @@
 (setq-default show-trailing-whitespace nil
               fill-column 79            ; default of 72 is too narrow
               save-place t)             ; This didn't used to be buffer-local
-(put 'upcase-region 'disabled nil)
 (fset 'yes-or-no-p 'y-or-n-p)            ; stop forcing me to spell out "yes"
 
 ; Uniquifying
@@ -559,8 +558,10 @@ annotations"
 ))
 
 
-(put 'narrow-to-region 'disabled nil)
 (put 'downcase-region 'disabled nil)
+(put 'list-threads 'disabled nil)
+(put 'narrow-to-region 'disabled nil)
+(put 'upcase-region 'disabled nil)
 
 
 (defun buffer-mode-histogram ()
