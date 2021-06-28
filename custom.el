@@ -279,7 +279,7 @@ Train
  '(org-mobile-files-exclude-regexp "-cal.org$")
  '(org-mobile-force-id-on-agenda-items nil)
  '(org-modules
-   '(org-bbdb org-bibtex org-docview org-gnus org-habit org-info org-irc org-mhe org-mouse org-rmail org-w3m org-notmuch))
+   '(ol-elisp-symbol org-eval org-notify ol-notmuch org-bbdb org-bibtex org-docview org-gnus org-habit org-info org-irc org-mhe org-mouse org-rmail org-w3m))
  '(org-pomodoro-keep-killed-pomodoro-time t)
  '(org-refile-use-outline-path t)
  '(org-src-lang-modes
