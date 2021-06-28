@@ -211,7 +211,8 @@
      (ruby . t)
      (js . t)
      (shell . t)
-     (sql . t)))
+     (sql . t)
+     (scheme . t)))
  '(org-capture-templates
    '(("w" "work TODO" entry
       (file+headline "~/.emacs.d/org/work.org" "Tasks")
