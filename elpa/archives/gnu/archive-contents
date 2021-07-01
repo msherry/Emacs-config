@@ -648,7 +648,7 @@
 	       ("Leo Liu" . "sdl.web@gmail.com"))
 	      (:keywords "killing" "convenience"))])
  (ebdb .
-       [(0 6 23)
+       [(0 6 24)
 	((emacs
 	  (25 1))
 	 (cl-lib
@@ -2151,14 +2151,14 @@
 	(:keywords "sequences")
 	(:url . "http://elpa.gnu.org/packages/seq.html"))])
  (setup .
-	[(0 2 0)
+	[(0 2 1)
 	 ((emacs
 	   (26 1)))
 	 "Helpful Configuration Macro" tar
 	 ((:url . "https://git.sr.ht/~zge/setup")
-	  (:maintainer "Philip K." . "philipk@posteo.net")
+	  (:maintainer "Philip Kaludercic" . "philipk@posteo.net")
 	  (:authors
-	   ("Philip K." . "philipk@posteo.net"))
+	   ("Philip Kaludercic" . "philipk@posteo.net"))
 	  (:keywords "lisp" "local"))])
  (shelisp .
 	  [(0 9 1)
@@ -2428,7 +2428,7 @@
 	  ("Oleh Krehel" . "ohwoeowho@gmail.com"))
 	 (:keywords "convenience"))])
  (tramp .
-	[(2 5 0 5)
+	[(2 5 1)
 	 ((emacs
 	   (25 1)))
 	 "Transparent Remote Access, Multiple Protocol" tar
