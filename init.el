@@ -298,7 +298,12 @@
 (global-set-key (kbd "C-x C-b") #'ibuffer)
 
 ; Use Ivy mode for completion (moving off of iswitchb)
+; https://github.com/abo-abo/swiper
 (ivy-mode t)
+(setq ivy-use-virtual-buffers t)
+(setq enable-recursive-minibuffers t)
+(global-set-key (kbd "M-x") 'counsel-M-x)
+
 ; Don't prompt when creating scratch buffers
 (setq iswitchb-prompt-newbuffer nil)
 ;; Ivy fuzzy matching everywhere (not just on space)
