@@ -39,7 +39,7 @@
   (or (eq (car-safe sound) 'sound)
       (signal 'wrong-type-argument (list sound)))
 
-  (destructuring-bind (&key file data volume device)
+  (cl-destructuring-bind (&key file data volume device)
       (cdr sound)
 
     (and (or data device)
