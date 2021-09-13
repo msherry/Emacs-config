@@ -2,7 +2,9 @@
 
 ;;; Code:
 
+(require 'cl-macs)
 (require 'smtpmail)
+(require 'smtpmail-multi)
 
 (setq message-send-mail-function 'smtpmail-send-it
       smtpmail-stream-type 'starttls
@@ -10,8 +12,14 @@
       smtpmail-smtp-server "smtp.gmail.com"
       smtpmail-smtp-service 587)
 
+(setq smtpmail-multi-default-account (quote affirm))
+(setq message-send-mail-function 'smtpmail-multi-send-it)
+(setq smtpmail-debug-info t)
+(setq smtpmail-debug-verbose t)
+
+
 ;;; Browsing
-(require 'cl)
+(require 'cl-lib)
 (require 'notmuch)
 (require 'url)
 (require 's)
@@ -24,7 +32,7 @@
 
 (defvar msherry-notmuch-new-mail-search-str
   (concat
-   "tag:unread AND (tag:INBOX "
+   "tag:affirm AND tag:unread AND (tag:INBOX "
                     "OR ((tag:flagged OR tag:thread_flagged) "
                          "AND tag:differential.other) "
                     "OR (tag:ts_triage))" ; only include this when on triage
@@ -58,9 +66,14 @@ Offlineimap must:
 
 With a prefix argument, jump to the `notmuch' home screen."
   (interactive "P")
-  ;; TODO: use the saved 'u' search here
   (if arg (notmuch)
-    (notmuch-search msherry-notmuch-new-mail-search-str (default-value 'notmuch-search-oldest-first))))
+    ;; Get the (first) "unread (affirm)" ("u") search from notmuch-saved-searches
+    (let ((inbox-search (notmuch-saved-search-get
+                         (car (cl-loop for search in notmuch-saved-searches
+                                    when (equal "unread (affirm)" (notmuch-saved-search-get search :name))
+                                    collect search))
+                         :query)))
+      (notmuch-search inbox-search (default-value 'notmuch-search-oldest-first)))))
 
 (global-set-key (kbd "C-c m") #'msherry-notmuch-unread)
 
@@ -72,18 +85,18 @@ With a prefix argument, jump to the `notmuch' home screen."
          (current-mode (cond ((derived-mode-p 'notmuch-search-mode) 'search)
                              ((derived-mode-p 'notmuch-show-mode) 'show)))
          ; search and show mode have different ways to tag
-         (tag-fn (ecase current-mode
+         (tag-fn (cl-ecase current-mode
                    ('search #'notmuch-search-tag)
                    ('show #'notmuch-show-tag-message)))
          ; search and show mode have different ways to query tags
-         (tag-query-fn (ecase current-mode
+         (tag-query-fn (cl-ecase current-mode
                          ('search #'notmuch-search-get-tags)
                          ('show #'notmuch-show-get-tags)))
          ; is the tag currently present?
          (tag-present (member tag-name (funcall tag-query-fn)))
          ; show and search mode tagging functions take args raw or in a list,
          ; respectively
-         (tag-changes (funcall (ecase current-mode
+         (tag-changes (funcall (cl-ecase current-mode
                                  ('search #'list)
                                  ('show #'identity))
                                (concat (if tag-present "-" "+") tag-name))))
@@ -121,13 +134,6 @@ With a prefix argument, jump to the `notmuch' home screen."
         "Remove thread from inbox"
         (interactive (notmuch-search-interactive-region))
         (notmuch-search-tag (list "-INBOX" "-differential.other") beg end)
-        ;; TODO: inbox search might include tags other than "INBOX" --
-        ;; e.g. "identity_triage" when on triage. Update these to be unread,
-        ;; but only if they were brought into the inbox search this way -- we
-        ;; don't want to mark regular inbox messages unread when archiving.
-
-        ;; TODO: this untags all messages in the buffer, not just the current thread. Fix it.
-        (notmuch-tag "tag:identity_triage" (list "-unread"))
         (notmuch-refresh-this-buffer)))
 
 ; Mute mail in search mode

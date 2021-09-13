@@ -1,0 +1,10 @@
+# -*- mode: snippet -*-
+# name: recruit
+# key: recruit
+# --
+Hi, ${1:NAME}. Thanks for reaching out! I'm not looking for new opportunities at the moment, but I'd love to stay in touch for the future.
+
+All the best,
+marc
+
+

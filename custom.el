@@ -120,14 +120,13 @@
  '(notmuch-archive-tags '("-INBOX"))
  '(notmuch-crypto-process-mime t)
  '(notmuch-saved-searches
-   '((:name "inbox" :query "tag:INBOX" :key "i")
-     (:name "unread" :query "tag:unread AND tag:INBOX" :key "u")
-     (:name "flagged" :query "tag:flagged" :key "f")
-     (:name "sent" :query "tag:sent" :key "t")
-     (:name "drafts" :query "tag:draft" :key "d")
-     (:name "all mail" :query "*" :key "a")
-     (:name "Identity triage" :query "tag:identity_triage")
-     (:name "Riskeng triage" :query "tag:unread AND tag:riskeng_triage")))
+   '((:name "inbox (affirm)" :query "tag:INBOX AND tag:affirm" :key "i")
+     (:name "unread (affirm)" :query "tag:unread AND tag:INBOX AND tag:affirm" :key "u")
+     (:name "unread (personal)" :query "tag:unread AND tag:INBOX AND tag:personal" :key "p")
+     (:name "flagged (affirm)" :query "tag:flagged AND tag:affirm" :key "f")
+     (:name "sent (affirm)" :query "tag:sent AND tag:affirm" :key "t")
+     (:name "drafts (affirm)" :query "tag:draft AND tag:affirm" :key "d")
+     (:name "all mail (affirm)" :query "tag:affirm" :key "a")))
  '(notmuch-search-oldest-first nil)
  '(ns-alternate-modifier 'super)
  '(ns-command-modifier 'meta)
@@ -302,7 +301,7 @@ Train
  '(org-todo-keyword-faces '(("BLOCKED" . "#586e75") ("IN_QUEUE" . "#586e75")))
  '(org-use-sub-superscripts '{})
  '(package-selected-packages
-   '(ac-geiser ack arduino-mode auctex bazel-mode blacken cargo cider clojure-mode clojure-mode-extra-font-locking common-lisp-snippets counsel diff-hl dockerfile-mode dtrace-script-mode el2markdown elpy emojify ess esup exec-path-from-shell feature-mode find-find-in-project flx flx-ido flycheck-clojure flycheck-ocaml flycheck-package flycheck-pycheckers flycheck-rust fxrd-mode geiser geiser-guile geiser-racket gitignore-mode go-mode graphviz-dot-mode groovy-mode helm-projectile httpcode ido-completing-read+ ivy jabber jedi json-mode julia-mode kotlin-mode latex-preview-pane magit magithub markdown-preview-mode notmuch oauth2 org-agenda-property org-jira org-mru-clock org-plus-contrib org-pomodoro org-super-agenda ox-gfm package-lint paredit php-mode pinentry projectile protobuf-mode puppet-mode pymacs python-mode racer racket-mode rainbow-mode realgud-ipdb rmsbolt rust-mode s sass-mode slime smex solarized-theme suggest swift-mode tagedit thrift tickscript-mode tuareg virtualenv which-key window-numbering yaml-mode yasnippet-snippets))
+   '(ac-geiser ack arduino-mode auctex bazel-mode blacken cargo cider clojure-mode clojure-mode-extra-font-locking common-lisp-snippets counsel diff-hl dockerfile-mode dtrace-script-mode el2markdown elpy emojify ess esup exec-path-from-shell feature-mode find-find-in-project flx flx-ido flycheck-clojure flycheck-ocaml flycheck-package flycheck-pycheckers flycheck-rust fxrd-mode geiser geiser-guile geiser-racket gitignore-mode go-mode graphviz-dot-mode groovy-mode helm-projectile httpcode ido-completing-read+ ivy jabber jedi json-mode julia-mode kotlin-mode latex-preview-pane magit magithub markdown-preview-mode notmuch oauth2 org-agenda-property org-jira org-mru-clock org-plus-contrib org-pomodoro org-super-agenda ox-gfm package-lint paredit php-mode pinentry projectile protobuf-mode puppet-mode pymacs python-mode racer racket-mode rainbow-mode realgud-ipdb rmsbolt rust-mode s sass-mode slime smex smtpmail-multi solarized-theme suggest swift-mode tagedit thrift tickscript-mode tuareg virtualenv which-key window-numbering yaml-mode yasnippet-snippets))
  '(projectile-completion-system 'ivy)
  '(projectile-enable-caching t)
  '(projectile-globally-ignored-modes
@@ -327,6 +326,12 @@ Train
      (tickscript-series-dbrp . "desktop_client.default")
      (tickscript-series-type . "batch")
      (tickscript-series-name . "medians")))
+ '(smtpmail-multi-accounts
+   '((affirm "marc.sherry@affirm.com" "smtp.gmail.com" 587 header starttls nil nil nil)
+     (personal "msherry@gmail.com" "smtp.gmail.com" 587 header starttls nil nil nil)))
+ '(smtpmail-multi-associations
+   '(("marc.sherry@affirm.com" affirm)
+     ("msherry@gmail.com" personal)))
  '(tickscript-add-extra-graph-options t)
  '(tramp-default-method "ssh"))
 
