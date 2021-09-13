@@ -9,14 +9,14 @@
 (autoload 'jedi:setup "jedi" nil t)
 
 (add-hook 'python-mode-hook
-          '(lambda ()
+          #'(lambda ()
             (setq jedi:setup-keys t)
             (jedi-setup-venv)
             (jedi:setup)
             (setq jedi:complete-on-dot t)
             (setq jedi:tooltip-method nil)
             (define-key jedi-mode-map (kbd "C-c .") nil)
-            (elpy-mode)
+            (elpy-mode -1)  ;; currently broken
             (define-key elpy-mode-map (kbd "<M-left>") nil)
             (define-key elpy-mode-map (kbd "<M-right>") nil)
             ;; (local-set-key (kbd "C-c .") 'flymake-goto-next-error)
