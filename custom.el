@@ -122,6 +122,9 @@
                 (shell-quote-argument msherry-email-update-file-path))))))
  '(notmuch-archive-tags '("-INBOX"))
  '(notmuch-crypto-process-mime t)
+ '(notmuch-fcc-dirs
+   '(("marc.sherry@affirm.com" . "marc.sherry@affirm.com/sent")
+     ("msherry@gmail.com" . "msherry@gmail.com/sent")))
  '(notmuch-saved-searches
    '((:name "inbox (affirm)" :query "tag:INBOX AND tag:affirm" :key "i")
      (:name "unread (affirm)" :query "tag:unread AND tag:INBOX AND tag:affirm" :key "u")

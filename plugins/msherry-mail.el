@@ -25,7 +25,6 @@
 (require 's)
 
 (setq mm-text-html-renderer 'w3m)
-(setq notmuch-fcc-dirs nil)             ; Gmail saves sent mails by itself
 
 (defvar msherry-email-update-file-path "/tmp/offlineimap_sync_required"
   "Touch this file to force the external offlineimap-runner.sh to resync.")
