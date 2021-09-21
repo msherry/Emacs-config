@@ -30,13 +30,9 @@
   "Touch this file to force the external offlineimap-runner.sh to resync.")
 
 (defvar msherry-notmuch-new-mail-search-str
-  (concat
-   "tag:affirm AND tag:unread AND (tag:INBOX "
-                    "OR ((tag:flagged OR tag:thread_flagged) "
-                         "AND tag:differential.other) "
-                    "OR (tag:ts_triage))" ; only include this when on triage
-                    )
-  "The default search string used to determine if new mail is present.
+  ;; TODO: replace with (msherry/get-notmuch-saved-search-by-name "unread (affirm)"
+  "tag:affirm AND tag:unread AND tag:INBOX"
+  "The default search string used to see if new mail is present.
 
 
 TODO: it looks like we can remove interesting phab emails from the INBOX and leave them unread.
@@ -60,6 +56,11 @@ Gmail must be set up to:
 Offlineimap must:
 - Run the post-new hook to tag flagged threads with thread_flagged")
 
+(defun msherry/get-notmuch-saved-search-by-name (search-name)
+  (car (cl-loop for search in notmuch-saved-searches
+             when (equal "unread (affirm)" (notmuch-saved-search-get search :name))
+             collect search)))
+
 (defun msherry-notmuch-unread (arg)
   "Jump immediately to unread emails in notmuch.
 
@@ -68,9 +69,7 @@ With a prefix argument, jump to the `notmuch' home screen."
   (if arg (notmuch)
     ;; Get the (first) "unread (affirm)" ("u") search from notmuch-saved-searches
     (let ((inbox-search (notmuch-saved-search-get
-                         (car (cl-loop for search in notmuch-saved-searches
-                                    when (equal "unread (affirm)" (notmuch-saved-search-get search :name))
-                                    collect search))
+                         (msherry/get-notmuch-saved-search-by-name "unread (affirm)")
                          :query)))
       (notmuch-search inbox-search (default-value 'notmuch-search-oldest-first)))))
 
@@ -246,6 +245,18 @@ https://gist.github.com/dbp/9627194"
 (advice-add 'notmuch-search-archive-thread
             :after #'msherry-notmuch-redisplay-search-with-highlight)
 
+;; https://www.reddit.com/r/emacs/comments/gx6bps/notmuch_in_emacs_customize_timezone_for_date/ftdtz3h/
+(defun notmuch-show/format-date (&rest args)
+  "Fix up dates to be in the correct time zone"
+  (let* ((args (car args))
+         (date (plist-get (nth 0 args) :Date))
+         (parsed-date (parse-time-string date))
+         (fmt-date (format-time-string
+                    "%a, %d %b %Y %H:%M:%S %z"
+                    (apply #'encode-time (parse-time-string date)))))
+    (plist-put (nth 0 args) :Date fmt-date)
+    args))
+
 ;;; Update mail flag more often
 (advice-add 'notmuch-refresh-this-buffer :after #'display-time-update)
 
@@ -255,6 +266,10 @@ https://gist.github.com/dbp/9627194"
 
 ;;; Update the alert timestamp when closing notmuch buffers
 (advice-add #'notmuch-bury-or-kill-this-buffer :after #'msherry-mail-refresh-alert-ts)
+
+
+;;; Update the displayed message headers to be in the correct time zone
+(advice-add #'notmuch-show-insert-headerline :filter-args #'notmuch-show/format-date)
 
 
 (defun msherry-highlight-myself (&rest args)
