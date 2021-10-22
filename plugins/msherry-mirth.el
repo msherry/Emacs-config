@@ -94,7 +94,7 @@ If the region is active, highlight every line in the region."
       ;; https://github.com/magnars/s.el/issues/57
       (if (region-active-p)
           ;; TODO: this duplication is ugly, but it saves us from having to
-          ;; know that Github urls are formatted line #L1-L22 in this
+          ;; know that Github urls are formatted like #L1-L22 in this
           ;; function. Can we clean it up?
           (s-format mirth-base-url-multiline 'aget
                 `((organization . ,organization)

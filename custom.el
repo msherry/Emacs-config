@@ -64,11 +64,11 @@
    '(lambda nil
      (concat
       (if
-          (and
-           (boundp 'venv-current-name)
-           venv-current-name)
-          (concat "(" venv-current-name ") ")
-        "")
+       (and
+        (boundp 'venv-current-name)
+        venv-current-name)
+       (concat "(" venv-current-name ") ")
+       "")
       (user-login-name)
       "@"
       (system-name)
@@ -77,10 +77,10 @@
        (eshell/pwd))
       (msherry/git-branch)
       (if
-          (=
-           (user-uid)
-           0)
-          " # " " $ "))))
+       (=
+        (user-uid)
+        0)
+       " # " " $ "))))
  '(exec-path-from-shell-variables '("PATH" "MANPATH" "CARGO_HOME" "RUST_SRC_PATH" "GOPATH"))
  '(flycheck-checker-error-threshold nil)
  '(flycheck-display-errors-delay 0.15)
@@ -306,7 +306,7 @@ Train
  '(org-todo-keyword-faces '(("BLOCKED" . "#586e75") ("IN_QUEUE" . "#586e75")))
  '(org-use-sub-superscripts '{})
  '(package-selected-packages
-   '(ac-geiser ack arduino-mode auctex bazel-mode blacken cargo cider clojure-mode clojure-mode-extra-font-locking common-lisp-snippets counsel diff-hl dockerfile-mode dtrace-script-mode el2markdown elpy emojify ess esup exec-path-from-shell feature-mode find-find-in-project flx flx-ido flycheck-clojure flycheck-ocaml flycheck-package flycheck-pycheckers flycheck-rust fxrd-mode geiser geiser-guile geiser-racket gitignore-mode go-mode graphviz-dot-mode groovy-mode helm-projectile httpcode ido-completing-read+ ivy jabber jedi json-mode julia-mode kotlin-mode latex-preview-pane magit magithub markdown-preview-mode notmuch oauth2 org-agenda-property org-jira org-mru-clock org-plus-contrib org-pomodoro org-super-agenda ox-gfm package-lint paredit php-mode pinentry projectile protobuf-mode puppet-mode pymacs python-mode racer racket-mode rainbow-mode realgud-ipdb rmsbolt rust-mode s sass-mode slime smex smtpmail-multi solarized-theme suggest swift-mode tagedit thrift tickscript-mode tuareg virtualenv which-key window-numbering yaml-mode yasnippet-snippets))
+   '(ac-geiser ack arduino-mode auctex bazel-mode blacken cargo cider clojure-mode clojure-mode-extra-font-locking common-lisp-snippets counsel diff-hl dockerfile-mode dtrace-script-mode el2markdown elpy emojify ess esup exec-path-from-shell feature-mode find-find-in-project flx flx-ido flycheck-clojure flycheck-ocaml flycheck-package flycheck-pycheckers flycheck-rust fxrd-mode geiser geiser-guile geiser-racket git-modes go-mode graphviz-dot-mode groovy-mode helm-projectile httpcode ido-completing-read+ ivy jabber jedi json-mode julia-mode kotlin-mode latex-preview-pane magit magithub markdown-preview-mode notmuch oauth2 org-agenda-property org-jira org-mru-clock org-plus-contrib org-pomodoro org-super-agenda ox-gfm package-lint paredit php-mode pinentry projectile protobuf-mode puppet-mode pymacs python-mode racer racket-mode rainbow-mode realgud-ipdb rmsbolt rust-mode s sass-mode slime smex smtpmail-multi solarized-theme suggest swift-mode tagedit thrift tickscript-mode tuareg virtualenv which-key window-numbering yaml-mode yasnippet-snippets))
  '(projectile-completion-system 'ivy)
  '(projectile-enable-caching t)
  '(projectile-globally-ignored-modes
