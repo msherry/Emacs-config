@@ -1,2 +1,0 @@
-;;; Generated package description from protobuf-mode.el  -*- no-byte-compile: t -*-
-(define-package "protobuf-mode" "20200619.1742" "major mode for editing protocol buffers." 'nil :commit "dd247c20ad4ba324547fa88d1d0d5ab1e05d08ad" :authors '(("Alexandre Vassalotti" . "alexandre@peadrop.com")) :maintainer '("Alexandre Vassalotti" . "alexandre@peadrop.com") :keywords '("google" "protobuf" "languages"))

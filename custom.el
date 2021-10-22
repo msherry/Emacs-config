@@ -9,22 +9,8 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(button ((t (:foreground "#b58900" :underline t))))
  '(csv-separator-face ((t (:foreground "cornflower blue"))))
- '(diff-added ((t (:background "#002b36" :foreground "green4"))))
- '(diff-refine-added ((t (:inherit diff-refine-change :background "dark green"))))
- '(diff-refine-removed ((t (:inherit diff-refine-change :background "red4"))))
- '(ediff-current-diff-B ((((class color) (min-colors 16)) (:background "#ff00ff" :foreground "blue"))))
- '(ediff-current-diff-C ((t (:background "#888833" :foreground "black"))))
- '(ediff-even-diff-B ((((class color) (min-colors 16)) (:background "Grey" :foreground "black"))))
- '(error ((t (:foreground "Coral"))))
- '(font-lock-constant-face ((t nil)))
- '(font-lock-variable-name-face ((t nil)))
- '(org-agenda-current-time ((t (:inherit org-time-grid :foreground "SpringGreen3"))))
- '(org-habit-ready-face ((t (:background "green4" :foreground "#859900"))))
- '(org-habit-ready-future-face ((t (:background "green4"))))
- '(region ((((class color) (min-colors 24)) (:background "#00ffff"))))
- '(warning ((t (:background "#a4caff")))))
+ '(org-agenda-current-time ((t (:inherit org-time-grid :foreground "SpringGreen3")))))
 
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
