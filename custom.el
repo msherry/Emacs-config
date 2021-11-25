@@ -42,7 +42,6 @@
    '(elpy-module-company elpy-module-eldoc elpy-module-pyvenv elpy-module-sane-defaults))
  '(elpy-project-ignored-directories
    '(".bzr" "CVS" ".git" ".hg" ".svn" ".tox" "build" "dist" ".cask" ".mypy_cache"))
- '(elpy-rpc-python-command "python2")
  '(elpy-rpc-timeout 10)
  '(elpy-test-runner 'elpy-test-nose-runner)
  '(epg-pinentry-mode 'loopback)
@@ -50,11 +49,11 @@
    '(lambda nil
      (concat
       (if
-       (and
-        (boundp 'venv-current-name)
-        venv-current-name)
-       (concat "(" venv-current-name ") ")
-       "")
+          (and
+           (boundp 'venv-current-name)
+           venv-current-name)
+          (concat "(" venv-current-name ") ")
+        "")
       (user-login-name)
       "@"
       (system-name)
@@ -63,10 +62,10 @@
        (eshell/pwd))
       (msherry/git-branch)
       (if
-       (=
-        (user-uid)
-        0)
-       " # " " $ "))))
+          (=
+           (user-uid)
+           0)
+          " # " " $ "))))
  '(exec-path-from-shell-variables '("PATH" "MANPATH" "CARGO_HOME" "RUST_SRC_PATH" "GOPATH"))
  '(flycheck-checker-error-threshold nil)
  '(flycheck-display-errors-delay 0.15)

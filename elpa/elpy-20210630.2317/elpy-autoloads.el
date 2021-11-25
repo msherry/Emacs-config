@@ -17,13 +17,16 @@ Enable Elpy in all future Python buffers.
 (autoload 'elpy-mode "elpy" "\
 Minor mode in Python buffers for the Emacs Lisp Python Environment.
 
-If called interactively, toggle `Elpy mode'.  If the prefix
-argument is positive, enable the mode, and if it is zero or
-negative, disable the mode.
+This is a minor mode.  If called interactively, toggle the `Elpy
+mode' mode.  If the prefix argument is positive, enable the mode,
+and if it is zero or negative, disable the mode.
 
 If called from Lisp, toggle the mode if ARG is `toggle'.  Enable
 the mode if ARG is nil, omitted, or is a positive number.
 Disable the mode if ARG is a negative number.
+
+To check whether the minor mode is enabled in the current buffer,
+evaluate `elpy-mode'.
 
 The mode's hook is called both when the mode is enabled and when
 it is disabled.
