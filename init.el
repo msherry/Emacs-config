@@ -176,6 +176,8 @@
 (add-to-list 'auto-mode-alist '("\\.pac$" . js2-mode))
 (add-to-list 'auto-mode-alist '("\\.tsx$" . js2-mode))
 
+;; Minor mode associations - depends on auto-minor-mode package
+(add-to-list 'auto-minor-mode-alist '("\\.ino\\'" . arduino-cli-mode))
 
 ;; Indentation settings
 (setq-default indent-tabs-mode nil)     ; indent with spaces instead of tabs
@@ -355,6 +357,14 @@
 ;;           errors)
 ;;   errors)
   )
+
+(with-eval-after-load 'arduino-mode
+  (add-hook 'arduino-mode-hook
+            #'(lambda ()
+                ;; Use compile/verify commands from arduino-cli instead of
+                ;; arduino-mode
+                (local-set-key (kbd "C-c C-c") 'arduino-cli-compile-and-upload)
+                (local-set-key (kbd "C-c C-v") 'arduino-cli-compile))))
 
 ; Fast jumps to windows
 (window-numbering-mode)
