@@ -1,7 +1,7 @@
-(define-package "arduino-mode" "20210907.1455" "Major mode for editing Arduino code"
+(define-package "arduino-mode" "20211112.1223" "Major mode for editing Arduino code"
   '((emacs "25.1")
     (spinner "1.7.3"))
-  :commit "6d2d1122924370ffa17ce337e3b02ecab79d861b" :maintainer
+  :commit "3bc47bd7f75a7ccae409236dab43208ce8d41d51" :maintainer
   '("stardiviner" . "numbchild@gmail.com")
   :keywords
   '("languages" "arduino")

@@ -31,7 +31,6 @@
 ;;
 ;;; Code:
 
-(require 'org)
 (require 'ob)
 (require 'arduino-mode nil t)
 
