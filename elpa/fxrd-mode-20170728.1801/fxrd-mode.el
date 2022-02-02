@@ -51,6 +51,8 @@
 
 ;;; Code:
 
+(require 'cl-macs)
+
 (defgroup fxrd nil
   "Major mode for editing fixed field width files"
   :group 'convenience)
@@ -161,7 +163,7 @@ Returns nil if no hit found."
     (let ((start (nth 0 spec-item))
           (end (nth 1 spec-item)))
       (when (<= start pos end)
-        (return spec-item)))))
+        (cl-return spec-item)))))
 
 (defun get-field-boundaries (&optional field-spec)
   "Find the (absolute) [start, end + 1] position of the field
