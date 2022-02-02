@@ -754,6 +754,11 @@ http://blogs.fluidinfo.com/terry/2011/11/10/emacs-buffer-mode-histogram/"
   (interactive)
   (pyvenv-activate "/Users/marcsherry/src/all-the-things/deployable/fraud/src/.venv"))
 
+(defun activate-fraud-venv3 ()
+  "Activate fraud's venv"
+  (interactive)
+  (pyvenv-activate "/Users/marcsherry/src/all-the-things/deployable/fraud/src/.venv3"))
+
 (defun activate-riskops-venv ()
   "Activate the riskops venv"
   (interactive)
