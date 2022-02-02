@@ -22,13 +22,16 @@ With no argument, the mode is toggled on/off.
 Non-nil argument turns mode on.
 Nil argument turns mode off.
 
-If called interactively, toggle `Org-jira mode'.  If the prefix
-argument is positive, enable the mode, and if it is zero or
-negative, disable the mode.
+This is a minor mode.  If called interactively, toggle the
+`Org-jira mode' mode.  If the prefix argument is positive, enable
+the mode, and if it is zero or negative, disable the mode.
 
 If called from Lisp, toggle the mode if ARG is `toggle'.  Enable
 the mode if ARG is nil, omitted, or is a positive number.
 Disable the mode if ARG is a negative number.
+
+To check whether the minor mode is enabled in the current buffer,
+evaluate `org-jira-mode'.
 
 The mode's hook is called both when the mode is enabled and when
 it is disabled.
