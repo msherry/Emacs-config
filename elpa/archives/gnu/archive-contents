@@ -721,7 +721,7 @@
 	     ("Chong Yidong" . "cyd@gnu.org"))
 	    (:maintainer "Chong Yidong" . "cyd@gnu.org"))])
  (dtache .
-	 [(0 4)
+	 [(0 5)
 	  ((emacs
 	    (27 1)))
 	  "Run and interact with detached shell commands" tar
@@ -730,7 +730,7 @@
 	   (:maintainer "Niklas Eklund" . "niklas.eklund@posteo.net")
 	   (:authors
 	    ("Niklas Eklund" . "niklas.eklund@posteo.net"))
-	   (:commit . "45eeecf2d57369961bbc09539d26a3b522e71cdf"))])
+	   (:commit . "ecf4c57d96eda400d9b2d5cfeaa9244993ae3603"))])
  (dts-mode .
 	   [(0 1 1)
 	    nil "Major mode for Device Tree source files" tar
@@ -1624,7 +1624,7 @@
 		      (:maintainer "Vitalie Spinu" . "spinuvit@gmail.com")
 		      (:url . "https://github.com/vspinu/math-symbol-lists"))])
  (mct .
-      [(0 4 2)
+      [(0 5 0)
        ((emacs
 	 (27 1)))
        "Minibuffer and Completions in Tandem" tar
@@ -1632,7 +1632,7 @@
 	(:maintainer "Protesilaos Stavrou" . "info@protesilaos.com")
 	(:authors
 	 ("Protesilaos Stavrou" . "info@protesilaos.com"))
-	(:commit . "e250562c531578c88f91db7cad1210f56adcf095"))])
+	(:commit . "680d7727216ed05ba58e7d2f04a046d1f27cf3e9"))])
  (memory-usage .
 	       [(0 2)
 		nil "Analyze the memory usage of Emacs in various ways" single
@@ -2567,15 +2567,18 @@
 	    (:authors
 	     ("Phil Sainty" . "psainty@orcon.net.nz")))])
  (soap-client .
-	      [(3 2 0)
-	       ((cl-lib
+	      [(3 2 1)
+	       ((emacs
+		 (24 1))
+		(cl-lib
 		 (0 6 1)))
 	       "Access SOAP web services" tar
 	       ((:url . "https://github.com/alex-hhh/emacs-soap-client")
+		(:keywords "soap" "web-services" "comm" "hypermedia")
 		(:maintainer "Alexandru Harsanyi" . "AlexHarsanyi@gmail.com")
 		(:authors
 		 ("Alexandru Harsanyi" . "AlexHarsanyi@gmail.com"))
-		(:keywords "soap" "web-services" "comm" "hypermedia"))])
+		(:commit . "37eef19fd608ca81acb40f974b8d7bbe7fc27127"))])
  (sokoban .
 	  [(1 4 8)
 	   ((emacs
