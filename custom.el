@@ -24,9 +24,6 @@
  '(appt-display-format 'window)
  '(appt-display-interval 5)
  '(appt-message-warning-time 10)
- '(arduino-cli-default-fqbn "arduino:avr:uno")
- '(arduino-cli-verify t)
- '(arduino-cli-warnings t)
  '(arduino-executable "/Applications/Arduino.app/Contents/MacOS/Arduino")
  '(auth-sources '("~/.authinfo.gpg" "~/.authinfo" "~/.netrc"))
  '(auto-revert-verbose nil)
@@ -52,11 +49,11 @@
    '(lambda nil
      (concat
       (if
-          (and
-           (boundp 'venv-current-name)
-           venv-current-name)
-          (concat "(" venv-current-name ") ")
-        "")
+       (and
+        (boundp 'venv-current-name)
+        venv-current-name)
+       (concat "(" venv-current-name ") ")
+       "")
       (user-login-name)
       "@"
       (system-name)
@@ -65,10 +62,10 @@
        (eshell/pwd))
       (msherry/git-branch)
       (if
-          (=
-           (user-uid)
-           0)
-          " # " " $ "))))
+       (=
+        (user-uid)
+        0)
+       " # " " $ "))))
  '(exec-path-from-shell-variables '("PATH" "MANPATH" "CARGO_HOME" "RUST_SRC_PATH" "GOPATH"))
  '(flycheck-checker-error-threshold nil)
  '(flycheck-display-errors-delay 0.15)
@@ -96,6 +93,8 @@
    '(jabber-message-wave jabber-message-echo jabber-message-scroll))
  '(jabber-alert-message-wave "/System/Library/Sounds/Bottle.aiff")
  '(jabber-auto-reconnect t)
+ '(jiralib-agile-page-size 500)
+ '(jiralib-url "https://jira.team.affirm.com")
  '(magit-log-arguments '("--graph" "--color" "--decorate" "-n256"))
  '(magit-push-always-verify nil)
  '(magit-section-visibility-indicator nil)
@@ -128,34 +127,34 @@
  '(org-agenda-custom-commands
    '(("c" "Agenda and all unscheduled/everyday TODO's / unfiled"
       ((agenda ""
-               ((org-super-agenda-groups
-                 '((:log t)
-                   (:name "Schedule" :time-grid t)
-                   (:name "Priority" :priority "A")
-                   (:name "Overdue" :deadline past)
-                   (:name "Due today" :deadline today)
-                   (:name "Today" :scheduled today)
-                   (:name "Due soon" :deadline future)
-                   (:name "No deadline" :tag "WORK")))
-                (org-agenda-sorting-strategy
-                 '((agenda habit-down todo-state-down time-up priority-down category-keep)
-                   (todo priority-down category-keep)
-                   (tags priority-down category-keep)
-                   (search category-keep)))))
+        ((org-super-agenda-groups
+          '((:log t)
+            (:name "Schedule" :time-grid t)
+            (:name "Priority" :priority "A")
+            (:name "Overdue" :deadline past)
+            (:name "Due today" :deadline today)
+            (:name "Today" :scheduled today)
+            (:name "Due soon" :deadline future)
+            (:name "No deadline" :tag "WORK")))
+         (org-agenda-sorting-strategy
+          '((agenda habit-down todo-state-down time-up priority-down category-keep)
+            (todo priority-down category-keep)
+            (tags priority-down category-keep)
+            (search category-keep)))))
        (tags "EVERYDAY"
-             ((org-agenda-overriding-header "Every day")
-              (org-agenda-skip-function
-               '(org-agenda-skip-entry-if 'regexp "\\^* .*:EVERYDAY\\|^\\*\\*\\*\\*"))))
+        ((org-agenda-overriding-header "Every day")
+         (org-agenda-skip-function
+          '(org-agenda-skip-entry-if 'regexp "\\^* .*:EVERYDAY\\|^\\*\\*\\*\\*"))))
        (todo ""
-             ((org-agenda-overriding-header "Unscheduled TODOs")
-              (org-agenda-skip-function
-               '(org-agenda-skip-entry-if 'deadline 'scheduled))))
+        ((org-agenda-overriding-header "Unscheduled TODOs")
+         (org-agenda-skip-function
+          '(org-agenda-skip-entry-if 'deadline 'scheduled))))
        (tags "TOREAD"
-             ((org-agenda-overriding-header "To read")
-              (org-agenda-skip-function
-               '(org-agenda-skip-entry-if 'regexp "\\* To read.*:TOREAD:"))))
+        ((org-agenda-overriding-header "To read")
+         (org-agenda-skip-function
+          '(org-agenda-skip-entry-if 'regexp "\\* To read.*:TOREAD:"))))
        (tags "REFILE"
-             ((org-agenda-overriding-header "To refile"))))
+        ((org-agenda-overriding-header "To refile"))))
       nil)
      ("N" "Notes" tags "NOTE"
       ((org-agenda-overriding-header "Notes")
@@ -171,7 +170,7 @@
       #("WORK+ALLTAGS={\\(:FRAUDENG::$\\)\\|\\(:WORK::$\\)}" 13 45
         (regexp t))
       ((org-agenda-overriding-header "Untagged work TODOs (open/closed)")))))
- '(org-agenda-files '("~/.emacs.d/org"))
+ '(org-agenda-files '("~/.emacs.d/org" "~/.emacs.d/org/org-jira"))
  '(org-agenda-persistent-filter t)
  '(org-agenda-prefix-format
    '((agenda . " %i %-12:c%?-12t% s")
@@ -266,6 +265,10 @@ Train
  '(org-habit-show-habits-only-for-today nil)
  '(org-image-actual-width '(300))
  '(org-indirect-buffer-display 'current-window)
+ '(org-jira-jira-status-to-org-keyword-alist
+   '(("In Progress" . "IN_PROGRESS")
+     ("In Review" . "IN_PROGRESS")
+     ("Ready For Deploy" . "IN_QUEUE")))
  '(org-list-allow-alphabetical t)
  '(org-log-done 'time)
  '(org-mobile-agendas '("c"))
@@ -294,7 +297,7 @@ Train
  '(org-todo-keyword-faces '(("BLOCKED" . "#586e75") ("IN_QUEUE" . "#586e75")))
  '(org-use-sub-superscripts '{})
  '(package-selected-packages
-   '(ac-geiser ack arduino-mode auctex bazel-mode blacken cargo cider clojure-mode clojure-mode-extra-font-locking common-lisp-snippets counsel diff-hl dockerfile-mode dtrace-script-mode el2markdown elpy emojify ess esup exec-path-from-shell feature-mode find-find-in-project flx flx-ido flycheck-clojure flycheck-ocaml flycheck-package flycheck-pycheckers flycheck-rust fxrd-mode geiser geiser-guile geiser-racket git-modes go-mode graphviz-dot-mode groovy-mode helm-projectile httpcode ido-completing-read+ ivy jabber jedi json-mode julia-mode kotlin-mode latex-preview-pane magit magithub markdown-preview-mode notmuch oauth2 org org-agenda-property org-jira org-mru-clock org-plus-contrib org-pomodoro org-super-agenda ox-gfm package-lint paredit php-mode pinentry projectile protobuf-mode puppet-mode pymacs python-mode racer racket-mode rainbow-mode realgud-ipdb rmsbolt rust-mode s sass-mode slime smex smtpmail-multi solarized-theme suggest swift-mode tagedit thrift tickscript-mode tuareg virtualenv which-key window-numbering yaml-mode yasnippet-snippets))
+   '(ac-geiser ack arduino-cli-mode arduino-mode auctex auto-minor-mode bazel-mode blacken cargo cider clojure-mode clojure-mode-extra-font-locking common-lisp-snippets counsel diff-hl dockerfile-mode dtrace-script-mode el2markdown elpy emojify ess esup exec-path-from-shell feature-mode find-find-in-project flx flx-ido flycheck-clojure flycheck-ocaml flycheck-package flycheck-pycheckers flycheck-rust fxrd-mode geiser geiser-guile geiser-racket git-modes go-mode graphviz-dot-mode groovy-mode helm-projectile httpcode ido-completing-read+ ivy jabber jedi json-mode julia-mode kotlin-mode latex-preview-pane magit magithub markdown-preview-mode notmuch oauth2 org org-agenda-property org-jira org-mru-clock org-plus-contrib org-pomodoro org-super-agenda ox-gfm package-lint paredit php-mode pinentry protobuf-mode puppet-mode pymacs python-mode racer racket-mode rainbow-mode realgud-ipdb rmsbolt rust-mode s sass-mode slime smex smtpmail-multi solarized-theme suggest swift-mode tagedit thrift tickscript-mode tuareg virtualenv which-key window-numbering yaml-mode yasnippet-snippets))
  '(projectile-completion-system 'ivy)
  '(projectile-enable-caching t)
  '(projectile-globally-ignored-modes
@@ -303,7 +306,9 @@ Train
  '(racer-rust-src-path nil)
  '(rust-format-on-save t)
  '(safe-local-variable-values
-   '((eval org-jira-mode t)
+   '((arduino-cli-default-fqbn . "arduino:avr:uno")
+     (arduino-cli-default-port . "/dev/cu.usbmodem1421")
+     (eval org-jira-mode t)
      (jiralib-url . "https://jira.team.affirm.com")
      (jedi:environment-root . "/Users/marcsherry/src/all-the-things/deployable/monolith/src/.venv")
      (rust--format-args quote
@@ -326,7 +331,8 @@ Train
    '(("marc.sherry@affirm.com" affirm)
      ("msherry@gmail.com" personal)))
  '(tickscript-add-extra-graph-options t)
- '(tramp-default-method "ssh"))
+ '(tramp-default-method "ssh")
+ '(tramp-syntax 'simplified nil (tramp)))
 
 (provide 'custom)
 ;;; custom.el ends here

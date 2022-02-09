@@ -774,6 +774,9 @@ http://blogs.fluidinfo.com/terry/2011/11/10/emacs-buffer-mode-histogram/"
   (interactive)
   (pyvenv-activate "/Users/marcsherry/src/risk-ops/riskops/.venv"))
 
+(defun msherry/set-jira-token (token)
+  ;; Should prefer using a personal access token
+  (setq jiralib-token `("Cookie" . ,token)))
 
 (defun urldecode-region (start end)
   (interactive "r")
