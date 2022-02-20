@@ -6,7 +6,7 @@
 ;; Keywords: languages, arduino
 ;; Package-Requires: ((emacs "25.1") (spinner "1.7.3"))
 ;; Package-Version: 1.3.0
-;; homepage: https://github.com/stardiviner/arduino-mode
+;; homepage: https://repo.or.cz/arduino-mode.git
 
 ;; This file is free software; you can redistribute it and/or modify
 ;; it under the terms of the GNU General Public License as published by

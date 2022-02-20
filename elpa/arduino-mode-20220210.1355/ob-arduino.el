@@ -4,7 +4,7 @@
 ;; Package-Requires: ((emacs "24.4") (org "24.1"))
 ;; Package-Version: 1.0
 ;; Keywords: arduino org babel
-;; homepage: https://github.com/stardiviner/arduino-mode
+;; homepage: https://repo.or.cz/arduino-mode.git
 ;;
 ;; You should have received a copy of the GNU General Public License
 ;; along with GNU Emacs.  If not, see <https://www.gnu.org/licenses/>.
@@ -32,7 +32,6 @@
 ;;; Code:
 
 (require 'ob)
-(require 'arduino-mode nil t)
 
 (defgroup ob-arduino nil
   "org-mode blocks for Arduino."
