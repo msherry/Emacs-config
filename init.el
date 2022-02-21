@@ -819,38 +819,34 @@ command, and restart the serial process."
         (let ((window (get-buffer-window serial-buf))
               (serial-proc (get-buffer-process serial-buf)))
           (if serial-proc
-              (progn
-                ;; Buffer exists and has active serial process
-                (let ((serial-args (process-contact serial-proc t)))
-                  (kill-buffer serial-buf)
-                  (let* ((compilation-buffer (apply orig args)))
-                    (with-current-buffer compilation-buffer
-                      (add-hook
-                       (make-local-variable 'compilation-finish-functions)
-                       #'(lambda (buf msg)
-                           ; Give the arduino time to boot, to avoid crashing
-                           ; the host
-                           (sleep-for 2)
-                           (let* ((process (apply #'make-serial-process serial-args))
-                                  (buffer (process-buffer process)))
-                             ;; Copied from serial-term
-                             (with-current-buffer buffer
-                               (term-mode)
-                               (term-char-mode)
-                               (goto-char (point-max))
-                               (set-marker (process-mark process) (point))
-                               (set-process-filter process #'term-emulate-terminal)
-                               (set-process-sentinel process #'term-sentinel))
-                             (set-window-buffer window buffer)))))
-                    compilation-buffer)))
+              (let ((serial-args (process-contact serial-proc t)))
+                (kill-buffer serial-buf)
+                (let ((compilation-buffer (apply orig args)))
+                  (with-current-buffer compilation-buffer
+                    (add-hook
+                     (make-local-variable 'compilation-finish-functions)
+                     #'(lambda (buf msg)
+                         ;; Give the arduino time to boot, to avoid crashing
+                         ;; the host
+                         (sleep-for 2)
+                         (let* ((process (apply #'make-serial-process serial-args))
+                                (buffer (process-buffer process)))
+                           ;; Copied from serial-term
+                           (with-current-buffer buffer
+                             (term-mode)
+                             (term-char-mode)
+                             (goto-char (point-max))
+                             (set-marker (process-mark process) (point))
+                             (set-process-filter process #'term-emulate-terminal)
+                             (set-process-sentinel process #'term-sentinel))
+                           (set-window-buffer window buffer)))))
+                  compilation-buffer))
               (progn
                 ;; Buffer exists, but process already exited
                 (kill-buffer serial-buf)
                 (apply orig args))))
         ;; no serial buffer, call original func
-        (progn
-          ;; No buffer exists
-          (apply orig args)))))
+        (apply orig args))))
 
 (with-eval-after-load 'arduino-cli-mode
   (advice-add #'arduino-cli-compile-and-upload
