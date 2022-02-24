@@ -79,9 +79,6 @@
              '("elpy" . "http://jorgenschaefer.github.io/packages/"))
 (add-to-list 'package-archives
              '("non-gnu" . "https://elpa.nongnu.org/nongnu/") t)
-;; Slated to be deprecated
-(add-to-list 'package-archives
-             '("org" . "https://orgmode.org/elpa/") t)
 ;; Marmalade is less up-to-date than melpa and is currently giving certificate
 ;; errors
 ;; (add-to-list 'package-archives
