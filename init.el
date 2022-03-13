@@ -94,7 +94,6 @@
 (require 'erlang-start)
 (require 'flycheck-pycheckers)
 (require 'highlight-beyond-fill-column)
-(require 'jabber-keymap) ; This loads inconsistently on its own
 (require 'magit)
 (require 'paredit)
 (require 'rainbow-mode)
