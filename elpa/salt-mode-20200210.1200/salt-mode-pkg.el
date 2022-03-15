@@ -1,0 +1,2 @@
+;;; Generated package description from salt-mode.el  -*- no-byte-compile: t -*-
+(define-package "salt-mode" "20200210.1200" "Major mode for Salt States" '((emacs "24.4") (yaml-mode "0.0.12") (mmm-mode "0.5.4") (mmm-jinja2 "0.1")) :commit "c46b24e7fdf4a46df5507dc9c533bbc0064a46fa" :authors '(("Ben Hayden" . "hayden767@gmail.com")) :maintainer '("Glynn Forrest" . "me@glynnforrest.com") :keywords '("languages") :url "https://github.com/glynnforrest/salt-mode")
