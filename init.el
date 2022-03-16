@@ -114,6 +114,7 @@
 (require 'lambda)
 (require 'lisp-customization)
 (require 'load-edict)
+(require 'msherry-arduino)
 (require 'msherry-c)
 (require 'msherry-go)
 (require 'msherry-mail)
@@ -197,7 +198,7 @@
                                             ; on Linux
 (blink-cursor-mode 1)
 (show-paren-mode t)
-(ido-ubiquitous-mode 1)
+; (ido-ubiquitous-mode 1)
 (global-emojify-mode)
 (which-key-mode)
 
@@ -789,64 +790,6 @@ http://blogs.fluidinfo.com/terry/2011/11/10/emacs-buffer-mode-histogram/"
 
 ;; https://emacs.stackexchange.com/a/32882/7169
 (pinentry-start)
-
-;; Arduino compilation hints
-
-(defun msherry/get-serial-buffer ()
-  "Find an active serial buffer."
-  (car
-   (seq-filter
-    #'(lambda (buf)
-        (and
-         (string-equal "/dev/"
-                       (ignore-errors (substring (buffer-name buf) 0 5)))
-         (string-equal "term-mode"
-                       (with-current-buffer buf major-mode))))
-    (buffer-list))))
-
-
-(defun msherry/with-suspended-serial-process (orig &rest args)
-  "Advice function for arduino-cli-mode.
-
-If there is an active serial buffer, suspend it, run the advised
-command, and restart the serial process."
-  (let ((serial-buf (msherry/get-serial-buffer)))
-    (if serial-buf
-        (let ((window (get-buffer-window serial-buf))
-              (serial-proc (get-buffer-process serial-buf)))
-          (if serial-proc
-              (let ((serial-args (process-contact serial-proc t)))
-                (kill-buffer serial-buf)
-                (let ((compilation-buffer (apply orig args)))
-                  (with-current-buffer compilation-buffer
-                    (add-hook
-                     (make-local-variable 'compilation-finish-functions)
-                     #'(lambda (buf msg)
-                         ;; Give the arduino time to boot, to avoid crashing
-                         ;; the host
-                         (sleep-for 2)
-                         (let* ((process (apply #'make-serial-process serial-args))
-                                (buffer (process-buffer process)))
-                           ;; Copied from serial-term
-                           (with-current-buffer buffer
-                             (term-mode)
-                             (term-char-mode)
-                             (goto-char (point-max))
-                             (set-marker (process-mark process) (point))
-                             (set-process-filter process #'term-emulate-terminal)
-                             (set-process-sentinel process #'term-sentinel))
-                           (set-window-buffer window buffer)))))
-                  compilation-buffer))
-              (progn
-                ;; Buffer exists, but process already exited
-                (kill-buffer serial-buf)
-                (apply orig args))))
-        ;; no serial buffer, call original func
-        (apply orig args))))
-
-(with-eval-after-load 'arduino-cli-mode
-  (advice-add #'arduino-cli-compile-and-upload
-              :around #'msherry/with-suspended-serial-process))
 
 
 (provide 'init)
