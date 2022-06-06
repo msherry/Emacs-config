@@ -654,8 +654,8 @@ http://blogs.fluidinfo.com/terry/2011/11/10/emacs-buffer-mode-histogram/"
 
 ;;; Misc
 
-(defvar msherry-odin "joaqui")
-(defvar msherry-raven "raven-periwinkle")
+(defvar msherry-odin "cel")
+(defvar msherry-raven "raven-lavender")
 
 (defun msherry/git-branch ()
   "Return the current git branch name."
@@ -686,7 +686,7 @@ http://blogs.fluidinfo.com/terry/2011/11/10/emacs-buffer-mode-histogram/"
 (defun open-this-file-on-odin ()
   "Open the current file (via TRAMP) on an ODIN whose name is given by `msherry-odin'."
   (interactive)
-  (msherry/open-this-file-other-host msherry-odin "/ssh:%s.odin.aff:/opt/code/frontend/%s%s"))
+  (msherry/open-this-file-other-host msherry-odin "/ssh:%s.odin.aff:/opt/code/investigations/%s%s"))
 
 ;;; Walk down directory hierarchies when processing dir-locals.el so they can
 ;;; nest. From https://emacs.stackexchange.com/a/5537/7169
@@ -767,6 +767,11 @@ http://blogs.fluidinfo.com/terry/2011/11/10/emacs-buffer-mode-histogram/"
   (interactive)
   (pyvenv-activate "/Users/marcsherry/src/all-the-things/deployable/fraud/src/.venv3"))
 
+(defun activate-investigatons-venv3 ()
+  "Activate investigations's venv"
+  (interactive)
+  (pyvenv-activate "/Users/marcsherry/src/all-the-things/deployable/investigations/src/.venv3"))
+
 (defun activate-riskops-venv ()
   "Activate the riskops venv"
   (interactive)
@@ -791,7 +796,10 @@ http://blogs.fluidinfo.com/terry/2011/11/10/emacs-buffer-mode-histogram/"
 ;; https://emacs.stackexchange.com/a/32882/7169
 (pinentry-start)
 
-
+;; https://jakemccrary.com/blog/2020/11/14/speeding-up-magit/
+(eval-after-load "magit"
+  (lambda ()
+    (remove-hook 'magit-status-headers-hook 'magit-insert-tags-header)))
 (provide 'init)
 
 ;;; init.el ends here

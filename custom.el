@@ -54,11 +54,11 @@
    '(lambda nil
      (concat
       (if
-       (and
-        (boundp 'venv-current-name)
-        venv-current-name)
-       (concat "(" venv-current-name ") ")
-       "")
+          (and
+           (boundp 'venv-current-name)
+           venv-current-name)
+          (concat "(" venv-current-name ") ")
+        "")
       (user-login-name)
       "@"
       (system-name)
@@ -67,10 +67,10 @@
        (eshell/pwd))
       (msherry/git-branch)
       (if
-       (=
-        (user-uid)
-        0)
-       " # " " $ "))))
+          (=
+           (user-uid)
+           0)
+          " # " " $ "))))
  '(exec-path-from-shell-variables '("PATH" "MANPATH" "CARGO_HOME" "RUST_SRC_PATH" "GOPATH"))
  '(flycheck-checker-error-threshold nil)
  '(flycheck-display-errors-delay 0.15)
@@ -104,6 +104,8 @@
  '(magit-push-always-verify nil)
  '(magit-section-visibility-indicator nil)
  '(magit-tag-arguments '("--annotate"))
+ '(max-lisp-eval-depth 217640)
+ '(max-specpdl-size 36400)
  '(mm-inline-large-images 'resize)
  '(mm-text-html-renderer 'shr)
  '(notmuch-after-tag-hook
@@ -209,7 +211,8 @@
      (js . t)
      (shell . t)
      (sql . t)
-     (scheme . t)))
+     (scheme . t)
+     (R . t)))
  '(org-capture-templates
    '(("w" "work TODO" entry
       (file+headline "~/.emacs.d/org/work.org" "Tasks")
@@ -312,7 +315,8 @@ Train
  '(racer-rust-src-path nil)
  '(rust-format-on-save t)
  '(safe-local-variable-values
-   '((arduino-cli-default-fqbn . "arduino:avr:nano:cpu=atmega328old")
+   '((org-confirm-babel-evaluate)
+     (arduino-cli-default-fqbn . "arduino:avr:nano:cpu=atmega328old")
      (arduino-cli-default-port . "/dev/cu.wchusbserial1410")
      (arduino-cli-default-port . "/dev/cu.wchusbserial1420")
      (arduino-cli-default-port . "/dev/cu.usbmodem1421")
@@ -345,7 +349,7 @@ Train
      ("msherry@gmail.com" personal)))
  '(tickscript-add-extra-graph-options t)
  '(tramp-default-method "ssh")
- '(tramp-syntax 'simplified nil (tramp)))
+ '(tramp-syntax 'default nil (tramp)))
 
 (provide 'custom)
 ;;; custom.el ends here

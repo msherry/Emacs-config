@@ -617,5 +617,19 @@ works as I expect it to when calling this programmatically."
 	 (t (user-error "No link found")))))
     (run-hook-with-args 'org-follow-link-hook)))
 
+(defun msherry/org-babel-result-hide-all ()
+  "Fold all results in the current buffer.
+
+  Fixes a bug in the default version in that only results after point are hidden."
+  (interactive)
+  (org-babel-show-result-all)
+  (save-excursion
+    (goto-char (point-min))             ; the real version should do this
+    (let ((case-fold-search t))
+      (while (re-search-forward org-babel-result-regexp nil t)
+	(save-excursion (goto-char (match-beginning 0))
+			(org-babel-hide-result-toggle-maybe))))))
+
+
 (provide 'org-customization)
 ;;; org-customization.el ends here
