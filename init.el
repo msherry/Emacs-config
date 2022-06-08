@@ -173,6 +173,7 @@
 (add-to-list 'auto-mode-alist '("\\.js$" . js2-mode))
 (add-to-list 'auto-mode-alist '("\\.pac$" . js2-mode))
 (add-to-list 'auto-mode-alist '("\\.tsx$" . js2-mode))
+(add-to-list 'auto-mode-alist '("\\.leek$" . js2-mode))
 
 ;; Minor mode associations - depends on auto-minor-mode package
 (add-to-list 'auto-minor-mode-alist '("\\.ino\\'" . arduino-cli-mode))
