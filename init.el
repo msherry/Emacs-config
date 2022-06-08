@@ -170,10 +170,10 @@
 (add-to-list 'auto-mode-alist '("\\.org$" . org-mode))
 (add-to-list 'auto-mode-alist '("\\.php$" . php-mode))
 (add-to-list 'auto-mode-alist '("\\.pyst$" . python-mode))
-(add-to-list 'auto-mode-alist '("\\.js$" . js2-mode))
-(add-to-list 'auto-mode-alist '("\\.pac$" . js2-mode))
-(add-to-list 'auto-mode-alist '("\\.tsx$" . js2-mode))
-(add-to-list 'auto-mode-alist '("\\.leek$" . js2-mode))
+(add-to-list 'auto-mode-alist '("\\.js$" . javascript-mode))
+(add-to-list 'auto-mode-alist '("\\.pac$" . javascript-mode))
+(add-to-list 'auto-mode-alist '("\\.tsx$" . javascript-mode))
+(add-to-list 'auto-mode-alist '("\\.leek$" . javascript-mode))
 
 ;; Minor mode associations - depends on auto-minor-mode package
 (add-to-list 'auto-minor-mode-alist '("\\.ino\\'" . arduino-cli-mode))
@@ -383,8 +383,9 @@
 
 ;; Mode hooks
 (defvar programming-modes '(actionscript-mode c-mode conf-mode emacs-lisp-mode ess-mode
-                            go-mode java-mode js-mode js2-mode lisp-mode makefile-mode
-                            objc-mode python-mode ruby-mode rust-mode sh-mode tickscript-mode)
+                            go-mode java-mode javascript-mode js-mode js2-mode lisp-mode
+                            makefile-mode objc-mode python-mode ruby-mode rust-mode sh-mode
+                            tickscript-mode)
   "Modes used for programming.")
 
 
