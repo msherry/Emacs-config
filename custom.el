@@ -31,7 +31,7 @@
  '(arduino-executable "/Applications/Arduino.app/Contents/MacOS/Arduino")
  '(auth-sources '("~/.authinfo.gpg" "~/.authinfo" "~/.netrc"))
  '(auto-revert-verbose nil)
- '(csv-separators '("	" ","))
+ '(csv-separators '("\11" ","))
  '(custom-safe-themes
    '("8aebf25556399b58091e533e455dd50a6a9cba958cc4ebb0aab175863c25b9a4" default))
  '(dired-bind-jump nil t)
@@ -216,48 +216,28 @@
  '(org-capture-templates
    '(("w" "work TODO" entry
       (file+headline "~/.emacs.d/org/work.org" "Tasks")
-      "** TODO %?
- %a
- " :empty-lines-after 1 :clock-resume t)
+      "** TODO %?\12 %a\12 " :empty-lines-after 1 :clock-resume t)
      ("p" "personal TODO" entry
       (file+headline "~/.emacs.d/org/personal.org" "Tasks")
-      "** TODO %?
- %a
- " :empty-lines-after 1 :clock-in t :clock-resume t)
+      "** TODO %?\12 %a\12 " :empty-lines-after 1 :clock-in t :clock-resume t)
      ("l" "LLC TODO" entry
       (file+headline "~/.emacs.d/org/llc.org" "Tasks")
-      "** TODO %?
- %a
- " :empty-lines-after 1 :clock-in t :clock-resume t)
+      "** TODO %?\12 %a\12 " :empty-lines-after 1 :clock-in t :clock-resume t)
      ("h" "HOA TODO" entry
       (file+headline "~/.emacs.d/org/hoa.org" "Tasks")
-      "** TODO %?
- %a
- " :empty-lines-after 1 :clock-in t :clock-resume t)
+      "** TODO %?\12 %a\12 " :empty-lines-after 1 :clock-in t :clock-resume t)
      ("n" "note" entry
       (file "~/.emacs.d/org/refile.org")
-      "* %? :NOTE:
- %U
- %a
- " :empty-lines-after 1)
+      "* %? :NOTE:\12 %U\12 %a\12 " :empty-lines-after 1)
      ("m" "Meeting" entry
       (file+olp "~/.emacs.d/org/work.org" "Meetings")
-      "* %? :MEETINGS:
- " :empty-lines-after 1 :clock-in t :clock-resume t)
+      "* %? :MEETINGS:\12 " :empty-lines-after 1 :clock-in t :clock-resume t)
      ("b" "Purchase" entry
       (file+olp "~/.emacs.d/org/personal.org" "Purchases")
       "" :empty-lines-after 1)
      ("t" "(Work) task" entry
       (file+olp "~/.emacs.d/org/work.org" "Tasks")
-      "** TODO %?
-DEADLINE: %t SCHEDULED: %t
-JIRA task
-
-Phab link
-
-Train
-
-%a" :empty-lines-after 1 :clock-in t :clock-resume t)))
+      "** TODO %?\12DEADLINE: %t SCHEDULED: %t\12JIRA task\12\12Phab link\12\12Train\12\12%a" :empty-lines-after 1 :clock-in t :clock-resume t)))
  '(org-clock-out-remove-zero-time-clocks t)
  '(org-clock-persist nil)
  '(org-clock-report-include-clocking-task t)
@@ -306,7 +286,7 @@ Train
  '(org-todo-keyword-faces '(("BLOCKED" . "#586e75") ("IN_QUEUE" . "#586e75")))
  '(org-use-sub-superscripts '{})
  '(package-selected-packages
-   '(ac-geiser ack arduino-cli-mode arduino-mode auctex auto-minor-mode bazel-mode blacken cargo cider clojure-mode clojure-mode-extra-font-locking common-lisp-snippets counsel diff-hl dockerfile-mode dtrace-script-mode el2markdown elpy emojify ess esup exec-path-from-shell feature-mode find-find-in-project flx flx-ido flycheck-clojure flycheck-ocaml flycheck-package flycheck-pycheckers flycheck-rust fxrd-mode geiser geiser-guile geiser-racket git-modes go-mode graphviz-dot-mode groovy-mode helm-projectile httpcode ido-completing-read+ ivy jabber jedi json-mode julia-mode kotlin-mode latex-preview-pane magit magithub markdown-preview-mode notmuch oauth2 org org-agenda-property org-jira org-mru-clock org-plus-contrib org-pomodoro org-super-agenda ox-gfm package-lint paredit php-mode pinentry protobuf-mode puppet-mode pymacs python-mode racer racket-mode rainbow-mode realgud-ipdb rmsbolt rust-mode s salt-mode sass-mode slime smex smtpmail-multi solarized-theme suggest swift-mode tagedit thrift tickscript-mode tuareg virtualenv which-key window-numbering yaml-mode yasnippet-snippets))
+   '(org-contrib ac-geiser ack arduino-cli-mode arduino-mode auctex auto-minor-mode bazel-mode blacken cargo cider clojure-mode clojure-mode-extra-font-locking common-lisp-snippets counsel diff-hl dockerfile-mode dtrace-script-mode el2markdown elpy emojify ess esup exec-path-from-shell feature-mode find-find-in-project flx flx-ido flycheck-clojure flycheck-ocaml flycheck-package flycheck-pycheckers flycheck-rust fxrd-mode geiser geiser-guile geiser-racket git-modes go-mode graphviz-dot-mode groovy-mode helm-projectile httpcode ido-completing-read+ ivy jabber jedi json-mode julia-mode kotlin-mode latex-preview-pane magit magithub markdown-preview-mode notmuch oauth2 org org-agenda-property org-jira org-mru-clock org-pomodoro org-super-agenda ox-gfm package-lint paredit php-mode pinentry protobuf-mode puppet-mode pymacs python-mode racer racket-mode rainbow-mode realgud-ipdb rmsbolt rust-mode s salt-mode sass-mode slime smex smtpmail-multi solarized-theme suggest swift-mode tagedit thrift tickscript-mode tuareg virtualenv which-key window-numbering yaml-mode yasnippet-snippets))
  '(projectile-completion-system 'ivy)
  '(projectile-enable-caching t)
  '(projectile-globally-ignored-modes
