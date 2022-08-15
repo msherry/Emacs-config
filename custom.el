@@ -134,7 +134,9 @@
  '(org-agenda-clockreport-parameter-plist '(:link t :maxlevel 3))
  '(org-agenda-custom-commands
    '(("c" "Agenda and all unscheduled/everyday TODO's / unfiled"
-      ((agenda ""
+      ((tags "REFILE"
+             ((org-agenda-overriding-header "To refile")))
+       (agenda ""
                ((org-super-agenda-groups
                  '((:log t)
                    (:name "Schedule" :time-grid t)
@@ -160,9 +162,7 @@
        (tags "TOREAD"
              ((org-agenda-overriding-header "To read")
               (org-agenda-skip-function
-               '(org-agenda-skip-entry-if 'regexp "\\* To read.*:TOREAD:"))))
-       (tags "REFILE"
-             ((org-agenda-overriding-header "To refile"))))
+               '(org-agenda-skip-entry-if 'regexp "\\* To read.*:TOREAD:")))))
       nil)
      ("N" "Notes" tags "NOTE"
       ((org-agenda-overriding-header "Notes")
@@ -191,7 +191,6 @@
  '(org-agenda-skip-scheduled-if-deadline-is-shown t)
  '(org-agenda-span 'day)
  '(org-agenda-start-on-weekday nil)
- '(org-agenda-sticky t)
  '(org-agenda-time-grid
    '((daily today)
      (800 1000 1200 1400 1600 1800 2000)
