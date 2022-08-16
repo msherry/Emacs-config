@@ -140,12 +140,14 @@
                ((org-super-agenda-groups
                  '((:log t)
                    (:name "Schedule" :time-grid t)
+                   (:name "To refile" :tag "REFILE")
                    (:name "Priority" :priority "A")
                    (:name "Overdue" :deadline past)
                    (:name "Due today" :deadline today)
                    (:name "Today" :scheduled today)
                    (:name "Due soon" :deadline future)
                    (:name "Home" :tag "HOME")
+                   (:name "Motorcycle" :tag "MOTORCYCLE")
                    (:name "No deadline" :tag "WORK")))
                 (org-agenda-sorting-strategy
                  '((agenda habit-down todo-state-down time-up priority-down category-keep)
