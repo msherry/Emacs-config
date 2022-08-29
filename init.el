@@ -805,3 +805,4 @@ http://blogs.fluidinfo.com/terry/2011/11/10/emacs-buffer-mode-histogram/"
 (provide 'init)
 
 ;;; init.el ends here
+(put 'list-timers 'disabled nil)

@@ -31,7 +31,7 @@
  '(arduino-executable "/Applications/Arduino.app/Contents/MacOS/Arduino")
  '(auth-sources '("~/.authinfo.gpg" "~/.authinfo" "~/.netrc"))
  '(auto-revert-verbose nil)
- '(csv-separators '("\11" ","))
+ '(csv-separators '("	" ","))
  '(custom-safe-themes
    '("8aebf25556399b58091e533e455dd50a6a9cba958cc4ebb0aab175863c25b9a4" default))
  '(dired-bind-jump nil t)
@@ -216,28 +216,48 @@
  '(org-capture-templates
    '(("w" "work TODO" entry
       (file+headline "~/.emacs.d/org/work.org" "Tasks")
-      "** TODO %?\12 %a\12 " :empty-lines-after 1 :clock-resume t)
+      "** TODO %?
+ %a
+ " :empty-lines-after 1 :clock-resume t)
      ("p" "personal TODO" entry
       (file+headline "~/.emacs.d/org/personal.org" "Tasks")
-      "** TODO %?\12 %a\12 " :empty-lines-after 1 :clock-in t :clock-resume t)
+      "** TODO %?
+ %a
+ " :empty-lines-after 1 :clock-in t :clock-resume t)
      ("l" "LLC TODO" entry
       (file+headline "~/.emacs.d/org/llc.org" "Tasks")
-      "** TODO %?\12 %a\12 " :empty-lines-after 1 :clock-in t :clock-resume t)
+      "** TODO %?
+ %a
+ " :empty-lines-after 1 :clock-in t :clock-resume t)
      ("h" "HOA TODO" entry
       (file+headline "~/.emacs.d/org/hoa.org" "Tasks")
-      "** TODO %?\12 %a\12 " :empty-lines-after 1 :clock-in t :clock-resume t)
+      "** TODO %?
+ %a
+ " :empty-lines-after 1 :clock-in t :clock-resume t)
      ("n" "note" entry
       (file "~/.emacs.d/org/refile.org")
-      "* %? :NOTE:\12 %U\12 %a\12 " :empty-lines-after 1)
+      "* %? :NOTE:
+ %U
+ %a
+ " :empty-lines-after 1)
      ("m" "Meeting" entry
-      (file+olp "~/.emacs.d/org/work.org" "Meetings")
-      "* %? :MEETINGS:\12 " :empty-lines-after 1 :clock-in t :clock-resume t)
+      (file+olp "~/.emacs.d/org/meetings.org" "Meetings")
+      "* %? :MEETINGS:
+ " :empty-lines-after 1 :clock-in t :clock-resume t)
      ("b" "Purchase" entry
       (file+olp "~/.emacs.d/org/personal.org" "Purchases")
       "" :empty-lines-after 1)
      ("t" "(Work) task" entry
       (file+olp "~/.emacs.d/org/work.org" "Tasks")
-      "** TODO %?\12DEADLINE: %t SCHEDULED: %t\12JIRA task\12\12Phab link\12\12Train\12\12%a" :empty-lines-after 1 :clock-in t :clock-resume t)))
+      "** TODO %?
+DEADLINE: %t SCHEDULED: %t
+JIRA task
+
+Phab link
+
+Train
+
+%a" :empty-lines-after 1 :clock-in t :clock-resume t)))
  '(org-clock-out-remove-zero-time-clocks t)
  '(org-clock-persist nil)
  '(org-clock-report-include-clocking-task t)
