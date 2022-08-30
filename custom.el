@@ -163,21 +163,17 @@
        (tags "TOREAD"
              ((org-agenda-overriding-header "To read")
               (org-agenda-skip-function
-               '(org-agenda-skip-entry-if 'regexp "\\* To read.*:TOREAD:")))))
+               '(org-agenda-skip-entry-if 'regexp "\\* To read.*:TOREAD:\\|.* DONE .*")))))
       nil)
      ("N" "Notes" tags "NOTE"
       ((org-agenda-overriding-header "Notes")
        (org-tags-match-list-sublevels t)))
      ("o" "Completed tasks older than 6 months (http://gnuru.org/article/1639/org-mode-find-all-done-items-older-than-2-months)" tags "CLOSED<\"<-6m>\"" nil)
      ("w" "Tasks completed within the past week" tags "CLOSED>=\"<-7d>\"" nil)
-     ("u" "All open \"work\" TODOs (to refile)" tags-todo
-      #("WORK+ALLTAGS={\\(:FRAUDENG::$\\)\\|\\(:WORK::$\\)}" 13 45
-        (regexp t))
+     ("u" "All open \"work\" TODOs (to refile)" tags-todo "WORK+ALLTAGS={\\(:FRAUDENG::$\\)\\|\\(:WORK::$\\)}"
       ((org-agenda-overriding-header "Untagged open work TODOs"))
       nil)
-     ("U" "All untagged work TODOs (open/closed)" tags
-      #("WORK+ALLTAGS={\\(:FRAUDENG::$\\)\\|\\(:WORK::$\\)}" 13 45
-        (regexp t))
+     ("U" "All untagged work TODOs (open/closed)" tags "WORK+ALLTAGS={\\(:FRAUDENG::$\\)\\|\\(:WORK::$\\)}"
       ((org-agenda-overriding-header "Untagged work TODOs (open/closed)")))))
  '(org-agenda-files '("~/.emacs.d/org" "~/.emacs.d/org/org-jira"))
  '(org-agenda-persistent-filter t)
