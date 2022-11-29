@@ -683,7 +683,7 @@ http://blogs.fluidinfo.com/terry/2011/11/10/emacs-buffer-mode-histogram/"
 (defun open-this-file-on-raven ()
   "Open the current file (via TRAMP) on raven whose name is given by `msherry-raven'."
   (interactive)
-  (msherry/open-this-file-other-host msherry-raven "/ssh:%s:%s%s"))
+  (msherry/open-this-file-other-host msherry-raven "/tsh:%s:%s%s")) ; use tsh instead of ssh here
 
 (defun open-this-file-on-odin ()
   "Open the current file (via TRAMP) on an ODIN whose name is given by `msherry-odin'."
@@ -802,6 +802,29 @@ http://blogs.fluidinfo.com/terry/2011/11/10/emacs-buffer-mode-histogram/"
 (eval-after-load "magit"
   (lambda ()
     (remove-hook 'magit-status-headers-hook 'magit-insert-tags-header)))
+
+;; Add teleport support for tramp
+;; https://github.com/dangirsh/.doom.d
+(defun teleport-tramp-add-method ()
+  "Add teleport tramp method."
+  ;; For debugging remove the old method
+  (setf tramp-methods (assoc-delete-all "tsh" tramp-methods))
+  (add-to-list 'tramp-methods `("tsh"
+                                (tramp-login-program "tsh ssh")
+                                (tramp-login-args
+                                 (("-l" "%u")
+                                  ("%h")))
+                                (tramp-copy-program "tsh")
+                                (tramp-copy-args (("scp")))
+                                (tramp-copy-recursive t)
+                                (tramp-remote-shell       "/bin/sh")
+                                (tramp-remote-shell-args  ("-i" "-c")))))
+
+;;;###autoload
+(eval-after-load 'tramp
+  '(progn
+     (teleport-tramp-add-method)))
+
 (provide 'init)
 
 ;;; init.el ends here

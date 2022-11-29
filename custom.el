@@ -281,6 +281,7 @@
      ("dot" . graphviz-dot)))
  '(org-src-tab-acts-natively t)
  '(org-table-copy-increment nil)
+ '(org-tag-alist '(("WORK" . 119) ("PERSONAL" . 112) ("HOME" . 104)))
  '(org-todo-keyword-faces '(("BLOCKED" . "#586e75") ("IN_QUEUE" . "#586e75")))
  '(org-use-sub-superscripts '{})
  '(package-selected-packages
@@ -327,6 +328,11 @@
      ("msherry@gmail.com" personal)))
  '(tickscript-add-extra-graph-options t)
  '(tramp-default-method "ssh")
+ '(tramp-default-method-alist
+   '((nil "\\`\\(anonymous\\|ftp\\)\\'" "ftp")
+     ("\\`ftp\\." nil "ftp")
+     ("\\`\\(127\\.0\\.0\\.1\\|::1\\|Marc\\.S-MBPro\\|localhost6?\\)\\'" "\\`root\\'" "su")
+     ("raven-\\.*" nil "tsh")))
  '(tramp-syntax 'default nil (tramp)))
 
 (provide 'custom)
