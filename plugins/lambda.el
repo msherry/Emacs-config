@@ -18,8 +18,11 @@ font-lock-mode"
         (font-lock-add-keywords
          nil `(("\\<lambda\\>"
                 (0 (progn (compose-region (match-beginning 0) (match-end 0)
-                                          ,(make-char 'greek-iso8859-7 107))
+                                          ,(make-char 'greek-iso8859-7 107))  ; TODO: where does this value come from
                           nil)))
+               ("\\<epsilon\\>"
+                (0 (progn (compose-region (match-beginning 0) (match-end 0)
+                                          ,(make-char 'greek-iso8859-7 229)))))
                ;; ("\\(\\<for\\>\\).+\\(\\<in\\>\\)"
                ;;  (0 (progn (compose-region (match-beginning 1) (match-end 1)
                ;;                            "∀")
@@ -30,6 +33,7 @@ font-lock-mode"
       (progn
         ;; Requires prettify-symbols-mode, which only became available in 24.4
         (push '("lambda" . ?λ) prettify-symbols-alist)
+        (push '("epsilon" . ?ε) prettify-symbols-alist)
         (prettify-symbols-mode 1))))
 
 (mapc #'(lambda (hook)
