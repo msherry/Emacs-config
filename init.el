@@ -56,7 +56,7 @@
 ;; I edit these files a lot, so put them in registers
 (set-register ?a '(file . "~/src/all-the-things"))
 (set-register ?r '(file . "~/src/risk-ops"))
-(set-register ?s '(file . "~/src/salt"))
+(set-register ?s '(file . "~/src/all-the-things/models/affirm/models/signals/defs.py"))
 (set-register ?z '(file . "~/.emacs.d/init.el"))
 (set-register ?p '(file . "~/.emacs.d/pass.org.gpg"))
 (set-register ?t '(file . "~/TODO.org"))

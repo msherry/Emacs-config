@@ -212,7 +212,12 @@
      (scheme . t)
      (R . t)))
  '(org-capture-templates
-   '(("w" "work TODO" entry
+   '(("h" "home TODO" entry
+      (file+headline "~/.emacs.d/org/home.org" "Tasks")
+      "** TODO %?
+%a
+")
+     ("w" "work TODO" entry
       (file+headline "~/.emacs.d/org/work.org" "Tasks")
       "** TODO %?
  %a
@@ -227,7 +232,7 @@
       "** TODO %?
  %a
  " :empty-lines-after 1 :clock-in t :clock-resume t)
-     ("h" "HOA TODO" entry
+     ("a" "HOA TODO" entry
       (file+headline "~/.emacs.d/org/hoa.org" "Tasks")
       "** TODO %?
  %a
@@ -314,7 +319,8 @@ Train
  '(racer-rust-src-path nil)
  '(rust-format-on-save t)
  '(safe-local-variable-values
-   '((org-confirm-babel-evaluate)
+   '((magit-todos-depth . 1)
+     (org-confirm-babel-evaluate)
      (arduino-cli-default-fqbn . "arduino:avr:nano:cpu=atmega328old")
      (arduino-cli-default-port . "/dev/cu.wchusbserial1410")
      (arduino-cli-default-port . "/dev/cu.wchusbserial1420")
