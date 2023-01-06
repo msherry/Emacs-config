@@ -1,6 +1,6 @@
-(define-package "graphviz-dot-mode" "20220117.1537" "Mode for the dot-language used by graphviz (att)."
+(define-package "graphviz-dot-mode" "20221128.519" "Mode for the dot-language used by graphviz (att)."
   '((emacs "25.0"))
-  :commit "a1b7d66f5c20404a1e59c2ee5e841022622535b8" :maintainer
+  :commit "46afe4825b4a3a5d1a1ac65ec7f585051f756b78" :maintainer
   '("Pieter Pareit" . "pieter.pareit@gmail.com")
   :keywords
   '("mode" "dot" "dot-language" "dotlanguage" "graphviz" "graphs" "att")

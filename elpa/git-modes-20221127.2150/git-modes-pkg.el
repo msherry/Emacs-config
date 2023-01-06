@@ -1,6 +1,6 @@
-(define-package "git-modes" "20211020.2306" "Major modes for editing Git configuration files"
-  '((emacs "24.3"))
-  :commit "62fbf2e5b84ca789e7bc2f87939386023b5ba3df" :authors
+(define-package "git-modes" "20221127.2150" "Major modes for editing Git configuration files"
+  '((emacs "25.1"))
+  :commit "be96ef14fab6a2d76cca3ebf9a15b462a695923d" :authors
   '(("Sebastian Wiesner" . "lunaryorn@gmail.com")
     ("Rüdiger Sonderfeld" . "ruediger@c-plusplus.net")
     ("Jonas Bernoulli" . "jonas@bernoul.li"))

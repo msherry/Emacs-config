@@ -1,4 +1,4 @@
-;;; geiser-guile.el --- Guile's implementation of the geiser protocols  -*- lexical-binding: t; -*-
+;;; geiser-guile.el --- Guile and Geiser talk to each other  -*- lexical-binding: t; -*-
 
 ;; Copyright (C) 2009-2022 Jose Antonio Ortega Ruiz
 ;; Start date: Sun Mar 08, 2009 23:03
@@ -7,9 +7,9 @@
 ;; Maintainer: Jose Antonio Ortega Ruiz (jao@gnu.org)
 ;; Keywords: languages, guile, scheme, geiser
 ;; Homepage: https://gitlab.com/emacs-geiser/guile
-;; Package-Requires: ((emacs "25.1") (geiser "0.21"))
+;; Package-Requires: ((emacs "25.1") (transient "0.3") (geiser "0.28.1"))
 ;; SPDX-License-Identifier: BSD-3-Clause
-;; Version: 0.21.2
+;; Version: 0.28.1
 
 ;; This file is NOT part of GNU Emacs.
 
@@ -25,6 +25,7 @@
 (require 'geiser-syntax)
 (require 'geiser-custom)
 (require 'geiser-repl)
+(require 'geiser-debug)
 (require 'geiser-impl)
 (require 'geiser-base)
 (require 'geiser-eval)
@@ -32,14 +33,17 @@
 (require 'geiser-log)
 (require 'geiser)
 
+(require 'transient)
 (require 'compile)
 (require 'info-look)
 
-(eval-when-compile (require 'cl-lib)
-                   (require 'tramp))
+(eval-when-compile
+  (require 'cl-lib)
+  (require 'tramp)
+  (require 'subr-x))
 
 
-;;; Customization:
+;;; Customization
 
 (defgroup geiser-guile nil
   "Customization for Geiser's Guile flavour."
@@ -62,33 +66,60 @@ good candidate for an entry in your project's .dir-locals.el."
 (geiser-custom--defcustom geiser-guile-init-file "~/.guile-geiser"
   "Initialization file with user code for the Guile REPL.
 If all you want is to load ~/.guile, set
-`geiser-guile-load-init-file-p' instead."
+`geiser-guile-load-init-file' instead."
   :type 'string)
 
-(geiser-custom--defcustom geiser-guile-load-init-file-p nil
+(define-obsolete-variable-alias
+  'geiser-guile-load-init-file-p 'geiser-guile-load-init-file "0.26.2")
+
+(geiser-custom--defcustom geiser-guile-load-init-file nil
   "Whether to load ~/.guile when starting Guile.
 Note that, due to peculiarities in the way Guile loads its init
 file, using `geiser-guile-init-file' is not equivalent to setting
 this variable to t."
   :type 'boolean)
 
-(geiser-custom--defcustom geiser-guile-use-declarative-modules-p nil
+(define-obsolete-variable-alias
+  'geiser-guile-use-declarative-modules-p 'geiser-guile-use-declarative-modules
+  "0.26.2")
+
+(geiser-custom--defcustom geiser-guile-use-declarative-modules nil
   "Whether Guile should use \"declarative\" modules limiting mutability.
 When set to `t', Guile will enforce immutable bindings in
 exported modules."
   :type 'boolean
   :link '(info-link "(guile) Declarative Modules"))
 
-(geiser-custom--defcustom geiser-guile-debug-show-bt-p t
+(geiser-custom--defcustom geiser-guile-debug-backwards-backtrace t
+  "Whether to configure backtraces using the \\='backwards ordering."
+  :type 'boolean)
+
+(geiser-custom--defcustom geiser-guile-debug-terminal-width 999
+  "Maximum number of columns shown in backtraces.
+Normally, you'd want a big value here so that messages are not
+truncated.  Set to a negative value if you prefer that geiser
+does not set it on startup."
+  :type 'integer)
+
+(define-obsolete-variable-alias
+  'geiser-guile-debug-show-bt-p 'geiser-guile-debug-show-bt "0.26.2")
+
+(geiser-custom--defcustom geiser-guile-debug-show-bt t
   "Whether to automatically show a full backtrace when entering the debugger.
 If nil, only the last frame is shown."
   :type 'boolean)
 
-(geiser-custom--defcustom geiser-guile-debug-show-full-bt-p t
+(define-obsolete-variable-alias
+  'geiser-guile-debug-show-full-bt-p 'geiser-guile-debug-show-full-bt "0.26.2")
+
+(geiser-custom--defcustom geiser-guile-debug-show-full-bt t
   "Whether to show full backtraces in the debugger, including local variables."
   :type 'boolean)
 
-(geiser-custom--defcustom geiser-guile-show-debug-help-p t
+(define-obsolete-variable-alias
+  'geiser-guile-show-debug-help-p 'geiser-guile-show-debug-help "0.26.2")
+
+(geiser-custom--defcustom geiser-guile-show-debug-help t
   "Whether to show brief help in the echo area when entering the debugger."
   :type 'boolean)
 
@@ -118,11 +149,18 @@ effect on new REPLs.  For existing ones, use the command
   "Extra keywords highlighted in Guile scheme buffers."
   :type '(repeat string))
 
-(geiser-custom--defcustom geiser-guile-case-sensitive-p t
+(define-obsolete-variable-alias
+  'geiser-guile-case-sensitive-p 'geiser-guile-case-sensitive "0.26.2")
+
+(geiser-custom--defcustom geiser-guile-case-sensitive t
   "Non-nil means keyword highlighting is case-sensitive."
   :type 'boolean)
 
-(geiser-custom--defcustom geiser-guile-manual-lookup-other-window-p nil
+(define-obsolete-variable-alias
+  'geiser-guile-manual-lookup-other-window-p
+  'geiser-guile-manual-lookup-other-window "0.26.2")
+
+(geiser-custom--defcustom geiser-guile-manual-lookup-other-window nil
   "Non-nil means pop up the Info buffer in another window."
   :type 'boolean)
 
@@ -132,7 +170,7 @@ effect on new REPLs.  For existing ones, use the command
   :type '(repeat string))
 
 
-;;; REPL support:
+;;; REPL support
 
 (defun geiser-guile--binary ()
   "Return the name of the Guile binary to execute."
@@ -214,7 +252,7 @@ This function uses `geiser-guile-init-file' if it exists."
         (c-flags (when geiser-guile--conn-address
                    `(,(format "--listen=%s"
                               (geiser-guile--get-connection-address t)))))
-        (q-flags (and (not geiser-guile-load-init-file-p) '("-q"))))
+        (q-flags (and (not geiser-guile-load-init-file) '("-q"))))
     `(,@(and (listp geiser-guile-binary) (cdr geiser-guile-binary))
       ,@q-flags "-L" ,(geiser-guile-ensure-scheme-dir) ,@c-flags
       ,@(apply 'append (mapcar (lambda (p) (list "-L" p))
@@ -233,13 +271,13 @@ This function uses `geiser-guile-init-file' if it exists."
           "\\(\nEntering a new prompt.  Type `,bt' for [^\n]+\\.$\\)"))
 
 
-;;; Evaluation support:
+;;; Evaluation support
 (defsubst geiser-guile--linearize-args (args)
   "Concatenate the list ARGS."
   (mapconcat 'identity args " "))
 
 (defun geiser-guile--debug-cmd (args)
-  (let ((args (if (and geiser-guile-debug-show-full-bt-p
+  (let ((args (if (and geiser-guile-debug-show-full-bt
                        (string= (car args) "backtrace"))
                   '("backtrace" "#:full?" "#t")
                 args)))
@@ -266,7 +304,7 @@ This function uses `geiser-guile-init-file' if it exists."
   "(define-module +\\(([^)]+)\\)")
 
 (defconst geiser-guile--library-re
-  "(library +\\(([^)]+)\\)")
+  "(\\(?:define-\\)?library[[:blank:]\n]+\\(([^)]+)\\)")
 
 (defun geiser-guile--get-module (&optional module)
   "Find current buffer's module using MODULE as a hint."
@@ -347,7 +385,7 @@ This function uses `geiser-guile-init-file' if it exists."
     (and (stringp f) (list f))))
 
 
-;;; Error display
+;;; Error display and debugger
 
 (defun geiser-guile--set-up-error-links ()
   (setq-local compilation-error-regexp-alist
@@ -357,9 +395,69 @@ This function uses `geiser-guile-init-file' if it exists."
   (font-lock-add-keywords nil
                           `((,geiser-guile--path-rx 1 compilation-error-face))))
 
+(defun geiser-guile-debug--send-dbg (thing)
+  (geiser-eval--send/wait (cons :debug (if (listp thing) thing (list thing)))))
+
+(defun geiser-guile-debug--debugger-display (thing ret)
+  (geiser-debug--display-retort (format ",%s" thing)
+                                ret
+                                (geiser-eval--retort-result-str ret nil)))
+
+(defun geiser-guile-debug--send-to-repl (thing)
+  (unless (geiser-debug-active-p) (error "Debugger not active"))
+  (save-window-excursion
+    (with-current-buffer geiser-debug--sender-buffer
+      (when-let (ret (geiser-guile-debug--send-dbg thing))
+        (geiser-guile-debug--debugger-display thing ret)))))
+
+(defun geiser-guile-debug-quit ()
+  "Quit the current debugging session level."
+  (interactive)
+  (geiser-guile-debug--send-to-repl 'quit))
+
+(defun geiser-guile-debug-show-backtrace ()
+  "Quit the current debugging session level."
+  (interactive)
+  (geiser-guile-debug--send-to-repl 'backtrace))
+
+(defun geiser-guile-debug-show-locals ()
+  "Show local variables."
+  (interactive)
+  (geiser-guile-debug--send-to-repl 'locals))
+
+(defun geiser-guile-debug-show-registers ()
+  "Show register values."
+  (interactive)
+  (geiser-guile-debug--send-to-repl 'registers))
+
+(defun geiser-guile-debug-show-error ()
+  "Show error message."
+  (interactive)
+  (geiser-guile-debug--send-to-repl 'error))
+
+(transient-define-prefix geiser-guile--debug-transient ()
+  "Debugging meta-commands."
+  ["Guile debugger"
+   [("n" "Next error" compilation-next-error)
+    ("p" "Previous error" compilation-next-error)
+    ("z" "Scheme buffer" geiser-debug-switch-to-buffer)
+    ("x" "Exit debug level" geiser-guile-debug-quit)]
+   [("b" "Show backtrace" geiser-guile-debug-show-backtrace)
+    ("e" "Show error" geiser-guile-debug-show-error)
+    ("l" "Show locals" geiser-guile-debug-show-locals)
+    ("r" "Show registers" geiser-guile-debug-show-registers)]])
+
+(defun geiser-guile-debug-menu ()
+  "Show available debugging commands, if any."
+  (interactive)
+  (when (and (eq 'guile geiser-impl--implementation) (geiser-debug-active-p))
+    (call-interactively #'geiser-guile--debug-transient)))
+
+(define-key geiser-debug-mode-map "," #'geiser-guile-debug-menu)
+
 (defun geiser-guile--enter-debugger ()
   "Tell Geiser to interact with the debugger."
-  (when geiser-guile-show-debug-help-p
+  (when geiser-guile-show-debug-help
     (message "Debugger active. Press , for commands."))
   nil)
 
@@ -371,7 +469,7 @@ This function uses `geiser-guile-init-file' if it exists."
   (not (zerop (length msg))))
 
 
-;;; Trying to ascertain whether a buffer is Guile Scheme:
+;;; Trying to ascertain whether a buffer is Guile Scheme
 
 (defconst geiser-guile--guess-re
   (format "\\(%s\\|#! *.+\\(/\\| \\)guile\\( *\\\\\\)?\\)"
@@ -492,21 +590,31 @@ it spawn a server thread."
 
 (defun geiser-guile--set-up-declarative-modules ()
   "Set up Guile to (not) use declarative modules.
-See `geiser-guile-use-declarative-modules-p'."
-  (unless geiser-guile-use-declarative-modules-p
+See `geiser-guile-use-declarative-modules'."
+  (unless geiser-guile-use-declarative-modules
     (let ((code '(begin (eval-when (expand) (user-modules-declarative? :f)) 'ok)))
       (geiser-eval--send/wait code))))
+
+(defun geiser-guile--set-up-backtrace ()
+  "Set up Guile's backtrace properties."
+  (when geiser-guile-debug-backwards-backtrace
+    (geiser-eval--send/wait '(debug-enable 'backwards)))
+  (when (> geiser-guile-debug-terminal-width 0)
+    (geiser-eval--send/wait `(begin ((@ (system repl debug) terminal-width)
+                                     ,geiser-guile-debug-terminal-width)
+                                    'ok))))
 
 (defun geiser-guile--startup (remote)
   "Startup function, for a remote connection if REMOTE is t."
   (geiser-guile--set-up-error-links)
-  (let ((geiser-log-verbose-p t)
+  (let ((geiser-log-verbose t)
         (g-load-path (buffer-local-value 'geiser-guile-load-path
                                          (or geiser-repl--last-scm-buffer
                                              (current-buffer)))))
     (when (or geiser-guile--conn-address remote)
       (geiser-guile--set-geiser-load-path))
     (geiser-guile--set-up-declarative-modules)
+    (geiser-guile--set-up-backtrace)
     (geiser-eval--send/wait ",use (geiser emacs)\n'done")
     (dolist (dir g-load-path)
       (let ((dir (expand-file-name dir)))
@@ -543,9 +651,9 @@ See `geiser-guile-use-declarative-modules-p'."
 
 (defun geiser-guile--manual-look-up (id _mod)
   "Look for ID in the Guile manuals."
-  (let ((info-lookup-other-window-flag geiser-guile-manual-lookup-other-window-p))
+  (let ((info-lookup-other-window-flag geiser-guile-manual-lookup-other-window))
     (geiser-guile--info-lookup id)
-    (when geiser-guile-manual-lookup-other-window-p
+    (when geiser-guile-manual-lookup-other-window
       (switch-to-buffer-other-window "*info*"))))
 
 
@@ -571,7 +679,7 @@ See `geiser-guile-use-declarative-modules-p'."
   (external-help geiser-guile--manual-look-up)
   (check-buffer geiser-guile--guess)
   (keywords geiser-guile--keywords)
-  (case-sensitive geiser-guile-case-sensitive-p))
+  (case-sensitive geiser-guile-case-sensitive))
 
 ;;;###autoload
 (geiser-activate-implementation 'guile)

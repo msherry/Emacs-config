@@ -38,9 +38,9 @@ Meta-command used by Geiser to evaluate and compile code."
   (let ((args (syntax->datum args))
         (mod (syntax->datum mod)))
     (if (null? args)
-	(call-with-error-handling
-	 (lambda () (ge:compile form mod)))
-	(let ((proc (eval form this-module)))
+        (call-with-error-handling
+         (lambda () (ge:compile form mod)))
+        (let ((proc (eval form this-module)))
           (ge:eval `(,proc ,@args) mod)))))
 
 (define-meta-command ((geiser-load-file geiser) repl file)

@@ -4,8 +4,8 @@
 
 ;; Author: Bozhidar Batsov
 ;; URL: https://github.com/bbatsov/helm-projectile
-;; Package-Version: 20201217.908
-;; Package-Commit: 58123f14c392021714fc5d23b9f95c7f95ce07f1
+;; Package-Version: 20221215.613
+;; Package-Commit: 35a2111d00c0c0c9d8743280d3f1243bb217118a
 ;; Created: 2011-31-07
 ;; Keywords: project, convenience
 ;; Version: 1.1.0-snapshot
@@ -101,7 +101,8 @@ This needs to be set before loading helm-projectile.el."
     (reverse ret)))
 
 (defun helm-projectile-hack-actions (actions &rest prescription)
-  "Given a Helm action list and a prescription, return a hacked Helm action list, after applying the PRESCRIPTION.
+  "Given a Helm action list and a prescription, return a hacked Helm action list.
+Optionally applies the PRESCRIPTION beforehand.
 
 The Helm action list ACTIONS is of the form:
 
@@ -303,14 +304,14 @@ Previews the contents of a file in a temporary buffer."
                          (set-auto-mode))
                        (font-lock-ensure)
                        (setq inhibit-read-only nil)))
-      (if (and (helm-attr 'previewp)
-               (string= candidate (helm-attr 'current-candidate)))
+      (if (and (helm-get-attr 'previewp)
+               (string= candidate (helm-get-attr 'current-candidate)))
           (progn
             (kill-buffer buf)
-            (helm-attrset 'previewp nil))
+            (helm-set-attr 'previewp nil))
         (preview candidate)
-        (helm-attrset 'previewp t)))
-    (helm-attrset 'current-candidate candidate)))
+        (helm-set-attr 'previewp t)))
+    (helm-set-attr 'current-candidate candidate)))
 
 (defun helm-projectile-find-files-eshell-command-on-file-action (candidate)
   (interactive)
@@ -536,11 +537,14 @@ Meant to be added to `helm-cleanup-hook', from which it removes
   (remove-hook 'helm-after-update-hook #'helm-projectile--move-to-real)
   (remove-hook 'helm-cleanup-hook #'helm-projectile--remove-move-to-real))
 
+(defvar helm-source-projectile-files-list-before-init-hook
+  (lambda ()
+    (add-hook 'helm-after-update-hook #'helm-projectile--move-to-real)
+    (add-hook 'helm-cleanup-hook #'helm-projectile--remove-move-to-real)))
+
 (defvar helm-source-projectile-files-list
   (helm-build-sync-source "Projectile files"
-    :before-init-hook (lambda ()
-                        (add-hook 'helm-after-update-hook #'helm-projectile--move-to-real)
-                        (add-hook 'helm-cleanup-hook #'helm-projectile--remove-move-to-real))
+    :before-init-hook 'helm-source-projectile-files-list-before-init-hook
     :candidates (lambda ()
                   (when (projectile-project-p)
                     (with-helm-current-buffer
@@ -675,11 +679,11 @@ Meant to be added to `helm-cleanup-hook', from which it removes
                          ;; If a new buffer is longer that this value
                          ;; this value will be updated
                          (setq helm-buffer-max-len-mode (cdr result))))))
-   (candidates :initform helm-projectile-buffers-list-cache)
+   (candidates :initform 'helm-projectile-buffers-list-cache)
    (matchplugin :initform nil)
    (match :initform 'helm-buffers-match-function)
    (persistent-action :initform 'helm-buffers-list-persistent-action)
-   (keymap :initform helm-buffer-map)
+   (keymap :initform 'helm-buffer-map)
    (volatile :initform t)
    (persistent-help
     :initform
@@ -733,7 +737,7 @@ See documentation of `helm-grep-default-command' for the format."
     helm-source-projectile-files-list
     helm-source-projectile-projects)
   "Default sources for `helm-projectile'."
-  :type 'list
+  :type '(repeat symbol)
   :group 'helm-projectile)
 
 (defmacro helm-projectile-command (command source prompt &optional not-require-root truncate-lines-var)
@@ -806,8 +810,9 @@ With a prefix ARG invalidates the cache first."
 ;;;###autoload
 (defun helm-projectile-find-other-file (&optional flex-matching)
   "Switch between files with the same name but different extensions using Helm.
-With FLEX-MATCHING, match any file that contains the base name of current file.
-Other file extensions can be customized with the variable `projectile-other-file-alist'."
+With FLEX-MATCHING, match any file that contains the base name of
+current file.  Other file extensions can be customized with the
+variable `projectile-other-file-alist'."
   (interactive "P")
   (let* ((project-root (projectile-project-root))
          (other-files (projectile-get-other-files (buffer-file-name)
@@ -988,14 +993,27 @@ DIR is the project root, if not set then current directory is used"
         (buffer-substring-no-properties (region-beginning) (region-end))
       (helm-rg--get-thing-at-pt))))
 
+(defun glob-quote (string)
+  "Quote the special glob characters: *, ?, [, and ].
+STRING the string in which to escape special characters."
+  (replace-regexp-in-string "[]*?[]" "\\\\\\&" string))
+
 ;;;###autoload
 (defun helm-projectile-rg ()
   "Projectile version of `helm-rg'."
   (interactive)
   (if (require 'helm-rg nil t)
       (if (projectile-project-p)
-          (let ((helm-rg-prepend-file-name-line-at-top-of-matches nil)
-                (helm-rg-include-file-on-every-match-line t))
+          (let* ((helm-rg-prepend-file-name-line-at-top-of-matches nil)
+                 (helm-rg-include-file-on-every-match-line t)
+                 (ignored-files (mapcan (lambda (path)
+                                          (list "--glob" (concat "!" (glob-quote path))))
+                                        (cl-union (projectile-ignored-files-rel)  grep-find-ignored-files)))
+                 (ignored-directories (mapcan (lambda (path)
+                                                   (list "--glob" (concat "!" (glob-quote path) "/**")))
+                                              (cl-union (mapcar 'directory-file-name (projectile-ignored-directories-rel))
+                                                        grep-find-ignored-directories)))
+                 (helm-rg--extra-args `(,@ignored-files ,@ignored-directories)))
             (let ((default-directory (projectile-project-root)))
               (helm-rg (helm-projectile-rg--region-selection)
                        nil)))
