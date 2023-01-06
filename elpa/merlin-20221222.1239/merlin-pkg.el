@@ -1,6 +1,6 @@
-(define-package "merlin" "20210720.950" "Mode for Merlin, an assistant for OCaml"
+(define-package "merlin" "20221222.1239" "Mode for Merlin, an assistant for OCaml"
   '((emacs "25.1"))
-  :commit "e4791e22986993c36c3f5c91e8dff93494cc232e" :authors
+  :commit "41cd949106fbf0769c97e3a56808e4d99fc42c6f" :authors
   '(("Frédéric Bour <frederic.bour(_)lakaban.net>"))
   :maintainer
   '("Frédéric Bour <frederic.bour(_)lakaban.net>")

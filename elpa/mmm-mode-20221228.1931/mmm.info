@@ -1,4 +1,4 @@
-This is mmm.info, produced by makeinfo version 6.7 from mmm.texinfo.
+This is mmm.info, produced by makeinfo version 6.7 from mmm.texi.
 
 INFO-DIR-SECTION GNU Emacs Lisp
 START-INFO-DIR-ENTRY
@@ -24,7 +24,7 @@ versions, except that this permission notice may be stated in a
 translation approved by the Free Software Foundation.
 
 
-File: mmm.info,  Node: Top,  Next: Overview,  Prev: (dir),  Up: (dir)
+File: mmm.info,  Node: Top,  Next: Overview,  Up: (dir)
 
 MMM Mode
 ********
@@ -178,7 +178,7 @@ be in two or more different modes.  For example:
 <chen@posc.org>, from which MMM Mode was adapted.
 
 
-File: mmm.info,  Node: Basic Concepts,  Next: Installation,  Prev: Overview,  Up: Overview
+File: mmm.info,  Node: Basic Concepts,  Next: Installation,  Up: Overview
 
 1.1 Basic Concepts
 ==================
@@ -341,7 +341,7 @@ This chapter explains the most important parts of how to use MMM Mode.
 * Global Mode::                 Turning MMM Mode on automatically.
 
 
-File: mmm.info,  Node: MMM Minor Mode,  Next: Submode Classes,  Prev: Basics,  Up: Basics
+File: mmm.info,  Node: MMM Minor Mode,  Next: Submode Classes,  Up: Basics
 
 2.1 The MMM Minor Mode
 ======================
@@ -359,7 +359,7 @@ denoted by ‘MMM’ in the mode line (*note Mode Line::).
 * MMM Mode Keys::               Default key bindings in MMM Mode.
 
 
-File: mmm.info,  Node: Enabling MMM Mode,  Next: MMM Mode Keys,  Prev: MMM Minor Mode,  Up: MMM Minor Mode
+File: mmm.info,  Node: Enabling MMM Mode,  Next: MMM Mode Keys,  Up: MMM Minor Mode
 
 2.1.1 Enabling MMM Mode
 -----------------------
@@ -481,7 +481,7 @@ covered in a later chapter.
 * Global Classes::              Classes for all MMM Mode buffers.
 
 
-File: mmm.info,  Node: File Classes,  Next: Mode-Ext Classes,  Prev: Selecting Classes,  Up: Selecting Classes
+File: mmm.info,  Node: File Classes,  Next: Mode-Ext Classes,  Up: Selecting Classes
 
 2.3.1 File-Local Submode Classes
 --------------------------------
@@ -721,7 +721,7 @@ automatically.
 * Major Mode Hook::             Using MMM’s Major Mode Hook
 
 
-File: mmm.info,  Node: Major Mode Hook,  Prev: Global Mode,  Up: Global Mode
+File: mmm.info,  Node: Major Mode Hook,  Up: Global Mode
 
 2.7.1 The Major Mode Hook
 -------------------------
@@ -774,7 +774,7 @@ MMM Mode however you want.
 * Hooks::                       How to make MMM Mode run your code.
 
 
-File: mmm.info,  Node: Region Coloring,  Next: Preferred Modes,  Prev: Customizing,  Up: Customizing
+File: mmm.info,  Node: Region Coloring,  Next: Preferred Modes,  Up: Customizing
 
 3.1 Customizing Region Coloring
 ===============================
@@ -1066,7 +1066,7 @@ Mode.
 * Noweb::                       Noweb literate programs.
 
 
-File: mmm.info,  Node: Mason,  Next: File Variables,  Prev: Supplied Classes,  Up: Supplied Classes
+File: mmm.info,  Node: Mason,  Next: File Variables,  Up: Supplied Classes
 
 4.1 Mason: Perl in HTML
 =======================
@@ -1179,12 +1179,19 @@ scripts and Perl scripts) is the here-document syntax:
        <body>
      END_HTML
 
-   The ‘here-doc’ submode class recognizes this syntax, and can even
-guess the correct submode to use in many cases.  For instance, it would
-put the above example in ‘html-mode’, noticing the string ‘HTML’ in the
-name of the here-document.  If you use less than evocative here-document
-names, or if the submode is recognized incorrectly for any other reason,
-you can tell it explicitly what submode to use.
+   The ‘here-doc’ submode class supports the general case of
+here-documents while the ‘sh-here-doc’ class has more specialized
+support for shell scripts.  They can both guess the correct submode to
+use based on the “delimiter” (‘END_HTML’ in the example) used.  For
+instance, it would put the above example in ‘html-mode’, noticing the
+string ‘HTML’ in the delimiter of the here-document.  Generally speaking
+any language mode can be found if the language name is one of the words
+in delimiter, but be aware that the first word that matches will be
+used.  The ‘mmm-major-mode-preferences’ list is checked for any language
+mode preferences, as described in *note Preferred Modes::.  If you use
+less than evocative here-document names, or if the submode is recognized
+incorrectly for any other reason, you can tell it explicitly what
+submode to use.
 
  -- User Option: mmm-here-doc-mode-alist
      The value of this variable should be an alist, each element a cons
@@ -1279,7 +1286,7 @@ File: mmm.info,  Node: RPM,  Next: Noweb,  Prev: JSP,  Up: Supplied Classes
 ‘mmm-rpm.el’ contains the definition of an MMM Mode submode class for
 editing shell script sections within RPM (Redhat Package Manager) spec
 files.  It is recommended for use in combination with ‘rpm-spec-mode.el’
-by Stig Bj\xF8rlykke <stigb@tihlde.hist.no> and Steve Sanbeg
+by Stig Bjørlykke <stigb@tihlde.hist.no> and Steve Sanbeg
 <sanbeg@dset.com> (<http://www.xemacs.org/~stigb/rpm-spec-mode.el>).
 
    Suggested setup code:
@@ -1401,7 +1408,7 @@ with examples.
 * Misc Keywords::               Other miscellaneous options.
 
 
-File: mmm.info,  Node: Basic Classes,  Next: Paired Delimiters,  Prev: Writing Classes,  Up: Writing Classes
+File: mmm.info,  Node: Basic Classes,  Next: Paired Delimiters,  Up: Writing Classes
 
 5.1 Writing Basic Submode Classes
 =================================
@@ -1887,7 +1894,7 @@ File: mmm.info,  Node: Indices,  Prev: Writing Classes,  Up: Top
 * Keystroke Index::             Index of key bindings in MMM Mode.
 
 
-File: mmm.info,  Node: Concept Index,  Next: Function Index,  Prev: Indices,  Up: Indices
+File: mmm.info,  Node: Concept Index,  Next: Function Index,  Up: Indices
 
 6.1 Concept Index
 =================
@@ -1969,7 +1976,7 @@ File: mmm.info,  Node: Function Index,  Next: Keystroke Index,  Prev: Concept In
 * mmm-get-class-parameter:               Changing Classes.     (line 18)
 * mmm-global-classes:                    Global Classes.       (line 10)
 * mmm-global-mode:                       Global Mode.          (line 12)
-* mmm-here-doc-mode-alist:               Here-documents.       (line 25)
+* mmm-here-doc-mode-alist:               Here-documents.       (line 32)
 * mmm-insertion-help:                    MMM Mode Keys.        (line  6)
 * mmm-interactive-history:               Interactive.          (line 40)
 * mmm-major-mode-hook:                   Major Mode Hook.      (line  6)
@@ -2014,61 +2021,61 @@ File: mmm.info,  Node: Keystroke Index,  Prev: Function Index,  Up: Indices
 
 
 Tag Table:
-Node: Top1061
-Node: Overview4993
-Ref: Overview-Footnote-17501
-Node: Basic Concepts7625
-Node: Installation9982
-Node: Quick Start12042
-Node: Basics14613
-Node: MMM Minor Mode15299
-Node: Enabling MMM Mode15989
-Node: MMM Mode Keys17280
-Node: Submode Classes19634
-Node: Selecting Classes21026
-Node: File Classes21864
-Node: Mode-Ext Classes22647
-Node: Global Classes24429
-Node: Insertion25987
-Node: Re-parsing28246
-Node: Interactive28514
-Node: Global Mode31175
-Node: Major Mode Hook33224
-Node: Customizing34944
-Node: Region Coloring35684
-Node: Preferred Modes38300
-Node: Mode Line40339
-Node: Key Bindings41923
-Node: Local Variables43715
-Node: Changing Classes45531
-Node: Hooks46577
-Node: Supplied Classes48050
-Node: Mason48920
-Node: File Variables52672
-Node: Here-documents53426
-Node: Javascript54898
-Node: Embedded CSS55431
-Node: Embperl55872
-Node: ePerl56308
-Node: JSP56702
-Node: RPM57099
-Node: Noweb57792
-Node: Writing Classes60636
-Node: Basic Classes61809
-Node: Paired Delimiters64466
-Node: Region Placement66226
-Node: Submode Groups69326
-Node: Calculated Submodes71065
-Node: Calculated Faces73376
-Node: Insertion Commands75069
-Node: Region Names78255
-Node: Other Hooks79643
-Node: Delimiters81742
-Node: Misc Keywords85579
-Node: Indices85993
-Node: Concept Index86285
-Node: Function Index90452
-Node: Keystroke Index92903
+Node: Top1058
+Node: Overview4976
+Ref: Overview-Footnote-17484
+Node: Basic Concepts7608
+Node: Installation9948
+Node: Quick Start12008
+Node: Basics14579
+Node: MMM Minor Mode15265
+Node: Enabling MMM Mode15940
+Node: MMM Mode Keys17208
+Node: Submode Classes19562
+Node: Selecting Classes20954
+Node: File Classes21792
+Node: Mode-Ext Classes22549
+Node: Global Classes24331
+Node: Insertion25889
+Node: Re-parsing28148
+Node: Interactive28416
+Node: Global Mode31077
+Node: Major Mode Hook33126
+Node: Customizing34826
+Node: Region Coloring35566
+Node: Preferred Modes38162
+Node: Mode Line40201
+Node: Key Bindings41785
+Node: Local Variables43577
+Node: Changing Classes45393
+Node: Hooks46439
+Node: Supplied Classes47912
+Node: Mason48782
+Node: File Variables52509
+Node: Here-documents53263
+Node: Javascript55192
+Node: Embedded CSS55725
+Node: Embperl56166
+Node: ePerl56602
+Node: JSP56996
+Node: RPM57393
+Node: Noweb58084
+Node: Writing Classes60928
+Node: Basic Classes62101
+Node: Paired Delimiters64734
+Node: Region Placement66494
+Node: Submode Groups69594
+Node: Calculated Submodes71333
+Node: Calculated Faces73644
+Node: Insertion Commands75337
+Node: Region Names78523
+Node: Other Hooks79911
+Node: Delimiters82010
+Node: Misc Keywords85847
+Node: Indices86261
+Node: Concept Index86553
+Node: Function Index90704
+Node: Keystroke Index93155
 
 End Tag Table
 

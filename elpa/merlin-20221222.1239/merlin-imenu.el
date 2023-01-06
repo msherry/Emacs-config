@@ -1,4 +1,4 @@
-;;; merlin-imenu.el --- Merlin and imenu integration.   -*- coding: utf-8; lexical-binding: t -*-
+;;; merlin-imenu.el --- Merlin and imenu integration   -*- coding: utf-8; lexical-binding: t -*-
 ;; Licensed under the MIT license.
 
 ;; Author: tddsg (Ta Quang Trung)
@@ -8,7 +8,6 @@
 ;;   - v0.2: 27 April 2017
 ;;   - v0.3: 21 August 2019
 ;; Keywords: ocaml, imenu, merlin
-;; URL:
 
 (require 'imenu)
 (require 'subr-x)
@@ -18,6 +17,10 @@
 (defvar-local merlin-imenu--value-list nil)
 (defvar-local merlin-imenu--type-list nil)
 (defvar-local merlin-imenu--exception-list nil)
+(defvar-local merlin-imenu--module-list nil)
+(defvar-local merlin-imenu--signature-list nil)
+(defvar-local merlin-imenu--class-list nil)
+(defvar-local merlin-imenu--method-list nil)
 
 (defun merlin-imenu-compute-position (line col)
   "Get location of the item."
@@ -58,16 +61,28 @@
              (setq merlin-imenu--value-list (cons marker merlin-imenu--value-list)))
             ((string= kind "Type")
              (setq merlin-imenu--type-list (cons marker merlin-imenu--type-list)))
+            ((string= kind "Module")
+             (setq merlin-imenu--module-list (cons marker merlin-imenu--module-list)))
+            ((string= kind "Signature")
+             (setq merlin-imenu--signature-list (cons marker merlin-imenu--signature-list)))
+            ((string= kind "Class")
+             (setq merlin-imenu--class-list (cons marker merlin-imenu--class-list)))
+            ((string= kind "Method")
+             (setq merlin-imenu--method-list (cons marker merlin-imenu--method-list)))
             ((string= kind "Exn")
              (setq merlin-imenu--exception-list (cons marker merlin-imenu--exception-list))))
       (when sub-trees
-        (merlin-imenu-parse-outline (concat prefix entry ".") sub-trees)))))
+        (merlin-imenu-parse-outline (concat entry ".") sub-trees)))))
 
 (defun merlin-imenu-create-index ()
   "Create data for imenu using the merlin outline feature."
   ;; Reset local vars
   (setq merlin-imenu--value-list nil
         merlin-imenu--type-list nil
+        merlin-imenu--module-list nil
+        merlin-imenu--signature-list nil
+        merlin-imenu--class-list nil
+        merlin-imenu--method-list nil
         merlin-imenu--exception-list nil)
   ;; Read outline tree
   (merlin-imenu-parse-outline "" (merlin-call "outline"))
@@ -78,6 +93,14 @@
       (push (cons "Exception" merlin-imenu--exception-list) index))
     (when merlin-imenu--type-list
       (push (cons "Type" merlin-imenu--type-list) index))
+    (when merlin-imenu--module-list
+      (push (cons "Module" merlin-imenu--module-list) index))
+    (when merlin-imenu--signature-list
+      (push (cons "Signature" merlin-imenu--signature-list) index))
+    (when merlin-imenu--class-list
+      (push (cons "Class" merlin-imenu--class-list) index))
+    (when merlin-imenu--method-list
+      (push (cons "Method" merlin-imenu--method-list) index))
     index))
 
 ;;;###autoload

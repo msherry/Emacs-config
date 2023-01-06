@@ -29,6 +29,20 @@
 
 (require 'parseclj-alist)
 
+(defcustom parseclj-lex-symbol-special-chars
+  '(?. ?* ?+ ?! ?- ?_ ?? ?$ ?% ?& ?= ?< ?> ?/ ?')
+  "The list of characters that can consitute a symbol or keyword's name.
+
+Please note that Clojure might at runtime accept keywords with
+more constituent characters than those found in the default value
+of this variable (which is the officially supported list), but
+the end result should be treated as undefined.  This could be the
+case for example when keywordized maps are created from external
+sources without keyword validation.  Change this value at your
+own risk."
+  :type 'sexp
+  :group 'parseclj)
+
 (defvar parseclj-lex--leaf-tokens '(:whitespace
                                     :comment
                                     :symbolic-value
@@ -163,11 +177,20 @@ S goes through three transformations:
      ((eq first-char ?o) (string-to-number (substring c 2) 8))
      (t first-char))))
 
+(defun parseclj-lex--number-value (number-str)
+  "Parse the NUMBER-STR to an Elisp number."
+  (let ((ratio (split-string number-str "/")))
+    (if (= 2 (length ratio))
+        (let ((numerator (string-to-number (car ratio)))
+              (denominator (string-to-number (cadr ratio))))
+          (/ numerator (float denominator)))
+      (string-to-number number-str))))
+
 (defun parseclj-lex--leaf-token-value (token)
   "Parse the given leaf TOKEN to an Emacs Lisp value."
   (let ((token-type (parseclj-lex-token-type token)))
     (cond
-     ((eq :number token-type) (string-to-number (alist-get :form token)))
+     ((eq :number token-type) (parseclj-lex--number-value (alist-get :form token)))
      ((eq :nil token-type) nil)
      ((eq :true token-type) t)
      ((eq :false token-type) nil)
@@ -254,6 +277,11 @@ S goes through three transformations:
     (when (eq (char-after (point)) ?N)
       (right-char))
 
+    ;; clojure.lang.Ratio
+    (when (eq (char-after (point)) ?/)
+      (right-char)
+      (parseclj-lex-skip-number))
+
     (let ((char (char-after (point))))
       (if (and char (or (and (<= ?a char) (<= char ?z))
                         (and (<= ?A char) (<= char ?Z))
@@ -289,7 +317,7 @@ alphabetic characters only.  ALPHA-ONLY ensures this behavior."
   (not (not (and char
                  (or (and (<= ?a char) (<= char ?z))
                      (and (<= ?A char) (<= char ?Z))
-                     (and (not alpha-only) (member char '(?. ?* ?+ ?! ?- ?_ ?? ?$ ?% ?& ?= ?< ?> ?/ ?'))))))))
+                     (and (not alpha-only) (member char parseclj-lex-symbol-special-chars)))))))
 
 (defun parseclj-lex-symbol-rest-p (char)
   "Return t if CHAR is a valid character in a symbol.

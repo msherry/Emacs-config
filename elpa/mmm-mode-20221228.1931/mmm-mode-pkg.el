@@ -1,6 +1,7 @@
-(define-package "mmm-mode" "20200908.2236" "Allow Multiple Major Modes in a buffer"
-  '((cl-lib "0.2"))
-  :commit "0d00cdf4d02cc166304f6967a20fa22e2eaf208b" :authors
+(define-package "mmm-mode" "20221228.1931" "Allow Multiple Major Modes in a buffer"
+  '((emacs "25.1")
+    (cl-lib "0.2"))
+  :commit "171bf6395b8a95a2d08d41fa38cc1799025d3916" :authors
   '(("Michael Abraham Shulman" . "viritrilbia@gmail.com"))
   :maintainer
   '("Dmitry Gutov" . "dgutov@yandex.ru")
