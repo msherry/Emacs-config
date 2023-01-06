@@ -1,6 +1,6 @@
 ;;; org-jira.el --- Syncing between Jira and Org-mode. -*- lexical-binding: t -*-
 
-;; Copyright (C) 2016-2019 Matthew Carter <m@ahungry.com>
+;; Copyright (C) 2016-2022 Matthew Carter <m@ahungry.com>
 ;; Copyright (C) 2011 Bao Haojun
 ;;
 ;; Authors:
@@ -9,7 +9,7 @@
 ;;
 ;; Maintainer: Matthew Carter <m@ahungry.com>
 ;; URL: https://github.com/ahungry/org-jira
-;; Version: 4.3.1
+;; Version: 4.3.2
 ;; Keywords: ahungry jira org bug tracker
 ;; Package-Requires: ((emacs "24.5") (cl-lib "0.5") (request "0.2.0") (dash "2.14.1"))
 
@@ -37,6 +37,9 @@
 ;; issue servers.
 
 ;;; News:
+
+;;;; Changes in 4.3.2:
+;; - Fixes issues with org-jira-add-comment and org-jira-update-comment
 
 ;;;; Changes in 4.3.1:
 ;; - Fix to make custom-jql results sync worklogs properly.
@@ -116,6 +119,7 @@
 
 ;;; Code:
 
+(eval-when-compile (require 'cl))
 (require 'org)
 (require 'org-clock)
 (require 'cl-lib)
@@ -371,14 +375,14 @@ See `org-default-priority' for more info."
   (declare (debug t)
            (indent 0))
   `(save-excursion
-     (save-restriction
-       (widen)
-       (unless (looking-at "^\\*\\* ")
-         (search-backward-regexp "^\\*\\* " nil t)) ; go to top heading
-       (let ((org-jira-id (org-jira-id)))
-         (unless (and org-jira-id (string-match (jiralib-get-issue-regexp) (downcase org-jira-id)))
-           (error "Not on an issue region!")))
-       ,@body)))
+    (save-restriction
+      (widen)
+      (unless (looking-at "^\\*\\* ")
+        (search-backward-regexp "^\\*\\* " nil t)) ; go to top heading
+      (let ((org-jira-id (org-jira-id)))
+        (unless (and org-jira-id (string-match (jiralib-get-issue-regexp) (downcase org-jira-id)))
+          (error "Not on an issue region!")))
+      ,@body)))
 
 (defmacro org-jira-with-callback (&rest body)
   "Simpler way to write the data BODY callbacks."
@@ -1005,6 +1009,20 @@ Will send a list of org-jira-sdk-issue objects to the list printer."
           org-jira-sdk-create-issues-from-data-list
           org-jira-get-issues))))
 
+(defvar org-jira-get-sprint-list-callback
+  (cl-function
+   (lambda (&key data &allow-other-keys)
+     "Callback for async, DATA is the response from the request call.
+
+Will send a list of org-jira-sdk-issue objects to the list printer."
+     (org-jira-log "Received data for org-jira-get-sprint-list-callback.")
+     (--> data
+          (org-jira-sdk-path it '(sprint))
+          (append it nil)               ; convert the conses into a proper list.
+          org-jira-sdk-create-issues-from-data-list
+          org-jira-get-issues))))
+
+
 ;;;###autoload
 (defun org-jira-get-issues (issues)
   "Get list of ISSUES into an org buffer.
@@ -1127,7 +1145,7 @@ ORG-JIRA-PROJ-KEY-OVERRIDE being set before and after running."
                       (when (or (and val (not (string= val "")))
                                 (eq entry 'assignee)) ;; Always show assignee
                         (org-jira-entry-put (point) (symbol-name entry) val))))
-                  '(assignee filename reporter type type-id priority labels resolution status components created updated))
+                  '(assignee filename reporter type type-id priority labels resolution status components created updated sprint))
 
             (org-jira-entry-put (point) "ID" issue-id)
             (org-jira-entry-put (point) "CUSTOM_ID" issue-id)
@@ -1668,6 +1686,7 @@ purpose of wiping an old subtree."
 
 (defvar org-jira-project-read-history nil)
 (defvar org-jira-boards-read-history nil)
+(defvar org-jira-sprints-read-history nil)
 (defvar org-jira-components-read-history nil)
 (defvar org-jira-priority-read-history nil)
 (defvar org-jira-type-read-history nil)
@@ -1693,6 +1712,17 @@ purpose of wiping an old subtree."
                            'org-jira-boards-read-history
                            (car org-jira-boards-read-history))))
     (assoc board-name boards-alist)))
+
+(defun org-jira-read-sprint (board)
+  "Read sprint name. Returns cons pair (name . integer-id)"
+  (let* ((sprints-alist
+	  (jiralib-make-assoc-list (append (alist-get 'values (jiralib-get-board-sprints board)) nil) 'name 'id))
+	  (sprint-name
+	   (completing-read "Sprints: " sprints-alist
+			    nil t nil
+			    'org-jira-sprints-read-history
+			    (car org-jira-sprints-read-history))))
+       (assoc sprint-name sprints-alist)))
 
 (defun org-jira-read-component (project)
   "Read the components options for PROJECT such as EX."
@@ -1852,7 +1882,7 @@ that should be bound to an issue."
            ;; about the local properties, not any hierarchal or special
            ;; ones).
            (let ((org-special-properties nil))
-             (or (org-entry-get (point) key)
+             (or (org-entry-get (point) key t)
                  ""))))))
 
 (defun org-jira-read-action (actions)
@@ -1908,6 +1938,29 @@ Used in org-jira-read-resolution and org-jira-progress-issue calls.")
                                        (org-jira-find-value resolution 'name))
                                      resolutions))))
       (cons 'name resolution-name))))
+
+(defun org-jira-refresh-issues-in-buffer-loose ()
+  "Iterates over all level 1-2 headings in current buffer, refreshing on issue :ID:.
+     It differs with org-jira-refresh-issues-in-buffer() in that:
+       a) It accepts current buffer and its corresponding filename, regardless of whether
+          it has been previously registered as an org-jira project file or not.
+       b) It doesn't expect a very specific structure in the org buffer, but simply goes
+          over every existing heading (level 1-2), and refreshes it IFF a valid jira ID
+          can be detected in it."
+  (interactive)
+  (save-excursion
+    (save-restriction
+      (widen)
+      (outline-show-all)
+      (outline-hide-sublevels 2)
+      (goto-char (point-min))
+
+      (while (not (eobp))
+        (progn
+          (if (org-jira-id)
+              (progn
+                (org-jira--refresh-issue (org-jira-id) (file-name-sans-extension buffer-file-name))))
+          (outline-next-visible-heading 1))))))
 
 ;; TODO: Refactor to just scoop all ids from buffer, run ensure-on-issue-id on
 ;; each using a map, and refresh them that way.  That way we don't have to iterate
@@ -2131,6 +2184,7 @@ otherwise it should return:
   (ensure-on-issue-id-with-filename issue-id filename
     ;; Set up a bunch of values from the org content
     (let* ((org-issue-components (org-jira-get-issue-val-from-org 'components))
+           (org-issue-labels (org-jira-get-issue-val-from-org 'labels))
            (org-issue-description (org-trim (org-jira-get-issue-val-from-org 'description)))
            (org-issue-priority (org-jira-get-issue-val-from-org 'priority))
            (org-issue-type (org-jira-get-issue-val-from-org 'type))
@@ -2156,6 +2210,7 @@ otherwise it should return:
                     (or (org-jira-build-components-list
                          project-components
                          org-issue-components) []))
+                   (cons 'labels (split-string org-issue-labels ",\\s *"))
                    (cons 'priority (org-jira-get-id-name-alist org-issue-priority
                                                        (jiralib-get-priorities)))
                    (cons 'description org-issue-description)
@@ -2365,6 +2420,19 @@ See `org-jira-get-issues-from-filter'."
                               :callback org-jira-get-issue-list-callback
                               :limit (org-jira-get-board-limit board-id)
                               :query-params (org-jira--make-jql-queryparams board-id))))
+
+;;;###autoload
+(defun org-jira-get-issues-by-sprint ()
+  "Get list of ISSUES from sprint."
+  (interactive)
+  (let* ((board (org-jira-read-board))
+	 (board-id (cdr board))
+	 (sprint (org-jira-read-sprint board-id))
+	 (sprint-id (cdr sprint)))
+    (jiralib-get-sprint-issues sprint-id
+			       :callback org-jira-get-issue-list-callback
+			       :limit (org-jira-get-board-limit board-id)
+			       :query-params (org-jira--make-jql-queryparams board-id))))
 
 (defun org-jira-get-board-limit (id)
   "Get limit for number of retrieved issues for a board

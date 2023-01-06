@@ -1,6 +1,6 @@
 ;;; jiralib.el -- Provide connectivity to JIRA SOAP/REST services.
 
-;; Copyright (C) 2016,2017 Matthew Carter <m@ahungry.com>
+;; Copyright (C) 2016-2022 Matthew Carter <m@ahungry.com>
 ;; Copyright (C) 2011 Bao Haojun
 ;; original Copyright (C) 2009 Alex Harsanyi
 
@@ -112,6 +112,15 @@
 
 (defcustom jiralib-host ""
   "User customizable host name of the Jiralib server.
+
+This will be used with USERNAME to compute password from
+.authinfo file.  Will be calculated from jiralib-url if not set."
+  :group 'jiralib
+  :type 'string
+  :initialize 'custom-initialize-set)
+
+(defcustom jiralib-user ""
+  "User customizable user name of the Jiralib server.
 
 This will be used with USERNAME to compute password from
 .authinfo file.  Will be calculated from jiralib-url if not set."
@@ -264,10 +273,12 @@ After a successful login, store the authentication token in
                                              :host (if (string= jiralib-host "")
                                                        (url-host (url-generic-parse-url jiralib-url))
                                                      jiralib-host)
+                                             :user (if (string= jiralib-user "")
+                                                       (url-user (url-generic-parse-url jiralib-url))
+                                                     jiralib-user)
                                              ;; secrets.el wouldn’t accept a number.
                                              :port (list (number-to-string (url-port (url-generic-parse-url jiralib-url)))
-							 (url-port (url-generic-parse-url jiralib-url))
-							 (url-type (url-generic-parse-url jiralib-url)))
+                                                         (url-type (url-generic-parse-url jiralib-url)))
                                              :require '(:user :secret)
                                              :create t)))
            user secret)
@@ -320,6 +331,7 @@ This produces a noticeable slowdown and is not recommended by
 request.el, so if at all possible, it should be avoided."
   ;; @TODO :auth: Probably pass this all the way down, but I think
   ;; it may be OK at the moment to just set the variable each time.
+  
   (setq jiralib-complete-callback
         ;; Don't run with async if we don't have a login token yet.
         (if jiralib-token callback nil))
@@ -415,6 +427,11 @@ request.el, so if at all possible, it should be avoided."
                   (format "/rest/api/2/issue/%s" (first params))))
       ('getIssuesFromBoard  (apply 'jiralib--agile-call-it
 				   (format "rest/agile/1.0/board/%d/issue" (first params))
+				   'issues
+				   (cdr params)))
+      ('getSprintsFromBoard  (jiralib--rest-call-it (format "/rest/agile/1.0/board/%s/sprint"  (first params))))
+      ('getIssuesFromSprint  (apply 'jiralib--agile-call-it
+				   (format "rest/agile/1.0/sprint/%d/issue" (first params))
 				   'issues
 				   (cdr params)))
       ('getIssuesFromJqlSearch  (append (cdr ( assoc 'issues (jiralib--rest-call-it
@@ -541,7 +558,7 @@ first is normally used."
 
 DATA is a list of association lists (a SOAP array-of type)
 KEY-FIELD is the field to use as the key in the returned alist
-VALUE-FIELD is the field to use as the value in the returned alist"
+VALUE-FIELD is the field to use as the value in the returned alist"  
   (cl-loop for element in data
         collect (cons (cdr (assoc key-field element))
                       (cdr (assoc value-field element)))))
@@ -1170,6 +1187,15 @@ Auxiliary Notes:
 (defun jiralib-get-boards ()
   "Return list of jira boards"
   (jiralib-call "getBoards" nil))
+
+(defun jiralib-get-board-sprints (id)
+  "Return list of jira sprints in the specified jira board"
+  (jiralib-call "getSprintsFromBoard" nil id))
+
+(defun jiralib-get-sprint-issues (id &rest params)
+  "Return list of issues in the specified sprint"
+  (apply 'jiralib-call "getIssuesFromSprint"
+	 (cl-getf params :callback) id params))
 
 (defun jiralib-get-board-issues (board-id &rest params)
   "Return list of jira issues in the specified jira board"

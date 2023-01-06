@@ -4,8 +4,8 @@
 
 ;; Author: Kevin Brubeck Unhammer <unhammer@fsfe.org>
 ;; Version: 0.6.1
-;; Package-Version: 20211029.1147
-;; Package-Commit: 454d317bf772a616cb76cf2212f111c7977016a2
+;; Package-Version: 20230104.1922
+;; Package-Commit: be90bc9084b384d8a728d68f69da09171ca26d3c
 ;; Package-Requires: ((emacs "26.1"))
 ;; URL: https://github.com/unhammer/org-mru-clock
 ;; Keywords: convenience, calendar
@@ -272,7 +272,7 @@ filled first.  Optional argument N as in `org-mru-clock'."
   (let* ((org-clock-history (org-mru-clock-select-workaround-history))
          (m (org-clock-select-task "Select recent task: ")))
     (when m
-      (switch-to-buffer (marker-buffer m))
+      (select-window (display-buffer (marker-buffer m)))
       (goto-char (marker-position m))
       (org-up-element)
       (org-show-subtree))))
@@ -376,7 +376,7 @@ string."
   "Go to buffer and position of the TASK (cons of description and marker)."
   (interactive (list (org-mru-clock--completing-read)))
   (let ((m (cdr task)))
-    (switch-to-buffer (org-base-buffer (marker-buffer m)))
+    (select-window (display-buffer (org-base-buffer (marker-buffer m))))
     (if (or (< m (point-min)) (> m (point-max))) (widen))
     (goto-char m)
     (org-show-entry)
@@ -463,6 +463,7 @@ For use with embark and similar."
 
 (eval-when-compile
   ;; Ensure we can dynamically let-bind this even when compiled with lexical-let
+  (defvar vertico-sort-function)
   (defvar selectrum-should-sort)
   (defvar selectrum-should-sort-p))
 
@@ -473,6 +474,7 @@ For use with embark and similar."
   (let ((require-match (not org-mru-clock-capture-if-no-match))
         (collection (org-mru-clock--collection))
         ;; Ensure we keep our mru sort order:
+        (vertico-sort-function nil)
         (selectrum-should-sort nil)
         (selectrum-should-sort-p nil))
     (when-let ((choice (funcall org-mru-clock-completing-read

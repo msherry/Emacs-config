@@ -198,6 +198,12 @@ to fill window width, and a newline is added."
   "String prepended to group headers."
   :type 'string)
 
+(defcustom org-super-agenda-final-group-separator ""
+  "Separator inserted after final agenda group.
+If a character, it is repeated to fill window width, and a
+newline is added."
+  :type '(choice character string))
+
 (defcustom org-super-agenda-date-format "%e %B %Y"
   "Format string for date headers.
 See `format-time-string'."
@@ -1001,6 +1007,7 @@ of the arguments to the function."
   "the date of their latest timestamp anywhere in the entry (formatted according to `org-super-agenda-date-format', which see)"
   :keyword :auto-ts
   :key-form (org-super-agenda--when-with-marker-buffer (org-super-agenda--get-marker item)
+              (ignore args)
               (let* ((limit (org-entry-end-position))
                      (latest-ts (->> (cl-loop for next-ts =
                                               (when (re-search-forward org-element--timestamp-regexp limit t)
@@ -1013,8 +1020,10 @@ of the arguments to the function."
                   (propertize (ts-format org-super-agenda-date-format latest-ts)
                               'org-super-agenda-ts latest-ts))))
   :key-sort-fn (lambda (a b)
-                 (ts< (get-text-property 0 'org-super-agenda-ts a)
-                      (get-text-property 0 'org-super-agenda-ts b))))
+                 (funcall (if (member 'reverse args)
+                              #'ts> #'ts<)
+                          (get-text-property 0 'org-super-agenda-ts a)
+                          (get-text-property 0 'org-super-agenda-ts b))))
 
 (org-super-agenda--def-auto-group items "their AGENDA-GROUP property"
   :keyword :auto-group
@@ -1218,7 +1227,10 @@ STRING should be that returned by `org-agenda-finalize-entries'"
        (split-string it "\n" 'omit-nulls)
        org-super-agenda--group-items
        (-remove #'s-blank-str? it)
-       (s-join "\n" it)))
+       (s-join "\n" it)
+       (concat it (cl-etypecase org-super-agenda-final-group-separator
+                    (character (concat "\n" (make-string (window-width) org-super-agenda-final-group-separator)))
+                    (string org-super-agenda-final-group-separator)))))
 
 (defun org-super-agenda--hide-or-show-groups (&rest _)
   "Hide/Show any empty/non-empty groups.

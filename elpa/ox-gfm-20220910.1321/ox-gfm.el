@@ -4,7 +4,8 @@
 
 ;; Author: Lars Tveito
 ;; Keywords: org, wp, markdown, github
-;; Package-Version: 20170628.2102
+;; Package-Version: 20220910.1321
+;; Package-Commit: 46faa67dbb3fb0cd7a76c3fe518f16e4195c22c7
 
 ;; This file is not part of GNU Emacs.
 
@@ -57,6 +58,7 @@
   :translate-alist '((inner-template . org-gfm-inner-template)
                      (paragraph . org-gfm-paragraph)
                      (strike-through . org-gfm-strike-through)
+                     (example-block . org-gfm-example-block)
                      (src-block . org-gfm-src-block)
                      (table-cell . org-gfm-table-cell)
                      (table-row . org-gfm-table-row)
@@ -92,6 +94,10 @@ channel."
          (prefix (concat "```" lang "\n"))
          (suffix "```"))
     (concat prefix code suffix)))
+
+;;;; Example Block
+
+(defalias 'org-gfm-example-block #'org-gfm-src-block)
 
 
 ;;;; Strike-Through
@@ -285,7 +291,7 @@ holding export options."
          (toc-string (or (mapconcat 'org-gfm-format-toc headlines "\n") ""))
          (toc-tail (if headlines "\n\n" "")))
     (org-trim (concat toc-string toc-tail contents "\n" (org-gfm-footnote-section info)))))
-        
+
 
 
 

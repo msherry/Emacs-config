@@ -1,0 +1,2 @@
+;;; Generated package description from org-mru-clock.el  -*- no-byte-compile: t -*-
+(define-package "org-mru-clock" "20230104.1922" "Clock in/out of tasks with completion and persistent history" '((emacs "26.1")) :commit "be90bc9084b384d8a728d68f69da09171ca26d3c" :authors '(("Kevin Brubeck Unhammer" . "unhammer@fsfe.org")) :maintainer '("Kevin Brubeck Unhammer" . "unhammer@fsfe.org") :keywords '("convenience" "calendar") :url "https://github.com/unhammer/org-mru-clock")
