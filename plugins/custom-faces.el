@@ -14,7 +14,7 @@
 ;; is to underline, which sucks.
 ;; TODO: use defface here
 (set-face-background 'highlight-beyond-fill-column-face "#D2FFD2");;"#FFAFD7")
-(set-face-underline-p 'highlight-beyond-fill-column-face nil)
+;(set-face-underline-p 'highlight-beyond-fill-column-face nil)
 
 ;; WTF? I didn't ask for this
 (eval-after-load 'python-mode
