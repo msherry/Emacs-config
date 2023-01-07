@@ -1,12 +1,12 @@
 ;;; hl-todo.el --- Highlight TODO and similar keywords  -*- lexical-binding:t -*-
 
-;; Copyright (C) 2013-2022 Jonas Bernoulli
+;; Copyright (C) 2013-2023 Jonas Bernoulli
 
 ;; Author: Jonas Bernoulli <jonas@bernoul.li>
 ;; Homepage: https://github.com/tarsius/hl-todo
 ;; Keywords: convenience
-;; Package-Version: 20221011.1032
-;; Package-Commit: c699c9beb2f878ad3803c91bd0bd7c1a5e1c9690
+;; Package-Version: 20230107.1515
+;; Package-Commit: 4e10dc84a3a8b05892c8dd5eb37420e3533d70f5
 
 ;; Package-Requires: ((emacs "25.1") (compat "28.1.1.0"))
 
