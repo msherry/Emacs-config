@@ -269,7 +269,9 @@ https://gist.github.com/dbp/9627194"
 
 
 ;;; Update the displayed message headers to be in the correct time zone
-(advice-add #'notmuch-show-insert-headerline :filter-args #'notmuch-show/format-date)
+
+;; TODO: this broke recently - fix it
+;(advice-add #'notmuch-show-insert-headerline :filter-args #'notmuch-show/format-date)
 
 
 (defun msherry-highlight-myself (&rest args)
