@@ -58,7 +58,7 @@ Offlineimap must:
 
 (defun msherry/get-notmuch-saved-search-by-name (search-name)
   (car (cl-loop for search in notmuch-saved-searches
-             when (equal "unread (affirm)" (notmuch-saved-search-get search :name))
+             when (equal search-name (notmuch-saved-search-get search :name))
              collect search)))
 
 (defun msherry-notmuch-unread (arg)
@@ -67,9 +67,9 @@ Offlineimap must:
 With a prefix argument, jump to the `notmuch' home screen."
   (interactive "P")
   (if arg (notmuch)
-    ;; Get the (first) "unread (affirm)" ("u") search from notmuch-saved-searches
+    ;; Get the (first) "unread (personal)" ("u") search from notmuch-saved-searches
     (let ((inbox-search (notmuch-saved-search-get
-                         (msherry/get-notmuch-saved-search-by-name "unread (affirm)")
+                         (msherry/get-notmuch-saved-search-by-name "unread (personal)")
                          :query)))
       (notmuch-search inbox-search (default-value 'notmuch-search-oldest-first)))))
 
@@ -219,7 +219,7 @@ https://gist.github.com/dbp/9627194"
   (let ((default-directory (expand-file-name user-emacs-directory)))
     (when (msherry-mail-alert-ok)
       (if (string= (s-chomp
-                    (shell-command-to-string (format "/usr/local/bin/notmuch count \"%s\""
+                    (shell-command-to-string (format "notmuch count \"%s\""
                                                      msherry-notmuch-new-mail-search-str)))
                    "0")
           nil
