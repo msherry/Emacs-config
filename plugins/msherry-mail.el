@@ -12,7 +12,7 @@
       smtpmail-smtp-server "smtp.gmail.com"
       smtpmail-smtp-service 587)
 
-(setq smtpmail-multi-default-account (quote affirm))
+(setq smtpmail-multi-default-account (quote personal))
 (setq message-send-mail-function 'smtpmail-multi-send-it)
 (setq smtpmail-debug-info t)
 (setq smtpmail-debug-verbose t)
@@ -29,9 +29,14 @@
 (defvar msherry-email-update-file-path "/tmp/offlineimap_sync_required"
   "Touch this file to force the external offlineimap-runner.sh to resync.")
 
+
+(defun msherry/get-notmuch-saved-search-by-name (search-name)
+  (car (cl-loop for search in notmuch-saved-searches
+             when (equal search-name (notmuch-saved-search-get search :name))
+             collect search)))
+
 (defvar msherry-notmuch-new-mail-search-str
-  ;; TODO: replace with (msherry/get-notmuch-saved-search-by-name "unread (affirm)"
-  "tag:affirm AND tag:unread AND tag:INBOX"
+  (notmuch-saved-search-get (msherry/get-notmuch-saved-search-by-name "unread (futureproof)") :query)
   "The default search string used to see if new mail is present.
 
 
@@ -56,11 +61,6 @@ Gmail must be set up to:
 Offlineimap must:
 - Run the post-new hook to tag flagged threads with thread_flagged")
 
-(defun msherry/get-notmuch-saved-search-by-name (search-name)
-  (car (cl-loop for search in notmuch-saved-searches
-             when (equal search-name (notmuch-saved-search-get search :name))
-             collect search)))
-
 (defun msherry-notmuch-unread (arg)
   "Jump immediately to unread emails in notmuch.
 
@@ -69,7 +69,7 @@ With a prefix argument, jump to the `notmuch' home screen."
   (if arg (notmuch)
     ;; Get the (first) "unread (personal)" ("u") search from notmuch-saved-searches
     (let ((inbox-search (notmuch-saved-search-get
-                         (msherry/get-notmuch-saved-search-by-name "unread (personal)")
+                         (msherry/get-notmuch-saved-search-by-name "unread (futureproof)")
                          :query)))
       (notmuch-search inbox-search (default-value 'notmuch-search-oldest-first)))))
 
@@ -131,7 +131,7 @@ With a prefix argument, jump to the `notmuch' home screen."
       (lambda (&optional beg end)
         "Remove thread from inbox"
         (interactive (notmuch-search-interactive-region))
-        (notmuch-search-tag (list "-INBOX" "-differential.other") beg end)
+        (notmuch-search-tag (list "-INBOX") beg end)
         (notmuch-refresh-this-buffer)))
 
 ; Mute mail in search mode
@@ -155,7 +155,7 @@ With a prefix argument, jump to the `notmuch' home screen."
   (lambda ()
     "Remove all shown messages in thread from inbox, return to search mode"
     (interactive)
-    (notmuch-show-tag-all (list "-INBOX" "-differential.other"))
+    (notmuch-show-tag-all (list "-INBOX"))
     (notmuch-bury-or-kill-this-buffer)
     (notmuch-refresh-this-buffer)
     (notmuch-search-last-thread)))

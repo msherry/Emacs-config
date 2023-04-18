@@ -31,7 +31,7 @@
     ;; an agenda buffer open
     (when agenda-window
       (with-selected-window agenda-window (org-agenda-redo)))))
-(run-at-time nil 300 'msherry/org-agenda-redo-in-other-window)
+;(run-at-time nil 300 'msherry/org-agenda-redo-in-other-window)
 
 
 ;;; Display popup alerts From
@@ -201,7 +201,7 @@ http://stackoverflow.com/a/17067170/52550"
           (add-text-properties (match-beginning 0) (point-at-eol)
                                '(face font-lock-constant-face)))))
     (goto-char (point-min))
-    (while (re-search-forward "affirm:" nil t)
+    (while (re-search-forward "futureproof:" nil t)
       (save-excursion
         ;; Color unaccepted meetings
         (when (not (re-search-backward "======" nil t))
@@ -380,8 +380,8 @@ as the default task."
                (equal org-clock-current-task (msherry/get-email-task-name)))
       (org-clock-out))))
 
-(advice-add 'msherry-notmuch-unread :before #'msherry/clock-in-email-task)
-(advice-add 'notmuch-bury-or-kill-this-buffer :after #'msherry/clock-out-of-email)
+;; (advice-add 'msherry-notmuch-unread :before #'msherry/clock-in-email-task)
+;; (advice-add 'notmuch-bury-or-kill-this-buffer :after #'msherry/clock-out-of-email)
 
 ;;; Flyspell-mode clobbers this
 (define-key org-mode-map (kbd "s-<tab>") #'pcomplete)

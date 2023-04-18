@@ -369,7 +369,7 @@
 (window-numbering-mode)
 
 ;; Enable elpy for python
-(elpy-enable)
+;(elpy-enable)
 
 ; Create two windows initially if we have the room. Check both current width
 ; and width from default-frame-alist (if present), since the frame may not have
@@ -405,7 +405,10 @@
   (c-set-offset 'arglist-close '++)
   (setq show-trailing-whitespace t)
   ;; Completion that doesn't compete with OSX's program switching
-  (local-set-key (kbd "s-<tab>") 'complete-symbol))
+  (local-set-key (kbd "s-<tab>") 'complete-symbol)
+  ;; Enable LSP
+  (lsp-deferred)
+  )
 
 
 ;; Colors in files where it makes sense

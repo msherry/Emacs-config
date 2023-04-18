@@ -26,6 +26,7 @@ emojis/
 elpy/
 magithub/
 eshell/
+org-persist/
 
 org
 bookmarks
@@ -40,3 +41,4 @@ projectile.cache
 smex-items
 eln-cache/
 recentf
+.lsp-session*
