@@ -42,3 +42,4 @@ smex-items
 eln-cache/
 recentf
 .lsp-session*
+.cache
