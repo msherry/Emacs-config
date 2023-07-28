@@ -668,5 +668,6 @@ works as I expect it to when calling this programmatically."
 (add-hook 'org-agenda-finalize-hook #'org-agenda-delete-empty-blocks)
 
 
+
 (provide 'org-customization)
 ;;; org-customization.el ends here

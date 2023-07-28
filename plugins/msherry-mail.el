@@ -35,31 +35,6 @@
              when (equal search-name (notmuch-saved-search-get search :name))
              collect search)))
 
-(defvar msherry-notmuch-new-mail-search-str
-  (notmuch-saved-search-get (msherry/get-notmuch-saved-search-by-name "unread (futureproof)") :query)
-  "The default search string used to see if new mail is present.
-
-
-TODO: it looks like we can remove interesting phab emails from the INBOX and leave them unread.
-
-Unread mail, and either in the Inbox (not filtered/muted by
-gmail), or a member of a flagged (starred thread) AND tagged with
-'differential.other'.
-
-
-Phab emails:
- - first one should show up in inbox
- - subsequent ones should show up if
-   - i am an author, reviewer, or subscriber
-     - but NOT if i am an actor
-
-
-Gmail must be set up to:
-- Mark uninteresting phabricator emails (not reviewer()/subscriber()) as read/removed from inbox
-  - from:phabricator@affirm.com -\"reviewer(@marc.sherry)\" -\"subscriber(@marc.sherry)\" -\"author(@marc.sherry)\"
-
-Offlineimap must:
-- Run the post-new hook to tag flagged threads with thread_flagged")
 
 (defun msherry-notmuch-unread (arg)
   "Jump immediately to unread emails in notmuch.
@@ -294,6 +269,32 @@ https://gist.github.com/dbp/9627194"
                         secret)))
     real-secret))
 
+
+(defvar msherry-notmuch-new-mail-search-str
+  (notmuch-saved-search-get (msherry/get-notmuch-saved-search-by-name "unread (futureproof)") :query)
+  "The default search string used to see if new mail is present.
+
+
+TODO: it looks like we can remove interesting phab emails from the INBOX and leave them unread.
+
+Unread mail, and either in the Inbox (not filtered/muted by
+gmail), or a member of a flagged (starred thread) AND tagged with
+'differential.other'.
+
+
+Phab emails:
+ - first one should show up in inbox
+ - subsequent ones should show up if
+   - i am an author, reviewer, or subscriber
+     - but NOT if i am an actor
+
+
+Gmail must be set up to:
+- Mark uninteresting phabricator emails (not reviewer()/subscriber()) as read/removed from inbox
+  - from:phabricator@affirm.com -\"reviewer(@marc.sherry)\" -\"subscriber(@marc.sherry)\" -\"author(@marc.sherry)\"
+
+Offlineimap must:
+- Run the post-new hook to tag flagged threads with thread_flagged")
 
 (provide 'msherry-mail)
 

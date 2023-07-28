@@ -37,9 +37,13 @@ Assumes a Github remote.")
   "Base URL to use for linking code snippets using `mirth', multi-line version.
 
 Assumes a Github remote.")
+
+(defvar mirth-default-branch-name "main"
+  "Older repos will probably use `master`.")
 ;;; Any string value should be safe enough -- don't prompt for confirmation.
 (put 'mirth-base-url 'safe-local-variable 'stringp)
 (put 'mirth-base-url-multiline 'safe-local-variable 'stringp)
+(put 'mirth-default-branch-name 'safe-local-variable 'stringp)
 
 
 (defun mirth--shell-command (command)
@@ -68,9 +72,9 @@ prefix args (numeric value 16), return the SHA of the current
 head of master, even if that is not the checked-out revision.
 Otherwise, return \"master\"."
   (if (not pinned)
-      "master"
+      mirth-default-branch-name
     (let ((refname (if (= 16 (prefix-numeric-value pinned))
-                       "master"
+                       mirth-default-branch-name
                      "HEAD")))
       (mirth--shell-command (format "git rev-parse --short %s" refname)))))
 

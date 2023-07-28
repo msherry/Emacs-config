@@ -31,6 +31,7 @@
  '(arduino-executable "/Applications/Arduino.app/Contents/MacOS/Arduino")
  '(auth-sources '("~/.authinfo.gpg" "~/.authinfo" "~/.netrc"))
  '(auto-revert-verbose nil)
+ '(blacken-line-length 100)
  '(csv-separators '("\11" ","))
  '(custom-safe-themes
    '("8aebf25556399b58091e533e455dd50a6a9cba958cc4ebb0aab175863c25b9a4" default))
@@ -73,6 +74,8 @@
           " # " " $ "))))
  '(exec-path-from-shell-variables '("PATH" "MANPATH" "CARGO_HOME" "RUST_SRC_PATH" "GOPATH"))
  '(flycheck-checker-error-threshold nil)
+ '(flycheck-checkers
+   '(python-pycheckers lsp ada-gnat asciidoctor asciidoc awk-gawk bazel-build-buildifier bazel-module-buildifier bazel-starlark-buildifier bazel-workspace-buildifier c/c++-clang c/c++-gcc c/c++-cppcheck cfengine chef-foodcritic coffee coffee-coffeelint coq css-csslint css-stylelint cuda-nvcc cwl d-dmd dockerfile-hadolint elixir-credo emacs-lisp emacs-lisp-checkdoc ember-template erlang-rebar3 erlang eruby-erubis eruby-ruumba fortran-gfortran go-gofmt go-golint go-vet go-build go-test go-errcheck go-unconvert go-staticcheck groovy haml handlebars haskell-stack-ghc haskell-ghc haskell-hlint html-tidy javascript-eslint javascript-jshint javascript-standard json-jsonlint json-python-json json-jq jsonnet less less-stylelint llvm-llc lua-luacheck lua markdown-markdownlint-cli markdown-mdl nix nix-linter opam perl perl-perlcritic php php-phpmd php-phpcs processing proselint protobuf-protoc protobuf-prototool pug puppet-parser puppet-lint python-flake8 python-pylint python-pycompile python-pyright python-mypy r-lintr racket rpm-rpmlint rst-sphinx rst ruby-rubocop ruby-standard ruby-reek ruby-rubylint ruby ruby-jruby rust-cargo rust rust-clippy scala scala-scalastyle scheme-chicken scss-lint scss-stylelint sass/scss-sass-lint sass scss sh-bash sh-posix-dash sh-posix-bash sh-zsh sh-shellcheck slim slim-lint sql-sqlint systemd-analyze tcl-nagelfar terraform terraform-tflint tex-chktex tex-lacheck texinfo textlint typescript-tslint verilog-verilator vhdl-ghdl xml-xmlstarlet xml-xmllint yaml-jsyaml yaml-ruby yaml-yamllint))
  '(flycheck-display-errors-delay 0.15)
  '(flycheck-flake8-maximum-line-length 120)
  '(flycheck-global-modes '(not org-mode org-agenda-mode))
@@ -99,7 +102,9 @@
  '(jabber-alert-message-wave "/System/Library/Sounds/Bottle.aiff")
  '(jabber-auto-reconnect t)
  '(jiralib-agile-page-size 500)
- '(jiralib-url "https://jira.team.affirm.com")
+ '(jiralib-url "https://futureprooftech.atlassian.net")
+ '(lsp-diagnostics-provider :none)
+ '(lsp-warn-no-matched-clients nil)
  '(magit-log-arguments '("--graph" "--color" "--decorate" "-n256"))
  '(magit-push-always-verify nil)
  '(magit-section-visibility-indicator nil)
@@ -264,6 +269,7 @@
    '(("In Progress" . "IN_PROGRESS")
      ("In Review" . "IN_PROGRESS")
      ("Ready For Deploy" . "IN_QUEUE")))
+ '(org-jira-working-dir "~/.emacs.d/org/org-jira")
  '(org-list-allow-alphabetical t)
  '(org-log-done 'time)
  '(org-mobile-agendas '("c"))
@@ -293,7 +299,7 @@
  '(org-todo-keyword-faces '(("BLOCKED" . "#586e75") ("IN_QUEUE" . "#586e75")))
  '(org-use-sub-superscripts '{})
  '(package-selected-packages
-   '(ac-geiser ack arduino-cli-mode arduino-mode auctex auto-minor-mode bazel-mode blacken cargo cider clojure-mode clojure-mode-extra-font-locking common-lisp-snippets counsel diff-hl dockerfile-mode dtrace-script-mode el2markdown elpy emojify ess esup exec-path-from-shell feature-mode find-find-in-project flx flx-ido flycheck-clojure flycheck-ocaml flycheck-package flycheck-pycheckers flycheck-rust fxrd-mode geiser geiser-guile geiser-racket git-modes go-mode graphviz-dot-mode groovy-mode helm-projectile httpcode ido-completing-read+ ivy jabber jedi json-mode julia-mode kotlin-mode latex-preview-pane lsp-jedi lsp-mode lsp-treemacs lsp-ui magit magit-todos magithub markdown-preview-mode notmuch oauth2 ol-notmuch org org-agenda-property org-contrib org-jira org-mru-clock org-pomodoro org-super-agenda ox-gfm package-lint paredit php-mode pinentry protobuf-mode puppet-mode pymacs python-mode racer racket-mode rainbow-mode realgud-ipdb rmsbolt rust-mode s salt-mode sass-mode slime smex smtpmail-multi solarized-theme string-inflection suggest swift-mode tagedit thrift tickscript-mode tuareg virtualenv which-key window-numbering yaml-mode yasnippet-snippets))
+   '(ac-geiser ack arduino-cli-mode arduino-mode auctex auto-minor-mode bazel-mode blacken cargo cider clojure-mode clojure-mode-extra-font-locking common-lisp-snippets counsel diff-hl dockerfile-mode dtrace-script-mode el2markdown elpy emojify ess esup exec-path-from-shell feature-mode find-find-in-project flx flx-ido flycheck-clojure flycheck-ocaml flycheck-package flycheck-pycheckers flycheck-rust fxrd-mode geiser geiser-guile geiser-racket git-modes go-mode graphviz-dot-mode groovy-mode helm-projectile httpcode ido-completing-read+ ivy jabber jedi json-mode julia-mode kotlin-mode latex-preview-pane lsp-jedi lsp-mode lsp-treemacs lsp-ui magit magit-todos magithub markdown-preview-mode notmuch oauth2 ol-notmuch org org-agenda-property org-contrib org-jira org-mru-clock org-pomodoro org-super-agenda ox-gfm package-lint paredit php-mode pinentry protobuf-mode puppet-mode pymacs python-coverage python-mode python-pytest racer racket-mode rainbow-mode realgud-ipdb rmsbolt rust-mode s salt-mode sass-mode slime smex smtpmail-multi solarized-theme string-inflection suggest swift-mode tagedit thrift tickscript-mode tuareg virtualenv which-key window-numbering yaml-mode yasnippet-snippets))
  '(projectile-completion-system 'ivy)
  '(projectile-enable-caching t)
  '(projectile-globally-ignored-modes
@@ -302,7 +308,10 @@
  '(racer-rust-src-path nil)
  '(rust-format-on-save t)
  '(safe-local-variable-values
-   '((magit-todos-depth . 1)
+   '((time-stamp-active . t)
+     (elpy-test-runner . elpy-test-pytest-runner)
+     (blacken-line-length . 100)
+     (magit-todos-depth . 1)
      (org-confirm-babel-evaluate)
      (arduino-cli-default-fqbn . "arduino:avr:nano:cpu=atmega328old")
      (arduino-cli-default-port . "/dev/cu.wchusbserial1410")

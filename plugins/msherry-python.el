@@ -16,6 +16,8 @@
             (setq jedi:complete-on-dot t)
             (setq jedi:tooltip-method nil)
             (define-key jedi-mode-map (kbd "C-c .") nil)
+            (ignore-errors
+              (python-coverage-overlay-mode))
             ;(elpy-mode -1)  ;; currently broken
             ;(define-key elpy-mode-map (kbd "<M-left>") nil)
             ;(define-key elpy-mode-map (kbd "<M-right>") nil)
@@ -39,6 +41,32 @@
   (if (not (get-buffer-window (process-buffer (elpy-shell-get-or-create-process))))
       (apply orig-fun args)))
 (advice-add 'elpy-shell-display-buffer :around #'dont-display-if-visible)
+
+
+;; Redefine this to not throw errors on missing files
+(defun python-coverage--find-class-node (tree file-name)
+  "Find the <class> XML node in TREE for the specified FILE-NAME."
+  ;; Unfortunately, the XML does not contain full file paths. Find all
+  ;; <class name=...> elements for the base file name, then check if
+  ;; any of them matches when combined with any of the source paths.
+  (-if-let*
+      ((file-name-without-directory (file-name-nondirectory file-name))
+       (query `((coverage) > (packages) > (package) > (classes) >
+                (class :name ,file-name-without-directory)))
+       (class-node-candidates (xml+-query-all tree query))
+       (source-paths (python-coverage--get-source-paths tree))
+       (class-node
+        (--first
+         (python-coverage--class-node-matches-file-name? it file-name source-paths)
+         class-node-candidates)))
+      class-node
+    ;(warn "Coverage file contains no information for file ‘%s’" file-name)
+    nil))
+
+;; Run pytest tests in python
+(eval-after-load "python-mode"
+  (lambda ()
+    (define-key python-mode-map (kbd "C-c C-/") 'python-pytest-dispatch)))
 
 
 (provide 'msherry-python)

@@ -292,7 +292,7 @@
 ;; Make kill-ring-save work like normal in magit modes
 (define-key magit-mode-map (kbd "M-w") nil)
 
-; Util functions for dired
+                                        ; Util functions for dired
 (eval-after-load "dired"
   (lambda ()
     (define-key dired-mode-map "F" #'find-matching-pattern-under-dir)))
@@ -735,7 +735,7 @@ http://blogs.fluidinfo.com/terry/2011/11/10/emacs-buffer-mode-histogram/"
                       ;; "--dont-skip __init__.py" ; why would you skip this?
                       "--line-width 100"
                       "--multi-line 3"
-                      "--project affirm"
+                      "--project app"
                       "--project tests"
                       ;; "--thirdparty typing" ; treat this as third-party since we use Python 2.7
                       "--trailing-comma"
@@ -830,5 +830,5 @@ http://blogs.fluidinfo.com/terry/2011/11/10/emacs-buffer-mode-histogram/"
 
 (provide 'init)
 
-;;; init.el ends here
 (put 'list-timers 'disabled nil)
+;;; init.el ends here

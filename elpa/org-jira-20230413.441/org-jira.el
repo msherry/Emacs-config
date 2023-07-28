@@ -9,7 +9,7 @@
 ;;
 ;; Maintainer: Matthew Carter <m@ahungry.com>
 ;; URL: https://github.com/ahungry/org-jira
-;; Version: 4.3.2
+;; Version: 4.3.3
 ;; Keywords: ahungry jira org bug tracker
 ;; Package-Requires: ((emacs "24.5") (cl-lib "0.5") (request "0.2.0") (dash "2.14.1"))
 
@@ -37,6 +37,13 @@
 ;; issue servers.
 
 ;;; News:
+
+;;;; Changes in 4.4.1
+;; - Fix tag (4.3.3 was out of order - we had a 4.4.0 on repo)
+;; - Fix for some crazy scoping issue in the org-jira-get-issue-val-from-org function
+
+;;;; Changes in 4.3.3:
+;; - Address issue with assignee property being removed when Unassigned
 
 ;;;; Changes in 4.3.2:
 ;; - Fixes issues with org-jira-add-comment and org-jira-update-comment
@@ -772,20 +779,10 @@ Example: \"2012-01-09T08:59:15.000Z\" becomes \"2012-01-09
   "Convert TIME-STAMP into org-clock format."
   (format-time-string "%Y-%m-%d %a %H:%M" time-stamp))
 
-(defun org-jira-date-strip-letter-t (date)
-  "Convert DATE into a time stamp and then into org-clock format.
-Expects a date in format such as: 2017-02-26T00:08:00.000-0500 and
-returns in format 2017-02-26 00:08:00-0500."
-  (replace-regexp-in-string
-   "\\.000\\([-+]\\)" "\\1"
-   (replace-regexp-in-string "^\\(.*?\\)T" "\\1 " date)))
-
 (defun org-jira-date-to-org-clock (date)
   "Convert DATE into a time stamp and then into org-clock format.
 Expects a date in format such as: 2017-02-26T00:08:00.000-0500."
-  (org-jira-time-stamp-to-org-clock
-   (date-to-time
-    (org-jira-date-strip-letter-t date))))
+  (org-jira-time-stamp-to-org-clock (date-to-time date)))
 
 (defun org-jira-worklogs-to-org-clocks (worklogs)
   "Get a list of WORKLOGS and convert to org-clocks."
@@ -1140,12 +1137,12 @@ ORG-JIRA-PROJ-KEY-OVERRIDE being set before and after running."
             (save-excursion
               (org-back-to-heading t)
               (org-set-tags-to (replace-regexp-in-string "-" "_" issue-id)))
+            (org-jira-entry-put (point) "assignee" (or (slot-value Issue 'assignee) "Unassigned"))
             (mapc (lambda (entry)
                     (let ((val (slot-value Issue entry)))
-                      (when (or (and val (not (string= val "")))
-                                (eq entry 'assignee)) ;; Always show assignee
+                      (when (and val (not (string= val "")))
                         (org-jira-entry-put (point) (symbol-name entry) val))))
-                  '(assignee filename reporter type type-id priority labels resolution status components created updated sprint))
+                  '(filename reporter type type-id priority labels resolution status components created updated sprint))
 
             (org-jira-entry-put (point) "ID" issue-id)
             (org-jira-entry-put (point) "CUSTOM_ID" issue-id)
@@ -1767,14 +1764,18 @@ that should be bound to an issue."
                          (jiralib-get-issue-types))))
          (initial-input (when (member (car org-jira-type-read-history) issue-types)
                           org-jira-type-read-history)))
+
+    ;; TODO: The completing-read calls as such are all over the place, and always tend
+    ;; to follow this exact same call structure - we should abstract to a single fn
+    ;; that will allow calling with fewer or keyword args
     (completing-read
-     "Type: "
-     issue-types
-     nil
-     t
-     nil
-     initial-input
-     (car initial-input))))
+     "Type: "                           ; PROMPT
+     issue-types                        ; COLLECTION
+     nil                                ; PREDICATE
+     t                                  ; REQUIRE-MATCH
+     nil                                ; INITIAL-INPUT
+     'initial-input                     ; HIST
+     (car initial-input))))             ; DEF
 
 (defun org-jira-read-subtask-type ()
   "Read issue type name."
@@ -1848,42 +1849,61 @@ that should be bound to an issue."
 
 (defun org-jira-get-issue-val-from-org (key)
   "Return the requested value by KEY from the current issue."
-  (ensure-on-issue
-    (cond ((eq key 'description)
-           (org-goto-first-child)
-           (forward-thing 'whitespace)
-           (if (looking-at "description: ")
-               (org-trim (org-get-entry))
-             (error "Can not find description field for this issue")))
+  ;; There is some odd issue when not using any let-scoping, where myself
+  ;; and an array of users are hitting a snag circa 2023-03-01 time frame
+  ;; in which the setq portion of a when clause is being hit even when it
+  ;; evaluates to false - the bug only manifests on a first launch of Emacs - it
+  ;; doesn't occur when re-evaluating this function.  However, wrapping it "fixes"
+  ;; the issue.
+  ;;
+  ;; The first link has the most troubleshooting/diagnosis around the particulars of
+  ;; this bug.
+  ;;
+  ;; See: https://github.com/ahungry/org-jira/issues/319
+  ;; See: https://github.com/ahungry/org-jira/issues/296
+  ;; See: https://github.com/ahungry/org-jira/issues/316
+  (lexical-let ((my-key key))
+    (ensure-on-issue
+      (cond ((eq my-key 'description)
+             (org-goto-first-child)
+             (forward-thing 'whitespace)
+             (if (looking-at "description: ")
+                 (org-trim (org-get-entry))
+               (error "Can not find description field for this issue")))
 
-          ((eq key 'summary)
-           (ensure-on-issue
-             (org-get-heading t t)))
+            ((eq my-key 'summary)
+             (ensure-on-issue
+               (org-get-heading t t)))
 
-          ;; org returns a time tuple, we need to convert it
-          ((eq key 'deadline)
-           (let ((encoded-time (org-get-deadline-time (point))))
-             (when encoded-time
-               (cl-reduce (lambda (carry segment)
-                            (format "%s-%s" carry segment))
-                          (reverse (cl-subseq (decode-time encoded-time) 3 6))))))
+            ;; org returns a time tuple, we need to convert it
+            ((eq my-key 'deadline)
+             (let ((encoded-time (org-get-deadline-time (point))))
+               (when encoded-time
+                 (cl-reduce (lambda (carry segment)
+                              (format "%s-%s" carry segment))
+                            (reverse (cl-subseq (decode-time encoded-time) 3 6))))))
 
-          ;; default case, just grab the value in the properties block
-          (t
-           (when (symbolp key)
-             (setq key (symbol-name key)))
-           (setq key (or (assoc-default key org-jira-property-overrides)
-                         key))
-           (when (string= key "key")
-             (setq key "ID"))
-           ;; The variable `org-special-properties' will mess this up
-           ;; if our search, such as 'priority' is within there, so
-           ;; don't bother with it for this (since we only ever care
-           ;; about the local properties, not any hierarchal or special
-           ;; ones).
-           (let ((org-special-properties nil))
-             (or (org-entry-get (point) key t)
-                 ""))))))
+            ;; default case, just grab the value in the properties block
+            (t
+             (when (symbolp my-key)
+               (setq my-key (symbol-name my-key)))
+
+             (setq my-key (or (assoc-default my-key org-jira-property-overrides)
+                              my-key))
+
+             ;; This is the "impossible" to hit setq that somehow gets hit without the let
+             ;; wrapper around the function input args.
+             (when (string= my-key "key")
+               (setq my-key "ID"))
+
+             ;; The variable `org-special-properties' will mess this up
+             ;; if our search, such as 'priority' is within there, so
+             ;; don't bother with it for this (since we only ever care
+             ;; about the local properties, not any hierarchal or special
+             ;; ones).
+             (let ((org-special-properties nil))
+               (or (org-entry-get (point) my-key t)
+                   "")))))))
 
 (defun org-jira-read-action (actions)
   "Read issue workflow progress ACTIONS."
