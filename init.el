@@ -336,7 +336,7 @@
 ;;; https://github.com/flycheck/flycheck/issues/185
 (with-eval-after-load 'flycheck
   (add-hook 'flycheck-mode-hook
-            '(lambda ()
+            #'(lambda ()
               (local-set-key (kbd "C-c .") 'flycheck-next-error)
               (flycheck-pycheckers-setup)
               (flycheck-rust-setup))
@@ -430,7 +430,7 @@
             ))
 
 (add-hook 'elpy-mode-hook
-          '(lambda ()
+          #'(lambda ()
             ;; C-c C-p is now used by projectile, unbind it from
             ;; elpy-flymake-previous-error, but only if elpy is in use
             (when (boundp 'elpy-mode-map)
@@ -446,7 +446,7 @@
 ;;; At some point, rustfmt stopped respecting .rustfmt.toml files. I can't
 ;;; track down where, so hack it up with a hardcoded path for now.
 (add-hook 'rust-mode-hook
-          '(lambda ()
+          #'(lambda ()
             (setq rust--format-args '("--config-path" "/Users/msherry/src/client/rust/nucleus/.rustfmt.toml"))
             (defun rust--format-call (buf)
               "Format BUF using rustfmt."
@@ -506,10 +506,10 @@
 (unless window-system
   (xterm-mouse-mode 1)
   ;(mouse-wheel-mode 1) ;; https://github.com/eschulte/emacs24-starter-kit/issues/32
-  (global-set-key [mouse-4] '(lambda ()
+  (global-set-key [mouse-4] #'(lambda ()
                                (interactive)
                                (scroll-down 5)))
-  (global-set-key [mouse-5] '(lambda ()
+  (global-set-key [mouse-5] #'(lambda ()
                                (interactive)
                                (scroll-up 5))))
 

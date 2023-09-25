@@ -1,5 +1,7 @@
 ;; Python-related settings and functions
 
+(require 'python-mode)
+
 ;;; Use python-mode, instead of the crappy built-in python.el on the mac
 (autoload 'python-mode "python-mode" "Python Mode." t)
 (add-to-list 'auto-mode-alist '("\\.py$" . python-mode))
@@ -64,9 +66,7 @@
     nil))
 
 ;; Run pytest tests in python
-(eval-after-load "python-mode"
-  (lambda ()
-    (define-key python-mode-map (kbd "C-c C-/") 'python-pytest-dispatch)))
+(define-key python-mode-map (kbd "C-c C-/") 'python-pytest-dispatch)
 
 
 (provide 'msherry-python)

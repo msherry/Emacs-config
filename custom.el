@@ -91,6 +91,7 @@
  '(ido-cr+-allow-list '(org-agenda-refile org-refile))
  '(ido-cr+-disable-list
    '(read-file-name-internal read-buffer todo-add-category gnus-emacs-completing-read gnus-iswitchb-completing-read grep-read-files magit-builtin-completing-read ess-completing-read Info-read-node-name tmm-prompt org-tags-completion-function ffap-read-file-or-url ffap-read-file-or-url-internal copy-region-as-kill))
+ '(ido-enable-flex-matching t)
  '(ivy-use-selectable-prompt t)
  '(jabber-account-list
    '(("msherry@gmail.com"
@@ -102,8 +103,10 @@
  '(jabber-alert-message-wave "/System/Library/Sounds/Bottle.aiff")
  '(jabber-auto-reconnect t)
  '(jiralib-agile-page-size 500)
+ '(jiralib-update-issue-fields-exclude-list '(components reporter priority))
  '(jiralib-url "https://futureprooftech.atlassian.net")
  '(lsp-diagnostics-provider :none)
+ '(lsp-pylsp-plugins-jedi-signature-help-enabled nil)
  '(lsp-warn-no-matched-clients nil)
  '(magit-log-arguments '("--graph" "--color" "--decorate" "-n256"))
  '(magit-push-always-verify nil)
@@ -143,7 +146,17 @@
  '(ocamlformat-enable 'enable-outside-detected-project)
  '(org-agenda-clockreport-parameter-plist '(:link t :maxlevel 3))
  '(org-agenda-custom-commands
-   '(("c" "Agenda and all unscheduled/everyday TODO's / unfiled"
+   '(("w" "Work schedule"
+      ((tags "TODO=DONE"
+             ((org-agenda-overriding-header "Done")))
+       (tags-todo "WORK"
+                  ((org-agenda-overriding-header "Sprints")
+                   (org-super-agenda-groups
+                    '((:auto-property "sprint")))
+                   (org-agenda-sorting-strategy
+                    '((agenda todo-state-down time-up priority-down))))))
+      nil)
+     ("c" "Agenda and all unscheduled/everyday TODO's / unfiled"
       ((tags "REFILE"
              ((org-agenda-overriding-header "To refile")))
        (agenda ""
@@ -181,12 +194,15 @@
       ((org-agenda-overriding-header "Notes")
        (org-tags-match-list-sublevels t)))
      ("o" "Completed tasks older than 6 months (http://gnuru.org/article/1639/org-mode-find-all-done-items-older-than-2-months)" tags "CLOSED<\"<-6m>\"" nil)
-     ("w" "Tasks completed within the past week" tags "CLOSED>=\"<-7d>\"" nil)
+     ("O" "Tasks completed within the past week" tags "CLOSED>=\"<-7d>\"" nil)
      ("u" "All open \"work\" TODOs (to refile)" tags-todo "WORK+ALLTAGS={\\(:FRAUDENG::$\\)\\|\\(:WORK::$\\)}"
       ((org-agenda-overriding-header "Untagged open work TODOs"))
       nil)
      ("U" "All untagged work TODOs (open/closed)" tags "WORK+ALLTAGS={\\(:FRAUDENG::$\\)\\|\\(:WORK::$\\)}"
-      ((org-agenda-overriding-header "Untagged work TODOs (open/closed)")))))
+      ((org-agenda-overriding-header "Untagged work TODOs (open/closed)")))
+     ("N" "Notes" "NOTE"
+      ((org-agenda-overriding-header "Notes")
+       (org-tags-match-list-sublevels t)))))
  '(org-agenda-files '("~/.emacs.d/org" "~/.emacs.d/org/org-jira"))
  '(org-agenda-persistent-filter t)
  '(org-agenda-prefix-format
@@ -225,6 +241,9 @@
    '(("h" "home TODO" entry
       (file+headline "~/.emacs.d/org/home.org" "Tasks")
       "** TODO %?\12%a\12")
+     ("d" "Work TODO (DIGITALMGA)" entry
+      (file+headline "~/.emacs.d/org/org-jira/DIGITALMGA.org" "* DIGITALMGA-Tickets")
+      "** TODO %?\12:PROPERTIES:\12:assignee: marc\12:filename: DIGITALMGA\12:reporter: marc\12:type: Task\12:END:")
      ("w" "work TODO" entry
       (file+headline "~/.emacs.d/org/work.org" "Tasks")
       "** TODO %?\12 %a\12 " :empty-lines-after 1 :clock-resume t)
@@ -266,10 +285,19 @@
  '(org-image-actual-width '(300))
  '(org-indirect-buffer-display 'current-window)
  '(org-jira-jira-status-to-org-keyword-alist
-   '(("In Progress" . "IN_PROGRESS")
-     ("In Review" . "IN_PROGRESS")
-     ("Ready For Deploy" . "IN_QUEUE")))
+   '(("To Do" . "TODO")
+     ("In Progress" . "IN_PROGRESS")
+     ("In Review" . "IN_REVIEW")
+     ("Blocked" . "BLOCKED")
+     ("Done" . "DONE")))
+ '(org-jira-priority-to-org-priority-omit-default-priority t)
+ '(org-jira-progress-issue-flow
+   '(("To Do" . "In Progress")
+     ("In Progress" . "In Review")
+     ("In Review" . "Done")))
+ '(org-jira-property-overrides nil)
  '(org-jira-working-dir "~/.emacs.d/org/org-jira")
+ '(org-jira-worklog-sync-p nil)
  '(org-list-allow-alphabetical t)
  '(org-log-done 'time)
  '(org-mobile-agendas '("c"))
@@ -304,6 +332,7 @@
  '(projectile-enable-caching t)
  '(projectile-globally-ignored-modes
    '("erc-mode" "help-mode" "completion-list-mode" "Buffer-menu-mode" "gnus-.*-mode" "occur-mode" "graphviz-dot-mode"))
+ '(py-underscore-word-syntax-p nil)
  '(python-shell-interpreter "python")
  '(racer-rust-src-path nil)
  '(rust-format-on-save t)

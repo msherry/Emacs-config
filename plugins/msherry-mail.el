@@ -59,19 +59,19 @@ With a prefix argument, jump to the `notmuch' home screen."
                              ((derived-mode-p 'notmuch-show-mode) 'show)))
          ; search and show mode have different ways to tag
          (tag-fn (cl-ecase current-mode
-                   ('search #'notmuch-search-tag)
-                   ('show #'notmuch-show-tag-message)))
+                   (search #'notmuch-search-tag)
+                   (show #'notmuch-show-tag-message)))
          ; search and show mode have different ways to query tags
          (tag-query-fn (cl-ecase current-mode
-                         ('search #'notmuch-search-get-tags)
-                         ('show #'notmuch-show-get-tags)))
+                         (search #'notmuch-search-get-tags)
+                         (show #'notmuch-show-get-tags)))
          ; is the tag currently present?
          (tag-present (member tag-name (funcall tag-query-fn)))
          ; show and search mode tagging functions take args raw or in a list,
          ; respectively
          (tag-changes (funcall (cl-ecase current-mode
-                                 ('search #'list)
-                                 ('show #'identity))
+                                 (search #'list)
+                                 (show #'identity))
                                (concat (if tag-present "-" "+") tag-name))))
     (funcall tag-fn tag-changes)))
 
@@ -271,7 +271,9 @@ https://gist.github.com/dbp/9627194"
 
 
 (defvar msherry-notmuch-new-mail-search-str
-  (notmuch-saved-search-get (msherry/get-notmuch-saved-search-by-name "unread (futureproof)") :query)
+  ;; TODO: searching the saved queries doesn't work here
+  ;; (notmuch-saved-search-get (msherry/get-notmuch-saved-search-by-name "unread (futureproof)") :query)
+  "tag:unread AND tag:INBOX AND tag:futureproof"
   "The default search string used to see if new mail is present.
 
 

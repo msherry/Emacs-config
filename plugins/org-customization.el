@@ -4,6 +4,7 @@
 (require 'org-agenda-property)          ; Show properties like :LOCATION: in agenda
 (require 'org-id)                       ; global identifiers for org entries
 (require 'org-super-agenda)
+(require 'org-jira)
 
 ;;; Commentary:
 
@@ -668,6 +669,141 @@ works as I expect it to when calling this programmatically."
 (add-hook 'org-agenda-finalize-hook #'org-agenda-delete-empty-blocks)
 
 
+(eval-after-load "org-jira-mode"
+  (progn
+    ;; Customize this to fetch the custom field for the sprint name
+    (cl-defmethod org-jira-sdk-from-data ((rec org-jira-sdk-issue))
+      (cl-flet ((path (keys) (org-jira-sdk-path (oref rec data) keys)))
+        (org-jira-sdk-issue
+         :assignee (path '(fields assignee displayName))
+         :components (mapconcat (lambda (c) (org-jira-sdk-path c '(name))) (path '(fields components)) ", ")
+         :labels (mapconcat (lambda (c) (format "%s" c)) (mapcar #'identity (path '(fields labels))) ", ")
+         :created (path '(fields created))  ; confirm
+         :description (or (path '(fields description)) "")
+         :duedate (or (path '(fields sprint endDate)) (path '(fields duedate))) ; confirm
+         :filename (path '(fields project key))
+         :headline (path '(fields summary)) ; Duplicate of summary, maybe different.
+         :id (path '(key))
+         :issue-id (path '(key))
+         :issue-id-int (path '(id))
+         :priority (path '(fields priority name))
+         :proj-key (path '(fields project key))
+         :reporter (path '(fields reporter displayName)) ; reporter could be an object of its own slot values
+         :resolution (path '(fields resolution name))    ; confirm
+         :sprint (or
+                  (path '(fields sprint name))
+                  (and (path '(fields customfield_10020))
+                       (cdr (assoc 'name
+                                   ;; we're assuming that the last value is the latest sprint
+                                   (let ((vals (path '(fields customfield_10020))))
+                                     (aref vals (1- (length vals)))))))
+                  "")
+         :start-date (path '(fields start-date)) ; confirm
+         :status (org-jira-decode (path '(fields status name)))
+         :summary (path '(fields summary))
+         :type (path '(fields issuetype name))
+         :type-id (path '(fields issuetype id))
+         :updated (path '(fields updated))  ; confirm
+         ;; TODO: Remove this
+         ;; :data (oref rec data)
+         )))
+
+
+    ;; Similarly, set the custom field for the sprint *id*
+    (defun org-jira-update-issue-details (issue-id filename &rest rest)
+      "Update the details of issue ISSUE-ID in FILENAME.  REST will contain optional input."
+      (ensure-on-issue-id-with-filename issue-id filename
+                                        ;; Set up a bunch of values from the org content
+                                        (let* ((org-issue-components (org-jira-get-issue-val-from-org 'components))
+                                               (org-issue-labels (org-jira-get-issue-val-from-org 'labels))
+                                               (org-issue-description (org-trim (org-jira-get-issue-val-from-org 'description)))
+                                               (org-issue-priority (org-jira-get-issue-val-from-org 'priority))
+                                               (org-issue-type (org-jira-get-issue-val-from-org 'type))
+                                               (org-issue-type-id (org-jira-get-issue-val-from-org 'type-id))
+                                               (org-issue-sprint (org-jira-get-issue-val-from-org 'sprint))
+                                               (org-issue-assignee (cl-getf rest :assignee (org-jira-get-issue-val-from-org 'assignee)))
+                                               (org-issue-reporter (cl-getf rest :reporter (org-jira-get-issue-val-from-org 'reporter)))
+                                               (project (replace-regexp-in-string "-[0-9]+" "" issue-id))
+                                               (project-components (jiralib-get-components project)))
+
+                                          ;; Lets fire off a worklog update async with the main issue
+                                          ;; update, why not?  This is better to fire first, because it
+                                          ;; doesn't auto-refresh any areas, while the end of the main
+                                          ;; update does a callback that reloads the worklog entries (so,
+                                          ;; we hope that wont occur until after this successfully syncs
+                                          ;; up).  Only do this sync if the user defcustom defines it as such.
+                                          (when org-jira-worklog-sync-p
+                                            (org-jira-update-worklogs-from-org-clocks))
+
+                                          ;; Send the update to jira
+                                          (let ((update-fields
+                                                 (list (cons
+                                                        'components
+                                                        (or (org-jira-build-components-list
+                                                             project-components
+                                                             org-issue-components) []))
+                                                       (cons 'labels (split-string org-issue-labels ",\\s *"))
+                                                       (cons 'priority (org-jira-get-id-name-alist org-issue-priority
+                                                                                                   (jiralib-get-priorities)))
+                                                       (cons 'description org-issue-description)
+                                                       (cons 'customfield_10020 (save-match-data (string-to-number (and (string-match "\\([[:digit:]]+\\)" org-issue-sprint) (match-string 1 org-issue-sprint)))))
+                                                       (cons 'assignee (list (cons 'id (jiralib-get-user-account-id project org-issue-assignee))))
+                                                       (cons 'reporter (list (cons 'id (jiralib-get-user-account-id project org-issue-reporter))))
+                                                       (cons 'summary (org-jira-strip-priority-tags (org-jira-get-issue-val-from-org 'summary)))
+                                                       (cons 'issuetype `((id . ,org-issue-type-id)
+                                                                          (name . ,org-issue-type))))))
+
+
+                                            ;; If we enable duedate sync and we have a deadline present
+                                            (when (and org-jira-deadline-duedate-sync-p
+                                                       (org-jira-get-issue-val-from-org 'deadline))
+                                              (setq update-fields
+                                                    (append update-fields
+                                                            (list (cons 'duedate (org-jira-get-issue-val-from-org 'deadline))))))
+
+                                            ;; TODO: We need some way to handle things like assignee setting
+                                            ;; and refreshing the proper issue in the proper buffer/filename.
+                                            (jiralib-update-issue
+                                             issue-id
+                                             update-fields
+                                             ;; This callback occurs on success
+                                             (org-jira-with-callback
+                                               (message (format "Issue '%s' updated!" issue-id))
+                                               (jiralib-get-issue
+                                                issue-id
+                                                (org-jira-with-callback
+                                                  (org-jira-log "Update get issue for refresh callback hit.")
+                                                  (-> cb-data list org-jira-get-issues))))
+                                             ))
+                                          )))
+
+    ;; Don't attempt to set priority when creating issues
+    (defun org-jira-get-issue-struct (project type summary description &optional parent-id)
+      "Create an issue struct for PROJECT, of TYPE, with SUMMARY and DESCRIPTION."
+      (if (or (equal project "")
+              (equal type "")
+              (equal summary ""))
+          (error "Must provide all information!"))
+      (let* ((project-components (jiralib-get-components project))
+             (jira-users (org-jira-get-assignable-users project))
+             (user (completing-read "Assignee: " (mapcar 'car jira-users)))
+             (priority (car (rassoc (org-jira-read-priority) (jiralib-get-priorities))))
+             (ticket-struct
+              `((fields
+                 (project (key . ,project))
+                 (parent (key . ,parent-id))
+                 (issuetype (id . ,(car (rassoc type (if (and (boundp 'parent-id) parent-id)
+                                                         (jiralib-get-subtask-types)
+                                                       (jiralib-get-issue-types-by-project project))))))
+                 (summary . ,(format "%s%s" summary
+                                     (if (and (boundp 'parent-id) parent-id)
+                                         (format " (subtask of [jira:%s])" parent-id)
+                                       "")))
+                 (description . ,description)
+                 ;(priority (id . ,priority))
+                 ;; accountId should be nil if Unassigned, not the key slot.
+                 (assignee (accountId . ,(or (cdr (assoc user jira-users)) nil)))))))
+        ticket-struct))))
 
 (provide 'org-customization)
 ;;; org-customization.el ends here
