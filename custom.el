@@ -112,6 +112,7 @@
  '(magit-push-always-verify nil)
  '(magit-section-visibility-indicator nil)
  '(magit-tag-arguments '("--annotate"))
+ '(magit-todos-insert-after '(bottom) nil nil "Changed by setter of obsolete option `magit-todos-insert-at'")
  '(max-lisp-eval-depth 217640)
  '(max-specpdl-size 36400 t)
  '(mm-inline-large-images 'resize)
