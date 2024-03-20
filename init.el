@@ -95,6 +95,8 @@
 (require 'flycheck-pycheckers)
 (require 'highlight-beyond-fill-column)
 (require 'magit)
+(with-eval-after-load 'magit
+  (require 'forge))
 (require 'paredit)
 (require 'rainbow-mode)
 (require 'saveplace)
@@ -827,6 +829,10 @@ http://blogs.fluidinfo.com/terry/2011/11/10/emacs-buffer-mode-histogram/"
 (eval-after-load 'tramp
   '(progn
      (teleport-tramp-add-method)))
+
+(defalias 'hoist-build-method
+   (kmacro "C-w <left> C-SPC M-m M-w C-e <left> c l s . b u i l d _ C-y ( q r ) C-r c l a s s m e t h o d RET <up> RET RET <up> TAB @ s t a t i c m e t h o d <left> <right> RET d e f SPC b u i l d _ C-y ( q r : Q u o t e R e q u e s t D e t a i l s ) SPC - > SPC N o n e : RET r e t u r n SPC C-y M-y C-u C-SPC C-u C-SPC C-u C-SPC"))
+
 
 (provide 'init)
 

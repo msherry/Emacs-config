@@ -43,3 +43,4 @@ eln-cache/
 recentf
 .lsp-session*
 .cache
+forge-database.sqlite
