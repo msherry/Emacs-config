@@ -306,14 +306,15 @@
      geiser-guile geiser-racket git-modes go-mode graphviz-dot-mode groovy-mode
      helm-projectile httpcode ido-completing-read+ ivy jabber jedi json-mode
      julia-mode kotlin-mode latex-preview-pane lsp-jedi lsp-mode lsp-treemacs
-     lsp-ui magit magit-todos magithub markdown-preview-mode notmuch oauth2
-     ol-notmuch org org-agenda-property org-contrib org-jira org-mru-clock
-     org-pomodoro org-super-agenda ox-gfm package-lint paredit php-mode
-     pinentry protobuf-mode puppet-mode pymacs python-coverage python-mode
-     python-pytest racer racket-mode rainbow-mode realgud-ipdb rmsbolt
-     rust-mode s salt-mode sass-mode slime smex smtpmail-multi solarized-theme
-     string-inflection suggest swift-mode tagedit thrift tickscript-mode tuareg
-     virtualenv which-key window-numbering yaml-mode yasnippet-snippets))
+     lsp-ui lua-mode magit magit-todos magithub markdown-preview-mode notmuch
+     oauth2 ol-notmuch org org-agenda-property org-contrib org-jira
+     org-mru-clock org-pomodoro org-super-agenda org-table-sticky-header ox-gfm
+     package-lint paredit php-mode pinentry protobuf-mode puppet-mode pymacs
+     python-coverage python-mode python-pytest racer racket-mode rainbow-mode
+     realgud-ipdb rmsbolt rust-mode s salt-mode sass-mode slime smex
+     smtpmail-multi solarized-theme string-inflection suggest swift-mode
+     tagedit thrift tickscript-mode tuareg virtualenv which-key
+     window-numbering yaml-mode yasnippet-snippets))
  '(projectile-completion-system 'ivy)
  '(projectile-enable-caching t)
  '(projectile-globally-ignored-modes
@@ -324,9 +325,9 @@
  '(racer-rust-src-path nil)
  '(rust-format-on-save t)
  '(safe-local-variable-values
-   '((time-stamp-active . t) (elpy-test-runner . elpy-test-pytest-runner)
-     (blacken-line-length . 100) (magit-todos-depth . 1)
-     (org-confirm-babel-evaluate)
+   '((eval org-table-sticky-header-mode t) (time-stamp-active . t)
+     (elpy-test-runner . elpy-test-pytest-runner) (blacken-line-length . 100)
+     (magit-todos-depth . 1) (org-confirm-babel-evaluate)
      (arduino-cli-default-fqbn . "arduino:avr:nano:cpu=atmega328old")
      (arduino-cli-default-port . "/dev/cu.wchusbserial1410")
      (arduino-cli-default-port . "/dev/cu.wchusbserial1420")

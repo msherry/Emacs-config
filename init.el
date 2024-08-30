@@ -202,7 +202,7 @@
 (blink-cursor-mode 1)
 (show-paren-mode t)
 ; (ido-ubiquitous-mode 1)
-(global-emojify-mode)
+;; (global-emojify-mode)
 (which-key-mode)
 
 ; Display
