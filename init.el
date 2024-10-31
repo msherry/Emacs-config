@@ -14,6 +14,19 @@
 (setq save-place-file "~/.emacs.d/emacs-places"
       backup-directory-alist '(("." . "~/.emacs.d/backups")))
 
+;; https://github.com/d12frosted/homebrew-emacs-plus/issues/554#issuecomment-1564287827
+;; HACK Work around native compilation on macOS failing with 'ld: library not
+;; found for -lemutls_w'.
+;; https://github.com/d12frosted/homebrew-emacs-plus/issues/554
+;; https://lists.gnu.org/archive/html/help-gnu-emacs/2021-10/msg00419.html
+;;; Adjust versions as necessary
+(setenv "LIBRARY_PATH"
+	(string-join
+	 '("/opt/homebrew/opt/gcc/lib/gcc/current"
+	   "/opt/homebrew/opt/libgccjit/lib/gcc/current"
+	   "/opt/homebrew/opt/gcc/lib/gcc/current/gcc/aarch64-apple-darwin24/14")
+	 ":"))
+
 ; Seed RNG
 (random t)
 

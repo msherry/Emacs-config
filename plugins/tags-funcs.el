@@ -1,6 +1,6 @@
 ;; Marc Sherry
 
-;; Depends on exuberant ctags being symlinked to etags
+;; Depends on exuberant/universal ctags being installed - NOT emacs ctags
 (defvar tags-cmd "ctags --langmap=c++:.ino -e -R 2>/dev/null")
 
 (defun regen-tags ()
