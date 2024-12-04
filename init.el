@@ -105,11 +105,11 @@
 (require 'comint)        ; better key handling in shell mode
 ;; (require 'doxymacs)
 (require 'erlang-start)
-(require 'flycheck-pycheckers)
+;; (require 'flycheck-pycheckers)
 (require 'highlight-beyond-fill-column)
-(require 'magit)
-(with-eval-after-load 'magit
-  (require 'forge))
+;; (require 'magit)
+;; (with-eval-after-load 'magit
+;;   (require 'forge))
 (require 'paredit)
 (require 'rainbow-mode)
 (require 'saveplace)
@@ -257,9 +257,9 @@
 (setq dired-dwim-target t)
 
 ;; Magit settings
-(setq magit-popup-show-common-commands t)
-(add-to-list 'git-commit-style-convention-checks
-             'overlong-summary-line)
+;; (setq magit-popup-show-common-commands t)
+;; (add-to-list 'git-commit-style-convention-checks
+;;              'overlong-summary-line)
 
 ;; Bindings
 (global-set-key (kbd "M-o") #'other-window)
@@ -305,7 +305,7 @@
 ;; C-j is useful in scratch buffers, and I don't use the paredit version
 (define-key paredit-mode-map (kbd "C-j") nil)
 ;; Make kill-ring-save work like normal in magit modes
-(define-key magit-mode-map (kbd "M-w") nil)
+;; (define-key magit-mode-map (kbd "M-w") nil)
 
                                         ; Util functions for dired
 (eval-after-load "dired"
@@ -838,10 +838,28 @@ http://blogs.fluidinfo.com/terry/2011/11/10/emacs-buffer-mode-histogram/"
                                 (tramp-remote-shell       "/bin/sh")
                                 (tramp-remote-shell-args  ("-i" "-c")))))
 
+;;; https://www.masteringemacs.org/article/how-to-get-started-tree-sitter
+(setq treesit-language-source-alist
+   '((bash "https://github.com/tree-sitter/tree-sitter-bash")
+     (cmake "https://github.com/uyha/tree-sitter-cmake")
+     (css "https://github.com/tree-sitter/tree-sitter-css")
+     (elisp "https://github.com/Wilfred/tree-sitter-elisp")
+     (go "https://github.com/tree-sitter/tree-sitter-go")
+     (html "https://github.com/tree-sitter/tree-sitter-html")
+     (javascript "https://github.com/tree-sitter/tree-sitter-javascript" "master" "src")
+     (json "https://github.com/tree-sitter/tree-sitter-json")
+     (make "https://github.com/alemuller/tree-sitter-make")
+     (markdown "https://github.com/ikatyang/tree-sitter-markdown")
+     (python "https://github.com/tree-sitter/tree-sitter-python")
+     (toml "https://github.com/tree-sitter/tree-sitter-toml")
+     (tsx "https://github.com/tree-sitter/tree-sitter-typescript" "master" "tsx/src")
+     (typescript "https://github.com/tree-sitter/tree-sitter-typescript" "master" "typescript/src")
+     (yaml "https://github.com/ikatyang/tree-sitter-yaml")))
+
 ;;;###autoload
 (eval-after-load 'tramp
   '(progn
-     (teleport-tramp-add-method)))
+    (teleport-tramp-add-method)))
 
 (defalias 'hoist-build-method
    (kmacro "C-w <left> C-SPC M-m M-w C-e <left> c l s . b u i l d _ C-y ( q r ) C-r c l a s s m e t h o d RET <up> RET RET <up> TAB @ s t a t i c m e t h o d <left> <right> RET d e f SPC b u i l d _ C-y ( q r : Q u o t e R e q u e s t D e t a i l s ) SPC - > SPC N o n e : RET r e t u r n SPC C-y M-y C-u C-SPC C-u C-SPC C-u C-SPC"))

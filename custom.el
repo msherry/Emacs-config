@@ -307,10 +307,10 @@
      graphviz-dot-mode groovy-mode helm-projectile httpcode
      ido-completing-read+ ivy jabber jedi json-mode julia-mode kotlin-mode
      latex-preview-pane lsp-jedi lsp-mode lsp-treemacs lsp-ui lua-mode magit
-     magit-todos magithub markdown-preview-mode notmuch oauth2 ol-notmuch org
-     org-agenda-property org-contrib org-jira org-mru-clock org-pomodoro
-     org-super-agenda org-table-sticky-header ox-gfm package-lint paredit
-     php-mode pinentry protobuf-mode puppet-mode pymacs python-coverage
+     magit-section magit-todos magithub markdown-preview-mode notmuch oauth2
+     ol-notmuch org org-agenda-property org-contrib org-jira org-mru-clock
+     org-pomodoro org-super-agenda org-table-sticky-header ox-gfm package-lint
+     paredit php-mode pinentry protobuf-mode puppet-mode pymacs python-coverage
      python-mode python-pytest racer racket-mode rainbow-mode realgud-ipdb
      rmsbolt rust-mode s salt-mode sass-mode slime smex smtpmail-multi
      solarized-theme string-inflection suggest swift-mode tagedit thrift
@@ -340,8 +340,8 @@
      (arduino-cli-default-fqbn . "arduino:avr:nano")
      (arduino-cli-default-port . "/dev/cu.usbmodel1421") (eval org-jira-mode t)
      (jiralib-url . "https://jira.team.affirm.com")
-     (jedi:environment-root .
-      "/Users/marcsherry/src/all-the-things/deployable/monolith/src/.venv")
+     (jedi:environment-root
+      . "/Users/marcsherry/src/all-the-things/deployable/monolith/src/.venv")
      (rust--format-args quote
       ("--config-path" "/Users/msherry/src/client/rust/nucleus/.rustfmt.toml"))
      (flycheck-checker . go-lint) (tickscript-kapacitor-version . "1.3")
