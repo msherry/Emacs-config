@@ -1,6 +1,7 @@
 .DS_Store
 *.elc
 *.pyc
+*.dylib
 auto-save-list/*
 backups/*
 emacs-places
