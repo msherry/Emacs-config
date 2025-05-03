@@ -91,7 +91,7 @@
  '(flycheck-flake8-maximum-line-length 120)
  '(flycheck-global-modes '(not org-mode org-agenda-mode))
  '(flycheck-highlighting-mode 'lines)
- '(flycheck-pycheckers-checkers '(pylint pep8 mypy2 mypy3 bandit))
+ '(flycheck-pycheckers-checkers '(pylint pep8 mypy3 bandit))
  '(flycheck-pycheckers-enable-codes '("W0613"))
  '(flycheck-pycheckers-max-line-length 100)
  '(flycheck-rust-check-tests t)
@@ -139,15 +139,14 @@
  '(notmuch-fcc-dirs '(("msherry@gmail.com" . "msherry@gmail.com/sent")))
  '(notmuch-identities '("marc@futureproof.am" "msherry@gmail.com"))
  '(notmuch-saved-searches
-   '((:name "inbox (futureproof)" :query "tag:INBOX AND tag:futureproof" :key
-      [105])
+   '((:name "inbox (futureproof)" :query "tag:INBOX AND tag:futureproof")
      (:name "unread (futureproof)" :query
-      "tag:unread AND tag:INBOX AND tag:futureproof" :key [117])
-     (:name "inbox (personal)" :query "tag:INBOX and tag:personal" :key [108])
+      "tag:unread AND tag:INBOX AND tag:futureproof")
+     (:name "inbox (personal)" :query "tag:INBOX and tag:personal" :key [105])
      (:name "unread (personal)" :query
-      "tag:unread AND tag:INBOX AND tag:personal" :key [112])
-     (:name "all mail (futureproof)" :query "tag:futureproof" :key [97])
-     (:name "all mail (personal)" :query "tag:personal" :key [109])
+      "tag:unread AND tag:INBOX AND tag:personal" :key [117])
+     (:name "all mail (futureproof)" :query "tag:futureproof")
+     (:name "all mail (personal)" :query "tag:personal" :key [97])
      (:name "Sent mail" :query "tag:sent")))
  '(notmuch-search-oldest-first nil)
  '(ns-alternate-modifier 'super)

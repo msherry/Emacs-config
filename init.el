@@ -400,7 +400,7 @@
 (defvar programming-modes '(actionscript-mode c-mode conf-mode emacs-lisp-mode ess-mode
                             go-mode java-mode javascript-mode js-mode js2-mode lisp-mode
                             makefile-mode objc-mode python-mode ruby-mode rust-mode sh-mode
-                            tickscript-mode)
+                            tickscript-mode yaml-mode)
   "Modes used for programming.")
 
 

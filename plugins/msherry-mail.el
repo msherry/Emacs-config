@@ -44,7 +44,7 @@ With a prefix argument, jump to the `notmuch' home screen."
   (if arg (notmuch)
     ;; Get the (first) "unread (personal)" ("u") search from notmuch-saved-searches
     (let ((inbox-search (notmuch-saved-search-get
-                         (msherry/get-notmuch-saved-search-by-name "unread (futureproof)")
+                         (msherry/get-notmuch-saved-search-by-name "unread (personal)")
                          :query)))
       (notmuch-search inbox-search (default-value 'notmuch-search-oldest-first)))))
 
