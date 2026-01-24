@@ -173,9 +173,8 @@
                    (:name "Due today" :deadline today)
                    (:name "Today" :scheduled today)
                    (:name "Due soon" :deadline future)
-                   (:name "Home" :tag "HOME")
-                   (:name "Motorcycle" :tag "MOTORCYCLE")
-                   (:name "No deadline" :tag "WORK")))
+                   (:name "Home" :tag "HOME") (:name "No deadline" :tag "WORK")
+                   (:name "Motorcycle" :tag "MOTORCYCLE")))
                 (org-agenda-sorting-strategy
                  '((agenda habit-down todo-state-down time-up priority-down
                     category-keep)
@@ -323,6 +322,7 @@
  '(py-underscore-word-syntax-p nil)
  '(python-shell-interpreter "python")
  '(racer-rust-src-path nil)
+ '(remote-file-name-inhibit-locks t)
  '(rust-format-on-save t)
  '(safe-local-variable-values
    '((eval emojify-mode nil) (eval org-table-sticky-header-mode t)
@@ -359,13 +359,15 @@
       nil nil nil)))
  '(smtpmail-multi-associations '(("msherry@gmail.com" personal)))
  '(tickscript-add-extra-graph-options t)
+ '(tramp-copy-size-limit 1048576)
  '(tramp-default-method "ssh")
  '(tramp-default-method-alist
    '((nil "\\`\\(anonymous\\|ftp\\)\\'" "ftp") ("\\`ftp\\." nil "ftp")
      ("\\`\\(127\\.0\\.0\\.1\\|::1\\|Marc\\.S-MBPro\\|localhost6?\\)\\'"
       "\\`root\\'" "su")
      ("raven-\\.*" nil "tsh")))
- '(tramp-syntax 'default nil (tramp)))
+ '(tramp-syntax 'default nil (tramp))
+ '(tramp-use-scp-direct-remote-copying t))
 
 (provide 'custom)
 ;;; custom.el ends here
