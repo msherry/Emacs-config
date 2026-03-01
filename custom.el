@@ -296,24 +296,27 @@
  '(org-use-sub-superscripts '{})
  '(package-selected-packages
    '(ac-geiser ack arduino-cli-mode arduino-mode auctex auto-minor-mode bazel-mode
-     blacken cargo cider clojure-mode clojure-mode-extra-font-locking
-     common-lisp-snippets counsel diff-hl dockerfile-mode dtrace-script-mode
-     el2markdown elpy emojify ess esup exec-path-from-shell feature-mode
-     find-find-in-project flx flx-ido flycheck-clojure flycheck-ocaml
-     flycheck-package flycheck-pycheckers flycheck-rust forge fxrd-mode geiser
-     geiser-guile geiser-racket git-modes gnuplot-mode go-mode
-     graphviz-dot-mode groovy-mode helm-projectile httpcode
-     ido-completing-read+ ivy jabber jedi json-mode julia-mode kotlin-mode
-     latex-preview-pane lsp-jedi lsp-mode lsp-treemacs lsp-ui lua-mode magit
-     magit-section magit-todos magithub markdown-preview-mode notmuch oauth2
-     ol-notmuch org org-agenda-property org-contrib org-jira org-mru-clock
-     org-pomodoro org-super-agenda org-table-sticky-header ox-gfm package-lint
-     paredit php-mode pinentry protobuf-mode puppet-mode pymacs python-coverage
-     python-mode python-pytest racer racket-mode rainbow-mode realgud-ipdb
-     rmsbolt rust-mode s salt-mode sass-mode slime smex smtpmail-multi
-     solarized-theme string-inflection sudo-edit suggest swift-mode tagedit
-     thrift tickscript-mode tuareg virtualenv which-key window-numbering
-     yaml-mode yasnippet-snippets))
+     blacken cargo cider claude-code-ide clojure-mode
+     clojure-mode-extra-font-locking common-lisp-snippets counsel diff-hl
+     dockerfile-mode dtrace-script-mode el2markdown elpy emojify ess esup
+     exec-path-from-shell feature-mode find-find-in-project flx flx-ido
+     flycheck-clojure flycheck-ocaml flycheck-package flycheck-pycheckers
+     flycheck-rust forge fxrd-mode geiser geiser-guile geiser-racket git-modes
+     gnuplot-mode go-mode graphviz-dot-mode groovy-mode helm-projectile
+     httpcode ido-completing-read+ ivy jabber jedi json-mode julia-mode
+     kotlin-mode latex-preview-pane lsp-jedi lsp-mode lsp-treemacs lsp-ui
+     lua-mode magit magit-section magit-todos magithub markdown-preview-mode
+     notmuch oauth2 ol-notmuch org org-agenda-property org-contrib org-jira
+     org-mru-clock org-pomodoro org-super-agenda org-table-sticky-header ox-gfm
+     package-lint paredit php-mode pinentry protobuf-mode puppet-mode pymacs
+     python-coverage python-mode python-pytest racer racket-mode rainbow-mode
+     realgud-ipdb rmsbolt rust-mode s salt-mode sass-mode slime smex
+     smtpmail-multi solarized-theme string-inflection sudo-edit suggest
+     swift-mode tagedit thrift tickscript-mode tuareg virtualenv which-key
+     window-numbering yaml-mode yasnippet-snippets))
+ '(package-vc-selected-packages
+   '((claude-code-ide :vc-backend Git :url
+      "https://github.com/manzaltu/claude-code-ide.el")))
  '(projectile-completion-system 'ivy)
  '(projectile-enable-caching t)
  '(projectile-globally-ignored-modes
