@@ -311,9 +311,9 @@
      paredit php-mode pinentry protobuf-mode puppet-mode pymacs python-coverage
      python-mode python-pytest racer racket-mode rainbow-mode realgud-ipdb
      rmsbolt rust-mode s salt-mode sass-mode slime smex smtpmail-multi
-     solarized-theme string-inflection suggest swift-mode tagedit thrift
-     tickscript-mode tuareg virtualenv which-key window-numbering yaml-mode
-     yasnippet-snippets))
+     solarized-theme string-inflection sudo-edit suggest swift-mode tagedit
+     thrift tickscript-mode tuareg virtualenv which-key window-numbering
+     yaml-mode yasnippet-snippets))
  '(projectile-completion-system 'ivy)
  '(projectile-enable-caching t)
  '(projectile-globally-ignored-modes
