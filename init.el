@@ -880,6 +880,11 @@ http://blogs.fluidinfo.com/terry/2011/11/10/emacs-buffer-mode-histogram/"
    (kmacro "C-w <left> C-SPC M-m M-w C-e <left> c l s . b u i l d _ C-y ( q r ) C-r c l a s s m e t h o d RET <up> RET RET <up> TAB @ s t a t i c m e t h o d <left> <right> RET d e f SPC b u i l d _ C-y ( q r : Q u o t e R e q u e s t D e t a i l s ) SPC - > SPC N o n e : RET r e t u r n SPC C-y M-y C-u C-SPC C-u C-SPC C-u C-SPC"))
 
 
+;; Claude code setup. Installed with `package-vc-install', upgrade with `package-vc-upgrade'.
+(require 'claude-code-ide)
+(claude-code-ide-emacs-tools-setup)
+(global-set-key (kbd "C-c C-'") #'claude-code-ide-menu)
+
 (provide 'init)
 
 (put 'list-timers 'disabled nil)

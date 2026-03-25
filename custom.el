@@ -61,7 +61,9 @@
       (user-login-name) "@" (system-name) ":"
       (abbreviate-file-name (eshell/pwd)) (msherry/git-branch)
       (if (= (user-uid) 0) " # " " $ "))))
- '(exec-path-from-shell-variables '("PATH" "MANPATH" "CARGO_HOME" "RUST_SRC_PATH" "GOPATH"))
+ '(exec-path-from-shell-variables
+   '("PATH" "MANPATH" "CARGO_HOME" "RUST_SRC_PATH" "GOPATH" "ANTHROPIC_AUTH_TOKEN"
+     "ANTHROPIC_BASE_URL" "CLAUDE_CODE_MAX_OUTPUT_TOKENS" "API_TIMEOUT_MS"))
  '(flycheck-checker-error-threshold nil)
  '(flycheck-checkers
    '(python-pycheckers lsp ada-gnat asciidoctor asciidoc awk-gawk
@@ -312,8 +314,8 @@
      python-coverage python-mode python-pytest racer racket-mode rainbow-mode
      realgud-ipdb rmsbolt rust-mode s salt-mode sass-mode slime smex
      smtpmail-multi solarized-theme string-inflection sudo-edit suggest
-     swift-mode tagedit thrift tickscript-mode tuareg virtualenv which-key
-     window-numbering yaml-mode yasnippet-snippets))
+     swift-mode tagedit thrift tickscript-mode tuareg virtualenv vterm
+     which-key window-numbering yaml-mode yasnippet-snippets))
  '(package-vc-selected-packages
    '((claude-code-ide :vc-backend Git :url
       "https://github.com/manzaltu/claude-code-ide.el")))
