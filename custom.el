@@ -57,7 +57,7 @@
      (concat
       (if (and (boundp 'venv-current-name) venv-current-name)
           (concat "(" venv-current-name ") ")
-        "")
+          "")
       (user-login-name) "@" (system-name) ":"
       (abbreviate-file-name (eshell/pwd)) (msherry/git-branch)
       (if (= (user-uid) 0) " # " " $ "))))
@@ -159,43 +159,41 @@
    '(("w" "Work schedule"
       ((tags "TODO=DONE" ((org-agenda-overriding-header "Done")))
        (tags-todo "WORK"
-                  ((org-agenda-overriding-header "Sprints")
-                   (org-super-agenda-groups '((:auto-property "sprint")))
-                   (org-agenda-sorting-strategy
-                    '((agenda todo-state-down time-up priority-down))))))
+        ((org-agenda-overriding-header "Sprints")
+         (org-super-agenda-groups '((:auto-property "sprint")))
+         (org-agenda-sorting-strategy
+          '((agenda todo-state-down time-up priority-down))))))
       nil)
      ("c" "Agenda and all unscheduled/everyday TODO's / unfiled"
       ((tags "REFILE" ((org-agenda-overriding-header "To refile")))
        (agenda ""
-               ((org-super-agenda-groups
-                 '((:log t) (:name "Schedule" :time-grid t)
-                   (:name "To refile" :tag "REFILE")
-                   (:name "Priority" :priority "A")
-                   (:name "Overdue" :deadline past)
-                   (:name "Due today" :deadline today)
-                   (:name "Today" :scheduled today)
-                   (:name "Due soon" :deadline future)
-                   (:name "Home" :tag "HOME") (:name "No deadline" :tag "WORK")
-                   (:name "Motorcycle" :tag "MOTORCYCLE")))
-                (org-agenda-sorting-strategy
-                 '((agenda habit-down todo-state-down time-up priority-down
-                    category-keep)
-                   (todo priority-down category-keep)
-                   (tags priority-down category-keep) (search category-keep)))))
+        ((org-super-agenda-groups
+          '((:log t) (:name "Schedule" :time-grid t)
+            (:name "To refile" :tag "REFILE") (:name "Priority" :priority "A")
+            (:name "Overdue" :deadline past)
+            (:name "Due today" :deadline today)
+            (:name "Today" :scheduled today)
+            (:name "Due soon" :deadline future) (:name "Home" :tag "HOME")
+            (:name "No deadline" :tag "WORK")
+            (:name "Motorcycle" :tag "MOTORCYCLE")))
+         (org-agenda-sorting-strategy
+          '((agenda habit-down todo-state-down time-up priority-down
+             category-keep)
+            (todo priority-down category-keep)
+            (tags priority-down category-keep) (search category-keep)))))
        (tags "EVERYDAY"
-             ((org-agenda-overriding-header "Every day")
-              (org-agenda-skip-function
-               '(org-agenda-skip-entry-if 'regexp
-                 "\\^* .*:EVERYDAY\\|^\\*\\*\\*\\*"))))
+        ((org-agenda-overriding-header "Every day")
+         (org-agenda-skip-function
+          '(org-agenda-skip-entry-if 'regexp "\\^* .*:EVERYDAY\\|^\\*\\*\\*\\*"))))
        (todo ""
-             ((org-agenda-overriding-header "Unscheduled TODOs")
-              (org-agenda-skip-function
-               '(org-agenda-skip-entry-if 'deadline 'scheduled))))
+        ((org-agenda-overriding-header "Unscheduled TODOs")
+         (org-agenda-skip-function
+          '(org-agenda-skip-entry-if 'deadline 'scheduled))))
        (tags "TOREAD"
-             ((org-agenda-overriding-header "To read")
-              (org-agenda-skip-function
-               '(org-agenda-skip-entry-if 'regexp
-                 "\\* To read.*:TOREAD:\\|.* DONE .*")))))
+        ((org-agenda-overriding-header "To read")
+         (org-agenda-skip-function
+          '(org-agenda-skip-entry-if 'regexp
+            "\\* To read.*:TOREAD:\\|.* DONE .*")))))
       nil)
      ("N" "Notes" tags "NOTE"
       ((org-agenda-overriding-header "Notes") (org-tags-match-list-sublevels t)))
@@ -312,7 +310,7 @@
      org-mru-clock org-pomodoro org-super-agenda org-table-sticky-header ox-gfm
      package-lint paredit php-mode pinentry protobuf-mode puppet-mode pymacs
      python-coverage python-mode python-pytest racer racket-mode rainbow-mode
-     realgud-ipdb rmsbolt rust-mode s salt-mode sass-mode slime smex
+     realgud-ipdb rmsbolt rust-mode s salt-mode sass-mode scad-mode slime smex
      smtpmail-multi solarized-theme string-inflection sudo-edit suggest
      swift-mode tagedit thrift tickscript-mode tuareg virtualenv vterm
      which-key window-numbering yaml-mode yasnippet-snippets))
@@ -357,6 +355,7 @@
      (tickscript-series-type . "stream")
      (tickscript-series-dbrp . "desktop_client.default")
      (tickscript-series-type . "batch") (tickscript-series-name . "medians")))
+ '(scad-command "/Applications/OpenSCAD.app/Contents/MacOS/OpenSCAD")
  '(smtpmail-multi-accounts
    '((personal "msherry@gmail.com" "smtp.gmail.com" 587 header starttls nil nil
       nil)
