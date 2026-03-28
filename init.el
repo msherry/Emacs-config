@@ -423,6 +423,8 @@
   (local-set-key (kbd "s-<tab>") 'complete-symbol)
   ;; Enable LSP
   (lsp-deferred)
+  ;; Compile command
+  (local-set-key (kbd "C-c C-c") 'compile)
   )
 
 
@@ -885,7 +887,15 @@ http://blogs.fluidinfo.com/terry/2011/11/10/emacs-buffer-mode-histogram/"
 (claude-code-ide-emacs-tools-setup)
 (global-set-key (kbd "C-c C-'") #'claude-code-ide-menu)
 
+(put 'list-timers 'disabled nil)
+
+;; Handle colored esphome compilation output
+(require 'ansi-color)
+(defun my-colorize-compilation-buffer ()
+  (when (eq major-mode 'compilation-mode)
+    (ansi-color-apply-on-region compilation-filter-start (point-max))))
+(add-hook 'compilation-filter-hook 'my-colorize-compilation-buffer)
+
 (provide 'init)
 
-(put 'list-timers 'disabled nil)
 ;;; init.el ends here

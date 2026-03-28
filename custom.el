@@ -32,6 +32,7 @@
  '(auth-sources '("~/.authinfo.gpg" "~/.authinfo" "~/.netrc"))
  '(auto-revert-verbose nil)
  '(blacken-line-length 100)
+ '(compilation-scroll-output 'first-error)
  '(csv-separators '("\11" ","))
  '(custom-safe-themes
    '("8aebf25556399b58091e533e455dd50a6a9cba958cc4ebb0aab175863c25b9a4" default))
