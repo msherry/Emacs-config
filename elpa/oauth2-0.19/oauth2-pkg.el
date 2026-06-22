@@ -1,0 +1,2 @@
+;; Generated package description from oauth2.el  -*- no-byte-compile: t; lexical-binding:t -*-
+(define-package "oauth2" "0.19" "OAuth 2.0 Authorization Protocol" '((emacs "27.1")) :commit "d5390a3213399b2fb95e5cac940d3065226ee3f7" :authors '(("Julien Danjou" . "julien@danjou.info")) :maintainer '(("Xiyue Deng" . "manphiz@gmail.com") (nil . "emacs-devel@gnu.org")) :keywords '("comm") :url "https://elpa.gnu.org/packages/oauth2.html")
