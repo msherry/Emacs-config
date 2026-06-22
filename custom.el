@@ -1,4 +1,4 @@
-;;; custom.el --- Holds values set by `customize'
+;;; custom.el --- Holds values set by `customize'  -*- lexical-binding: t; -*-
 
 ;;; Commentary:
 

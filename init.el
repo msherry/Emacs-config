@@ -8,6 +8,10 @@
 
 ;;; Code:
 
+;; Don't warn about missing lexical-binding cookies
+(add-to-list 'warning-suppress-log-types '(files lexical-binding))
+
+
 ;; Do these early so if there's an error in config we don't pollute ~/ with
 ;; junk files
 (defvar save-place-file)                ; C-h i g (Elisp) Warning Tips
@@ -891,10 +895,7 @@ http://blogs.fluidinfo.com/terry/2011/11/10/emacs-buffer-mode-histogram/"
 
 ;; Handle colored esphome compilation output
 (require 'ansi-color)
-(defun my-colorize-compilation-buffer ()
-  (when (eq major-mode 'compilation-mode)
-    (ansi-color-apply-on-region compilation-filter-start (point-max))))
-(add-hook 'compilation-filter-hook 'my-colorize-compilation-buffer)
+(add-hook 'compilation-filter-hook #'ansi-color-compilation-filter)
 
 (provide 'init)
 
