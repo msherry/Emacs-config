@@ -1,16 +1,14 @@
 ;; Python-related settings and functions
 
-(require 'python-mode)
+(require 'python)  ; built-in python.el; defines `python-ts-mode' and `python-base-mode-hook'
 
-;;; Use python-mode, instead of the crappy built-in python.el on the mac
-(autoload 'python-mode "python-mode" "Python Mode." t)
-(add-to-list 'auto-mode-alist '("\\.py$" . python-mode))
-(add-to-list 'interpreter-mode-alist '("python" . python-mode))
+(add-to-list 'auto-mode-alist '("\\.py$" . python-ts-mode))
+(add-to-list 'interpreter-mode-alist '("python" . python-ts-mode))
 
 (autoload 'jedi-setup-venv "jedi-local" nil t)
 (autoload 'jedi:setup "jedi" nil t)
 
-(add-hook 'python-mode-hook
+(add-hook 'python-base-mode-hook
           #'(lambda ()
             (setq jedi:setup-keys t)
             (jedi-setup-venv)
@@ -66,7 +64,7 @@
     nil))
 
 ;; Run pytest tests in python
-(define-key python-mode-map (kbd "C-c C-/") 'python-pytest-dispatch)
+(define-key python-base-mode-map (kbd "C-c C-/") 'python-pytest-dispatch)
 
 
 (provide 'msherry-python)

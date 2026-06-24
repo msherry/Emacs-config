@@ -403,8 +403,8 @@
 ;; Mode hooks
 (defvar programming-modes '(actionscript-mode c-mode conf-mode emacs-lisp-mode ess-mode
                             go-mode java-mode javascript-mode js-mode js2-mode lisp-mode
-                            makefile-mode objc-mode python-mode ruby-mode rust-mode sh-mode
-                            tickscript-mode yaml-mode)
+                            makefile-mode objc-mode python-mode python-ts-mode ruby-mode
+                            rust-mode sh-mode tickscript-mode yaml-mode)
   "Modes used for programming.")
 
 
@@ -861,6 +861,44 @@ http://blogs.fluidinfo.com/terry/2011/11/10/emacs-buffer-mode-histogram/"
      (tsx "https://github.com/tree-sitter/tree-sitter-typescript" "master" "tsx/src")
      (typescript "https://github.com/tree-sitter/tree-sitter-typescript" "master" "typescript/src")
      (yaml "https://github.com/ikatyang/tree-sitter-yaml")))
+
+;;; Open Python files in `python-ts-mode' so a tree-sitter parser is created at
+;;; mode-init and kept in sync, rather than letting callers like python-pytest
+;;; build ad-hoc parsers per buffer.  We eagerly `require' built-in python.el so
+;;; that `python-ts-mode' resolves to the real definition: the third-party
+;;; python-mode package shadows `python-mode' and never defines
+;;; `python-ts-mode', which otherwise leaves the remap target pointing at a
+;;; nonexistent "python-ts-mode" file.  Guarded on grammar availability and on
+;;; the function actually resolving.
+(when (and (treesit-language-available-p 'python)
+           (require 'python nil t)
+           (fboundp 'python-ts-mode))
+  (add-to-list 'major-mode-remap-alist '(python-mode . python-ts-mode)))
+
+(defun msherry/treesit-reinstall-all-grammars ()
+  "Reinstall every grammar in `treesit-language-source-alist'.
+
+Useful after rebuilding Emacs against a newer tree-sitter, which can
+leave previously-compiled grammars unusable.  Reports which grammars
+succeeded and which failed at the end."
+  (interactive)
+  (let (succeeded failed)
+    (dolist (entry treesit-language-source-alist)
+      (let ((lang (car entry)))
+        (condition-case err
+            (progn
+              (treesit-install-language-grammar lang)
+              (push lang succeeded))
+          (error
+           (push (cons lang (error-message-string err)) failed)))))
+    (message "Reinstalled %d grammar(s): %s%s"
+             (length succeeded)
+             (mapconcat #'symbol-name (nreverse succeeded) " ")
+             (if failed
+                 (format " | FAILED: %s"
+                         (mapconcat (lambda (f) (format "%s (%s)" (car f) (cdr f)))
+                                    (nreverse failed) ", "))
+               ""))))
 
 ;; Tramp stuff - https://coredumped.dev/2025/06/18/making-tramp-go-brrrr./
 (connection-local-set-profile-variables
