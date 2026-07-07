@@ -32,6 +32,18 @@
  '(auth-sources '("~/.authinfo.gpg" "~/.authinfo" "~/.netrc"))
  '(auto-revert-verbose nil)
  '(blacken-line-length 100)
+ '(claude-code-ide-cli-extra-flags "--remote-control")
+ '(claude-code-ide-cli-path "claude")
+ '(claude-code-ide-focus-claude-after-ediff t)
+ '(claude-code-ide-focus-on-open t)
+ '(claude-code-ide-show-claude-window-in-ediff t)
+ '(claude-code-ide-switch-tab-on-ediff t)
+ '(claude-code-ide-system-prompt nil)
+ '(claude-code-ide-use-ide-diff t)
+ '(claude-code-ide-use-side-window t)
+ '(claude-code-ide-window-height 20)
+ '(claude-code-ide-window-side 'right)
+ '(claude-code-ide-window-width 100)
  '(compilation-scroll-output 'first-error)
  '(csv-separators '("\11" ","))
  '(custom-safe-themes
@@ -58,7 +70,7 @@
      (concat
       (if (and (boundp 'venv-current-name) venv-current-name)
           (concat "(" venv-current-name ") ")
-          "")
+        "")
       (user-login-name) "@" (system-name) ":"
       (abbreviate-file-name (eshell/pwd)) (msherry/git-branch)
       (if (= (user-uid) 0) " # " " $ "))))
@@ -160,41 +172,43 @@
    '(("w" "Work schedule"
       ((tags "TODO=DONE" ((org-agenda-overriding-header "Done")))
        (tags-todo "WORK"
-        ((org-agenda-overriding-header "Sprints")
-         (org-super-agenda-groups '((:auto-property "sprint")))
-         (org-agenda-sorting-strategy
-          '((agenda todo-state-down time-up priority-down))))))
+                  ((org-agenda-overriding-header "Sprints")
+                   (org-super-agenda-groups '((:auto-property "sprint")))
+                   (org-agenda-sorting-strategy
+                    '((agenda todo-state-down time-up priority-down))))))
       nil)
      ("c" "Agenda and all unscheduled/everyday TODO's / unfiled"
       ((tags "REFILE" ((org-agenda-overriding-header "To refile")))
        (agenda ""
-        ((org-super-agenda-groups
-          '((:log t) (:name "Schedule" :time-grid t)
-            (:name "To refile" :tag "REFILE") (:name "Priority" :priority "A")
-            (:name "Overdue" :deadline past)
-            (:name "Due today" :deadline today)
-            (:name "Today" :scheduled today)
-            (:name "Due soon" :deadline future) (:name "Home" :tag "HOME")
-            (:name "No deadline" :tag "WORK")
-            (:name "Motorcycle" :tag "MOTORCYCLE")))
-         (org-agenda-sorting-strategy
-          '((agenda habit-down todo-state-down time-up priority-down
-             category-keep)
-            (todo priority-down category-keep)
-            (tags priority-down category-keep) (search category-keep)))))
+               ((org-super-agenda-groups
+                 '((:log t) (:name "Schedule" :time-grid t)
+                   (:name "To refile" :tag "REFILE")
+                   (:name "Priority" :priority "A")
+                   (:name "Overdue" :deadline past)
+                   (:name "Due today" :deadline today)
+                   (:name "Today" :scheduled today)
+                   (:name "Due soon" :deadline future)
+                   (:name "Home" :tag "HOME") (:name "No deadline" :tag "WORK")
+                   (:name "Motorcycle" :tag "MOTORCYCLE")))
+                (org-agenda-sorting-strategy
+                 '((agenda habit-down todo-state-down time-up priority-down
+                    category-keep)
+                   (todo priority-down category-keep)
+                   (tags priority-down category-keep) (search category-keep)))))
        (tags "EVERYDAY"
-        ((org-agenda-overriding-header "Every day")
-         (org-agenda-skip-function
-          '(org-agenda-skip-entry-if 'regexp "\\^* .*:EVERYDAY\\|^\\*\\*\\*\\*"))))
+             ((org-agenda-overriding-header "Every day")
+              (org-agenda-skip-function
+               '(org-agenda-skip-entry-if 'regexp
+                 "\\^* .*:EVERYDAY\\|^\\*\\*\\*\\*"))))
        (todo ""
-        ((org-agenda-overriding-header "Unscheduled TODOs")
-         (org-agenda-skip-function
-          '(org-agenda-skip-entry-if 'deadline 'scheduled))))
+             ((org-agenda-overriding-header "Unscheduled TODOs")
+              (org-agenda-skip-function
+               '(org-agenda-skip-entry-if 'deadline 'scheduled))))
        (tags "TOREAD"
-        ((org-agenda-overriding-header "To read")
-         (org-agenda-skip-function
-          '(org-agenda-skip-entry-if 'regexp
-            "\\* To read.*:TOREAD:\\|.* DONE .*")))))
+             ((org-agenda-overriding-header "To read")
+              (org-agenda-skip-function
+               '(org-agenda-skip-entry-if 'regexp
+                 "\\* To read.*:TOREAD:\\|.* DONE .*")))))
       nil)
      ("N" "Notes" tags "NOTE"
       ((org-agenda-overriding-header "Notes") (org-tags-match-list-sublevels t)))
