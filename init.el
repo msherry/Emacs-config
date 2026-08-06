@@ -34,6 +34,10 @@
 ; Seed RNG
 (random t)
 
+;; Use the emacsclient bundled with this Emacs -- the one on PATH may be
+;; from an older build and speak a mismatched server protocol
+(setenv "EDITOR" (expand-file-name "bin/emacsclient" invocation-directory))
+
 ;; Plugins - add plugins dir, vendors dir, and all dirs under vendor
 ;; excluding . and ..
 (add-to-list 'load-path "~/.emacs.d/plugins")
