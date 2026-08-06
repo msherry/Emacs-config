@@ -1,0 +1,2 @@
+0
+396216 215988778 1785383515855302864 660bfba5af65a626c6ec53117bb0b29b 1 zig-pkg/ghostty-1.3.2-dev-5UdBC-mtJAXcrDxuFuetC6X66XQXV8hw_7pevfmFcVKL/pkg/simdutf/vendor/simdutf.h
