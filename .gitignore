@@ -45,3 +45,6 @@ recentf
 .lsp-session*
 .cache
 forge-database.sqlite
+elpa/**/vendor/
+elpa/**/zig-pkg/
+elpa/**/.zig-cache/
